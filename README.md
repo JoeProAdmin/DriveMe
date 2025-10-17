@@ -38,19 +38,26 @@ DriveMe met l’accent sur la **sécurité des utilisateurs** :
 
 ##  Structure actuelle du dépôt
 
-DriveMe/
-├── README.md
-├── src/
-│ ├── main/
-│ │ ├── java/com/driveme/
-│ │ │ ├── controller/
-│ │ │ ├── model/
-│ │ │ ├── repository/
-│ │ │ └── service/
-│ │ └── resources/
-│ │ ├── application.properties
-│ │ └── static/
-└── pom.xml
+## ⚙️ Structure actuelle du dépôt
+
+```yaml
+DriveMe:
+  README.md
+  src:
+    main:
+      java:
+        com:
+          driveme:
+            controller: "Endpoints REST (API)"
+            model: "Entités JPA : Chauffeur, Passager, etc."
+            repository: "Interfaces JPA (DAO)"
+            service: "Logique métier"
+      resources:
+        application.properties: "Configuration principale Spring Boot"
+        static: "Ressources front (CSS, JS, images...)"
+        templates: "Pages HTML / Thymeleaf (si utilisées)"
+  pom.xml: "Configuration Maven"
+
 
 ---
 
@@ -88,4 +95,5 @@ Toute reproduction ou utilisation commerciale est interdite sans autorisation.
 - Initialisation complète du dépôt (octobre 2025)  
 - En cours : développement du backend Spring Boot (`DriveMe-Spring`)  
 - À venir : intégration Angular & API REST sécurisée
+
 

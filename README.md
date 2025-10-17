@@ -38,9 +38,6 @@ DriveMe met l’accent sur la **sécurité des utilisateurs** :
 
 ##  Structure actuelle du dépôt
 
-## ⚙️ Structure actuelle du dépôt
-
-```yaml
 DriveMe:
   README.md
   src:
@@ -95,5 +92,6 @@ Toute reproduction ou utilisation commerciale est interdite sans autorisation.
 - Initialisation complète du dépôt (octobre 2025)  
 - En cours : développement du backend Spring Boot (`DriveMe-Spring`)  
 - À venir : intégration Angular & API REST sécurisée
+
 
 

@@ -1,4 +1,4 @@
-# DriveMe – Application VTC moderne (Projet TFE 2025)
+# DriveMe - Application VTC moderne (Projet TFE 2025)
 
 ##  Contexte académique
 **Projet de fin d’études (TFE)** – Bachelier en Informatique, orientation développement d’applications.  
@@ -36,4 +36,56 @@ DriveMe met l’accent sur la **sécurité des utilisateurs** :
 
 ---
 
-## ⚙️ Structure actuelle du dépôt
+##  Structure actuelle du dépôt
+
+DriveMe/
+├── README.md
+├── src/
+│ ├── main/
+│ │ ├── java/com/driveme/
+│ │ │ ├── controller/
+│ │ │ ├── model/
+│ │ │ ├── repository/
+│ │ │ └── service/
+│ │ └── resources/
+│ │ ├── application.properties
+│ │ └── static/
+└── pom.xml
+
+---
+
+##  Objectifs du TFE
+1. Démontrer la **capacité à concevoir une architecture logicielle complète** (backend + frontend + BDD).
+2. Assurer la **sécurité et la fiabilité** des échanges utilisateurs.
+3. Intégrer des **services modernes** (notifications, géolocalisation, paiements locaux).
+4. Préparer une **scalabilité internationale** du modèle.
+
+---
+
+##  Vision entrepreneuriale
+DriveMe est également pensé comme une **startup technologique marocaine** :
+- Basée sur une **SARL locale**,
+- Reposant sur un **système de recharges prépayées** via **Inwi, IAM, Orange, CIH Pay, Wafacash, PayPal**,
+- Avec une ambition claire : **rendre le transport plus sûr et plus rentable pour les conducteurs** tout en soutenant la **population active locale**.
+
+---
+
+##  Auteur
+**Youssef Qarnouf**  
+Développeur - Administrateur M365 - Entrepreneur Tech  
+Basé en Belgique - Projet orienté vers le Maroc  
+Contact : *qyossef@gmail.com*
+
+---
+
+##  Licence
+Projet académique, utilisation réservée dans le cadre du TFE.  
+Toute reproduction ou utilisation commerciale est interdite sans autorisation.
+
+---
+
+##  Statut du projet
+- Initialisation complète du dépôt (octobre 2025)  
+- En cours : développement du backend Spring Boot (`DriveMe-Spring`)  
+- À venir : intégration Angular & API REST sécurisée
+

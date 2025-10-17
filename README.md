@@ -1,7 +1,7 @@
 # DriveMe - Application VTC moderne (Projet TFE 2025)
 
 ## Contexte académique
-**Projet de fin d’études (TFE)** – Bachelier en Informatique, orientation développement d’applications.  
+**Projet de fin d’études (TFE)** -  Bachelier en Informatique, orientation développement d’applications.  
 Objectif : concevoir et développer une application VTC complète, fiable et sécurisée, inspirée du modèle **inDrive**, adaptée initialement au **marché marocain**, avec une **ouverture internationale** future.
 
 ---
@@ -37,20 +37,56 @@ DriveMe met l’accent sur la **sécurité des utilisateurs** :
 ---
 
 ## Structure actuelle du dépôt
-```yaml
-DriveMe:
-  README.md
-  src:
-    main:
-      java:
-        com:
-          driveme:
-            controller: "Endpoints REST (API)"
-            model: "Entités JPA : Chauffeur, Passager, etc."
-            repository: "Interfaces JPA (DAO)"
-            service: "Logique métier"
-      resources:
-        application.properties: "Configuration principale Spring Boot"
-        static: "Ressources front (CSS, JS, images...)"
-        templates: "Pages HTML / Thymeleaf (si utilisées)"
-  pom.xml: "Configuration Maven"
+**Arborescence technique simplifiée :**
+
+- **DriveMe/**
+  - **README.md**
+  - **src/**
+    - **main/**
+      - **java/com/driveme/**
+        - **controller/** → Contrôleurs REST (API)
+        - **model/** → Entités JPA (Chauffeur, Passager, etc.)
+        - **repository/** → Interfaces JPA (DAO)
+        - **service/** → Logique métier
+      - **resources/**
+        - **application.properties** → Configuration principale Spring Boot
+        - **static/** → Ressources front (CSS, JS, images…)
+        - **templates/** → Pages HTML / Thymeleaf (si utilisées)
+  - **pom.xml** → Configuration Maven
+
+---
+
+## Objectifs du TFE
+1. Démontrer la **capacité à concevoir une architecture logicielle complète** (backend + frontend + base de données).  
+2. Assurer la **sécurité et la fiabilité** des échanges utilisateurs.  
+3. Intégrer des **services modernes** (notifications, géolocalisation, paiements locaux).  
+4. Préparer une **scalabilité internationale** du modèle.
+
+---
+
+## Vision entrepreneuriale
+DriveMe est également pensé comme une **startup technologique marocaine** :  
+- Basée sur une **SARL locale**,  
+- Reposant sur un **système de recharges prépayées** via **Inwi, IAM, Orange, CIH Pay, Wafacash, PayPal**,  
+- Avec une ambition claire : **rendre le transport plus sûr et plus rentable pour les conducteurs** tout en soutenant la **population active locale**.
+
+---
+
+## Auteur
+**Youssef Qarnouf**  
+Développeur - Administrateur M365 - Entrepreneur Tech  
+Basé en Belgique - Projet orienté vers le Maroc  
+Contact : *qyossef@gmail.com*
+
+---
+
+## Licence
+Projet académique, utilisation réservée dans le cadre du TFE.  
+Toute reproduction ou utilisation commerciale est interdite sans autorisation.
+
+---
+
+## Statut du projet
+- Initialisation complète du dépôt (octobre 2025)  
+- En cours : développement du backend Spring Boot (`DriveMe-Spring`)  
+- À venir : intégration Angular & API REST sécurisée

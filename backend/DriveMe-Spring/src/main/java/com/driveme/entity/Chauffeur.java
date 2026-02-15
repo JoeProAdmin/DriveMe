@@ -1,6 +1,9 @@
-package com.driveme.model;
+package com.driveme.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+
 import java.math.BigDecimal;
 
 @Entity
@@ -15,12 +18,16 @@ public class Chauffeur {
     @JoinColumn(name = "utilisateur_id", nullable = false, unique = true)
     private Utilisateur utilisateur;
 
+    @NotNull(message = "Le statutValidation est obligatoire")
     @Column(name = "statut_validation", nullable = false)
     private Byte statutValidation;
 
+    @PositiveOrZero(message = "La noteMoyenne ne peut pas être négative")
     @Column(name = "note_moyenne", precision = 3, scale = 2)
     private BigDecimal noteMoyenne;
 
+    @NotNull(message = "Le soldeCredit est obligatoire")
+    @PositiveOrZero(message = "Le soldeCredit ne peut pas être négatif")
     @Column(name = "solde_credit", nullable = false, precision = 10, scale = 2)
     private BigDecimal soldeCredit;
 

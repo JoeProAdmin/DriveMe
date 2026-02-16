@@ -1,9 +1,12 @@
 package com.driveme.service.impl;
 
+import com.driveme.dto.ChauffeurCreateDTO;
 import com.driveme.dto.ChauffeurResponseDTO;
 import com.driveme.entity.Chauffeur;
+import com.driveme.entity.Utilisateur;
 import com.driveme.exception.ResourceNotFoundException;
 import com.driveme.repository.ChauffeurRepository;
+import com.driveme.repository.UtilisateurRepository;
 import com.driveme.service.ChauffeurService;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +16,12 @@ import java.util.List;
 public class ChauffeurServiceImpl implements ChauffeurService {
 
     private final ChauffeurRepository chauffeurRepository;
+    private final UtilisateurRepository utilisateurRepository;
 
-    public ChauffeurServiceImpl(ChauffeurRepository chauffeurRepository) {
+    public ChauffeurServiceImpl(ChauffeurRepository chauffeurRepository,
+                                UtilisateurRepository utilisateurRepository) {
         this.chauffeurRepository = chauffeurRepository;
+        this.utilisateurRepository = utilisateurRepository;
     }
 
     @Override
@@ -36,21 +42,39 @@ public class ChauffeurServiceImpl implements ChauffeurService {
     }
 
     @Override
-    public Chauffeur createChauffeur(Chauffeur chauffeur) {
-        return chauffeurRepository.save(chauffeur);
+    public ChauffeurResponseDTO createChauffeur(ChauffeurCreateDTO dto) {
+
+        Utilisateur utilisateur = utilisateurRepository.findById(dto.getUtilisateurId())
+                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable"));
+
+        if (chauffeurRepository.existsByUtilisateurId(dto.getUtilisateurId())) {
+            throw new IllegalArgumentException("Un chauffeur existe déjà pour cet utilisateur");
+        }
+
+        Chauffeur chauffeur = new Chauffeur();
+        chauffeur.setUtilisateur(utilisateur);
+        chauffeur.setStatutValidation(dto.getStatutValidation());
+        chauffeur.setNoteMoyenne(dto.getNoteMoyenne());
+        chauffeur.setSoldeCredit(dto.getSoldeCredit());
+
+        Chauffeur saved = chauffeurRepository.save(chauffeur);
+
+        return mapToDTO(saved);
     }
 
     @Override
-    public Chauffeur updateChauffeur(Long id, Chauffeur chauffeurDetails) {
+    public ChauffeurResponseDTO updateChauffeur(Long id, ChauffeurCreateDTO dto) {
 
         Chauffeur chauffeur = chauffeurRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Chauffeur introuvable"));
 
-        chauffeur.setStatutValidation(chauffeurDetails.getStatutValidation());
-        chauffeur.setNoteMoyenne(chauffeurDetails.getNoteMoyenne());
-        chauffeur.setSoldeCredit(chauffeurDetails.getSoldeCredit());
+        chauffeur.setStatutValidation(dto.getStatutValidation());
+        chauffeur.setNoteMoyenne(dto.getNoteMoyenne());
+        chauffeur.setSoldeCredit(dto.getSoldeCredit());
 
-        return chauffeurRepository.save(chauffeur);
+        Chauffeur updated = chauffeurRepository.save(chauffeur);
+
+        return mapToDTO(updated);
     }
 
     @Override

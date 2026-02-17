@@ -1,22 +1,23 @@
 package com.driveme.dto;
 
-import java.math.BigDecimal;
-
 public class ChauffeurResponseDTO {
 
     private Long id;
     private String nom;
     private String prenom;
     private String telephone;
-    private Byte statutValidation;
-    private BigDecimal noteMoyenne;
+    private Integer statutValidation;
+    private Double noteMoyenne;
 
-    public ChauffeurResponseDTO() {}
+    public ChauffeurResponseDTO() {
+    }
 
-    public ChauffeurResponseDTO(Long id, String nom, String prenom,
+    public ChauffeurResponseDTO(Long id,
+                                String nom,
+                                String prenom,
                                 String telephone,
-                                Byte statutValidation,
-                                BigDecimal noteMoyenne) {
+                                Integer statutValidation,
+                                Double noteMoyenne) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -25,10 +26,23 @@ public class ChauffeurResponseDTO {
         this.noteMoyenne = noteMoyenne;
     }
 
+    // GETTERS & SETTERS
+
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
     public String getNom() { return nom; }
+    public void setNom(String nom) { this.nom = nom; }
+
     public String getPrenom() { return prenom; }
+    public void setPrenom(String prenom) { this.prenom = prenom; }
+
     public String getTelephone() { return telephone; }
-    public Byte getStatutValidation() { return statutValidation; }
-    public BigDecimal getNoteMoyenne() { return noteMoyenne; }
+    public void setTelephone(String telephone) { this.telephone = telephone; }
+
+    public Integer getStatutValidation() { return statutValidation; }
+    public void setStatutValidation(Integer statutValidation) { this.statutValidation = statutValidation; }
+
+    public Double getNoteMoyenne() { return noteMoyenne; }
+    public void setNoteMoyenne(Double noteMoyenne) { this.noteMoyenne = noteMoyenne; }
 }

@@ -1,4 +1,4 @@
-package com.driveme.model;
+package com.driveme.entity;
 
 import jakarta.persistence.*;
 
@@ -16,8 +16,6 @@ public class Passager {
     @OneToOne
     @JoinColumn(name = "utilisateur_id", nullable = false, unique = true)
     private Utilisateur utilisateur;
-
-    // GETTERS & SETTERS
 
     public Long getId() { return id; }
 

@@ -1,77 +1,49 @@
 package com.driveme.dto;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class CourseResponseDTO {
 
     private Long id;
-    private Long chauffeurId;
-    private Long passagerId;
+    private String passagerNom;
+    private String chauffeurNom;
     private String adresseDepart;
     private String adresseArrivee;
-    private LocalDateTime dateDemande;
-    private LocalDateTime dateDebut;
-    private LocalDateTime dateFin;
-    private BigDecimal prix;
+    private Double prix;
     private String statut;
+    private LocalDateTime dateCreation;
 
-    // ✅ CONSTRUCTEUR VIDE (IMPORTANT)
-    public CourseResponseDTO() {
-    }
+    public CourseResponseDTO() {}
 
-    // ✅ CONSTRUCTEUR COMPLET
-    public CourseResponseDTO(Long id,
-                             Long chauffeurId,
-                             Long passagerId,
-                             String adresseDepart,
-                             String adresseArrivee,
-                             LocalDateTime dateDemande,
-                             LocalDateTime dateDebut,
-                             LocalDateTime dateFin,
-                             BigDecimal prix,
-                             String statut) {
+    public CourseResponseDTO(Long id, String passagerNom, String chauffeurNom,
+                             String adresseDepart, String adresseArrivee,
+                             Double prix, String statut, LocalDateTime dateCreation) {
         this.id = id;
-        this.chauffeurId = chauffeurId;
-        this.passagerId = passagerId;
+        this.passagerNom = passagerNom;
+        this.chauffeurNom = chauffeurNom;
         this.adresseDepart = adresseDepart;
         this.adresseArrivee = adresseArrivee;
-        this.dateDemande = dateDemande;
-        this.dateDebut = dateDebut;
-        this.dateFin = dateFin;
         this.prix = prix;
         this.statut = statut;
+        this.dateCreation = dateCreation;
     }
 
-    // GETTERS & SETTERS
-
+    // getters/setters
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public Long getChauffeurId() { return chauffeurId; }
-    public void setChauffeurId(Long chauffeurId) { this.chauffeurId = chauffeurId; }
-
-    public Long getPassagerId() { return passagerId; }
-    public void setPassagerId(Long passagerId) { this.passagerId = passagerId; }
-
+    public String getPassagerNom() { return passagerNom; }
+    public String getChauffeurNom() { return chauffeurNom; }
     public String getAdresseDepart() { return adresseDepart; }
-    public void setAdresseDepart(String adresseDepart) { this.adresseDepart = adresseDepart; }
-
     public String getAdresseArrivee() { return adresseArrivee; }
-    public void setAdresseArrivee(String adresseArrivee) { this.adresseArrivee = adresseArrivee; }
-
-    public LocalDateTime getDateDemande() { return dateDemande; }
-    public void setDateDemande(LocalDateTime dateDemande) { this.dateDemande = dateDemande; }
-
-    public LocalDateTime getDateDebut() { return dateDebut; }
-    public void setDateDebut(LocalDateTime dateDebut) { this.dateDebut = dateDebut; }
-
-    public LocalDateTime getDateFin() { return dateFin; }
-    public void setDateFin(LocalDateTime dateFin) { this.dateFin = dateFin; }
-
-    public BigDecimal getPrix() { return prix; }
-    public void setPrix(BigDecimal prix) { this.prix = prix; }
-
+    public Double getPrix() { return prix; }
     public String getStatut() { return statut; }
+    public LocalDateTime getDateCreation() { return dateCreation; }
+
+    public void setId(Long id) { this.id = id; }
+    public void setPassagerNom(String passagerNom) { this.passagerNom = passagerNom; }
+    public void setChauffeurNom(String chauffeurNom) { this.chauffeurNom = chauffeurNom; }
+    public void setAdresseDepart(String adresseDepart) { this.adresseDepart = adresseDepart; }
+    public void setAdresseArrivee(String adresseArrivee) { this.adresseArrivee = adresseArrivee; }
+    public void setPrix(Double prix) { this.prix = prix; }
     public void setStatut(String statut) { this.statut = statut; }
+    public void setDateCreation(LocalDateTime dateCreation) { this.dateCreation = dateCreation; }
 }

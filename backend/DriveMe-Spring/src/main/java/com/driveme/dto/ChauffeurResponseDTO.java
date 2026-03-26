@@ -12,12 +12,7 @@ public class ChauffeurResponseDTO {
     public ChauffeurResponseDTO() {
     }
 
-    public ChauffeurResponseDTO(Long id,
-                                String nom,
-                                String prenom,
-                                String telephone,
-                                Integer statutValidation,
-                                Double noteMoyenne) {
+    public ChauffeurResponseDTO(Long id, String nom, String prenom, String telephone, Integer statutValidation, Double noteMoyenne) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -26,23 +21,51 @@ public class ChauffeurResponseDTO {
         this.noteMoyenne = noteMoyenne;
     }
 
-    // GETTERS & SETTERS
+    public Long getId() {
+        return id;
+    }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public String getNom() {
+        return nom;
+    }
 
-    public String getNom() { return nom; }
-    public void setNom(String nom) { this.nom = nom; }
+    public String getPrenom() {
+        return prenom;
+    }
 
-    public String getPrenom() { return prenom; }
-    public void setPrenom(String prenom) { this.prenom = prenom; }
+    public String getTelephone() {
+        return telephone;
+    }
 
-    public String getTelephone() { return telephone; }
-    public void setTelephone(String telephone) { this.telephone = telephone; }
+    public Integer getStatutValidation() {
+        return statutValidation;
+    }
 
-    public Integer getStatutValidation() { return statutValidation; }
-    public void setStatutValidation(Integer statutValidation) { this.statutValidation = statutValidation; }
+    public Double getNoteMoyenne() {
+        return noteMoyenne;
+    }
 
-    public Double getNoteMoyenne() { return noteMoyenne; }
-    public void setNoteMoyenne(Double noteMoyenne) { this.noteMoyenne = noteMoyenne; }
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public void setStatutValidation(Integer statutValidation) {
+        this.statutValidation = statutValidation;
+    }
+
+    public void setNoteMoyenne(Double noteMoyenne) {
+        this.noteMoyenne = noteMoyenne;
+    }
 }

@@ -2,51 +2,25 @@ package com.driveme.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 public class CourseCreateDTO {
 
-    @NotNull(message = "chauffeurId est obligatoire")
-    private Long chauffeurId;
-
-    @NotNull(message = "passagerId est obligatoire")
+    @NotNull(message = "Le passagerId est obligatoire")
     private Long passagerId;
 
-    @NotBlank(message = "adresseDepart est obligatoire")
+    @NotNull(message = "Le chauffeurId est obligatoire")
+    private Long chauffeurId;
+
+    @NotBlank(message = "L'adresse de départ est obligatoire")
     private String adresseDepart;
 
-    @NotBlank(message = "adresseArrivee est obligatoire")
+    @NotBlank(message = "L'adresse d'arrivée est obligatoire")
     private String adresseArrivee;
 
-    @NotNull(message = "dateDemande est obligatoire")
-    private LocalDateTime dateDemande;
+    @NotNull(message = "Le prix est obligatoire")
+    private Double prix;
 
-    @NotNull(message = "dateDebut est obligatoire")
-    private LocalDateTime dateDebut;
-
-    @NotNull(message = "dateFin est obligatoire")
-    private LocalDateTime dateFin;
-
-    @NotNull(message = "prix est obligatoire")
-    @Positive(message = "prix doit être positif")
-    private BigDecimal prix;
-
-    @NotBlank(message = "statut est obligatoire")
-    private String statut;
-
-    // =========================
-    // GETTERS & SETTERS
-    // =========================
-
-    public Long getChauffeurId() {
-        return chauffeurId;
-    }
-
-    public void setChauffeurId(Long chauffeurId) {
-        this.chauffeurId = chauffeurId;
+    public CourseCreateDTO() {
     }
 
     public Long getPassagerId() {
@@ -55,6 +29,14 @@ public class CourseCreateDTO {
 
     public void setPassagerId(Long passagerId) {
         this.passagerId = passagerId;
+    }
+
+    public Long getChauffeurId() {
+        return chauffeurId;
+    }
+
+    public void setChauffeurId(Long chauffeurId) {
+        this.chauffeurId = chauffeurId;
     }
 
     public String getAdresseDepart() {
@@ -73,43 +55,11 @@ public class CourseCreateDTO {
         this.adresseArrivee = adresseArrivee;
     }
 
-    public LocalDateTime getDateDemande() {
-        return dateDemande;
-    }
-
-    public void setDateDemande(LocalDateTime dateDemande) {
-        this.dateDemande = dateDemande;
-    }
-
-    public LocalDateTime getDateDebut() {
-        return dateDebut;
-    }
-
-    public void setDateDebut(LocalDateTime dateDebut) {
-        this.dateDebut = dateDebut;
-    }
-
-    public LocalDateTime getDateFin() {
-        return dateFin;
-    }
-
-    public void setDateFin(LocalDateTime dateFin) {
-        this.dateFin = dateFin;
-    }
-
-    public BigDecimal getPrix() {
+    public Double getPrix() {
         return prix;
     }
 
-    public void setPrix(BigDecimal prix) {
+    public void setPrix(Double prix) {
         this.prix = prix;
-    }
-
-    public String getStatut() {
-        return statut;
-    }
-
-    public void setStatut(String statut) {
-        this.statut = statut;
     }
 }

@@ -1,6 +1,7 @@
 package com.driveme.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "passager")
@@ -10,22 +11,34 @@ public class Passager {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 255)
-    private String photo;
+    private String nom;
+    private String prenom;
+    private String telephone;
+    private String email;
+    private String photoUrl;
 
-    @OneToOne
-    @JoinColumn(name = "utilisateur_id", nullable = false, unique = true)
-    private Utilisateur utilisateur;
+    private LocalDateTime dateCreation;
+
+    public Passager() {}
+
+    @PrePersist
+    public void prePersist() {
+        this.dateCreation = LocalDateTime.now();
+    }
 
     public Long getId() { return id; }
+    public String getNom() { return nom; }
+    public String getPrenom() { return prenom; }
+    public String getTelephone() { return telephone; }
+    public String getEmail() { return email; }
+    public String getPhotoUrl() { return photoUrl; }
+    public LocalDateTime getDateCreation() { return dateCreation; }
 
     public void setId(Long id) { this.id = id; }
-
-    public String getPhoto() { return photo; }
-
-    public void setPhoto(String photo) { this.photo = photo; }
-
-    public Utilisateur getUtilisateur() { return utilisateur; }
-
-    public void setUtilisateur(Utilisateur utilisateur) { this.utilisateur = utilisateur; }
+    public void setNom(String nom) { this.nom = nom; }
+    public void setPrenom(String prenom) { this.prenom = prenom; }
+    public void setTelephone(String telephone) { this.telephone = telephone; }
+    public void setEmail(String email) { this.email = email; }
+    public void setPhotoUrl(String photoUrl) { this.photoUrl = photoUrl; }
+    public void setDateCreation(LocalDateTime dateCreation) { this.dateCreation = dateCreation; }
 }

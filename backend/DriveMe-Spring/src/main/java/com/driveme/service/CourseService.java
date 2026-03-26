@@ -7,13 +7,7 @@ import java.util.List;
 
 public interface CourseService {
 
-    List<CourseResponseDTO> getAllCourses();
-
-    CourseResponseDTO getCourseById(Long id);
-
     CourseResponseDTO createCourse(CourseCreateDTO dto);
 
-    CourseResponseDTO updateCourse(Long id, CourseCreateDTO dto);
-
-    void deleteCourse(Long id);
+    List<CourseResponseDTO> getAllCourses();
 }

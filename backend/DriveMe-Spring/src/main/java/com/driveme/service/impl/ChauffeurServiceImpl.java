@@ -53,15 +53,9 @@ public class ChauffeurServiceImpl implements ChauffeurService {
 
         Chauffeur chauffeur = new Chauffeur();
         chauffeur.setUtilisateur(utilisateur);
-        chauffeur.setStatutValidation(dto.getStatutValidation().byteValue());
-        chauffeur.setNoteMoyenne(
-                dto.getNoteMoyenne() != null ?
-                        BigDecimal.valueOf(dto.getNoteMoyenne()) : null
-        );
-        chauffeur.setSoldeCredit(
-                dto.getSoldeCredit() != null ?
-                        BigDecimal.valueOf(dto.getSoldeCredit()) : BigDecimal.ZERO
-        );
+        chauffeur.setStatutValidation((byte) 0);
+        chauffeur.setNoteMoyenne(BigDecimal.ZERO);
+        chauffeur.setSoldeCredit(BigDecimal.ZERO);
 
         Chauffeur saved = chauffeurRepository.save(chauffeur);
 
@@ -74,15 +68,9 @@ public class ChauffeurServiceImpl implements ChauffeurService {
         Chauffeur chauffeur = chauffeurRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Chauffeur introuvable"));
 
-        chauffeur.setStatutValidation(dto.getStatutValidation().byteValue());
-        chauffeur.setNoteMoyenne(
-                dto.getNoteMoyenne() != null ?
-                        BigDecimal.valueOf(dto.getNoteMoyenne()) : null
-        );
-        chauffeur.setSoldeCredit(
-                dto.getSoldeCredit() != null ?
-                        BigDecimal.valueOf(dto.getSoldeCredit()) : BigDecimal.ZERO
-        );
+        chauffeur.setStatutValidation((byte) 1);
+        chauffeur.setNoteMoyenne(BigDecimal.valueOf(5.0));
+        chauffeur.setSoldeCredit(BigDecimal.valueOf(100));
 
         Chauffeur updated = chauffeurRepository.save(chauffeur);
 
@@ -104,8 +92,9 @@ public class ChauffeurServiceImpl implements ChauffeurService {
                 chauffeur.getUtilisateur().getPrenom(),
                 chauffeur.getUtilisateur().getTelephone(),
                 chauffeur.getStatutValidation().intValue(),
-                chauffeur.getNoteMoyenne() != null ?
-                        chauffeur.getNoteMoyenne().doubleValue() : null
+                chauffeur.getNoteMoyenne() != null
+                        ? chauffeur.getNoteMoyenne().doubleValue()
+                        : null
         );
     }
 }

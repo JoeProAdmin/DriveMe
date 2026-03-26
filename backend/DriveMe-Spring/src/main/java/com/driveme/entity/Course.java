@@ -1,7 +1,7 @@
 package com.driveme.entity;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,12 +13,12 @@ public class Course {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "chauffeur_id", nullable = false)
-    private Chauffeur chauffeur;
-
-    @ManyToOne
     @JoinColumn(name = "passager_id", nullable = false)
     private Passager passager;
+
+    @ManyToOne
+    @JoinColumn(name = "chauffeur_id", nullable = false)
+    private Chauffeur chauffeur;
 
     @Column(name = "adresse_depart", nullable = false)
     private String adresseDepart;
@@ -26,102 +26,87 @@ public class Course {
     @Column(name = "adresse_arrivee", nullable = false)
     private String adresseArrivee;
 
-    @Column(name = "date_demande", nullable = false)
-    private LocalDateTime dateDemande;
+    @Column(nullable = false)
+    private Double prix;
 
-    @Column(name = "date_debut", nullable = false)
-    private LocalDateTime dateDebut;
-
-    @Column(name = "date_fin", nullable = false)
-    private LocalDateTime dateFin;
-
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal prix;
-
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false)
     private String statut;
 
-    // ===============================
-    // GETTERS & SETTERS
-    // ===============================
+    @Column(name = "date_creation", nullable = false)
+    private LocalDateTime dateCreation;
+
+    public Course() {
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.dateCreation = LocalDateTime.now();
+        if (this.statut == null) {
+            this.statut = "EN_ATTENTE";
+        }
+    }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Chauffeur getChauffeur() {
-        return chauffeur;
-    }
-
-    public void setChauffeur(Chauffeur chauffeur) {
-        this.chauffeur = chauffeur;
     }
 
     public Passager getPassager() {
         return passager;
     }
 
-    public void setPassager(Passager passager) {
-        this.passager = passager;
+    public Chauffeur getChauffeur() {
+        return chauffeur;
     }
 
     public String getAdresseDepart() {
         return adresseDepart;
     }
 
-    public void setAdresseDepart(String adresseDepart) {
-        this.adresseDepart = adresseDepart;
-    }
-
     public String getAdresseArrivee() {
         return adresseArrivee;
     }
 
-    public void setAdresseArrivee(String adresseArrivee) {
-        this.adresseArrivee = adresseArrivee;
-    }
-
-    public LocalDateTime getDateDemande() {
-        return dateDemande;
-    }
-
-    public void setDateDemande(LocalDateTime dateDemande) {
-        this.dateDemande = dateDemande;
-    }
-
-    public LocalDateTime getDateDebut() {
-        return dateDebut;
-    }
-
-    public void setDateDebut(LocalDateTime dateDebut) {
-        this.dateDebut = dateDebut;
-    }
-
-    public LocalDateTime getDateFin() {
-        return dateFin;
-    }
-
-    public void setDateFin(LocalDateTime dateFin) {
-        this.dateFin = dateFin;
-    }
-
-    public BigDecimal getPrix() {
+    public Double getPrix() {
         return prix;
-    }
-
-    public void setPrix(BigDecimal prix) {
-        this.prix = prix;
     }
 
     public String getStatut() {
         return statut;
     }
 
+    public LocalDateTime getDateCreation() {
+        return dateCreation;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setPassager(Passager passager) {
+        this.passager = passager;
+    }
+
+    public void setChauffeur(Chauffeur chauffeur) {
+        this.chauffeur = chauffeur;
+    }
+
+    public void setAdresseDepart(String adresseDepart) {
+        this.adresseDepart = adresseDepart;
+    }
+
+    public void setAdresseArrivee(String adresseArrivee) {
+        this.adresseArrivee = adresseArrivee;
+    }
+
+    public void setPrix(Double prix) {
+        this.prix = prix;
+    }
+
     public void setStatut(String statut) {
         this.statut = statut;
+    }
+
+    public void setDateCreation(LocalDateTime dateCreation) {
+        this.dateCreation = dateCreation;
     }
 }

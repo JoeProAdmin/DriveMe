@@ -2,9 +2,13 @@ package com.driveme.service.impl;
 
 import com.driveme.dto.CourseCreateDTO;
 import com.driveme.dto.CourseResponseDTO;
+import com.driveme.entity.Chauffeur;
 import com.driveme.entity.Course;
+import com.driveme.entity.Passager;
 import com.driveme.exception.ResourceNotFoundException;
+import com.driveme.repository.ChauffeurRepository;
 import com.driveme.repository.CourseRepository;
+import com.driveme.repository.PassagerRepository;
 import com.driveme.service.CourseService;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +19,36 @@ import java.util.stream.Collectors;
 public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
+    private final PassagerRepository passagerRepository;
+    private final ChauffeurRepository chauffeurRepository;
 
-    public CourseServiceImpl(CourseRepository courseRepository) {
+    public CourseServiceImpl(CourseRepository courseRepository,
+                             PassagerRepository passagerRepository,
+                             ChauffeurRepository chauffeurRepository) {
         this.courseRepository = courseRepository;
+        this.passagerRepository = passagerRepository;
+        this.chauffeurRepository = chauffeurRepository;
+    }
+
+    @Override
+    public CourseResponseDTO createCourse(CourseCreateDTO dto) {
+
+        Passager passager = passagerRepository.findById(dto.getPassagerId())
+                .orElseThrow(() -> new ResourceNotFoundException("Passager introuvable"));
+
+        Chauffeur chauffeur = chauffeurRepository.findById(dto.getChauffeurId())
+                .orElseThrow(() -> new ResourceNotFoundException("Chauffeur introuvable"));
+
+        Course course = new Course();
+        course.setPassager(passager);
+        course.setChauffeur(chauffeur);
+        course.setAdresseDepart(dto.getAdresseDepart());
+        course.setAdresseArrivee(dto.getAdresseArrivee());
+        course.setPrix(dto.getPrix());
+
+        Course saved = courseRepository.save(course);
+
+        return mapToDTO(saved);
     }
 
     @Override
@@ -28,63 +59,16 @@ public class CourseServiceImpl implements CourseService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public CourseResponseDTO getCourseById(Long id) {
-        Course course = courseRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Course introuvable"));
-        return mapToDTO(course);
-    }
-
-    @Override
-    public CourseResponseDTO createCourse(CourseCreateDTO dto) {
-        Course course = new Course();
-        course.setAdresseDepart(dto.getAdresseDepart());
-        course.setAdresseArrivee(dto.getAdresseArrivee());
-        course.setDateDemande(dto.getDateDemande());
-        course.setDateDebut(dto.getDateDebut());
-        course.setDateFin(dto.getDateFin());
-        course.setPrix(dto.getPrix());
-        course.setStatut(dto.getStatut());
-
-        Course saved = courseRepository.save(course);
-        return mapToDTO(saved);
-    }
-
-    @Override
-    public CourseResponseDTO updateCourse(Long id, CourseCreateDTO dto) {
-        Course course = courseRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Course introuvable"));
-
-        course.setAdresseDepart(dto.getAdresseDepart());
-        course.setAdresseArrivee(dto.getAdresseArrivee());
-        course.setDateDemande(dto.getDateDemande());
-        course.setDateDebut(dto.getDateDebut());
-        course.setDateFin(dto.getDateFin());
-        course.setPrix(dto.getPrix());
-        course.setStatut(dto.getStatut());
-
-        Course updated = courseRepository.save(course);
-        return mapToDTO(updated);
-    }
-
-    @Override
-    public void deleteCourse(Long id) {
-        if (!courseRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Course introuvable");
-        }
-        courseRepository.deleteById(id);
-    }
-
     private CourseResponseDTO mapToDTO(Course course) {
-        CourseResponseDTO dto = new CourseResponseDTO();
-        dto.setId(course.getId());
-        dto.setAdresseDepart(course.getAdresseDepart());
-        dto.setAdresseArrivee(course.getAdresseArrivee());
-        dto.setDateDemande(course.getDateDemande());
-        dto.setDateDebut(course.getDateDebut());
-        dto.setDateFin(course.getDateFin());
-        dto.setPrix(course.getPrix());
-        dto.setStatut(course.getStatut());
-        return dto;
+        return new CourseResponseDTO(
+                course.getId(),
+                course.getPassager().getNom(),
+                course.getChauffeur().getUtilisateur().getNom(),
+                course.getAdresseDepart(),
+                course.getAdresseArrivee(),
+                course.getPrix(),
+                course.getStatut(),
+                course.getDateCreation()
+        );
     }
 }

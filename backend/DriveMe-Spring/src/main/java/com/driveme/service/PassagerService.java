@@ -7,7 +7,13 @@ import java.util.List;
 
 public interface PassagerService {
 
+    PassagerResponseDTO createPassager(PassagerCreateDTO dto);
+
     List<PassagerResponseDTO> getAllPassagers();
 
-    PassagerResponseDTO createPassager(PassagerCreateDTO dto);
+    PassagerResponseDTO getPassagerById(Long id);
+
+    PassagerResponseDTO updatePassager(Long id, PassagerCreateDTO dto);
+
+    void deletePassager(Long id);
 }

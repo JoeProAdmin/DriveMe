@@ -10,4 +10,10 @@ public interface CourseService {
     CourseResponseDTO createCourse(CourseCreateDTO dto);
 
     List<CourseResponseDTO> getAllCourses();
+
+    List<CourseResponseDTO> getCoursesByChauffeur(Long chauffeurId);
+
+    List<CourseResponseDTO> getCoursesByPassager(Long passagerId);
+
+    CourseResponseDTO updateStatus(Long id, String status);
 }

@@ -1,7 +1,6 @@
 package com.driveme.entity;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -29,8 +28,9 @@ public class Course {
     @Column(nullable = false)
     private Double prix;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String statut;
+    private CourseStatus statut;
 
     @Column(name = "date_creation", nullable = false)
     private LocalDateTime dateCreation;
@@ -42,7 +42,7 @@ public class Course {
     public void prePersist() {
         this.dateCreation = LocalDateTime.now();
         if (this.statut == null) {
-            this.statut = "EN_ATTENTE";
+            this.statut = CourseStatus.EN_ATTENTE;
         }
     }
 
@@ -70,7 +70,7 @@ public class Course {
         return prix;
     }
 
-    public String getStatut() {
+    public CourseStatus getStatut() {
         return statut;
     }
 
@@ -102,7 +102,7 @@ public class Course {
         this.prix = prix;
     }
 
-    public void setStatut(String statut) {
+    public void setStatut(CourseStatus statut) {
         this.statut = statut;
     }
 

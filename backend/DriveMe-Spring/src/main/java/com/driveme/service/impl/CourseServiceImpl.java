@@ -4,6 +4,7 @@ import com.driveme.dto.CourseCreateDTO;
 import com.driveme.dto.CourseResponseDTO;
 import com.driveme.entity.Chauffeur;
 import com.driveme.entity.Course;
+import com.driveme.entity.CourseStatus;
 import com.driveme.entity.Passager;
 import com.driveme.exception.ResourceNotFoundException;
 import com.driveme.repository.ChauffeurRepository;
@@ -59,6 +60,35 @@ public class CourseServiceImpl implements CourseService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<CourseResponseDTO> getCoursesByChauffeur(Long chauffeurId) {
+        return courseRepository.findByChauffeurId(chauffeurId)
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CourseResponseDTO> getCoursesByPassager(Long passagerId) {
+        return courseRepository.findByPassagerId(passagerId)
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public CourseResponseDTO updateStatus(Long id, String status) {
+
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Course introuvable"));
+
+        course.setStatut(CourseStatus.valueOf(status));
+
+        Course updated = courseRepository.save(course);
+
+        return mapToDTO(updated);
+    }
+
     private CourseResponseDTO mapToDTO(Course course) {
         return new CourseResponseDTO(
                 course.getId(),
@@ -67,7 +97,7 @@ public class CourseServiceImpl implements CourseService {
                 course.getAdresseDepart(),
                 course.getAdresseArrivee(),
                 course.getPrix(),
-                course.getStatut(),
+                course.getStatut().name(),
                 course.getDateCreation()
         );
     }

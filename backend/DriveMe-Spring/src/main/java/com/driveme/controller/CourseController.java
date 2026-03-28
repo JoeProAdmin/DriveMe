@@ -3,7 +3,6 @@ package com.driveme.controller;
 import com.driveme.dto.CourseCreateDTO;
 import com.driveme.dto.CourseResponseDTO;
 import com.driveme.service.CourseService;
-import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,12 +18,30 @@ public class CourseController {
     }
 
     @PostMapping
-    public CourseResponseDTO create(@Valid @RequestBody CourseCreateDTO dto) {
+    public CourseResponseDTO create(@RequestBody CourseCreateDTO dto) {
         return courseService.createCourse(dto);
     }
 
     @GetMapping
     public List<CourseResponseDTO> getAll() {
         return courseService.getAllCourses();
+    }
+
+    @GetMapping("/chauffeur/{id}")
+    public List<CourseResponseDTO> getByChauffeur(@PathVariable Long id) {
+        return courseService.getCoursesByChauffeur(id);
+    }
+
+    @GetMapping("/passager/{id}")
+    public List<CourseResponseDTO> getByPassager(@PathVariable Long id) {
+        return courseService.getCoursesByPassager(id);
+    }
+
+    @PutMapping("/{id}/status")
+    public CourseResponseDTO updateStatus(
+            @PathVariable Long id,
+            @RequestParam String status
+    ) {
+        return courseService.updateStatus(id, status);
     }
 }

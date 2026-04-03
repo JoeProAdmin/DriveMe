@@ -35,6 +35,10 @@ public class Course {
     @Column(name = "date_creation", nullable = false)
     private LocalDateTime dateCreation;
 
+    // ===== NOUVEAU : RELATION PAIEMENT =====
+    @OneToOne(mappedBy = "course", cascade = CascadeType.ALL)
+    private Paiement paiement;
+
     public Course() {
     }
 
@@ -78,6 +82,10 @@ public class Course {
         return dateCreation;
     }
 
+    public Paiement getPaiement() {
+        return paiement;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -108,5 +116,9 @@ public class Course {
 
     public void setDateCreation(LocalDateTime dateCreation) {
         this.dateCreation = dateCreation;
+    }
+
+    public void setPaiement(Paiement paiement) {
+        this.paiement = paiement;
     }
 }

@@ -15,6 +15,5 @@ public interface CourseService {
 
     List<CourseResponseDTO> getCoursesByPassager(Long passagerId);
 
-    //  AJOUT ROLE
-    CourseResponseDTO updateStatus(Long id, String status, String role);
+    CourseResponseDTO updateStatus(Long id, String status);
 }

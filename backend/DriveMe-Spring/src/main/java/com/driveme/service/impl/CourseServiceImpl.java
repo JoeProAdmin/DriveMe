@@ -1,6 +1,5 @@
 package com.driveme.service.impl;
 
-import com.driveme.service.PaiementService;
 import com.driveme.dto.CourseCreateDTO;
 import com.driveme.dto.CourseResponseDTO;
 import com.driveme.entity.Chauffeur;
@@ -12,6 +11,7 @@ import com.driveme.repository.ChauffeurRepository;
 import com.driveme.repository.CourseRepository;
 import com.driveme.repository.PassagerRepository;
 import com.driveme.service.CourseService;
+import com.driveme.service.PaiementService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -82,49 +82,32 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseResponseDTO updateStatus(Long id, String status, String role) {
+    public CourseResponseDTO updateStatus(Long id, String status) {
 
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course introuvable"));
 
         CourseStatus newStatus = CourseStatus.valueOf(status.toUpperCase());
 
-        // CONTROLE ROLE
-        if (newStatus == CourseStatus.ACCEPTEE || newStatus == CourseStatus.TERMINEE) {
-
-            if (!role.equalsIgnoreCase("CHAUFFEUR") &&
-                    !role.equalsIgnoreCase("ADMIN")) {
-
-                throw new RuntimeException("Accès refusé : seul un chauffeur peut modifier la course");
-            }
-        }
-
-        // ACCEPTATION
         if (newStatus == CourseStatus.ACCEPTEE) {
-
             if (course.getStatut() != CourseStatus.EN_ATTENTE) {
                 throw new RuntimeException("Seules les courses EN_ATTENTE peuvent être acceptées");
             }
 
-            if (course.getChauffeur() == null ||
-                    course.getChauffeur().getStatutValidation() == null ||
-                    course.getChauffeur().getStatutValidation() == 0) {
-
+            if (course.getChauffeur() == null
+                    || course.getChauffeur().getStatutValidation() == null
+                    || course.getChauffeur().getStatutValidation() == 0) {
                 throw new RuntimeException("Chauffeur non validé");
             }
         }
 
-        // TERMINER
         if (newStatus == CourseStatus.TERMINEE) {
-
             if (course.getStatut() != CourseStatus.ACCEPTEE) {
                 throw new RuntimeException("Seules les courses ACCEPTEES peuvent être terminées");
             }
         }
 
-        // ANNULER
         if (newStatus == CourseStatus.ANNULEE) {
-
             if (course.getStatut() == CourseStatus.TERMINEE) {
                 throw new RuntimeException("Impossible d'annuler une course terminée");
             }
@@ -134,7 +117,6 @@ public class CourseServiceImpl implements CourseService {
 
         Course updated = courseRepository.save(course);
 
-        // ===== PAIEMENT AUTOMATIQUE =====
         if (newStatus == CourseStatus.TERMINEE) {
             paiementService.creerPaiementAutomatique(updated.getId());
         }

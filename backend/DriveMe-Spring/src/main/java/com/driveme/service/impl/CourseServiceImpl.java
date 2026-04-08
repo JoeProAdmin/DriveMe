@@ -92,7 +92,7 @@ public class CourseServiceImpl implements CourseService {
     private CourseResponseDTO mapToDTO(Course course) {
         return new CourseResponseDTO(
                 course.getId(),
-                course.getPassager().getNom(),
+                course.getPassager().getUtilisateur().getNom(),
                 course.getChauffeur().getUtilisateur().getNom(),
                 course.getAdresseDepart(),
                 course.getAdresseArrivee(),

@@ -14,47 +14,67 @@ public class Paiement {
     @Column(nullable = false)
     private Double montant;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String methode; // CASH, CARTE, ONLINE
+    private PaiementMethode methode;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String statut; // EN_ATTENTE, PAYE, REFUSE
+    private PaiementStatut statut;
 
     @Column(name = "date_paiement")
     private LocalDateTime datePaiement;
 
-    // ===== RELATION AVEC COURSE =====
     @OneToOne
-    @JoinColumn(name = "course_id")
+    @JoinColumn(name = "course_id", unique = true)
     private Course course;
 
-    // ===== CONSTRUCTEUR =====
     public Paiement() {
         this.datePaiement = LocalDateTime.now();
-        this.statut = "EN_ATTENTE";
+        this.statut = PaiementStatut.EN_ATTENTE;
     }
 
-    // ===== GETTERS / SETTERS =====
+    public Long getId() {
+        return id;
+    }
 
-    public Long getId() { return id; }
+    public Double getMontant() {
+        return montant;
+    }
 
-    public Double getMontant() { return montant; }
+    public void setMontant(Double montant) {
+        this.montant = montant;
+    }
 
-    public void setMontant(Double montant) { this.montant = montant; }
+    public PaiementMethode getMethode() {
+        return methode;
+    }
 
-    public String getMethode() { return methode; }
+    public void setMethode(PaiementMethode methode) {
+        this.methode = methode;
+    }
 
-    public void setMethode(String methode) { this.methode = methode; }
+    public PaiementStatut getStatut() {
+        return statut;
+    }
 
-    public String getStatut() { return statut; }
+    public void setStatut(PaiementStatut statut) {
+        this.statut = statut;
+    }
 
-    public void setStatut(String statut) { this.statut = statut; }
+    public LocalDateTime getDatePaiement() {
+        return datePaiement;
+    }
 
-    public LocalDateTime getDatePaiement() { return datePaiement; }
+    public void setDatePaiement(LocalDateTime datePaiement) {
+        this.datePaiement = datePaiement;
+    }
 
-    public void setDatePaiement(LocalDateTime datePaiement) { this.datePaiement = datePaiement; }
+    public Course getCourse() {
+        return course;
+    }
 
-    public Course getCourse() { return course; }
-
-    public void setCourse(Course course) { this.course = course; }
+    public void setCourse(Course course) {
+        this.course = course;
+    }
 }

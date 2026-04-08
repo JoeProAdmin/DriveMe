@@ -11,12 +11,15 @@ public class Passager {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nom;
-    private String prenom;
-    private String telephone;
-    private String email;
+    // 🔥 LIEN AVEC UTILISATEUR (IMPORTANT)
+    @OneToOne
+    @JoinColumn(name = "utilisateur_id", nullable = false, unique = true)
+    private Utilisateur utilisateur;
+
+    @Column(name = "photo_url")
     private String photoUrl;
 
+    @Column(name = "date_creation")
     private LocalDateTime dateCreation;
 
     public Passager() {}
@@ -27,18 +30,18 @@ public class Passager {
     }
 
     public Long getId() { return id; }
-    public String getNom() { return nom; }
-    public String getPrenom() { return prenom; }
-    public String getTelephone() { return telephone; }
-    public String getEmail() { return email; }
+
+    public Utilisateur getUtilisateur() { return utilisateur; }
+
     public String getPhotoUrl() { return photoUrl; }
+
     public LocalDateTime getDateCreation() { return dateCreation; }
 
     public void setId(Long id) { this.id = id; }
-    public void setNom(String nom) { this.nom = nom; }
-    public void setPrenom(String prenom) { this.prenom = prenom; }
-    public void setTelephone(String telephone) { this.telephone = telephone; }
-    public void setEmail(String email) { this.email = email; }
+
+    public void setUtilisateur(Utilisateur utilisateur) { this.utilisateur = utilisateur; }
+
     public void setPhotoUrl(String photoUrl) { this.photoUrl = photoUrl; }
+
     public void setDateCreation(LocalDateTime dateCreation) { this.dateCreation = dateCreation; }
 }

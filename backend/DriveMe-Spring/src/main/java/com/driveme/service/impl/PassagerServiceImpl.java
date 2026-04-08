@@ -3,7 +3,12 @@ package com.driveme.service.impl;
 import com.driveme.dto.PassagerCreateDTO;
 import com.driveme.dto.PassagerResponseDTO;
 import com.driveme.entity.Passager;
+import com.driveme.entity.Utilisateur;
+import com.driveme.entity.Role;
+import com.driveme.entity.Language;
+import com.driveme.exception.ResourceNotFoundException;
 import com.driveme.repository.PassagerRepository;
+import com.driveme.repository.UtilisateurRepository;
 import com.driveme.service.PassagerService;
 import org.springframework.stereotype.Service;
 
@@ -14,83 +19,91 @@ import java.util.stream.Collectors;
 public class PassagerServiceImpl implements PassagerService {
 
     private final PassagerRepository passagerRepository;
+    private final UtilisateurRepository utilisateurRepository;
 
-    public PassagerServiceImpl(PassagerRepository passagerRepository) {
+    public PassagerServiceImpl(PassagerRepository passagerRepository,
+                               UtilisateurRepository utilisateurRepository) {
         this.passagerRepository = passagerRepository;
+        this.utilisateurRepository = utilisateurRepository;
     }
 
     @Override
     public PassagerResponseDTO createPassager(PassagerCreateDTO dto) {
 
-        if (passagerRepository.existsByEmail(dto.getEmail())) {
-            throw new RuntimeException("Un passager avec cet email existe déjà");
-        }
+        Utilisateur utilisateur = new Utilisateur();
+        utilisateur.setNom(dto.getNom());
+        utilisateur.setPrenom(dto.getPrenom());
+        utilisateur.setTelephone(dto.getTelephone());
+        utilisateur.setEmail(dto.getEmail());
+        utilisateur.setMotDePasse("test123");
+        utilisateur.setRole(Role.PASSAGER);
+        utilisateur.setLanguage(Language.FR);
 
-        if (passagerRepository.existsByTelephone(dto.getTelephone())) {
-            throw new RuntimeException("Un passager avec ce téléphone existe déjà");
-        }
+        utilisateur = utilisateurRepository.save(utilisateur);
 
         Passager passager = new Passager();
-        passager.setNom(dto.getNom());
-        passager.setPrenom(dto.getPrenom());
-        passager.setTelephone(dto.getTelephone());
-        passager.setEmail(dto.getEmail());
+        passager.setUtilisateur(utilisateur);
         passager.setPhotoUrl(dto.getPhotoUrl());
 
-        Passager saved = passagerRepository.save(passager);
+        passager = passagerRepository.save(passager);
 
-        return mapToResponse(saved);
+        return mapToDTO(passager);
     }
 
     @Override
     public List<PassagerResponseDTO> getAllPassagers() {
         return passagerRepository.findAll()
                 .stream()
-                .map(this::mapToResponse)
+                .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
     public PassagerResponseDTO getPassagerById(Long id) {
         Passager passager = passagerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Passager introuvable avec l'id : " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Passager introuvable"));
 
-        return mapToResponse(passager);
+        return mapToDTO(passager);
     }
 
     @Override
     public PassagerResponseDTO updatePassager(Long id, PassagerCreateDTO dto) {
 
         Passager passager = passagerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Passager introuvable avec l'id : " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Passager introuvable"));
 
-        passager.setNom(dto.getNom());
-        passager.setPrenom(dto.getPrenom());
-        passager.setTelephone(dto.getTelephone());
-        passager.setEmail(dto.getEmail());
+        Utilisateur utilisateur = passager.getUtilisateur();
+
+        utilisateur.setNom(dto.getNom());
+        utilisateur.setPrenom(dto.getPrenom());
+        utilisateur.setTelephone(dto.getTelephone());
+        utilisateur.setEmail(dto.getEmail());
+
+        utilisateurRepository.save(utilisateur);
+
         passager.setPhotoUrl(dto.getPhotoUrl());
 
-        Passager updated = passagerRepository.save(passager);
+        passager = passagerRepository.save(passager);
 
-        return mapToResponse(updated);
+        return mapToDTO(passager);
     }
 
     @Override
     public void deletePassager(Long id) {
 
         Passager passager = passagerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Passager introuvable avec l'id : " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Passager introuvable"));
 
         passagerRepository.delete(passager);
     }
 
-    private PassagerResponseDTO mapToResponse(Passager passager) {
+    private PassagerResponseDTO mapToDTO(Passager passager) {
         return new PassagerResponseDTO(
                 passager.getId(),
-                passager.getNom(),
-                passager.getPrenom(),
-                passager.getTelephone(),
-                passager.getEmail(),
+                passager.getUtilisateur().getNom(),
+                passager.getUtilisateur().getPrenom(),
+                passager.getUtilisateur().getTelephone(),
+                passager.getUtilisateur().getEmail(),
                 passager.getPhotoUrl(),
                 passager.getDateCreation()
         );

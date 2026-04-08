@@ -1,7 +1,6 @@
 package com.driveme.service.impl;
 
-import com.driveme.entity.Course;
-import com.driveme.entity.Paiement;
+import com.driveme.entity.*;
 import com.driveme.repository.CourseRepository;
 import com.driveme.repository.PaiementRepository;
 import com.driveme.service.PaiementService;
@@ -22,25 +21,27 @@ public class PaiementServiceImpl implements PaiementService {
     @Override
     public Paiement creerPaiement(Long courseId, Double montant, String methode) {
 
-        // 1. Récupérer la course
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course introuvable"));
 
-        // 2. VÉRIFIER si paiement déjà existant
+        // 🔴 RÈGLE MÉTIER CRITIQUE (TFE)
+        if (course.getStatut() != CourseStatus.TERMINEE) {
+            throw new RuntimeException("Le paiement est autorisé uniquement si la course est terminée");
+        }
+
         if (course.getPaiement() != null) {
             throw new RuntimeException("Cette course possède déjà un paiement");
         }
 
-        // 3. Créer paiement
         Paiement paiement = new Paiement();
         paiement.setMontant(montant);
-        paiement.setMethode(methode);
 
-        // 4. SYNCHRO BIDIRECTIONNELLE
+        // Conversion String → Enum
+        paiement.setMethode(PaiementMethode.valueOf(methode.toUpperCase()));
+
         paiement.setCourse(course);
         course.setPaiement(paiement);
 
-        // 5. Sauvegarde
         return paiementRepository.save(paiement);
     }
 }

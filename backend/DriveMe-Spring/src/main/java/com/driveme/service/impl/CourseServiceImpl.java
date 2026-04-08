@@ -1,5 +1,6 @@
 package com.driveme.service.impl;
 
+import com.driveme.service.PaiementService;
 import com.driveme.dto.CourseCreateDTO;
 import com.driveme.dto.CourseResponseDTO;
 import com.driveme.entity.Chauffeur;
@@ -22,13 +23,16 @@ public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
     private final PassagerRepository passagerRepository;
     private final ChauffeurRepository chauffeurRepository;
+    private final PaiementService paiementService;
 
     public CourseServiceImpl(CourseRepository courseRepository,
                              PassagerRepository passagerRepository,
-                             ChauffeurRepository chauffeurRepository) {
+                             ChauffeurRepository chauffeurRepository,
+                             PaiementService paiementService) {
         this.courseRepository = courseRepository;
         this.passagerRepository = passagerRepository;
         this.chauffeurRepository = chauffeurRepository;
+        this.paiementService = paiementService;
     }
 
     @Override
@@ -46,6 +50,7 @@ public class CourseServiceImpl implements CourseService {
         course.setAdresseDepart(dto.getAdresseDepart());
         course.setAdresseArrivee(dto.getAdresseArrivee());
         course.setPrix(dto.getPrix());
+        course.setStatut(CourseStatus.EN_ATTENTE);
 
         Course saved = courseRepository.save(course);
 
@@ -77,14 +82,62 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseResponseDTO updateStatus(Long id, String status) {
+    public CourseResponseDTO updateStatus(Long id, String status, String role) {
 
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course introuvable"));
 
-        course.setStatut(CourseStatus.valueOf(status));
+        CourseStatus newStatus = CourseStatus.valueOf(status.toUpperCase());
+
+        // CONTROLE ROLE
+        if (newStatus == CourseStatus.ACCEPTEE || newStatus == CourseStatus.TERMINEE) {
+
+            if (!role.equalsIgnoreCase("CHAUFFEUR") &&
+                    !role.equalsIgnoreCase("ADMIN")) {
+
+                throw new RuntimeException("Accès refusé : seul un chauffeur peut modifier la course");
+            }
+        }
+
+        // ACCEPTATION
+        if (newStatus == CourseStatus.ACCEPTEE) {
+
+            if (course.getStatut() != CourseStatus.EN_ATTENTE) {
+                throw new RuntimeException("Seules les courses EN_ATTENTE peuvent être acceptées");
+            }
+
+            if (course.getChauffeur() == null ||
+                    course.getChauffeur().getStatutValidation() == null ||
+                    course.getChauffeur().getStatutValidation() == 0) {
+
+                throw new RuntimeException("Chauffeur non validé");
+            }
+        }
+
+        // TERMINER
+        if (newStatus == CourseStatus.TERMINEE) {
+
+            if (course.getStatut() != CourseStatus.ACCEPTEE) {
+                throw new RuntimeException("Seules les courses ACCEPTEES peuvent être terminées");
+            }
+        }
+
+        // ANNULER
+        if (newStatus == CourseStatus.ANNULEE) {
+
+            if (course.getStatut() == CourseStatus.TERMINEE) {
+                throw new RuntimeException("Impossible d'annuler une course terminée");
+            }
+        }
+
+        course.setStatut(newStatus);
 
         Course updated = courseRepository.save(course);
+
+        // ===== PAIEMENT AUTOMATIQUE =====
+        if (newStatus == CourseStatus.TERMINEE) {
+            paiementService.creerPaiementAutomatique(updated.getId());
+        }
 
         return mapToDTO(updated);
     }

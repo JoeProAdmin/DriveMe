@@ -37,11 +37,13 @@ public class CourseController {
         return courseService.getCoursesByPassager(id);
     }
 
+    // ✅ AJOUT ROLE DANS API
     @PutMapping("/{id}/status")
     public CourseResponseDTO updateStatus(
             @PathVariable Long id,
-            @RequestParam String status
+            @RequestParam String status,
+            @RequestParam String role
     ) {
-        return courseService.updateStatus(id, status);
+        return courseService.updateStatus(id, status, role);
     }
 }

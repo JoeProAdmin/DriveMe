@@ -28,14 +28,29 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // LOGIN
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) {
 
         Utilisateur user = utilisateurRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
 
-        if (!passwordEncoder.matches(request.getRawPassword(), user.getMotDePasse())) {
+        if (request.getMotDePasse() == null || request.getMotDePasse().isBlank()) {
+            throw new RuntimeException("Mot de passe manquant");
+        }
+
+        if (user.getMotDePasse() == null || user.getMotDePasse().isBlank()) {
+            throw new RuntimeException("Mot de passe utilisateur absent en base");
+        }
+
+        if (!user.getMotDePasse().startsWith("$2a$")
+                && !user.getMotDePasse().startsWith("$2b$")
+                && !user.getMotDePasse().startsWith("$2y$")) {
+            throw new RuntimeException("Mot de passe non sécurisé en base (BCrypt requis)");
+        }
+
+        boolean passwordOk = passwordEncoder.matches(request.getMotDePasse(), user.getMotDePasse());
+
+        if (!passwordOk) {
             throw new RuntimeException("Mot de passe incorrect");
         }
 
@@ -47,7 +62,6 @@ public class AuthController {
         return new AuthResponse(token);
     }
 
-    // REGISTER
     @PostMapping("/register")
     public AuthResponse register(@RequestBody RegisterRequest request) {
 
@@ -64,13 +78,8 @@ public class AuthController {
         user.setPrenom(request.getPrenom());
         user.setEmail(request.getEmail());
         user.setTelephone(request.getTelephone());
-
-        // HASH PASSWORD
         user.setMotDePasse(passwordEncoder.encode(request.getMotDePasse()));
-
-        // ROLE
         user.setRole(Role.valueOf(request.getRole().toUpperCase()));
-
         user.setDateCreation(LocalDateTime.now());
 
         utilisateurRepository.save(user);

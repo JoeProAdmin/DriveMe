@@ -3,9 +3,10 @@ package com.driveme.dto;
 public class AuthRequest {
 
     private String email;
-    private String rawPassword;
+    private String motDePasse;
 
-    public AuthRequest() {}
+    public AuthRequest() {
+    }
 
     public String getEmail() {
         return email;
@@ -15,11 +16,11 @@ public class AuthRequest {
         this.email = email;
     }
 
-    public String getRawPassword() {
-        return rawPassword;
+    public String getMotDePasse() {
+        return motDePasse;
     }
 
-    public void setRawPassword(String rawPassword) {
-        this.rawPassword = rawPassword;
+    public void setMotDePasse(String motDePasse) {
+        this.motDePasse = motDePasse;
     }
 }

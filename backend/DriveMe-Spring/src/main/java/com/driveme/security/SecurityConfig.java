@@ -6,9 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.*;
 
 import java.util.List;
 
@@ -17,24 +15,24 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> {})
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll() // ⚠️ TEMPORAIRE (IMPORTANT)
                 );
 
         return http.build();
     }
 
-    //  CORS pour Angular
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of("http://localhost:4200"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:56401"));
+        config.setAllowedMethods(List.of("*"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
 
@@ -44,7 +42,6 @@ public class SecurityConfig {
         return source;
     }
 
-    //  Password Encoder (OBLIGATOIRE)
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

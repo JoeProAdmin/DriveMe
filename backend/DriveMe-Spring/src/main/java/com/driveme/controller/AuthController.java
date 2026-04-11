@@ -35,7 +35,7 @@ public class AuthController {
         Utilisateur user = utilisateurRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
 
-        if (!passwordEncoder.matches(request.getMotDePasse(), user.getMotDePasse())) {
+        if (!passwordEncoder.matches(request.getRawPassword(), user.getMotDePasse())) {
             throw new RuntimeException("Mot de passe incorrect");
         }
 

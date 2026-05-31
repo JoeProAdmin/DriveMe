@@ -11,7 +11,7 @@ public class Passager {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 🔥 LIEN AVEC UTILISATEUR (IMPORTANT)
+    //  LIEN AVEC UTILISATEUR (IMPORTANT)
     @OneToOne
     @JoinColumn(name = "utilisateur_id", nullable = false, unique = true)
     private Utilisateur utilisateur;

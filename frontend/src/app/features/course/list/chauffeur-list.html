@@ -1,0 +1,117 @@
+<div class="page-container">
+
+  <div class="page-header">
+
+    <div>
+      <h1>Gestion des chauffeurs</h1>
+      <p>Administration de la flotte DriveMe</p>
+    </div>
+
+    <div class="header-actions">
+      <button class="dashboard-btn" (click)="goToDashboard()">
+        Dashboard
+      </button>
+
+      <button class="refresh-btn" (click)="loadChauffeurs()">
+        Rafraîchir
+      </button>
+    </div>
+
+  </div>
+
+  <div class="stats-grid">
+
+    <div class="stat-card">
+      <h3>Total chauffeurs</h3>
+      <p>{{ chauffeurs.length }}</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Validés</h3>
+      <p>
+        {{ chauffeurs.filter(c => c.statutValidation === 'VALIDE').length }}
+      </p>
+    </div>
+
+    <div class="stat-card">
+      <h3>En attente</h3>
+      <p>
+        {{ chauffeurs.filter(c => c.statutValidation !== 'VALIDE').length }}
+      </p>
+    </div>
+
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    Chargement des chauffeurs...
+  </div>
+
+  <div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+
+  <div class="drivers-grid">
+
+    <div
+      class="driver-card"
+      *ngFor="let chauffeur of chauffeurs">
+
+      <div class="driver-header">
+
+        <div class="avatar">
+          {{ chauffeur.id }}
+        </div>
+
+        <div>
+
+          <h3>
+            {{ chauffeur.utilisateur?.prenom || chauffeur.prenom }}
+            {{ chauffeur.utilisateur?.nom || chauffeur.nom }}
+          </h3>
+
+          <span class="status">
+            {{ chauffeur.statutValidation || 'EN_ATTENTE' }}
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="driver-info">
+
+        <p>
+          <strong>Email</strong><br>
+          {{ chauffeur.utilisateur?.email || chauffeur.email }}
+        </p>
+
+        <p>
+          <strong>Téléphone</strong><br>
+          {{ chauffeur.utilisateur?.telephone || chauffeur.telephone }}
+        </p>
+
+        <p>
+          <strong>Crédit</strong><br>
+          {{ chauffeur.soldeCredit || 0 }} €
+        </p>
+
+      </div>
+
+      <div class="driver-actions">
+
+        <button class="edit-btn">
+          Modifier
+        </button>
+
+        <button
+          class="delete-btn"
+          (click)="deleteChauffeur(chauffeur.id)">
+          Supprimer
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

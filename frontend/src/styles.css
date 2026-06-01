@@ -1,0 +1,72 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom, #f0fdf4, #ffffff);
+}
+
+/* centrage parfait */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+/* carte login */
+.card {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  width: 360px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+/* logo */
+.logo {
+  font-size: 30px;
+  font-weight: bold;
+  color: #22c55e;
+  margin-bottom: 25px;
+}
+
+/* inputs */
+input {
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+/* bouton */
+button {
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: #22c55e;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #16a34a;
+}
+
+/* messages */
+.success {
+  color: green;
+  margin-top: 10px;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}

@@ -1,0 +1,23 @@
+import { Routes } from '@angular/router';
+import { Login } from './features/auth/login/login';
+import { Dashboard } from './features/dashboard/dashboard';
+import { CreateCourse } from './features/course/create/create-course';
+import { CourseList } from './features/course/list/course-list';
+import { ChauffeurList } from './features/course/list/chauffeur-list';
+import { authGuard } from './core/auth.guard';
+
+export const routes: Routes = [
+  { path: 'login', component: Login },
+
+  { path: 'dashboard', component: Dashboard, canActivate: [authGuard] },
+
+  { path: 'create-course', component: CreateCourse, canActivate: [authGuard] },
+
+  { path: 'courses', component: CourseList, canActivate: [authGuard] },
+
+  { path: 'chauffeurs', component: ChauffeurList, canActivate: [authGuard] },
+
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+
+  { path: '**', redirectTo: 'login' }
+];

@@ -1,0 +1,32 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f7fa;
+}
+
+.content {
+  flex: 1;
+  margin-left: 260px;
+  padding: 0;
+}
+
+@media (max-width: 900px) {
+
+  .app-layout {
+    flex-direction: column;
+  }
+
+  .content {
+    margin-left: 0;
+  }
+
+}

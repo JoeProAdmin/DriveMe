@@ -1,0 +1,55 @@
+.create-course-container {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.create-course-container h2 {
+  margin-bottom: 20px;
+  color: #00C853;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #1A1A1A;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.create-course-container button {
+  width: 100%;
+  padding: 14px;
+  background: #00C853;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.create-course-container button:hover {
+  opacity: 0.95;
+}
+
+.create-course-container p {
+  margin-top: 16px;
+  text-align: center;
+  font-weight: 600;
+}

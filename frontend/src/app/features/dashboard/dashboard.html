@@ -1,0 +1,91 @@
+<div class="dashboard-page">
+
+  <div class="hero-section">
+
+    <div>
+      <h1>DriveMe Administration</h1>
+      <p>
+        Tableau de bord central pour la gestion des chauffeurs,
+        passagers, courses et paiements.
+      </p>
+    </div>
+
+    <div class="hero-badge">
+      Plateforme opérationnelle
+    </div>
+
+  </div>
+
+  <div class="stats-grid">
+
+    <div class="stat-card">
+      <span>🚖</span>
+      <h3>Chauffeurs</h3>
+      <p>{{ stats.totalChauffeurs }}</p>
+    </div>
+
+    <div class="stat-card">
+      <span>👤</span>
+      <h3>Passagers</h3>
+      <p>{{ stats.totalPassagers }}</p>
+    </div>
+
+    <div class="stat-card">
+      <span>📍</span>
+      <h3>Courses</h3>
+      <p>{{ stats.totalCourses }}</p>
+    </div>
+
+    <div class="stat-card">
+      <span>💰</span>
+      <h3>Paiements</h3>
+      <p>{{ stats.totalPaiements }}</p>
+    </div>
+
+  </div>
+
+  <div class="dashboard-content">
+
+    <div class="activity-card">
+
+      <h2>Activité récente</h2>
+
+      <div class="activity-item">
+        Nouvelle course enregistrée
+      </div>
+
+      <div class="activity-item">
+        Chauffeur validé
+      </div>
+
+      <div class="activity-item">
+        Paiement confirmé
+      </div>
+
+      <div class="activity-item">
+        Nouveau passager inscrit
+      </div>
+
+    </div>
+
+    <div class="quick-actions">
+
+      <h2>Actions rapides</h2>
+
+      <button routerLink="/courses">
+        Gérer les courses
+      </button>
+
+      <button routerLink="/chauffeurs">
+        Gérer les chauffeurs
+      </button>
+
+      <button routerLink="/passagers">
+        Gérer les passagers
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

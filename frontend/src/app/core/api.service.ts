@@ -1,10 +1,9 @@
-import { Injectable, signal, WritableSignal } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
-// CORRECTION : Utilisation de "export" au lieu de "public" pour TypeScript
 export interface ChauffeurResponseDTO {
   id: number;
   nom?: string;
@@ -29,14 +28,23 @@ export interface UserSession {
   role: 'ADMIN' | 'CHAUFFEUR' | 'PASSAGER';
 }
 
+export interface AvisDTO {
+  id?: number;
+  courseId: number;
+  note: number;
+  commentaire: string;
+  dateCreation?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
   private readonly baseUrl = environment.apiUrl;
 
-  public currentLanguage: WritableSignal<'fr' | 'en' | 'ar' | 'es'> = signal('fr');
-  public currentCurrency: WritableSignal<'MAD' | '€' | '$'> = signal('MAD');
+  // Identité visuelle claire & multilingue global
+  public currentLanguage: WritableSignal<'fr' | 'en' | 'ar'> = signal('fr');
+  public currentCurrency: WritableSignal<'MAD' | '$'> = signal('MAD');
   public isRtlMode: WritableSignal<boolean> = signal(false);
 
   private authSubject = new BehaviorSubject<UserSession | null>(null);
@@ -74,22 +82,20 @@ export class ApiService {
     );
   }
 
-  logout(): void {
-    localStorage.clear();
-    this.authSubject.next(null);
+  /**
+   * Fonctionnalité d'upload de selfie pour la validation réglementaire des chauffeurs
+   */
+  uploadSelfieVerification(chauffeurId: number, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('selfie', file);
+    return this.http.post<any>(`${this.baseUrl}/chauffeurs/${chauffeurId}/selfie`, formData);
   }
 
-  setLanguage(lang: 'fr' | 'en' | 'ar' | 'es'): void {
-    this.currentLanguage.set(lang);
-    this.isRtlMode.set(lang === 'ar');
-
-    if (lang === 'ar') {
-      this.currentCurrency.set('MAD');
-    } else if (lang === 'en') {
-      this.currentCurrency.set('$');
-    } else {
-      this.currentCurrency.set('€');
-    }
+  /**
+   * Envoi d'une notation et d'un avis suite à une course
+   */
+  soumettreAvis(avis: AvisDTO): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/avis`, avis);
   }
 
   getAdminStats(): Observable<AdminStats> {
@@ -104,10 +110,6 @@ export class ApiService {
     return this.http.get<any[]>(`${this.baseUrl}/courses`);
   }
 
-  getChauffeurs(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/chauffeurs`);
-  }
-
   getAllChauffeurs(): Observable<ChauffeurResponseDTO[]> {
     return this.http.get<ChauffeurResponseDTO[]>(`${this.baseUrl}/chauffeurs`);
   }
@@ -116,7 +118,9 @@ export class ApiService {
     return this.http.put<any>(`${this.baseUrl}/chauffeurs/${id}/validation?statut=${statutByte}`, {});
   }
 
-  deleteChauffeur(id: number | string): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}/chauffeurs/${id}`);
+  setLanguage(lang: 'fr' | 'en' | 'ar'): void {
+    this.currentLanguage.set(lang);
+    this.isRtlMode.set(lang === 'ar');
+    this.currentCurrency.set(lang === 'en' ? '$' : 'MAD');
   }
 }

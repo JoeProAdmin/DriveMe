@@ -1,30 +1,42 @@
-<div class="auth-split-container">
+<div class="auth-split-container" [attr.dir]="apiService.isRtlMode() ? 'rtl' : 'ltr'">
 
-  <!-- PANNEAU VISUEL : IMMERSION MOBILITÉ MAROC (MARRAKECH/RABAT) -->
+  <!-- PANNEAU VISUEL : IMMERSION CASABLANCA / MARRAKECH / TANGER / FÈS -->
   <div class="auth-visual-side">
     <div class="visual-overlay"></div>
-    <img src="https://images.unsplash.com/photo-1539650116574-8efeb43e2750?auto=format&fit=crop&w=1200&q=80" alt="DriveMe Maroc Urban Mobility" class="bg-photo">
+    <!-- Image HD : Paysage urbain et historique marocain -->
+    <img src="https://images.unsplash.com/photo-1539650116574-8efeb43e2750?auto=format&fit=crop&w=1200&q=80" alt="DriveMe Maroc VTC" class="bg-photo">
     <div class="visual-content">
       <h1 class="brand-logo-text">DriveMe</h1>
-      <p class="brand-tagline">Votre chauffeur privé partout au Maroc. Commandez une course en toute transparence, sans frais cachés.</p>
+      <p class="brand-tagline">
+        {{ apiService.currentLanguage() === 'ar' ? 'سائقك الخاص في جميع المدن المغربية. اطلب رحلتك بكل شفافية.' : 'Votre chauffeur privé à Casablanca, Marrakech, Rabat, Tanger et Fès. Sans frais cachés.' }}
+      </p>
     </div>
   </div>
 
   <!-- PANNEAU FORMULAIRE DE CONNEXION -->
   <div class="auth-form-side">
     <div class="form-wrapper">
+
+      <!-- SÉLECTEUR DE LANGUE RAPIDE EN HAUT DU FORMULAIRE -->
+      <div class="lang-top-selector">
+        <button (click)="apiService.setLanguage('fr')" [class.active]="apiService.currentLanguage() === 'fr'">FR</button>
+        <button (click)="apiService.setLanguage('ar')" [class.active]="apiService.currentLanguage() === 'ar'">العربية</button>
+        <button (click)="apiService.setLanguage('en')" [class.active]="apiService.currentLanguage() === 'en'">EN</button>
+      </div>
+
       <header class="form-header">
-        <h2>Connexion Espace Privé</h2>
-        <p class="form-caption">Heureux de vous revoir. Saisissez vos identifiants pour planifier votre prochain trajet.</p>
+        <h2>{{ apiService.currentLanguage() === 'ar' ? 'تسجيل الدخول' : 'Connexion Espace Privé' }}</h2>
+        <p class="form-caption">
+          {{ apiService.currentLanguage() === 'ar' ? 'مرحبًا بك مجددًا. أدخل بياناتك لبرمجة رحلتك القادمة.' : 'Heureux de vous revoir. Saisissez vos identifiants pour planifier votre prochain trajet au Maroc.' }}
+        </p>
       </header>
 
       <div *ngIf="errorMessage" class="ui-alert error">{{ errorMessage }}</div>
 
       <form (ngSubmit)="executerConnexion()">
-
         <div class="input-block">
           <label>Adresse Email</label>
-          <input type="email" [(ngModel)]="credentials.email" name="email" placeholder="admin2@driveme.com" required>
+          <input type="email" [(ngModel)]="credentials.email" name="email" placeholder="exemple@driveme.ma" required>
         </div>
 
         <div class="input-block">
@@ -33,14 +45,8 @@
         </div>
 
         <button type="submit" class="btn-primary-action" [disabled]="isSubmitting">
-          <span *ngIf="!isSubmitting">Se connecter au système</span>
-          <span *ngIf="isSubmitting">Authentification sécurisée en cours...</span>
+          <span>{{ apiService.currentLanguage() === 'ar' ? 'دخول' : 'Se connecter' }}</span>
         </button>
-
-        <footer class="form-footer-links">
-          <p>Nouveau sur DriveMe ? <a routerLink="/auth/register">Créer un compte marocain</a></p>
-        </footer>
-
       </form>
     </div>
   </div>

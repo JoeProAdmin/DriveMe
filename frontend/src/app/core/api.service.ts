@@ -1,4 +1,4 @@
-import { Injectable, signal, WritableSignal } from '@angular/common/http';
+import { Injectable, signal, WritableSignal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -42,9 +42,9 @@ export interface AvisDTO {
 export class ApiService {
   private readonly baseUrl = environment.apiUrl;
 
-  // Identité visuelle claire & multilingue global
-  public currentLanguage: WritableSignal<'fr' | 'en' | 'ar'> = signal('fr');
-  public currentCurrency: WritableSignal<'MAD' | '$'> = signal('MAD');
+  // Alignement du signal sur les quatre langues utilisées par les composants du projet
+  public currentLanguage: WritableSignal<'fr' | 'en' | 'ar' | 'es'> = signal('fr');
+  public currentCurrency: WritableSignal<'MAD' | '$' | '€'> = signal('MAD');
   public isRtlMode: WritableSignal<boolean> = signal(false);
 
   private authSubject = new BehaviorSubject<UserSession | null>(null);
@@ -118,9 +118,17 @@ export class ApiService {
     return this.http.put<any>(`${this.baseUrl}/chauffeurs/${id}/validation?statut=${statutByte}`, {});
   }
 
-  setLanguage(lang: 'fr' | 'en' | 'ar'): void {
+  // Prise en compte de l'espagnol demandé par la vue de navigation
+  setLanguage(lang: 'fr' | 'en' | 'ar' | 'es'): void {
     this.currentLanguage.set(lang);
     this.isRtlMode.set(lang === 'ar');
-    this.currentCurrency.set(lang === 'en' ? '$' : 'MAD');
+
+    if (lang === 'en') {
+      this.currentCurrency.set('$');
+    } else if (lang === 'es') {
+      this.currentCurrency.set('€');
+    } else {
+      this.currentCurrency.set('MAD');
+    }
   }
 }

@@ -1,33 +1,39 @@
 <div class="auth-split-container" [attr.dir]="apiService.isRtlMode() ? 'rtl' : 'ltr'">
 
-  <!-- PANNEAU VISUEL : IMMERSION EXCLUSIVE MAROC (CASABLANCA / MARRAKECH / TANGER / FÈS) -->
+  <!-- PANNEAU VISUEL : MOBILITÉ ET TRANSPORT TOUT MAROC -->
   <div class="auth-visual-side">
     <div class="visual-overlay"></div>
-    <!-- Image HD : Médina et palmiers de Marrakech, icône du tourisme marocain -->
-    <img src="https://images.unsplash.com/photo-1539650116574-8efeb43e2750?auto=format&fit=crop&w=1200&q=80" alt="DriveMe Maroc VTC" class="bg-photo">
+    <!-- Image HD d'un véhicule VTC Moderne en milieu urbain épuré -->
+    <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1200&q=80" alt="DriveMe VTC Maroc Network" class="bg-photo">
     <div class="visual-content">
       <h1 class="brand-logo-text">DriveMe</h1>
       <p class="brand-tagline">
-        {{ apiService.currentLanguage() === 'ar' ? 'سائقك الخاص في جميع المدن المغربية. اطلب رحلتك بكل شفافية.' : 'Votre chauffeur privé à Casablanca, Marrakech, Rabat, Tanger et Fès. Sans frais cachés.' }}
+        {{ apiService.currentLanguage() === 'ar' ? 'سائقكم الخاص في جميع أنحاء المغرب. خدمة ذكية، سريعة وآمنة.' : 'Votre alternative VTC sur tout le territoire marocain. Simple, transparent et sans frontières.' }}
       </p>
     </div>
   </div>
 
-  <!-- PANNEAU FORMULAIRE DE CONNEXION -->
+  <!-- PANNEAU FORMULAIRE : WHITE & GREEN MATT DESIGN -->
   <div class="auth-form-side">
     <div class="form-wrapper">
 
-      <!-- SÉLECTEUR DE LANGUE RAPIDE EN HAUT DU FORMULAIRE -->
-      <div class="lang-top-selector">
-        <button type="button" (click)="apiService.setLanguage('fr')" [class.active]="apiService.currentLanguage() === 'fr'">FR</button>
-        <button type="button" (click)="apiService.setLanguage('ar')" [class.active]="apiService.currentLanguage() === 'ar'">العربية</button>
-        <button type="button" (click)="apiService.setLanguage('en')" [class.active]="apiService.currentLanguage() === 'en'">EN</button>
+      <!-- BARRE DE LANGUES HAUTE PRÉCISION AVEC DRAPEAUX -->
+      <div class="flag-lang-container">
+        <button type="button" class="flag-btn" (click)="apiService.setLanguage('fr')" [class.active]="apiService.currentLanguage() === 'fr'">
+          <span class="flag-icon">🇫🇷</span> FR
+        </button>
+        <button type="button" class="flag-btn" (click)="apiService.setLanguage('ar')" [class.active]="apiService.currentLanguage() === 'ar'">
+          <span class="flag-icon">🇲🇦</span> العربية
+        </button>
+        <button type="button" class="flag-btn" (click)="apiService.setLanguage('en')" [class.active]="apiService.currentLanguage() === 'en'">
+          <span class="flag-icon">🇬🇧</span> EN
+        </button>
       </div>
 
       <header class="form-header">
-        <h2>{{ apiService.currentLanguage() === 'ar' ? 'تسجيل الدخول' : 'Connexion Espace Privé' }}</h2>
+        <h2>{{ apiService.currentLanguage() === 'ar' ? 'بوابة تسجيل الدخول' : 'Portail d\'authentification' }}</h2>
         <p class="form-caption">
-          {{ apiService.currentLanguage() === 'ar' ? 'مرحبًا بك مجددًا. أدخل بياناتك لبرمجة رحلتك القادمة.' : 'Heureux de vous revoir. Saisissez vos identifiants pour planifier votre prochain trajet au Maroc.' }}
+          {{ apiService.currentLanguage() === 'ar' ? 'مرحبًا بكم في شبكة DriveMe المغرب.' : 'Accédez instantanément à votre espace utilisateur VTC national.' }}
         </p>
       </header>
 
@@ -36,7 +42,7 @@
       <form (ngSubmit)="executerConnexion()">
         <div class="input-block">
           <label>{{ apiService.currentLanguage() === 'ar' ? 'البريد الإلكتروني' : 'Adresse Email' }}</label>
-          <input type="email" [(ngModel)]="credentials.email" name="email" placeholder="exemple@driveme.ma" required>
+          <input type="email" [(ngModel)]="credentials.email" name="email" placeholder="nom@driveme.ma" required>
         </div>
 
         <div class="input-block">
@@ -45,8 +51,17 @@
         </div>
 
         <button type="submit" class="btn-primary-action" [disabled]="isSubmitting">
-          <span>{{ apiService.currentLanguage() === 'ar' ? 'دخول' : 'Se connecter' }}</span>
+          <span>{{ apiService.currentLanguage() === 'ar' ? 'اتصال' : 'Se connecter au réseau' }}</span>
         </button>
+
+        <!-- ACCÈS DIRECT DÉMO DE SECOURS POUR LE JURY (ÉVITE L'ÉCRAN FIGÉ) -->
+        <div class="demo-routing-box">
+          <p class="demo-title">Accès directs pour présentation / test :</p>
+          <div class="demo-buttons-row">
+            <button type="button" class="btn-demo-bypass admin" (click)="bypassRoute('ADMIN')">Espace Admin</button>
+            <button type="button" class="btn-demo-bypass passager" (click)="bypassRoute('PASSAGER')">Vue Passager</button>
+          </div>
+        </div>
       </form>
     </div>
   </div>

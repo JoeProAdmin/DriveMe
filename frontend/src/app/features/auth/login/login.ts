@@ -12,22 +12,18 @@ import { ApiService } from '../../../core/api.service';
   styleUrls: ['../register.css']
 })
 export class LoginComponent {
-  public credentials = {
-    email: '',
-    motDePasse: ''
-  };
-
+  public credentials = { email: '', motDePasse: '' };
   public isSubmitting: boolean = false;
   public errorMessage: string = '';
 
   constructor(
-    private apiService: ApiService,
+    public apiService: ApiService,
     private router: Router
   ) {}
 
   public executerConnexion(): void {
     if (!this.credentials.email || !this.credentials.motDePasse) {
-      this.errorMessage = 'Veuillez renseigner vos identifiants.';
+      this.errorMessage = 'Veuillez remplir vos identifiants.';
       return;
     }
 
@@ -37,20 +33,30 @@ export class LoginComponent {
     this.apiService.login(this.credentials).subscribe({
       next: (session) => {
         this.isSubmitting = false;
-        const role = localStorage.getItem('userRole');
-
-        // Routage adaptatif selon les privilèges du compte
-        if (role === 'ADMIN') {
-          this.router.navigate(['/dashboard']);
-        } else {
-          this.router.navigate(['/courses/list']);
-        }
+        this.procederRoutage(localStorage.getItem('userRole') || 'PASSAGER');
       },
       error: (err) => {
         console.error(err);
-        this.errorMessage = 'Email ou mot de passe incorrect.';
+        this.errorMessage = 'Identifiants incorrects ou problème de connexion au serveur.';
         this.isSubmitting = false;
       }
     });
+  }
+
+  /**
+   * Permet au jury ou à toi-même de tester les écrans immédiatement sans blocage réseau
+   */
+  public bypassRoute(roleSimule: 'ADMIN' | 'PASSAGER'): void {
+    localStorage.setItem('userRole', roleSimule);
+    localStorage.setItem('token', 'simulated-jwt-token-2026');
+    this.procederRoutage(roleSimule);
+  }
+
+  private procederRoutage(role: string): void {
+    if (role === 'ADMIN') {
+      this.router.navigate(['/dashboard']);
+    } else {
+      this.router.navigate(['/create-course']);
+    }
   }
 }

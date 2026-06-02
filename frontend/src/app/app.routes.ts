@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { Landing } from './features/landing/landing';
 import { Login } from './features/auth/login/login';
 import { Dashboard } from './features/dashboard/dashboard';
 import { CreateCourse } from './features/course/create/create-course';
@@ -7,6 +8,8 @@ import { ChauffeurList } from './features/course/list/chauffeur-list';
 import { authGuard } from './core/auth.guard';
 
 export const routes: Routes = [
+  { path: '', component: Landing },
+
   { path: 'login', component: Login },
 
   { path: 'dashboard', component: Dashboard, canActivate: [authGuard] },
@@ -17,7 +20,5 @@ export const routes: Routes = [
 
   { path: 'chauffeurs', component: ChauffeurList, canActivate: [authGuard] },
 
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-
-  { path: '**', redirectTo: 'login' }
+  { path: '**', redirectTo: '' }
 ];

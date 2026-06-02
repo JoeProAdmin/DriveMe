@@ -1,39 +1,74 @@
-<div class="container">
+<div class="auth-wrapper">
+  <div class="auth-card">
 
-  <div class="card">
+    <div class="auth-header">
+      <div class="brand-icon-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <h1>DriveMe</h1>
+      <p>Portail d'authentification sécurisé</p>
+    </div>
 
-    <div class="logo">DriveMe</div>
+    <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="auth-form">
 
-    <form (ngSubmit)="onLogin()">
+      <div class="input-group">
+        <label for="email">Identifiant réseau (Email)</label>
+        <div class="input-control-wrapper">
+          <input
+            id="email"
+            type="email"
+            [(ngModel)]="email"
+            name="email"
+            placeholder="nom@example.com"
+            required
+            autocomplete="email"
+            class="form-input"
+          >
+        </div>
+      </div>
 
-      <input
-        type="email"
-        [(ngModel)]="email"
-        name="email"
-        placeholder="Email"
-        required
-      >
+      <div class="input-group">
+        <label for="password">Mot de passe</label>
+        <div class="input-control-wrapper">
+          <input
+            id="password"
+            type="password"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="••••••••"
+            required
+            autocomplete="current-password"
+            class="form-input"
+          >
+        </div>
+      </div>
 
-      <input
-        type="password"
-        [(ngModel)]="password"
-        name="password"
-        placeholder="Mot de passe"
-        required
-      >
-
-      <button type="submit">Se connecter</button>
+      <button type="submit" [disabled]="!loginForm.form.valid" class="btn-auth-submit">
+        Se connecter au système
+      </button>
 
     </form>
 
-    <p class="success" *ngIf="successMessage">
-      {{ successMessage }}
-    </p>
+    <div class="feedback-container">
+      <div class="message-wrapper success" *ngIf="successMessage">
+        <svg class="feedback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        <span class="message-text">{{ successMessage }}</span>
+      </div>
 
-    <p class="error" *ngIf="errorMessage">
-      {{ errorMessage }}
-    </p>
+      <div class="message-wrapper error" *ngIf="errorMessage">
+        <svg class="feedback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span class="message-text">{{ errorMessage }}</span>
+      </div>
+    </div>
 
   </div>
-
 </div>

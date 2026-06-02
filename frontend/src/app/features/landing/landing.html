@@ -1,0 +1,164 @@
+<div class="landing-scope">
+
+  <nav class="public-navbar">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <div class="brand-logo-frame">
+          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <linearGradient id="emGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#10b981" /><stop offset="100%" stop-color="#059669" /></linearGradient>
+            <path d="M25 15C25 15 50 5 75 15V45C75 65 50 85 50 85C50 85 25 65 25 45V15Z" stroke="url(#emGrad)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M43 35L58 50L43 65" stroke="#ffffff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="brand-text">DriveMe</span>
+      </div>
+      <div class="nav-links">
+        <a href="#services" class="link-item">Services</a>
+        <a href="#security" class="link-item">Sécurité</a>
+        <a href="#workflow" class="link-item">Fonctionnement</a>
+        <a href="#faq" class="link-item">FAQ</a>
+      </div>
+      <div class="nav-actions">
+        <button class="btn-portal-link" routerLink="/login">Espace Privé</button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero-block">
+    <div class="hero-container">
+      <div class="hero-content-wrapper">
+        <span class="hero-pill-badge">Mobilité Urbaine Nouvelle Génération</span>
+        <h1 class="hero-title">Le transport intelligent <br><span class="title-accent">au Maroc</span></h1>
+        <p class="hero-subtitle">
+          Réservez un trajet sécurisé, rapide et transparent. DriveMe connecte passagers et chauffeurs certifiés grâce à une infrastructure moderne conçue pour réinventer les standards de la mobilité urbaine.
+        </p>
+        <div class="hero-actions-row">
+          <button class="btn-primary-action" routerLink="/login">Réserver un trajet</button>
+          <button class="btn-secondary-action" routerLink="/login">Devenir chauffeur</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="services" class="services-block">
+    <div class="section-container">
+      <div class="services-cards-grid">
+
+        <div class="service-card">
+          <div class="icon-circle icon-emerald">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="12" y2="12"/></svg>
+          </div>
+          <h3>Courses sécurisées</h3>
+          <p>Chauffeurs partenaires audités. Chaque profil fait l'objet d'un contrôle rigoureux de ses pièces obligatoires avant activation.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="icon-circle icon-blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <h3>Prix transparents</h3>
+          <p>Estimation précise et tarification claire validée avant votre déplacement. Suivi rigoureux de vos transactions.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="icon-circle icon-purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <h3>Canaux locaux</h3>
+          <p>Recharges de compte et règlements fluides via les solutions bancaires intégrées (CIH Pay) et opérateurs mobiles.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="security" class="security-block">
+    <div class="section-container split-layout">
+      <div class="info-side">
+        <span class="tag-red">Garanties Numériques</span>
+        <h2>Cryptage des données & Protection de la vie privée</h2>
+        <p class="block-paragraph">
+          DriveMe intègre les technologies de sécurité web les plus strictes pour veiller à la totale protection de vos informations personnelles. L'échange de données avec nos serveurs de production s'effectuent via des protocoles chiffrés et des jetons d'authentification sécurisés.
+        </p>
+      </div>
+      <div class="visual-side">
+        <div class="mock-terminal">
+          <div class="term-top"><span>DRIVEME_SECURITY_NODE // ACTIVE</span><span class="indicator-dot"></span></div>
+          <div class="term-text">Traitement chiffré de bout en bout. Protocoles d'authentification et protection de l'intégrité des flux opérationnels.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="workflow" class="workflow-block">
+    <div class="section-container">
+      <div class="workflow-intro">
+        <span class="tag-gray">Simplicité d'utilisation</span>
+        <h2>Déroulement d'un trajet en direct</h2>
+      </div>
+      <div class="steps-flex">
+        <div class="step-card">
+          <div class="step-header">
+            <span class="step-index">01</span>
+            <span class="state-badge pending">DEMANDE</span>
+          </div>
+          <h4>Création de la course</h4>
+          <p>Le client renseigne son itinéraire depuis son application ou son espace connecté personnel.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-header">
+            <span class="step-index">02</span>
+            <span class="state-badge active">ROUTAGE</span>
+          </div>
+          <h4>Acceptation immédiate</h4>
+          <p>La demande est transmise instantanément au chauffeur certifié disponible le plus proche.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-header">
+            <span class="step-index">03</span>
+            <span class="state-badge completed">ARRIVÉE</span>
+          </div>
+          <h4>Finalisation & Avis</h4>
+          <p>Le trajet se termine à destination. Le règlement est ajusté et les usagers peuvent s'évaluer mutuellement.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="faq-block">
+    <div class="section-container max-width-680">
+      <div class="workflow-intro center-text">
+        <span class="tag-gray">Centre d'aide</span>
+        <h2>Questions fréquemment posées</h2>
+      </div>
+      <div class="faq-stack">
+        <div class="faq-card">
+          <h4>Quelles sont les pièces requises pour devenir chauffeur partenaire ?</h4>
+          <p>Chaque candidat doit téléverser un dossier valide contenant son permis de conduire, une attestation d'assurance, la carte grise à jour ainsi qu'un contrôle technique du véhicule.</p>
+        </div>
+        <div class="faq-card">
+          <h4>Quels modes de règlement sont acceptés ?</h4>
+          <p>La plateforme accepte les cartes bancaires, le rechargement via CIH Pay ainsi que les solutions mobiles des opérateurs télécoms nationaux.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="academic-footer">
+    <div class="section-container footer-inner">
+      <div class="footer-logo-side">
+        <div class="brand-logo-frame mini">
+          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M25 15C25 15 50 5 75 15V45C75 65 50 85 50 85C50 85 25 65 25 45V15Z" stroke="#52525b" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span>DriveMe Mobility Platform © 2026. Tous droits réservés.</span>
+      </div>
+      <div class="footer-meta-side">
+        <span>Casablanca - Bruxelles</span>
+        <span class="tech-version">v1.0.0 Stable</span>
+      </div>
+    </div>
+  </footer>
+
+</div>

@@ -1,91 +1,231 @@
-<div class="dashboard-page">
+<div class="driveme-app-shell" [attr.dir]="isRtl ? 'rtl' : 'ltr'">
 
-  <div class="hero-section">
-
-    <div>
-      <h1>DriveMe Administration</h1>
-      <p>
-        Tableau de bord central pour la gestion des chauffeurs,
-        passagers, courses et paiements.
-      </p>
-    </div>
-
-    <div class="hero-badge">
-      Plateforme opérationnelle
-    </div>
-
-  </div>
-
-  <div class="stats-grid">
-
-    <div class="stat-card">
-      <span>🚖</span>
-      <h3>Chauffeurs</h3>
-      <p>{{ stats.totalChauffeurs }}</p>
-    </div>
-
-    <div class="stat-card">
-      <span>👤</span>
-      <h3>Passagers</h3>
-      <p>{{ stats.totalPassagers }}</p>
-    </div>
-
-    <div class="stat-card">
-      <span>📍</span>
-      <h3>Courses</h3>
-      <p>{{ stats.totalCourses }}</p>
-    </div>
-
-    <div class="stat-card">
-      <span>💰</span>
-      <h3>Paiements</h3>
-      <p>{{ stats.totalPaiements }}</p>
-    </div>
-
-  </div>
-
-  <div class="dashboard-content">
-
-    <div class="activity-card">
-
-      <h2>Activité récente</h2>
-
-      <div class="activity-item">
-        Nouvelle course enregistrée
+  <!-- SIDEBAR DE NAVIGATION PROPRIÉTAIRE -->
+  <aside class="shell-sidebar">
+    <div class="sidebar-brand-block">
+      <div class="brand-icon-wrapper">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
       </div>
-
-      <div class="activity-item">
-        Chauffeur validé
+      <div class="brand-meta">
+        <span class="brand-title">DriveMe</span>
+        <span class="brand-scope">Enterprise v1.0</span>
       </div>
-
-      <div class="activity-item">
-        Paiement confirmé
-      </div>
-
-      <div class="activity-item">
-        Nouveau passager inscrit
-      </div>
-
     </div>
 
-    <div class="quick-actions">
+    <!-- SÉLECTEUR DE LANGUE / INTERNATIONALISATION COMPATIBLE -->
+    <div class="i18n-selector-container">
+      <svg class="selector-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      <select (change)="switchLanguage($event)" [value]="currentLang">
+        <option value="fr">Français (FR)</option>
+        <option value="en">English (EN)</option>
+        <option value="ar">العربية (AR - RTL)</option>
+        <option value="es">Español (ES)</option>
+      </select>
+    </div>
 
-      <h2>Actions rapides</h2>
+    <!-- LIENS DE ROUTAGE MÉTIER -->
+    <nav class="sidebar-nav-links">
+      <a class="nav-link-item active" routerLink="/dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span>{{ labels[currentLang].overview }}</span>
+      </a>
+      <a class="nav-link-item" routerLink="/chauffeurs">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        <span>{{ labels[currentLang].drivers }}</span>
+      </a>
+      <a class="nav-link-item" routerLink="/passagers">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        <span>{{ labels[currentLang].passengers }}</span>
+      </a>
+      <a class="nav-link-item" routerLink="/courses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span>{{ labels[currentLang].trips }}</span>
+      </a>
+      <a class="nav-link-item" routerLink="/paiements">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <span>{{ labels[currentLang].payments }}</span>
+      </a>
+    </nav>
 
-      <button routerLink="/courses">
-        Gérer les courses
+    <!-- BOUTON SOS INFRASTRUCTURE -->
+    <div class="sidebar-emergency-anchor">
+      <button class="btn-emergency-sos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>PANIC ALERT (SOS)</span>
       </button>
-
-      <button routerLink="/chauffeurs">
-        Gérer les chauffeurs
-      </button>
-
-      <button routerLink="/passagers">
-        Gérer les passagers
-      </button>
-
     </div>
+  </aside>
 
+  <!-- CONTENEUR MASTER DE CONTENU -->
+  <div class="shell-workspace">
+
+    <!-- TOPBAR PERSISTANTE -->
+    <header class="workspace-topbar">
+      <div class="topbar-context-left">
+        <div class="sys-operational-pill">
+          <span class="pulse-node"></span>
+          <span class="pill-text">{{ labels[currentLang].systemStatus }}</span>
+        </div>
+      </div>
+      <div class="topbar-context-right">
+        <div class="user-profile-widget">
+          <div class="profile-avatar">YQ</div>
+          <div class="profile-details">
+            <span class="user-fullname">Youssef Qarnouf</span>
+            <span class="user-role-title">Lead Frontend Architect</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ZONE DE RENDU DYNAMIQUE -->
+    <main class="workspace-viewport">
+
+      <div class="viewport-title-block">
+        <h1>{{ labels[currentLang].dashboardTitle }}</h1>
+        <p class="section-subtitle">Analyse des flux transactionnels, monitoring de la conformité et télémétrie opérationnelle.</p>
+      </div>
+
+      <!-- INFRASTRUCTURE KPI AVEC DEVISE DYNAMIQUE -->
+      <section class="kpi-dashboard-grid">
+
+        <div class="premium-kpi-card">
+          <div class="kpi-card-meta">
+            <span class="kpi-card-label">{{ labels[currentLang].kpiDrivers }}</span>
+            <div class="kpi-icon-container box-emerald">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            </div>
+          </div>
+          <div class="kpi-card-core">
+            <h3 class="kpi-main-number">{{ stats.totalChauffeurs }}</h3>
+            <span class="kpi-growth-indicator up">+12.4%</span>
+          </div>
+          <p class="kpi-subtext">Dossiers administratifs certifiés</p>
+        </div>
+
+        <div class="premium-kpi-card">
+          <div class="kpi-card-meta">
+            <span class="kpi-card-label">{{ labels[currentLang].kpiPassengers }}</span>
+            <div class="kpi-icon-container box-blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            </div>
+          </div>
+          <div class="kpi-card-core">
+            <h3 class="kpi-main-number">{{ stats.totalPassagers }}</h3>
+            <span class="kpi-growth-indicator up">+14.2%</span>
+          </div>
+          <p class="kpi-subtext">Comptes vérifiés via SMS/Email</p>
+        </div>
+
+        <div class="premium-kpi-card">
+          <div class="kpi-card-meta">
+            <span class="kpi-card-label">{{ labels[currentLang].kpiTrips }}</span>
+            <div class="kpi-icon-container box-amber">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+          </div>
+          <div class="kpi-card-core">
+            <h3 class="kpi-main-number">{{ stats.totalCourses }}</h3>
+            <span class="kpi-growth-indicator down">-1.8%</span>
+          </div>
+          <p class="kpi-subtext">Workflow : EN_ATTENTE → TERMINEE</p>
+        </div>
+
+        <!-- ICI : GESTION MULTI-DEVISES AVEC SYMBOLE DYNAMIQUE (MAD, €, $) -->
+        <div class="premium-kpi-card">
+          <div class="kpi-card-meta">
+            <span class="kpi-card-label">{{ labels[currentLang].kpiVolume }}</span>
+            <div class="kpi-icon-container box-purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+          </div>
+          <div class="kpi-card-core">
+            <h3 class="kpi-main-number">
+              <!-- Inversion de position sémantique si Arabe/RTL pour respecter la typographie -->
+              <span *ngIf="currentLang !== 'ar'">{{ stats.totalPaiements }} </span>
+              <span class="kpi-currency-unit">{{ currentCurrency }}</span>
+              <span *ngIf="currentLang === 'ar'"> {{ stats.totalPaiements }}</span>
+            </h3>
+            <span class="kpi-growth-indicator up">+8.5%</span>
+          </div>
+          <p class="kpi-subtext">CIH Pay, Wafacash & Gateways</p>
+        </div>
+
+      </section>
+
+      <!-- EXPLOITATION & MONITORS INTERNES -->
+      <div class="operational-split-layout">
+
+        <!-- JOURNAL LOGS SYSTEME -->
+        <div class="saas-data-table-card">
+          <div class="table-card-header">
+            <h2>Journal d'exploitation en direct</h2>
+            <span class="log-refresh-badge">Temps réel synchrone</span>
+          </div>
+          <div class="system-logs-stack">
+            <div class="log-row">
+              <div class="log-indicator-node status-amber"></div>
+              <div class="log-body">
+                <p class="log-main-title">Nouvelle course enregistrée</p>
+                <span class="log-caption">Identifiant : REQ-9284 • Statut : <strong class="lbl-pending">EN_ATTENTE</strong></span>
+              </div>
+            </div>
+            <div class="log-row">
+              <div class="log-indicator-node status-emerald"></div>
+              <div class="log-body">
+                <p class="log-main-title">Validation d'un chauffeur</p>
+                <span class="log-caption">Dossier d'immatriculation certifié par conformité administrative</span>
+              </div>
+            </div>
+            <div class="log-row">
+              <div class="log-indicator-node status-purple"></div>
+              <div class="log-body">
+                <p class="log-main-title">Paiement confirmé</p>
+                <span class="log-caption">Compensation automatique reçue via canal local CIH Pay</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODULES METIERS EXTENSIONS -->
+        <div class="saas-data-table-card">
+          <div class="table-card-header">
+            <h2>Actions & Modules métiers</h2>
+          </div>
+          <p class="card-description-text">Accès direct aux modules de contrôle d'accès.</p>
+
+          <div class="kpi-action-buttons-list">
+            <button class="kpi-action-item btn-emerald" routerLink="/courses">
+              <div class="btn-inner-left">
+                <div class="action-icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+                <span>Gérer les courses</span>
+              </div>
+              <span class="action-chevron">→</span>
+            </button>
+
+            <button class="kpi-action-item btn-blue" routerLink="/chauffeurs">
+              <div class="btn-inner-left">
+                <div class="action-icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+                <span>Gérer les chauffeurs</span>
+              </div>
+              <span class="action-chevron">→</span>
+            </button>
+
+            <!-- CARD COMPOSANTE POUR QR SÉCURITÉ -->
+            <div class="future-spec-preview-box">
+              <div class="spec-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><rect x="7" y="7" width="3" height="3"/><rect x="14" y="7" width="3" height="3"/><rect x="7" y="14" width="3" height="3"/></svg>
+                <span>Architecture Sécurité & Validation QR Code</span>
+              </div>
+              <p>Interface prête pour l'intégration des signatures QR Code Conducteur / Passager pour la validation synchrone des courses en v2.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
   </div>
-
 </div>

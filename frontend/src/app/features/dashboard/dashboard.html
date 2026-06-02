@@ -1,12 +1,7 @@
 <div class="driveme-app-shell" [attr.dir]="apiService.isRtlMode() ? 'rtl' : 'ltr'">
 
-  <!-- Insertion de notre barre de navigation réutilisable -->
-  <app-sidebar></app-sidebar>
-
-  <!-- ZONE MASTER DE CONTENU -->
   <div class="shell-workspace">
 
-    <!-- BARRE SUPÉRIEURE DE STATUT -->
     <header class="workspace-topbar">
       <div class="topbar-context-left">
         <div class="sys-operational-pill">
@@ -25,7 +20,6 @@
       </div>
     </header>
 
-    <!-- ZONE DE RENDU DYNAMIQUE DES FILTRES MÉTIERS -->
     <main class="workspace-viewport">
 
       <div class="viewport-title-block">
@@ -33,7 +27,6 @@
         <p class="section-subtitle">{{ labels[apiService.currentLanguage()].subtitle }}</p>
       </div>
 
-      <!-- GRILLE DE CARTES KPI PREMIUM DE DEVISE DYNAMIQUE -->
       <section class="kpi-dashboard-grid">
 
         <div class="premium-kpi-card">
@@ -87,7 +80,6 @@
           </div>
           <div class="kpi-card-core">
             <h3 class="kpi-main-number">
-              <!-- Invocation correcte des méthodes ou signaux avec parenthèses simples -->
               <span *ngIf="!apiService.isRtlMode()">{{ stats.totalPaiements }} </span>
               <span class="kpi-currency-unit">{{ apiService.currentCurrency() }}</span>
               <span *ngIf="apiService.isRtlMode()"> {{ stats.totalPaiements }}</span>
@@ -99,10 +91,8 @@
 
       </section>
 
-      <!-- REGION DE TÉLÉMÉTRIE OPÉRATIONNELLE -->
       <div class="operational-split-layout">
 
-        <!-- JOURNAL LOGS SYSTEME -->
         <div class="saas-data-table-card">
           <div class="table-card-header">
             <h2>{{ labels[apiService.currentLanguage()].logTitle }}</h2>
@@ -133,7 +123,6 @@
           </div>
         </div>
 
-        <!-- MODULES METIERS & INFRASTRUCTURES EXTENSIONS -->
         <div class="saas-data-table-card">
           <div class="table-card-header">
             <h2>{{ labels[apiService.currentLanguage()].actionsTitle }}</h2>
@@ -156,7 +145,6 @@
               <span class="action-chevron">→</span>
             </button>
 
-            <!-- INFRASTRUCTURE APPLI MOBILE / PREVIEW QR CODE -->
             <div class="future-spec-preview-box">
               <div class="spec-header">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><rect x="7" y="7" width="3" height="3"/><rect x="14" y="7" width="3" height="3"/><rect x="7" y="14" width="3" height="3"/></svg>

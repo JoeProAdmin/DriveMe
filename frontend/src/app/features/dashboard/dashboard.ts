@@ -2,12 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ApiService, AdminStats } from '../../core/api.service';
-import { SidebarComponent } from '../../layout/sidebar/sidebar';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, SidebarComponent],
+  imports: [CommonModule, RouterModule], // Nettoyé : Plus de doublon de SidebarComponent ici
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css']
 })

@@ -1,93 +1,62 @@
-<div class="create-course-wrapper">
-  <div class="form-card">
+<div class="booking-view-container" [attr.dir]="apiService.isRtlMode() ? 'rtl' : 'ltr'">
 
-    <div class="form-header">
-      <div class="header-icon-box">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-        </svg>
-      </div>
-      <h2>Créer un ordre de course</h2>
-      <p class="header-desc">Instanciation manuelle d'un trajet et routage immédiat sur le réseau de transit.</p>
+  <div class="booking-card">
+    <header class="booking-header">
+      <h2>Commander une course</h2>
+      <p class="booking-subtitle">Saisissez vos coordonnées de routage pour obtenir une mise en relation immédiate.</p>
+    </header>
+
+    <div *ngIf="successMessage" class="banner-status success">
+      {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="banner-status error">
+      {{ errorMessage }}
     </div>
 
-    <form (ngSubmit)="createCourse()" #courseForm="ngForm" class="elegant-form">
+    <form (ngSubmit)="commanderCourse()" #courseForm="ngForm" *ngIf="!successMessage">
 
-      <div class="form-group">
-        <label for="adresseDepart">Adresse de départ</label>
-        <div class="input-wrapper">
-          <span class="input-addon addon-emerald"></span>
+      <div class="input-field-block">
+        <label for="adresseDepart">Point de départ</label>
+        <div class="input-with-icon">
           <input
+            type="text"
             id="adresseDepart"
-            type="text"
-            [(ngModel)]="adresseDepart"
             name="adresseDepart"
-            placeholder="Ex: Gare Casa-Port, Casablanca"
-            required
-            class="form-input-field"
-          >
+            [(ngModel)]="formModel.adresseDepart"
+            (input)="estimerPrix()"
+            placeholder="Ex: Gare de Rabat-Agdal, Maroc"
+            required>
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="adresseArrivee">Adresse de destination</label>
-        <div class="input-wrapper">
-          <span class="input-addon addon-amber"></span>
+      <div class="input-field-block">
+        <label for="adresseArrivee">Destination</label>
+        <div class="input-with-icon">
           <input
-            id="adresseArrivee"
             type="text"
-            [(ngModel)]="adresseArrivee"
+            id="adresseArrivee"
             name="adresseArrivee"
-            placeholder="Ex: Anfa Place Mall, Casablanca"
-            required
-            class="form-input-field"
-          >
+            [(ngModel)]="formModel.adresseArrivee"
+            (input)="estimerPrix()"
+            placeholder="Ex: Avenue Mohammed V, Casablanca"
+            required>
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="prix">Tarif estimé (MAD)</label>
-        <div class="input-wrapper">
-          <span class="input-text-addon">DH</span>
-          <input
-            id="prix"
-            type="number"
-            [(ngModel)]="prix"
-            name="prix"
-            placeholder="0.00"
-            min="1"
-            required
-            class="form-input-field padding-addon-left"
-          >
-        </div>
+      <div class="price-estimation-box" *ngIf="formModel.prix > 0">
+        <span class="price-label">Tarif estimé de la course</span>
+        <h3 class="price-value">{{ formModel.prix | number:'1.2-2' }} MAD</h3>
+        <p class="price-caption">Ce montant sera automatiquement imputé et enregistré dans le registre de facturation.</p>
       </div>
 
-      <button type="submit" [disabled]="!courseForm.form.valid" class="btn-dispatch-submit">
-        Déployer la course sur le réseau
+      <button
+        type="submit"
+        class="btn-submit-booking"
+        [disabled]="formModel.prix === 0 || isSubmitting">
+        <span *ngIf="!isSubmitting">Confirmer la demande</span>
+        <span *ngIf="isSubmitting">Traitement de l'itinéraire en cours...</span>
       </button>
 
     </form>
-
-    <div class="alert-stack-wrapper">
-
-      <div class="alert-ui success" *ngIf="successMessage">
-        <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-          <polyline points="22 4 12 14.01 9 11.01"/>
-        </svg>
-        <span class="alert-message-text">{{ successMessage }}</span>
-      </div>
-
-      <div class="alert-ui error" *ngIf="errorMessage">
-        <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="8" x2="12" y2="12"/>
-          <line x1="12" y1="16" x2="12.01" y2="16"/>
-        </svg>
-        <span class="alert-message-text">{{ errorMessage }}</span>
-      </div>
-
-    </div>
-
   </div>
 </div>

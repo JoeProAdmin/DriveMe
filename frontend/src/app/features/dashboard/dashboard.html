@@ -87,7 +87,7 @@
           </div>
           <div class="kpi-card-core">
             <h3 class="kpi-main-number">
-              <!-- Respect des règles typographiques d'orientation pour l'affichage de la monnaie -->
+              <!-- Invocation correcte des méthodes ou signaux avec parenthèses simples -->
               <span *ngIf="!apiService.isRtlMode()">{{ stats.totalPaiements }} </span>
               <span class="kpi-currency-unit">{{ apiService.currentCurrency() }}</span>
               <span *ngIf="apiService.isRtlMode()"> {{ stats.totalPaiements }}</span>

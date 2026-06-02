@@ -1,1 +1,30 @@
-<router-outlet></router-outlet>
+<div class="phone-mockup-wrapper">
+  <div class="phone-screen-area">
+
+    <!-- Zone de rendu de tes pages (Login, Create-course...) -->
+    <div class="phone-viewport-content">
+      <router-outlet></router-outlet>
+    </div>
+
+    <!-- BARRE DE NAVIGATION INFÉRIEURE CONFORME À TA MAQUETTE ICC -->
+    <nav class="phone-bottom-nav">
+      <button type="button" class="nav-tab-item active" routerLink="/create-course">
+        <span class="tab-icon">🏠</span>
+        <span class="tab-label">Home</span>
+      </button>
+      <button type="button" class="nav-tab-item" routerLink="/courses">
+        <span class="tab-icon">🕒</span>
+        <span class="tab-label">Histo</span>
+      </button>
+      <button type="button" class="nav-tab-item" routerLink="/payments">
+        <span class="tab-icon">💳</span>
+        <span class="tab-label">Wallet</span>
+      </button>
+      <button type="button" class="nav-tab-item" routerLink="/dashboard">
+        <span class="tab-icon">👤</span>
+        <span class="tab-label">Profil</span>
+      </button>
+    </nav>
+
+  </div>
+</div>

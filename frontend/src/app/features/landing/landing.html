@@ -1,83 +1,97 @@
 <div class="driveme-premium-landing">
 
-  <!-- BARRE DE NAVIGATION PUBLIQUE ÉPURÉE -->
+  <!-- BARRE DE NAVIGATION PUBLIQUE -->
   <nav class="landing-navbar">
-    <div class="nav-logo">
-      <span class="logo-dot"></span> DriveMe
+    <div class="nav-logo" routerLink="/">
+      <div class="driveme-logo-mark">
+        <span class="letter-d">D</span>
+        <span class="letter-m">M</span>
+      </div>
+      <span class="logo-text">Drive<span class="green-accent">Me</span></span>
     </div>
+
     <div class="nav-links-center">
       <a href="#concept">Concept</a>
-      <a href="#securite">Sécurité 🇲🇦</a>
+      <a href="#securite">Sécurité</a>
       <a href="#villes">Couverture nationale</a>
     </div>
     <div class="nav-actions-right">
-      <button class="btn-nav-login" routerLink="/login">Espace Privé</button>
+      <button type="button" class="btn-nav-login" routerLink="/login">Espace Privé</button>
     </div>
   </nav>
 
-  <!-- SECTION HERO : INSPIRATION DIRECTE INDRIVE 2026 -->
+  <!-- SECTION HERO PRINCIPALE -->
   <section class="hero-section">
     <div class="hero-visual-bg">
       <div class="hero-gradient-overlay"></div>
-      <!-- Une superbe photo lumineuse de l'intérieur d'un véhicule axé sur le confort et le sourire -->
       <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1600&q=80" alt="Voyage rapide DriveMe Maroc" class="hero-img">
     </div>
 
     <div class="hero-content-floating">
       <div class="badge-promo-maroc">Alternative VTC 100% Équitable</div>
       <h1>Des trajets justes, <br><span class="text-highlight">au prix qui vous convient.</span></h1>
-      <p class="hero-lead">Proposez votre tarif, choisissez votre conducteur et voyagez en toute sécurité dans tout le Royaume du Maroc. Sans algorithme caché.</p>
+      <p class="hero-lead">Proposez votre tarif, choisissez votre conducteur et voyagez en toute sécurité dans tout le Royaume du Maroc. Sans algorithme opaque.</p>
 
       <div class="hero-actions-row">
-        <button class="btn-main-cta green" routerLink="/login">Commander une course</button>
-        <button class="btn-main-cta outline" (click)="ouvrirPopUpQr()">Télécharger l'application</button>
+        <button type="button" class="btn-main-cta green" routerLink="/login">Commander une course</button>
+        <button type="button" class="btn-main-cta outline" (click)="ouvrirPopUpQr()">Télécharger l'application</button>
       </div>
     </div>
   </section>
 
-  <!-- SECTION HISTOIRES / ARGUMENTS AVEC COMPOSANTS VIFS -->
+  <!-- SECTION COMMERCIALE SANS EMOJIS -->
   <section id="concept" class="features-light-section">
     <div class="section-container">
       <header class="center-header">
         <h2>Pourquoi choisir DriveMe ?</h2>
-        <p>Un modèle transparent conçu pour protéger les passagers et valoriser les chauffeurs marocains.</p>
+        <p>Un modèle transparent conçu pour protéger les passagers et valoriser les conducteurs marocains.</p>
       </header>
 
       <div class="features-modern-grid">
         <div class="feature-card-white">
-          <div class="card-icon box-emerald">🇲🇦</div>
+          <div class="card-icon box-emerald">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="svg-icon-branding"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+          </div>
           <h3>Couverture Nationale</h3>
-          <p>De Casablanca à Tanger, de Marrakech à Fès, planifiez vos déplacements urbains et intervilles instantanément.</p>
+          <p>De Casablanca à Tanger, de Marrakech à Fès, planifiez vos déplacements urbains et interurbains instantanément.</p>
         </div>
+
         <div class="feature-card-white">
-          <div class="card-icon box-amber">🤝</div>
+          <div class="card-icon box-amber">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="svg-icon-branding"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </div>
           <h3>Prix de gré à gré</h3>
           <p>Le passager propose, les conducteurs répondent. Aucun frais de plateforme abusif, vous restez maître de votre budget.</p>
         </div>
+
         <div class="feature-card-white">
-          <div class="card-icon box-blue">🛡️</div>
+          <div class="card-icon box-blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="svg-icon-branding"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
           <h3>Sécurité Renforcée</h3>
-          <p>Chauffeurs audités, vérification biométrique par selfie, suivi GPS en direct et bouton SOS connecté aux autorités.</p>
+          <p>Chauffeurs certifiés, vérification biométrique par selfie, suivi cartographique en direct et bouton SOS connecté.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- POP-UP MODAL QR CODE (STYLE INTERACTIF PROFESSIONNEL) -->
+  <!-- POP-UP MODAL QR CODE STYLE INDRIVE -->
   <div class="qr-modal-overlay" *ngIf="isQrModalOpen" (click)="fermerPopUpQr()">
     <div class="qr-modal-card" (click)="$event.stopPropagation()">
-      <button class="btn-close-modal" (click)="fermerPopUpQr()">×</button>
+      <button type="button" class="btn-close-modal" (click)="fermerPopUpQr()">×</button>
       <div class="qr-modal-body">
-        <div class="qr-app-logo">ID</div>
+        <div class="driveme-logo-mark large" style="margin: 0 auto 1.5rem auto;">
+          <span class="letter-d">D</span>
+          <span class="letter-m">M</span>
+        </div>
         <h3>Scannez pour télécharger</h3>
-        <p>Dirigez l'appareil photo de votre smartphone vers le QR Code pour installer l'application DriveMe.</p>
+        <p>Dirigez l'appareil photo de votre smartphone vers le QR Code pour installer l'application officielle DriveMe.</p>
 
         <div class="qr-code-placeholder-box">
-          <!-- Un vrai QR code propre généré dynamiquement -->
           <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://driveme.ma/download" alt="QR Code DriveMe App">
         </div>
 
-        <span class="badge-stores">Disponible sur iOS & Android</span>
+        <div class="badge-stores">Disponible sur iOS & Android</div>
       </div>
     </div>
   </div>

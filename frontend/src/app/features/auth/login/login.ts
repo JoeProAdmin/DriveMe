@@ -1,58 +1,55 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../../core/api.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './login.html',
-  styleUrls: ['./login.css']
+  styleUrls: ['../register.css']
 })
-export class Login {
+export class LoginComponent {
+  public credentials = {
+    email: '',
+    motDePasse: ''
+  };
 
-  email: string = '';
-  password: string = '';
-
-  successMessage: string = '';
-  errorMessage: string = '';
+  public isSubmitting: boolean = false;
+  public errorMessage: string = '';
 
   constructor(
-    private api: ApiService,
+    private apiService: ApiService,
     private router: Router
   ) {}
 
-  onLogin(): void {
+  public executerConnexion(): void {
+    if (!this.credentials.email || !this.credentials.motDePasse) {
+      this.errorMessage = 'Veuillez renseigner vos identifiants.';
+      return;
+    }
+
+    this.isSubmitting = true;
     this.errorMessage = '';
-    this.successMessage = '';
 
-    const data = {
-      email: this.email,
-      motDePasse: this.password
-    };
+    this.apiService.login(this.credentials).subscribe({
+      next: (session) => {
+        this.isSubmitting = false;
+        const role = localStorage.getItem('userRole');
 
-    this.api.login(data).subscribe({
-      next: (res) => {
-        console.log('SUCCESS JWT:', res);
-
-        localStorage.setItem('token', res.token);
-
-        /*
-         * Démonstration TFE :
-         * Le compte passager1@driveme.com est lié au passager métier ID = 2.
-         * Le dashboard charge les courses via /api/courses/passager/2.
-         */
-        localStorage.setItem('userId', '2');
-
-        this.successMessage = 'Connexion réussie';
-
-        this.router.navigate(['/dashboard']);
+        // Routage adaptatif selon les privilèges du compte
+        if (role === 'ADMIN') {
+          this.router.navigate(['/dashboard']);
+        } else {
+          this.router.navigate(['/courses/list']);
+        }
       },
       error: (err) => {
-        console.error('ERROR LOGIN:', err);
-        this.errorMessage = 'Email ou mot de passe incorrect';
+        console.error(err);
+        this.errorMessage = 'Email ou mot de passe incorrect.';
+        this.isSubmitting = false;
       }
     });
   }

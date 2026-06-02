@@ -1,0 +1,78 @@
+<div class="auth-split-container">
+
+  <!-- PANNEAU VISUEL : INFRASTRUCTURE ET MODERNITÉ MAROCAINE -->
+  <div class="auth-visual-side">
+    <div class="visual-overlay"></div>
+    <img src="https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1200&q=80" alt="DriveMe Maroc Infrastructure" class="bg-photo">
+    <div class="visual-content">
+      <h1 class="brand-logo-text">DriveMe</h1>
+      <p class="brand-tagline">Rejoignez la première alternative VTC équitable, conçue sur mesure pour les citoyens et conducteurs au Maroc.</p>
+    </div>
+  </div>
+
+  <!-- PANNEAU FORMULAIRE D'INSCRIPTION -->
+  <div class="auth-form-side">
+    <div class="form-wrapper">
+      <header class="form-header">
+        <h2>Créer un compte DriveMe</h2>
+        <p class="form-caption">Inscrivez-vous instantanément et fixez vos règles de mobilité.</p>
+      </header>
+
+      <div *ngIf="successMessage" class="ui-alert success">{{ successMessage }}</div>
+      <div *ngIf="errorMessage" class="ui-alert error">{{ errorMessage }}</div>
+
+      <form (ngSubmit)="executerInscription()" *ngIf="!successMessage">
+
+        <div class="role-selector-group">
+          <button type="button"
+                  [class.active]="registerModel.role === 'PASSAGER'"
+                  (click)="registerModel.role = 'PASSAGER'">
+            Espace Passager
+          </button>
+          <button type="button"
+                  [class.active]="registerModel.role === 'CHAUFFEUR'"
+                  (click)="registerModel.role = 'CHAUFFEUR'">
+            Espace Chauffeur
+          </button>
+        </div>
+
+        <div class="form-row-twin">
+          <div class="input-block">
+            <label>Prénom</label>
+            <input type="text" [(ngModel)]="registerModel.prenom" name="prenom" placeholder="Youssef" required>
+          </div>
+          <div class="input-block">
+            <label>Nom</label>
+            <input type="text" [(ngModel)]="registerModel.nom" name="nom" placeholder="Qarnouf" required>
+          </div>
+        </div>
+
+        <div class="input-block">
+          <label>Numéro de téléphone marocain</label>
+          <input type="tel" [(ngModel)]="registerModel.telephone" name="telephone" placeholder="06XXXXXXXX ou 07XXXXXXXX" required>
+        </div>
+
+        <div class="input-block">
+          <label>Adresse Email</label>
+          <input type="email" [(ngModel)]="registerModel.email" name="email" placeholder="exemple@driveme.ma">
+        </div>
+
+        <div class="input-block">
+          <label>Mot de passe</label>
+          <input type="password" [(ngModel)]="registerModel.motDePasse" name="motDePasse" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" class="btn-primary-action" [disabled]="isSubmitting">
+          <span *ngIf="!isSubmitting">Activer mon espace</span>
+          <span *ngIf="isSubmitting">Création du profil en cours...</span>
+        </button>
+
+        <footer class="form-footer-links">
+          <p>Vous avez déjà un profil ? <a routerLink="/login">Identifiez-vous ici</a></p>
+        </footer>
+
+      </form>
+    </div>
+  </div>
+
+</div>

@@ -1,74 +1,48 @@
-<div class="auth-wrapper">
-  <div class="auth-card">
+<div class="auth-split-container">
 
-    <div class="auth-header">
-      <div class="brand-icon-box">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-        </svg>
-      </div>
-      <h1>DriveMe</h1>
-      <p>Portail d'authentification sécurisé</p>
+  <!-- PANNEAU VISUEL : IMMERSION MOBILITÉ MAROC (MARRAKECH/RABAT) -->
+  <div class="auth-visual-side">
+    <div class="visual-overlay"></div>
+    <img src="https://images.unsplash.com/photo-1539650116574-8efeb43e2750?auto=format&fit=crop&w=1200&q=80" alt="DriveMe Maroc Urban Mobility" class="bg-photo">
+    <div class="visual-content">
+      <h1 class="brand-logo-text">DriveMe</h1>
+      <p class="brand-tagline">Votre chauffeur privé partout au Maroc. Commandez une course en toute transparence, sans frais cachés.</p>
     </div>
-
-    <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="auth-form">
-
-      <div class="input-group">
-        <label for="email">Identifiant réseau (Email)</label>
-        <div class="input-control-wrapper">
-          <input
-            id="email"
-            type="email"
-            [(ngModel)]="email"
-            name="email"
-            placeholder="nom@example.com"
-            required
-            autocomplete="email"
-            class="form-input"
-          >
-        </div>
-      </div>
-
-      <div class="input-group">
-        <label for="password">Mot de passe</label>
-        <div class="input-control-wrapper">
-          <input
-            id="password"
-            type="password"
-            [(ngModel)]="password"
-            name="password"
-            placeholder="••••••••"
-            required
-            autocomplete="current-password"
-            class="form-input"
-          >
-        </div>
-      </div>
-
-      <button type="submit" [disabled]="!loginForm.form.valid" class="btn-auth-submit">
-        Se connecter au système
-      </button>
-
-    </form>
-
-    <div class="feedback-container">
-      <div class="message-wrapper success" *ngIf="successMessage">
-        <svg class="feedback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-          <polyline points="22 4 12 14.01 9 11.01"/>
-        </svg>
-        <span class="message-text">{{ successMessage }}</span>
-      </div>
-
-      <div class="message-wrapper error" *ngIf="errorMessage">
-        <svg class="feedback-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="8" x2="12" y2="12"/>
-          <line x1="12" y1="16" x2="12.01" y2="16"/>
-        </svg>
-        <span class="message-text">{{ errorMessage }}</span>
-      </div>
-    </div>
-
   </div>
+
+  <!-- PANNEAU FORMULAIRE DE CONNEXION -->
+  <div class="auth-form-side">
+    <div class="form-wrapper">
+      <header class="form-header">
+        <h2>Connexion Espace Privé</h2>
+        <p class="form-caption">Heureux de vous revoir. Saisissez vos identifiants pour planifier votre prochain trajet.</p>
+      </header>
+
+      <div *ngIf="errorMessage" class="ui-alert error">{{ errorMessage }}</div>
+
+      <form (ngSubmit)="executerConnexion()">
+
+        <div class="input-block">
+          <label>Adresse Email</label>
+          <input type="email" [(ngModel)]="credentials.email" name="email" placeholder="admin2@driveme.com" required>
+        </div>
+
+        <div class="input-block">
+          <label>Mot de passe</label>
+          <input type="password" [(ngModel)]="credentials.motDePasse" name="motDePasse" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" class="btn-primary-action" [disabled]="isSubmitting">
+          <span *ngIf="!isSubmitting">Se connecter au système</span>
+          <span *ngIf="isSubmitting">Authentification sécurisée en cours...</span>
+        </button>
+
+        <footer class="form-footer-links">
+          <p>Nouveau sur DriveMe ? <a routerLink="/auth/register">Créer un compte marocain</a></p>
+        </footer>
+
+      </form>
+    </div>
+  </div>
+
 </div>

@@ -61,21 +61,52 @@ Déploiement cible| Docker / VPS Linux
 
 ---
 
-Architecture du Projet
+Organisation du Projet
 
-DriveMe
-│
-├── backend/
-│   └── DriveMe-Spring
-│
-├── frontend/
-│   └── Angular
-│
-├── sql/
-│
-├── docs/
-│
-└── README.md
+Le projet est structuré selon une architecture moderne Frontend / Backend :
+
+Backend
+
+- Spring Boot 3
+- Java 17
+- Spring Security
+- JWT Authentication
+- Hibernate / JPA
+- MySQL
+- Swagger OpenAPI
+
+Frontend
+
+- Angular 17 Standalone
+- Responsive Design
+- Landing Page publique
+- Dashboard Administrateur
+- Gestion des chauffeurs
+- Gestion des passagers
+- Gestion des courses
+- Gestion des paiements
+
+Documentation
+
+- Cahier des charges
+- Analyse UML
+- Documentation API
+- Rapport TFE
+- Manuel utilisateur
+
+Base de données
+
+- MySQL
+- Modèle relationnel normalisé
+- Scripts SQL
+- Jeux de données de démonstration
+
+Déploiement
+
+- GitHub
+- Docker
+- VPS Linux
+- Hébergement Cloud (prévu)
 
 ---
 
@@ -94,11 +125,7 @@ Gestion des Courses
 
 Workflow métier actuel :
 
-EN_ATTENTE
-    ↓
-ACCEPTEE
-    ↓
-TERMINEE
+EN_ATTENTE → ACCEPTEE → TERMINEE
 
 Gestion des Paiements
 
@@ -143,7 +170,7 @@ Expérience Utilisateur
 - Responsive Desktop
 - Responsive Tablette
 - Responsive Mobile
-- Architecture évolutive pour application Android et iOS
+- Architecture évolutive pour Android et iOS
 
 ---
 
@@ -223,8 +250,10 @@ Propriété Intellectuelle
 
 Copyright © 2026 Youssef Qarnouf
 
-Projet développé dans le cadre du Travail de Fin d'Études ICC.
+DriveMe est un projet développé dans le cadre du Travail de Fin d'Études (TFE) de l'ICC.
 
-Toute reproduction, diffusion, modification ou exploitation commerciale du code source ou de la documentation est interdite sans autorisation écrite de l'auteur.
+Ce dépôt est publié à des fins académiques, d'évaluation et de démonstration technique.
+
+Toute reproduction, distribution, modification ou exploitation commerciale du code source, de la documentation ou des ressources associées est interdite sans autorisation écrite préalable de l'auteur.
 
 Tous droits réservés.

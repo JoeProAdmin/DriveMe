@@ -1,117 +1,110 @@
-<div class="page-container">
+<div class="saas-view-container" [attr.dir]="apiService.isRtlMode() ? 'rtl' : 'ltr'">
 
-  <div class="page-header">
-
-    <div>
+  <header class="view-action-bar">
+    <div class="action-bar-left">
       <h1>Gestion des chauffeurs</h1>
-      <p>Administration de la flotte DriveMe</p>
+      <p class="view-caption">Suivi de la flotte, validation documentaire et monitoring de la conformité administrative.</p>
     </div>
-
-    <div class="header-actions">
-      <button class="dashboard-btn" (click)="goToDashboard()">
-        Dashboard
-      </button>
-
-      <button class="refresh-btn" (click)="loadChauffeurs()">
-        Rafraîchir
+    <div class="action-bar-right">
+      <button class="btn-action-refresh" (click)="loadChauffeurs()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+        </svg>
+        <span>Rafraîchir</span>
       </button>
     </div>
+  </header>
 
-  </div>
-
-  <div class="stats-grid">
-
-    <div class="stat-card">
-      <h3>Total chauffeurs</h3>
-      <p>{{ chauffeurs.length }}</p>
-    </div>
-
-    <div class="stat-card">
-      <h3>Validés</h3>
-      <p>
-        {{ chauffeurs.filter(c => c.statutValidation === 'VALIDE').length }}
-      </p>
-    </div>
-
-    <div class="stat-card">
-      <h3>En attente</h3>
-      <p>
-        {{ chauffeurs.filter(c => c.statutValidation !== 'VALIDE').length }}
-      </p>
-    </div>
-
-  </div>
-
-  <div *ngIf="loading" class="loading">
-    Chargement des chauffeurs...
-  </div>
-
-  <div *ngIf="errorMessage" class="error">
-    {{ errorMessage }}
-  </div>
-
-  <div class="drivers-grid">
-
-    <div
-      class="driver-card"
-      *ngFor="let chauffeur of chauffeurs">
-
-      <div class="driver-header">
-
-        <div class="avatar">
-          {{ chauffeur.id }}
-        </div>
-
-        <div>
-
-          <h3>
-            {{ chauffeur.utilisateur?.prenom || chauffeur.prenom }}
-            {{ chauffeur.utilisateur?.nom || chauffeur.nom }}
-          </h3>
-
-          <span class="status">
-            {{ chauffeur.statutValidation || 'EN_ATTENTE' }}
-          </span>
-
-        </div>
-
+  <section class="metrics-cards-row">
+    <div class="mini-metric-card">
+      <div class="metric-card-inner">
+        <span class="metric-label">Total conducteurs</span>
+        <h3>{{ totalChauffeurs }}</h3>
       </div>
-
-      <div class="driver-info">
-
-        <p>
-          <strong>Email</strong><br>
-          {{ chauffeur.utilisateur?.email || chauffeur.email }}
-        </p>
-
-        <p>
-          <strong>Téléphone</strong><br>
-          {{ chauffeur.utilisateur?.telephone || chauffeur.telephone }}
-        </p>
-
-        <p>
-          <strong>Crédit</strong><br>
-          {{ chauffeur.soldeCredit || 0 }} €
-        </p>
-
+      <div class="metric-badge-icon icon-bg-gray">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
       </div>
-
-      <div class="driver-actions">
-
-        <button class="edit-btn">
-          Modifier
-        </button>
-
-        <button
-          class="delete-btn"
-          (click)="deleteChauffeur(chauffeur.id)">
-          Supprimer
-        </button>
-
-      </div>
-
     </div>
 
-  </div>
+    <div class="mini-metric-card">
+      <div class="metric-card-inner">
+        <span class="metric-label">Profils activés</span>
+        <h3>{{ chauffeursValides }}</h3>
+      </div>
+      <div class="metric-badge-icon icon-bg-emerald">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+    </div>
 
+    <div class="mini-metric-card">
+      <div class="metric-card-inner">
+        <span class="metric-label">En attente</span>
+        <h3>{{ chauffeursEnAttente }}</h3>
+      </div>
+      <div class="metric-badge-icon icon-bg-amber">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <div class="saas-table-wrapper">
+    <table class="saas-data-table">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Conducteur</th>
+        <th>Téléphone</th>
+        <th>Note moyenne</th>
+        <th>Solde crédit</th>
+        <th>Statut</th>
+        <th class="align-table-right">Actions de validation</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let item of chauffeurs">
+        <td class="cell-id">#{{ item.id }}</td>
+        <td>
+          <div class="driver-profile-cell">
+            <div class="driver-avatar-placeholder">
+              {{ item.prenom ? item.prenom.charAt(0) : 'C' }}
+            </div>
+            <div class="driver-identity">
+              <span class="driver-fullname">{{ item.prenom }} {{ item.nom }}</span>
+              <span class="driver-email-caption">{{ item.email }}</span>
+            </div>
+          </div>
+        </td>
+        <td class="cell-phone">{{ item.telephone }}</td>
+        <td>
+          <div class="rating-cell-box">
+            <svg class="star-icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span>{{ item.noteMoyenne || '5.00' }}</span>
+          </div>
+        </td>
+        <td class="solde-value">{{ item.soldeCredit || '0.00' }} MAD</td>
+        <td>
+          <span class="saas-status-badge tag-emerald" *ngIf="item.statutValidation === 'APPROUVE' || item.statutValidation === '1'">Approuvé</span>
+          <span class="saas-status-badge tag-amber" *ngIf="item.statutValidation === 'EN_ATTENTE' || item.statutValidation === '0'">En attente</span>
+          <span class="saas-status-badge tag-red" *ngIf="item.statutValidation === 'REJETE' || item.statutValidation === '2'">Rejeté</span>
+        </td>
+        <td class="align-table-right">
+          <div class="actions-buttons-cluster">
+            <button class="btn-action-inline green" (click)="approuver(item.id)" title="Approuver le dossier">
+              Approuver
+            </button>
+            <button class="btn-action-inline red" (click)="rejeter(item.id)" title="Rejeter le dossier">
+              Rejeter
+            </button>
+          </div>
+        </td>
+      </tr>
+
+      <tr *ngIf="chauffeurs.length === 0">
+        <td colspan="7" class="table-empty-placeholder">
+          <p>Aucun dossier chauffeur synchrone n'a été intercepté sur la passerelle MySQL.</p>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
-import { ApiService } from '../../../core/api.service';
+import { RouterModule } from '@angular/router';
+import { ApiService, ChauffeurResponseDTO } from '../../../core/api.service';
 
 @Component({
   selector: 'app-chauffeur-list',
@@ -12,53 +12,72 @@ import { ApiService } from '../../../core/api.service';
 })
 export class ChauffeurList implements OnInit {
 
-  chauffeurs: any[] = [];
-  loading = false;
-  errorMessage = '';
+  // Données de la flotte de conducteurs
+  public chauffeurs: ChauffeurResponseDTO[] = [];
 
-  constructor(
-    private apiService: ApiService,
-    private router: Router
-  ) {}
+  // Métriques de synthèse pour les mini-cartes KPI
+  public totalChauffeurs: number = 0;
+  public chauffeursValides: number = 0;
+  public chauffeursEnAttente: number = 0;
+
+  constructor(public apiService: ApiService) {}
 
   ngOnInit(): void {
     this.loadChauffeurs();
   }
 
-  loadChauffeurs(): void {
-    this.loading = true;
-    this.errorMessage = '';
-
-    this.apiService.getChauffeurs().subscribe({
-      next: (data) => {
+  /**
+   * Consomme l'endpoint de ton ChauffeurController.java existant
+   */
+  public loadChauffeurs(): void {
+    this.apiService.getAllChauffeurs().subscribe({
+      next: (data: ChauffeurResponseDTO[]) => {
         this.chauffeurs = data;
-        this.loading = false;
+        this.calculateMetrics();
       },
-      error: (error) => {
-        console.error(error);
-        this.errorMessage = 'Erreur lors du chargement des chauffeurs.';
-        this.loading = false;
+      error: (err: any) => {
+        console.error('Erreur lors du chargement de la flotte :', err);
       }
     });
   }
 
-  deleteChauffeur(id: number): void {
-    if (!confirm('Voulez-vous vraiment supprimer ce chauffeur ?')) {
-      return;
-    }
+  /**
+   * Calcule dynamiquement les compteurs à partir du statutValidation (Byte ou String)
+   */
+  private calculateMetrics(): void {
+    this.totalChauffeurs = this.chauffeurs.length;
 
-    this.apiService.deleteChauffeur(id).subscribe({
+    // Protection adaptative selon que ton service renvoie le Byte (0,1) ou le texte converti
+    this.chauffeursValides = this.chauffeurs.filter(c =>
+      c.statutValidation === 'APPROUVE' || c.statutValidation === '1'
+    ).length;
+
+    this.chauffeursEnAttente = this.chauffeurs.filter(c =>
+      c.statutValidation === 'EN_ATTENTE' || c.statutValidation === '0'
+    ).length;
+  }
+
+  /**
+   * Action d'approbation rapide en direct (statut byte 1 = APPROUVE)
+   */
+  public approuver(id: number): void {
+    this.apiService.validerChauffeur(id, 1).subscribe({
+      next: () => {
+        this.loadChauffeurs(); // Recharge la grille immédiatement
+      },
+      error: (err: any) => console.error('Erreur approbation :', err)
+    });
+  }
+
+  /**
+   * Action de rejet rapide en direct (statut byte 2 = REJETE)
+   */
+  public rejeter(id: number): void {
+    this.apiService.validerChauffeur(id, 2).subscribe({
       next: () => {
         this.loadChauffeurs();
       },
-      error: (error) => {
-        console.error(error);
-        this.errorMessage = 'Erreur lors de la suppression du chauffeur.';
-      }
+      error: (err: any) => console.error('Erreur rejet :', err)
     });
-  }
-
-  goToDashboard(): void {
-    this.router.navigate(['/dashboard']);
   }
 }

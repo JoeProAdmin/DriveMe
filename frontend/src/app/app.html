@@ -1,14 +1,19 @@
-<div class="phone-mockup-wrapper">
-  <div class="phone-screen-area">
+<div class="driveme-responsive-shell">
 
-    <!-- Zone de rendu de tes pages (Login, Create-course...) -->
-    <div class="phone-viewport-content">
+  <!-- BARRE LATÉRALE (SIDEBAR) : Visible UNIQUEMENT sur Desktop et Tablette -->
+  <aside class="desktop-sidebar-container">
+    <app-sidebar></app-sidebar>
+  </aside>
+
+  <!-- WORKSPACE PRINCIPAL -->
+  <div class="main-workspace-area">
+    <div class="viewport-router-scroll">
       <router-outlet></router-outlet>
     </div>
 
-    <!-- BARRE DE NAVIGATION INFÉRIEURE CONFORME À TA MAQUETTE ICC -->
-    <nav class="phone-bottom-nav">
-      <button type="button" class="nav-tab-item active" routerLink="/create-course">
+    <!-- BARRE TACTILE INFÉRIEURE : Visible UNIQUEMENT sur Mobile (Style Maquette App) -->
+    <nav class="mobile-bottom-tabbar">
+      <button type="button" class="tab-item active" routerLink="/create-course">
         <span class="tab-icon">🏠</span>
         <span class="tab-label">Home</span>
       </button>
@@ -25,6 +30,6 @@
         <span class="tab-label">Profil</span>
       </button>
     </nav>
-
   </div>
+
 </div>

@@ -3,55 +3,96 @@
 body, html {
   margin: 0;
   padding: 0;
-  background-color: #e2e8f0; /* Couleur d'arrière-plan de ton écran d'ordinateur */
   font-family: 'Roboto', sans-serif;
+  background-color: #f2f2f2; /* Gris clair officiel de ta charte ICC */
+  overflow-x: hidden;
+}
+
+/* Base de la structure adaptative */
+.driveme-responsive-shell {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 100vw;
   min-height: 100vh;
+  box-sizing: border-box;
 }
 
-/* Conteneur Smartphone comme sur ton illustration de conception */
-.phone-mockup-wrapper {
-  width: 390px;
-  height: 844px; /* Dimensions standards de l'appareil mobile ciblé */
-  background-color: #1a1a1a;
-  border: 12px solid #1a1a1a;
-  border-radius: 40px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
-  position: relative;
-}
-
-.phone-screen-area {
-  width: 100%;
-  height: 100%;
-  background-color: #ffffff;
+.main-workspace-area {
+  flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 0;
   position: relative;
 }
 
-.phone-viewport-content {
+.viewport-router-scroll {
   flex: 1;
   overflow-y: auto;
-  background-color: #f2f2f2; /* Gris clair officiel de ton rapport ICC */
+  width: 100%;
 }
 
-/* BARRE D'ONGLETS INFÉRIEURE DE LA MAQUETTE */
-.phone-bottom-nav {
-  height: 72px;
-  background-color: #ffffff;
-  border-top: 1px solid #e2e8f0;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding-bottom: 8px;
-  box-sizing: border-box;
-  z-index: 999;
+/* ==========================================================================
+   CONFIGURATION DES BREAKPOINTS RESPONSIFS (WEB, TABLETTE, SMARTPHONE)
+   ========================================================================== */
+
+/* 💻 1. MODE DESKTOP & ÉCRANS LARGES (Ordinateurs) */
+@media (min-width: 1025px) {
+  .desktop-sidebar-container {
+    width: 260px;
+    min-width: 260px;
+    background-color: #1a1a1a; /* Gris foncé de structure */
+    display: block;
+  }
+
+  /* Masquer complètement la barre mobile du bas sur PC */
+  .mobile-bottom-tabbar {
+    display: none !important;
+  }
 }
 
-.nav-tab-item {
+/* 📟 2. MODE TABLETTE (Écrans intermédiaires) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .desktop-sidebar-container {
+    width: 80px; /* Sidebar compacte en mode icônes pour gagner de la place */
+    min-width: 80px;
+    display: block;
+  }
+
+  .mobile-bottom-tabbar {
+    display: none !important;
+  }
+}
+
+/* 📱 3. MODE SMARTPHONE (Rendu d'application native mobile) */
+@media (max-width: 767px) {
+  /* Masquer la sidebar PC sur mobile pour libérer 100% de l'écran tactile */
+  .desktop-sidebar-container {
+    display: none !important;
+  }
+
+  /* Activer la barre de navigation du bas comme sur tes maquettes DriveMe */
+  .mobile-bottom-tabbar {
+    height: 68px;
+    background-color: #ffffff;
+    border-top: 1px solid #cbd5e1;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding-bottom: 6px;
+    box-sizing: border-box;
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+  }
+
+  .viewport-router-scroll {
+    padding-bottom: 10px;
+  }
+}
+
+/* STYLE DES ONGLETS MOBILES */
+.tab-item {
   background: none;
   border: none;
   display: flex;
@@ -61,18 +102,10 @@ body, html {
   color: #94a3b8;
   text-decoration: none;
 }
+.tab-icon { font-size: 1.3rem; margin-bottom: 1px; }
+.tab-label { font-size: 0.65rem; font-weight: 500; }
 
-.nav-tab-item .tab-icon {
-  font-size: 1.4rem;
-  margin-bottom: 2px;
-}
-
-.nav-tab-item .tab-label {
-  font-size: 0.7rem;
-  font-weight: 500;
-}
-
-/* Couleur verte principale de la charte DriveMe (#00C853) */
-.nav-tab-item.active {
-  color: #00C853;
+/* Application stricte de ton Vert Principal (#00C853) sur l'élément actif */
+.tab-item.active, .nav-tab-item.active {
+  color: #00C853 !important;
 }

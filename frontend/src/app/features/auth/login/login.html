@@ -1,14 +1,14 @@
-<div class="auth-split-container" [attr.dir]="apiService.isRtlMode() ? 'rtl' : 'ltr'">
+<div class="auth-split-container" [attr.dir]="apiService.isRtlMode()() ? 'rtl' : 'ltr'">
 
-  <!-- PANNEAU VISUEL : IMMERSION CASABLANCA / MARRAKECH / TANGER / FÈS -->
+  <!-- PANNEAU VISUEL : IMMERSION EXCLUSIVE MAROC (CASABLANCA / MARRAKECH / TANGER / FÈS) -->
   <div class="auth-visual-side">
     <div class="visual-overlay"></div>
-    <!-- Image HD : Paysage urbain et historique marocain -->
+    <!-- Image HD : Médina et palmiers de Marrakech, icône du tourisme marocain -->
     <img src="https://images.unsplash.com/photo-1539650116574-8efeb43e2750?auto=format&fit=crop&w=1200&q=80" alt="DriveMe Maroc VTC" class="bg-photo">
     <div class="visual-content">
       <h1 class="brand-logo-text">DriveMe</h1>
       <p class="brand-tagline">
-        {{ apiService.currentLanguage() === 'ar' ? 'سائقك الخاص في جميع المدن المغربية. اطلب رحلتك بكل شفافية.' : 'Votre chauffeur privé à Casablanca, Marrakech, Rabat, Tanger et Fès. Sans frais cachés.' }}
+        {{ apiService.currentLanguage()() === 'ar' ? 'سائقك الخاص في جميع المدن المغربية. اطلب رحلتك بكل شفافية.' : 'Votre chauffeur privé à Casablanca, Marrakech, Rabat, Tanger et Fès. Sans frais cachés.' }}
       </p>
     </div>
   </div>
@@ -19,15 +19,15 @@
 
       <!-- SÉLECTEUR DE LANGUE RAPIDE EN HAUT DU FORMULAIRE -->
       <div class="lang-top-selector">
-        <button (click)="apiService.setLanguage('fr')" [class.active]="apiService.currentLanguage() === 'fr'">FR</button>
-        <button (click)="apiService.setLanguage('ar')" [class.active]="apiService.currentLanguage() === 'ar'">العربية</button>
-        <button (click)="apiService.setLanguage('en')" [class.active]="apiService.currentLanguage() === 'en'">EN</button>
+        <button type="button" (click)="apiService.setLanguage('fr')" [class.active]="apiService.currentLanguage()() === 'fr'">FR</button>
+        <button type="button" (click)="apiService.setLanguage('ar')" [class.active]="apiService.currentLanguage()() === 'ar'">العربية</button>
+        <button type="button" (click)="apiService.setLanguage('en')" [class.active]="apiService.currentLanguage()() === 'en'">EN</button>
       </div>
 
       <header class="form-header">
-        <h2>{{ apiService.currentLanguage() === 'ar' ? 'تسجيل الدخول' : 'Connexion Espace Privé' }}</h2>
+        <h2>{{ apiService.currentLanguage()() === 'ar' ? 'تسجيل الدخول' : 'Connexion Espace Privé' }}</h2>
         <p class="form-caption">
-          {{ apiService.currentLanguage() === 'ar' ? 'مرحبًا بك مجددًا. أدخل بياناتك لبرمجة رحلتك القادمة.' : 'Heureux de vous revoir. Saisissez vos identifiants pour planifier votre prochain trajet au Maroc.' }}
+          {{ apiService.currentLanguage()() === 'ar' ? 'مرحبًا بك مجددًا. أدخل بياناتك لبرمجة رحلتك القادمة.' : 'Heureux de vous revoir. Saisissez vos identifiants pour planifier votre prochain trajet au Maroc.' }}
         </p>
       </header>
 
@@ -35,17 +35,17 @@
 
       <form (ngSubmit)="executerConnexion()">
         <div class="input-block">
-          <label>Adresse Email</label>
+          <label>{{ apiService.currentLanguage()() === 'ar' ? 'البريد الإلكتروني' : 'Adresse Email' }}</label>
           <input type="email" [(ngModel)]="credentials.email" name="email" placeholder="exemple@driveme.ma" required>
         </div>
 
         <div class="input-block">
-          <label>Mot de passe</label>
+          <label>{{ apiService.currentLanguage()() === 'ar' ? 'كلمة المرور' : 'Mot de passe' }}</label>
           <input type="password" [(ngModel)]="credentials.motDePasse" name="motDePasse" placeholder="••••••••" required>
         </div>
 
         <button type="submit" class="btn-primary-action" [disabled]="isSubmitting">
-          <span>{{ apiService.currentLanguage() === 'ar' ? 'دخول' : 'Se connecter' }}</span>
+          <span>{{ apiService.currentLanguage()() === 'ar' ? 'دخول' : 'Se connecter' }}</span>
         </button>
       </form>
     </div>

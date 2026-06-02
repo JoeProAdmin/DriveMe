@@ -1,0 +1,95 @@
+<div class="detail-view-container" [attr.dir]="apiService.isRtlMode() ? 'rtl' : 'ltr'">
+
+  <!-- BARRE DE RETOUR -->
+  <div class="navigation-top-bar">
+    <button class="btn-back" (click)="retourner()">
+      <span>← Retour à la liste</span>
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="loader-placeholder">
+    <p>Chargement des métadonnées du conducteur...</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-banner">
+    {{ errorMessage }}
+  </div>
+
+  <!-- PANNEAU PRINCIPAL -->
+  <div class="detail-grid-layout" *ngIf="!isLoading && chauffeur">
+
+    <!-- CARD FICHE IDENTITÉ -->
+    <div class="info-sidebar-card">
+      <div class="avatar-large">
+        {{ chauffeur.prenom ? chauffeur.prenom.charAt(0) : 'C' }}
+      </div>
+      <h2>{{ chauffeur.prenom }} {{ chauffeur.nom }}</h2>
+      <p class="role-badge">Conducteur Partenaire</p>
+
+      <hr class="divider" />
+
+      <div class="data-spec-group">
+        <label>Email d'exploitation</label>
+        <span class="value-text">{{ chauffeur.email || 'Non renseigné' }}</span>
+      </div>
+
+      <div class="data-spec-group">
+        <label>Téléphone sécurisé</label>
+        <span class="value-text">{{ chauffeur.telephone }}</span>
+      </div>
+
+      <div class="data-spec-group">
+        <label>Note de performance</label>
+        <span class="value-text rating-color">★ {{ chauffeur.noteMoyenne || '5.00' }}</span>
+      </div>
+
+      <div class="data-spec-group">
+        <label>Solde du compte</label>
+        <span class="value-text currency-color">{{ chauffeur.soldeCredit || '0.00' }} MAD</span>
+      </div>
+    </div>
+
+    <!-- ZONE DE VÉRIFICATION DOCUMENTAIRE -->
+    <div class="document-verification-panel">
+      <h3>Dossier de conformité administrative</h3>
+      <p class="section-subtitle">Vérification des pièces obligatoires pour l'autorisation de circuler sur le réseau DriveMe.</p>
+
+      <div class="documents-list-box">
+        <div class="document-item-row" *ngFor="let doc of documents">
+          <div class="doc-meta">
+            <span class="doc-title">{{ doc.type }}</span>
+            <span class="doc-date">Déposé le {{ doc.dateDepot }}</span>
+          </div>
+          <div class="doc-actions">
+            <span class="doc-status-badge">{{ doc.statut }}</span>
+            <button class="btn-view-file">Visualiser la pièce</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- WORKFLOW DE DÉCISION (STRIPE STYLE) -->
+      <div class="decision-action-box">
+        <h4>Statut actuel du compte :
+          <span class="status-inline-text" [ngClass]="{'text-green': chauffeur.statutValidation === '1', 'text-amber': chauffeur.statutValidation === '0', 'text-red': chauffeur.statutValidation === '2'}">
+            {{ chauffeur.statutValidation === '1' ? 'Approuvé' : chauffeur.statutValidation === '2' ? 'Rejeté' : 'En attente d\'activation' }}
+          </span>
+        </h4>
+        <p class="decision-caption">En modifiant le statut, le chauffeur recevra une notification automatique sur son application mobile pour lui ouvrir ou restreindre l'accès aux demandes de courses.</p>
+
+        <div class="decision-buttons">
+          <button class="btn-decision approve" (click)="modifierValidation(1)">
+            Approuver le profil
+          </button>
+          <button class="btn-decision reject" (click)="modifierValidation(2)">
+            Rejeter le dossier
+          </button>
+          <button class="btn-decision suspend" (click)="modifierValidation(0)">
+            Remettre en attente
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

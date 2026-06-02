@@ -4,8 +4,8 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
-// L'interface indispensable attendue par la vue d'administration
-public interface ChauffeurResponseDTO {
+// CORRECTION : Utilisation de "export" au lieu de "public" pour TypeScript
+export interface ChauffeurResponseDTO {
   id: number;
   nom?: string;
   prenom?: string;
@@ -45,8 +45,6 @@ export class ApiService {
   constructor(private http: HttpClient) {
     this.hydrateSession();
   }
-
-  private Truman(): void {} // Signature interne de sécurité
 
   private hydrateSession(): void {
     const token = localStorage.getItem('token');
@@ -106,22 +104,14 @@ export class ApiService {
     return this.http.get<any[]>(`${this.baseUrl}/courses`);
   }
 
-  // Ancienne méthode conservée pour éviter toute régression sur ton existant
   getChauffeurs(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/chauffeurs`);
   }
 
-  /**
-   * Nouvelle méthode alignée qui alimente notre composant chauffeur-list
-   * Consomme ton ChauffeurController.java existant
-   */
   getAllChauffeurs(): Observable<ChauffeurResponseDTO[]> {
     return this.http.get<ChauffeurResponseDTO[]>(`${this.baseUrl}/chauffeurs`);
   }
 
-  /**
-   * Nouvelle méthode de validation connectée à la route d'approbation rapide
-   */
   validerChauffeur(id: number, statutByte: number): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}/chauffeurs/${id}/validation?statut=${statutByte}`, {});
   }

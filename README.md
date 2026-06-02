@@ -1,210 +1,226 @@
-# DriveMe - Application VTC moderne (Projet TFE 2025–2026)
+# DriveMe – Smart Mobility Platform
 
-## Contexte académique
+> Application VTC moderne développée dans le cadre du Travail de Fin d'Études (TFE) ICC 2025 - 2026.
 
-Projet de fin d’études (TFE) – Bachelier en Informatique, orientation développement d’applications (ICC).
+## Présentation
 
-Objectif : concevoir et développer une application VTC complète, fiable et sécurisée, inspirée du modèle inDrive, adaptée au marché marocain avec une ouverture internationale.
+DriveMe est une plateforme de mobilité intelligente inspirée des acteurs internationaux du transport à la demande.
 
----
+L'objectif du projet est de proposer une solution moderne, sécurisée et évolutive permettant la mise en relation entre passagers et chauffeurs via une application web basée sur une architecture professionnelle.
 
-## Présentation du projet
-
-DriveMe est une application VTC (Voiture de Transport avec Chauffeur) permettant de connecter passagers et conducteurs via une plateforme web (et future mobile).
-
-Objectifs :
-
-- Offrir une solution de transport sécurisée
-- Proposer un modèle économique innovant (crédits prépayés)
-- Garantir une expérience utilisateur fluide
-- Assurer une architecture professionnelle complète (Backend + Frontend + Base de données)
+Le projet cible initialement le marché marocain avec une vision d'expansion internationale.
 
 ---
 
-## Architecture globale
+## Aperçu du projet
 
-Le projet est structuré en deux parties principales :
+### Espace Passager
 
-- Backend : API REST sécurisée développée avec Spring Boot
-- Frontend : application Angular (interface utilisateur)
+* Création de compte
+* Authentification sécurisée
+* Demande de course
+* Suivi des trajets
+* Historique des déplacements
+* Évaluation des chauffeurs
 
-Communication via API REST sécurisée (JWT).
+### Espace Chauffeur
+
+* Gestion du profil
+* Validation administrative
+* Acceptation des courses
+* Historique des revenus
+* Gestion du crédit DriveMe
+
+### Espace Administrateur
+
+* Tableau de bord centralisé
+* Gestion des chauffeurs
+* Gestion des passagers
+* Gestion des courses
+* Gestion des paiements
+* Gestion des avis
 
 ---
 
-## Architecture technique
+## Architecture Technique
 
-| Composant       | Technologie             |
-|-----------------|------------------------|
-| Backend         | Spring Boot 3 (Java 17)|
-| Sécurité        | Spring Security + JWT  |
-| Base de données | MySQL                  |
-| ORM             | JPA / Hibernate        |
-| API             | REST (JSON)            |
-| Frontend        | Angular (Standalone)   |
-| Outils          | IntelliJ, Postman      |
-| Versioning      | Git + GitHub           |
+| Domaine         | Technologie           |
+| --------------- | --------------------- |
+| Backend         | Spring Boot 3         |
+| Langage         | Java 17               |
+| Sécurité        | Spring Security + JWT |
+| Base de données | MySQL                 |
+| ORM             | Hibernate / JPA       |
+| Frontend        | Angular Standalone    |
+| API             | REST JSON             |
+| Documentation   | Swagger OpenAPI       |
+| Versioning      | Git / GitHub          |
 
 ---
 
-## Structure du projet
+## Architecture du Projet
 
-DriveMe/
-├── backend/DriveMe-Spring
-│     ├── controller
-│     ├── dto
-│     ├── entity
-│     ├── repository
-│     ├── service
-│     ├── security
-│     └── exception
+```text
+DriveMe
+│
+├── backend/
+│   └── DriveMe-Spring
 │
 ├── frontend/
-│     ├── src/app/
-│     │     ├── core
-│     │     ├── shared
-│     │     └── features/auth/login
+│   └── Angular
 │
 ├── sql/
+│
 ├── docs/
+│
 └── README.md
+```
 
 ---
 
-## Fonctionnalités Backend
+## Fonctionnalités Implémentées
 
-### Authentification & Sécurité
+### Authentification
 
-- Authentification JWT sécurisée
-- Gestion des rôles :
-    - ADMIN
-    - CHAUFFEUR
-    - PASSAGER
-- Protection des endpoints via Spring Security
-- Validation des données et logique métier
+* JWT sécurisé
+* Gestion des rôles
+* Protection des routes
+* Contrôle d'accès
 
-### Gestion des courses
+### Gestion des Courses
 
-Workflow métier complet :
+Workflow métier :
 
-EN_ATTENTE → ACCEPTEE → TERMINEE
+```text
+EN_ATTENTE
+     ↓
+ACCEPTEE
+     ↓
+TERMINEE
+```
 
-- Création par le passager
-- Acceptation par le chauffeur
-- Finalisation sécurisée
+### Gestion des Paiements
 
-### Paiement automatique
+* Paiement généré automatiquement
+* Suivi du statut
+* Historisation des transactions
 
-- Généré automatiquement après une course TERMINÉE
-- Un seul paiement par course
-- Statuts :
-    - EN_ATTENTE
-    - PAYE
-    - REFUSE
+### Administration
+
+* Dashboard central
+* Statistiques globales
+* Gestion des utilisateurs
+* Contrôle de la plateforme
 
 ---
 
 ## Fonctionnalités Frontend
 
-### Initialisation
+### Dashboard Administrateur
 
-- Projet Angular créé et configuré
-- Lancement local opérationnel (http://localhost:4200)
+* Interface moderne Angular
+* Sidebar de navigation
+* Cartes statistiques
+* Actions rapides
 
-### Architecture
+### Gestion des Chauffeurs
 
-- Structure professionnelle :
-    - core (services)
-    - shared (composants)
-    - features (modules métier)
-- Utilisation des composants standalone Angular
+* Consultation
+* Suppression
+* Statut de validation
 
-### Authentification (en cours)
+### Gestion des Courses
 
-- Écran de connexion (login)
-- Formulaire Angular (email + mot de passe)
-- Binding avec ngModel
-- Appel HTTP vers le backend /api/auth/login
-- Service API Angular fonctionnel
+* Liste des trajets
+* Suivi du statut
+* Rafraîchissement dynamique
 
-### Intégration Backend
+### Authentification
 
-- Communication Angular → Spring Boot fonctionnelle
-- Correction du problème CORS
-- Envoi des données conforme :
-    - email
-    - rawPassword
-
----
-
-## Exemple de flux API
-
-1. Login  
-   POST /api/auth/login
-
-2. Création course  
-   POST /api/courses
-
-3. Acceptation  
-   PUT /api/courses/{id}/status?status=ACCEPTEE
-
-4. Finalisation  
-   PUT /api/courses/{id}/status?status=TERMINEE
-
-5. Paiement  
-   Créé automatiquement en base
+* Formulaire de connexion
+* Intégration API REST
+* Gestion JWT
 
 ---
 
 ## Sécurité
 
-- Authentification JWT
-- Autorisation basée sur les rôles
-- Protection des endpoints
-- Validation métier stricte
+DriveMe applique plusieurs mécanismes de sécurité :
+
+* Authentification JWT
+* Contrôle d'accès par rôle
+* Validation des données
+* Protection des endpoints REST
+* Architecture sécurisée Spring Security
 
 ---
 
-## État actuel du projet
+## Roadmap
 
-### Backend
+### Version actuelle
 
-- Architecture complète validée
-- Sécurité JWT opérationnelle
-- Workflow métier fonctionnel
-- Paiement automatique implémenté
+* Backend opérationnel
+* Frontend Angular opérationnel
+* Authentification JWT
+* Gestion des courses
+* Gestion des paiements
+* Dashboard administrateur
 
-### Frontend
+### Prochaines évolutions
 
-- Initialisé et structuré
-- Interface login fonctionnelle
-- Communication backend établie
-- Problème restant côté backend (authentification → erreur 400)
-
----
-
-## Objectifs du TFE
-
-- Architecture complète Backend + Frontend + Base de données
-- Sécurité robuste (JWT)
-- Logique métier réaliste
-- Application scalable et professionnelle
-- Déploiement et documentation complète
+* Carte interactive
+* Géolocalisation
+* Notifications temps réel
+* Version mobile
+* Multilingue FR / EN / AR / ES
+* Tableau de bord analytique
+* Déploiement Cloud
 
 ---
 
-## Vision
+## Captures d'écran
 
-DriveMe est conçu comme une future startup orientée marché marocain avec un système de recharges prépayées pour les chauffeurs.
+### Dashboard Administrateur
+
+*Ajouter une capture du dashboard ici*
+
+### Gestion des Chauffeurs
+
+*Ajouter une capture ici*
+
+### Gestion des Courses
+
+*Ajouter une capture ici*
+
+---
+
+## Objectifs Académiques
+
+Ce projet répond aux exigences du Travail de Fin d'Études ICC :
+
+* Architecture complète Backend / Frontend
+* API REST sécurisée
+* Gestion des rôles
+* Base de données relationnelle
+* Documentation technique
+* Versioning GitHub
+* Déploiement professionnel
 
 ---
 
 ## Auteur
 
-Youssef Qarnouf  
-Projet TFE – ICC 2025–2026
+**Youssef Qarnouf**
+
+Bachelier en Informatique – Développement d'Applications
+
+ICC 2025–2026
 
 ---
+
+## Licence
+
+Projet académique réalisé dans le cadre du TFE ICC 2025 - 2026.
 
 ## Licence
 

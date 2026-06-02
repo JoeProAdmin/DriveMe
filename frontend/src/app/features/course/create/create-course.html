@@ -1,58 +1,89 @@
-<div class="booking-split-container" [attr.dir]="apiService.isRtlMode() ? 'rtl' : 'ltr'">
+<div class="driveme-vtc-screen" [attr.dir]="apiService.isRtlMode() ? 'rtl' : 'ltr'">
 
-  <div class="booking-form-side">
-    <div class="form-scroll-wrapper">
-      <header class="booking-header">
-        <h2>{{ apiService.currentLanguage() === 'ar' ? 'طلب رحلة جديدة' : 'Commander une course' }}</h2>
-        <p class="booking-subtitle">Fixez votre itinéraire sur le réseau DriveMe pour une mise en relation immédiate sur tout le Maroc.</p>
+  <!-- ZONE DE CARTOGRAPHIE PRINCIPALE (Prend tout l'arrière-plan) -->
+  <div class="map-container-layer">
+    <div id="driveme-live-map"></div>
+  </div>
+
+  <!-- PANNEAU COULISSANT INTERACTIF (STYLE INDRIVE TEXTURÉ) -->
+  <div class="interaction-sliding-sheet">
+
+    <!-- ÉTAPE A : SAISIE DE LA DEMANDE ET DU PRIX -->
+    <div *ngIf="courseStatus === 'CREATION'">
+      <header class="sheet-header">
+        <span class="drag-handle"></span>
+        <h3>Où allez-vous ?</h3>
       </header>
 
-      <div *ngIf="successMessage" class="ui-alert success">{{ successMessage }}</div>
-      <div *ngIf="errorMessage" class="ui-alert error">{{ errorMessage }}</div>
-
-      <form (ngSubmit)="commanderCourse()" *ngIf="!successMessage">
-
-        <div class="input-block">
-          <label>Point de départ (Adresse au Maroc)</label>
-          <input
-            type="text"
-            [(ngModel)]="formModel.adresseDepart"
-            name="adresseDepart"
-            (input)="estimerPrix()"
-            placeholder="Ex: Gare de Rabat-Agdal, Casablanca Voyageurs..."
-            required>
+      <div class="input-routing-group">
+        <div class="routing-field">
+          <span class="dot-icon green"></span>
+          <input type="text" [(ngModel)]="formModel.adresseDepart" placeholder="Lieu de départ (ex: Bd Moulay Rachid)">
         </div>
-
-        <div class="input-block">
-          <label>Destination finale</label>
-          <input
-            type="text"
-            [(ngModel)]="formModel.adresseArrivee"
-            name="adresseArrivee"
-            (input)="estimerPrix()"
-            placeholder="Ex: Aéroport Marrakech-Menara, Centre-ville..."
-            required>
+        <div class="routing-field">
+          <span class="dot-icon red"></span>
+          <input type="text" [(ngModel)]="formModel.adresseArrivee" placeholder="Destination (ex: Gueliz, Casablanca...)">
         </div>
-
-        <div class="price-estimation-box" *ngIf="formModel.prix > 0">
-          <span class="price-label">Tarif d'exploitation estimé</span>
-          <h3 class="price-value">{{ formModel.prix | number:'1.2-2' }} MAD</h3>
-          <p class="price-caption">Calcul de routage instantané (Kilométrage + Prise en charge DriveMe).</p>
+        <div class="routing-field price-input">
+          <span class="cash-icon">💰</span>
+          <input type="number" [(ngModel)]="formModel.prix" placeholder="Proposez votre prix (MAD)">
         </div>
+      </div>
 
-        <button type="submit" class="btn-primary-action-green" [disabled]="formModel.prix === 0 || isSubmitting">
-          <span *ngIf="!isSubmitting">Confirmer et chercher un chauffeur</span>
-          <span *ngIf="isSubmitting">Analyse du trafic national...</span>
-        </button>
-      </form>
+      <button type="button" class="btn-indrive-neon" (click)="publierDemande()">
+        Trouver un conducteur
+      </button>
     </div>
-  </div>
 
-  <div class="booking-map-side">
-    <div id="driveme-live-map"></div>
-    <div class="map-floating-badge">
-      <span class="pulse-dot"></span> GPS DriveMe Maroc Connecté
+    <!-- ÉTAPE B : ÉCRAN DE NÉGOCIATION / OFFRES CHAUFFEURS -->
+    <div *ngIf="courseStatus === 'NEGOCIATION'">
+      <header class="sheet-header">
+        <div class="loader-pulse-row" *ngIf="isSearching">
+          <div class="pulse-circle"></div>
+          <p>Recherche de chauffeurs à proximité...</p>
+        </div>
+        <h3 *ngIf="!isSearching">Choisissez votre conducteur</h3>
+      </header>
+
+      <div class="offers-list-container">
+        <div class="driver-offer-card" *ngFor="let offer of offers">
+          <div class="driver-avatar-block">
+            <div class="avatar-mock">👤</div>
+            <div class="driver-rating">★ {{ offer.note }}</div>
+          </div>
+
+          <div class="driver-details-block">
+            <h4>{{ offer.nom }}</h4>
+            <p class="car-info">{{ offer.vehicule }} • <span class="plate-badge">{{ offer.immatriculation }}</span></p>
+            <p class="arrival-meta">{{ offer.distance }} ({{ offer.tempsArrivee }} min)</p>
+          </div>
+
+          <div class="driver-action-block">
+            <div class="proposed-price">{{ offer.prixPropose }} MAD</div>
+            <button type="button" class="btn-accept-driver" (click)="accepterChauffeur(offer)">Accepter</button>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 
+    <!-- ÉTAPE C : TRAJET EN COURS & OPTIONS SÉCURITÉ CRITIQUES -->
+    <div *ngIf="courseStatus === 'EN_ROUTE'" class="active-ride-panel">
+      <header class="sheet-header">
+        <div class="status-badge-tracking">Le conducteur arrive dans ~{{ selectedChauffeur?.tempsArrivee }} min</div>
+        <h4>{{ selectedChauffeur?.vehicule }} • <span class="plate-badge-dark">{{ selectedChauffeur?.immatriculation }}</span></h4>
+      </header>
+
+      <div class="security-quick-actions">
+        <button type="button" class="sec-btn call">📞 Contacter {{ selectedChauffeur?.nom }}</button>
+        <button type="button" class="sec-btn sos" (click)="declencherSOS()">🛡️ Sécurité / SOS</button>
+      </div>
+
+      <div class="ride-summary-static">
+        <p><strong>De:</strong> {{ formModel.adresseDepart }}</p>
+        <p><strong>À:</strong> {{ formModel.adresseArrivee }}</p>
+        <p class="final-price">Prix fixé : <span>{{ formModel.prix }} MAD</span> (Cash)</p>
+      </div>
+    </div>
+
+  </div>
 </div>

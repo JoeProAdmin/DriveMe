@@ -1,128 +1,51 @@
-.booking-split-container {
-  display: flex;
-  height: calc(100vh - 64px);
-  width: 100vw;
-  box-sizing: border-box;
-  background-color: #ffffff;
-  font-family: 'Poppins', sans-serif;
-}
+.driveme-vtc-screen { position: relative; height: calc(100vh - 64px); width: 100vw; overflow: hidden; font-family: 'Poppins', sans-serif; }
+.map-container-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+#driveme-live-map { width: 100%; height: 100%; }
 
-@media (max-width: 900px) {
-  .booking-split-container { flex-direction: column; height: auto; }
-}
+/* PANNEAU COULISSANT TYPE INDRIVE */
+.interaction-sliding-sheet { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background-color: #1a1a1a; color: #ffffff; border-top-left-radius: 1.25rem; border-top-right-radius: 1.25rem; padding: 1.5rem; box-sizing: border-box; z-index: 10; box-shadow: 0 -10px 25px rgba(0,0,0,0.3); }
+.drag-handle { display: block; width: 40px; height: 4px; background-color: #444; border-radius: 2px; margin: 0 auto 1rem auto; }
+.sheet-header h3 { margin: 0 0 1.25rem 0; font-size: 1.2rem; font-weight: 700; color: #ffffff; }
 
-/* PANNEAU FORMULAIRE */
-.booking-form-side {
-  flex: 1;
-  max-width: 460px;
-  min-width: 380px;
-  border-right: 1px solid #e2e8f0;
-  display: flex;
-  flex-direction: column;
-  background-color: #ffffff;
-  box-sizing: border-box;
-}
+/* INPUTS ROUTAGE */
+.input-routing-group { background-color: #262626; border-radius: 0.75rem; padding: 0.5rem; margin-bottom: 1.25rem; }
+.routing-field { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border-bottom: 1px solid #333; }
+.routing-field:last-child { border-bottom: none; }
+.routing-field input { background: none; border: none; color: #ffffff; font-size: 0.95rem; width: 100%; }
+.routing-field input:focus { outline: none; }
+.dot-icon { width: 10px; height: 10px; border-radius: 50%; }
+.dot-icon.green { background-color: #00A86B; }
+.dot-icon.red { background-color: #ef4444; }
 
-[dir="rtl"] .booking-form-side {
-  border-right: none;
-  border-left: 1px solid #e2e8f0;
-}
+/* BOUTON FLUO APPLICATION */
+.btn-indrive-neon { width: 100%; background-color: #00A86B; color: #ffffff; border: none; padding: 0.9rem; border-radius: 0.5rem; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+.btn-indrive-neon:hover { background-color: #008f5a; }
 
-.form-scroll-wrapper {
-  padding: 2.5rem;
-  overflow-y: auto;
-}
+/* CARTES CHAUFFEURS EN NÉGOCIATION */
+.offers-list-container { max-height: 280px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; }
+.driver-offer-card { background-color: #262626; border-radius: 0.5rem; padding: 1rem; display: flex; align-items: center; justify-content: space-between; }
+.driver-avatar-block { text-align: center; }
+.avatar-mock { font-size: 1.5rem; background-color: #333; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+.driver-rating { font-size: 0.75rem; color: #f59e0b; font-weight: 700; margin-top: 0.25rem; }
+.driver-details-block { flex: 1; padding: 0 1rem; }
+.driver-details-block h4 { margin: 0; font-size: 0.95rem; }
+.car-info { font-size: 0.8rem; color: #a3a3a3; margin: 0.15rem 0; }
+.plate-badge { background-color: #444; color: #fff; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
+.arrival-meta { font-size: 0.75rem; color: #00A86B; margin: 0; font-weight: 600; }
+.proposed-price { font-size: 1.1rem; font-weight: 800; color: #ffffff; text-align: right; margin-bottom: 0.35rem; }
+.btn-accept-driver { background-color: #00A86B; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 0.8rem; }
 
-.booking-header { margin-bottom: 2rem; }
-.booking-header h2 { font-size: 1.5rem; font-weight: 700; color: #0f172a; margin: 0; }
-.booking-subtitle { font-size: 0.85rem; color: #64748b; margin-top: 0.35rem; line-height: 1.4; }
+/* ESPACE SÉCURITÉ ACTIVE RIDE */
+.status-badge-tracking { background-color: #3b82f6; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; display: inline-block; margin-bottom: 0.5rem; }
+.security-quick-actions { display: flex; gap: 0.75rem; margin: 1rem 0; }
+.sec-btn { flex: 1; border: none; padding: 0.75rem; border-radius: 0.375rem; font-weight: 700; font-size: 0.85rem; cursor: pointer; }
+.sec-btn.call { background-color: #333; color: white; }
+.sec-btn.sos { background-color: #ef4444; color: white; }
+.ride-summary-static { background-color: #262626; padding: 1rem; border-radius: 0.5rem; font-size: 0.85rem; color: #d4d4d4; }
+.ride-summary-static p { margin: 0.35rem 0; }
+.final-price span { color: #00A86B; font-weight: 800; font-size: 1.1rem; }
 
-.input-block { margin-bottom: 1.25rem; display: flex; flex-direction: column; }
-.input-block label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #475569; margin-bottom: 0.5rem; letter-spacing: 0.05em; }
-.input-block input { border: 1px solid #cbd5e1; border-radius: 0.375rem; padding: 0.75rem 1rem; font-size: 0.95rem; color: #0f172a; }
-.input-block input:focus { border-color: #00A86B; outline: none; }
-
-/* Cadre Tarif Vert Émeraude */
-.price-estimation-box {
-  background-color: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  border-radius: 0.5rem;
-  padding: 1.25rem;
-  text-align: center;
-  margin: 1.5rem 0;
-}
-.price-label { font-size: 0.75rem; font-weight: 700; color: #16a34a; text-transform: uppercase; }
-.price-value { font-size: 2rem; font-weight: 800; color: #115e59; margin: 0.25rem 0; }
-.price-caption { font-size: 0.75rem; color: #166534; margin: 0; }
-
-.btn-primary-action-green {
-  width: 100%;
-  background-color: #00A86B;
-  color: #ffffff;
-  border: none;
-  padding: 0.85rem;
-  border-radius: 0.375rem;
-  font-size: 0.95rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-}
-.btn-primary-action-green:hover { background-color: #008f5a; }
-.btn-primary-action-green:disabled { background-color: #e2e8f0; color: #94a3b8; cursor: not-allowed; }
-
-/* PANNEAU LIVE MAP (STYLE WAZE/GOOGLE MAPS) */
-.booking-map-side {
-  flex: 2;
-  position: relative;
-  background-color: #f1f5f9;
-  height: 100%;
-}
-@media (max-width: 900px) {
-  .booking-map-side { height: 400px; width: 100%; }
-}
-
-#driveme-live-map {
-  width: 100%;
-  height: 100%;
-  z-index: 10;
-}
-
-.map-floating-badge {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 100;
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #0f172a;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-}
-
-.pulse-dot {
-  width: 8px;
-  height: 8px;
-  background-color: #00A86B;
-  border-radius: 50%;
-  display: inline-block;
-  box-shadow: 0 0 0 0 rgba(0, 168, 107, 0.7);
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 168, 107, 0.7); }
-  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(0, 168, 107, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 168, 107, 0); }
-}
-
-.ui-alert { padding: 0.75rem; border-radius: 0.375rem; font-size: 0.85rem; font-weight: 600; text-align: center; margin-bottom: 1rem; }
-.ui-alert.success { background-color: #dcfce7; color: #15803d; }
-.ui-alert.error { background-color: #fee2e2; color: #991b1b; }
-
-[dir="rtl"] .booking-header, [dir="rtl"] .input-block { text-align: right; }
+/* Loader pulse */
+.loader-pulse-row { display: flex; align-items: center; gap: 0.5rem; }
+.pulse-circle { width: 8px; height: 8px; background-color: #00A86B; border-radius: 50%; animation: blink 1s infinite; }
+@keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }

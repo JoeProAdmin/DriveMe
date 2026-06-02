@@ -1,240 +1,300 @@
-DriveMe – Smart Mobility Platform
+# DriveMe
 
-Présentation
+## Présentation
 
-DriveMe est une plateforme de mobilité intelligente développée dans le cadre du Travail de Fin d'Études (TFE) ICC 2025–2026.
+DriveMe est une plateforme de mobilité intelligente développée dans le cadre du Travail de Fin d'Études (TFE) ICC 2025-2026.
 
-L'application vise à mettre en relation des passagers et des chauffeurs via une plateforme sécurisée, moderne et évolutive. Inspirée des leaders internationaux du transport à la demande, DriveMe a été conçue pour répondre aux besoins du marché marocain tout en respectant les standards techniques d'une solution professionnelle pouvant évoluer vers un déploiement commercial.
+L'objectif du projet est de proposer une solution moderne, sécurisée et évolutive permettant la mise en relation entre passagers et chauffeurs via une architecture professionnelle basée sur Spring Boot, Angular et MySQL.
 
-L'objectif du projet est de proposer une alternative moderne offrant sécurité, transparence, simplicité d'utilisation et gestion centralisée des opérations.
-
----
-
-Fonctionnalités Principales
-
-Espace Passager
-
-- Création et gestion de compte
-- Authentification sécurisée
-- Demande de course
-- Consultation de l'historique des trajets
-- Suivi du statut des courses
-- Évaluation des chauffeurs
-- Gestion du profil utilisateur
-
-Espace Chauffeur
-
-- Création et gestion de compte chauffeur
-- Validation administrative du dossier
-- Consultation et acceptation des courses
-- Gestion du profil professionnel
-- Historique des activités
-- Gestion du crédit DriveMe
-- Consultation des revenus
-
-Espace Administrateur
-
-- Tableau de bord centralisé
-- Gestion des chauffeurs
-- Gestion des passagers
-- Gestion des courses
-- Gestion des paiements
-- Gestion des avis
-- Contrôle et supervision de la plateforme
+Le projet vise initialement le marché marocain avec une perspective d'évolution vers une plateforme de mobilité internationale.
 
 ---
 
-Architecture Technique
+# Objectifs du Projet
 
-Domaine| Technologie
-Backend| Spring Boot 3
-Langage Backend| Java 17
-Frontend| Angular 17 Standalone
-Sécurité| Spring Security + JWT
-Base de données| MySQL
-ORM| Hibernate / JPA
-API| RESTful JSON
-Documentation API| Swagger OpenAPI
-Versioning| Git / GitHub
-Build Tool| Maven
-Déploiement cible| Docker / VPS Linux
+DriveMe a été conçu pour répondre aux besoins suivants :
 
----
-
-Organisation du Projet
-
-Le projet est structuré selon une architecture moderne Frontend / Backend :
-
-Backend
-
-- Spring Boot 3
-- Java 17
-- Spring Security
-- JWT Authentication
-- Hibernate / JPA
-- MySQL
-- Swagger OpenAPI
-
-Frontend
-
-- Angular 17 Standalone
-- Responsive Design
-- Landing Page publique
-- Dashboard Administrateur
-- Gestion des chauffeurs
-- Gestion des passagers
-- Gestion des courses
-- Gestion des paiements
-
-Documentation
-
-- Cahier des charges
-- Analyse UML
-- Documentation API
-- Rapport TFE
-- Manuel utilisateur
-
-Base de données
-
-- MySQL
-- Modèle relationnel normalisé
-- Scripts SQL
-- Jeux de données de démonstration
-
-Déploiement
-
-- GitHub
-- Docker
-- VPS Linux
-- Hébergement Cloud (prévu)
+- Réservation de trajets en temps réel
+- Gestion des chauffeurs et passagers
+- Paiement sécurisé
+- Gestion des avis et évaluations
+- Administration centralisée
+- Architecture RESTful moderne
+- Application multilingue
+- Compatibilité Web, Mobile et Tablette
+- Déploiement professionnel sur serveur Linux
 
 ---
 
-Fonctionnalités Implémentées
+# Architecture Technique
 
-Authentification et Sécurité
+| Domaine | Technologie |
+|----------|-------------|
+| Backend | Spring Boot 3 |
+| Langage Backend | Java 17 |
+| Frontend | Angular 17 Standalone |
+| Sécurité | Spring Security + JWT |
+| Base de données | MySQL |
+| ORM | Hibernate / JPA |
+| API | RESTful JSON |
+| Documentation API | Swagger OpenAPI |
+| Versioning | Git / GitHub |
+| Build Tool | Maven |
+| Déploiement cible | Docker / VPS Linux |
+
+---
+
+# Organisation du Projet
+
+Le projet est structuré selon une architecture moderne Frontend / Backend.
+
+```text
+DriveMe
+│
+├── backend
+│   └── DriveMe-Spring
+│
+├── frontend
+│   └── Angular
+│
+├── sql
+│
+├── docs
+│
+└── README.md
+```
+
+---
+
+# Fonctionnalités Implémentées
+
+## Authentification et Sécurité
 
 - Authentification JWT
 - Gestion des rôles
 - Protection des endpoints REST
 - Contrôle d'accès basé sur les rôles
-- Validation des données
-- Architecture sécurisée Spring Security
+- Hashage des mots de passe avec BCrypt
 
-Gestion des Courses
+## Gestion des Utilisateurs
+
+### Passagers
+
+- Création de compte
+- Connexion sécurisée
+- Gestion du profil
+- Historique des trajets
+
+### Chauffeurs
+
+- Gestion du profil
+- Validation administrative
+- Consultation des courses
+- Gestion du crédit DriveMe
+
+## Gestion des Courses
 
 Workflow métier actuel :
 
-EN_ATTENTE → ACCEPTEE → TERMINEE
+```text
+EN_ATTENTE
+     ↓
+ACCEPTEE
+     ↓
+TERMINEE
+```
 
-Gestion des Paiements
+Fonctionnalités :
 
-- Création automatique du paiement après validation d'une course
-- Historisation des transactions
-- Gestion des statuts de paiement
+- Création de course
+- Affectation chauffeur
+- Suivi du statut
+- Historisation
 
-Administration
+## Gestion des Paiements
 
-- Dashboard administrateur
-- Statistiques globales
-- Gestion centralisée des utilisateurs
-- Supervision des activités
+- Génération automatique du paiement
+- Historisation
+- Association aux courses
+- Gestion du statut de paiement
 
----
+## Administration
 
-Frontend Angular
-
-Interface Publique
-
-- Landing Page moderne
-- Présentation des services
-- Accès à l'authentification
-- Design responsive
-
-Dashboard Administrateur
-
-- Tableau de bord moderne
-- Cartes statistiques
-- Navigation latérale
-- Actions rapides
-
-Gestion des Entités
-
-- Chauffeurs
-- Passagers
-- Courses
-- Paiements
-
-Expérience Utilisateur
-
-- Responsive Desktop
-- Responsive Tablette
-- Responsive Mobile
-- Architecture évolutive pour Android et iOS
-
----
-
-Sécurité
-
-DriveMe applique plusieurs niveaux de sécurité :
-
-- Authentification JWT
-- Gestion des rôles utilisateurs
-- Validation côté backend
-- Protection des routes Angular
-- Contrôle d'accès administrateur
-- Sécurisation des API REST
-
----
-
-Roadmap
-
-Version Actuelle
-
-- Backend Spring Boot opérationnel
-- Frontend Angular opérationnel
-- Authentification JWT
-- Dashboard administrateur
+- Dashboard centralisé
 - Gestion des chauffeurs
 - Gestion des passagers
 - Gestion des courses
 - Gestion des paiements
-- Documentation Swagger
-
-Évolutions Prévues
-
-- Paiement électronique sécurisé
-- QR Code de paiement
-- Géolocalisation en temps réel
-- Cartographie interactive
-- Notifications temps réel
-- Gestion des avis
-- Multilingue (Français, Anglais, Arabe, Espagnol)
-- Application Android
-- Application iOS
-- Tableau de bord analytique avancé
-- Déploiement Cloud
 
 ---
 
-Objectifs Académiques
+# Fonctionnalités Frontend
 
-Ce projet répond aux principales exigences du Travail de Fin d'Études ICC :
+## Landing Page
 
-- Architecture Backend / Frontend complète
-- API RESTful sécurisée
-- Gestion des rôles et des accès
-- Base de données relationnelle normalisée
-- Documentation technique
-- Versioning GitHub
-- Déploiement professionnel
-- Sécurisation des données
+- Présentation publique de DriveMe
+- Design responsive
+- Compatible Desktop, Mobile et Tablette
+
+## Authentification
+
+- Interface de connexion
+- Intégration API JWT
+- Protection des routes Angular
+
+## Dashboard Administrateur
+
+- Statistiques globales
+- Vue d'ensemble de la plateforme
+- Actions rapides
+- Interface moderne responsive
+
+## Gestion des Chauffeurs
+
+- Consultation
+- Validation
+- Suppression
+
+## Gestion des Passagers
+
+- Consultation
+- Gestion administrative
+
+## Gestion des Courses
+
+- Liste des trajets
+- Mise à jour des statuts
+- Consultation détaillée
+
+---
+
+# Sécurité
+
+Le projet applique plusieurs mécanismes de sécurité :
+
+- Spring Security
+- JWT Authentication
+- BCrypt Password Encoder
+- Contrôle d'accès par rôles
+- Validation des données
+- Protection des routes Angular
+- Architecture REST sécurisée
+
+---
+
+# État d'Avancement
+
+| Module | Statut |
+|----------|----------|
+| Backend Spring Boot | Terminé |
+| Base de données MySQL | Terminé |
+| Authentification JWT | Terminé |
+| Swagger OpenAPI | Terminé |
+| API REST | Terminé |
+| Dashboard Administrateur | En cours d'amélioration |
+| Gestion Chauffeurs | Fonctionnel |
+| Gestion Passagers | Fonctionnel |
+| Gestion Courses | Fonctionnel |
+| Gestion Paiements | Fonctionnel |
+| Landing Page | En cours |
+| Gestion Avis | En cours |
+| Multilingue | En cours |
+| QR Code Paiement | Planifié |
+| Notifications Temps Réel | Planifié |
+| Déploiement VPS Linux | Planifié |
+| Application Android | Planifié |
+| Application iOS | Planifié |
+
+---
+
+# Conformité TFE ICC
+
+| Exigence | Statut |
+|-----------|---------|
+| Versioning GitHub | Conforme |
+| API RESTful | Conforme |
+| Back-office sécurisé | Conforme |
+| Authentification JWT | Conforme |
+| Base de données relationnelle | Conforme |
+| Documentation API | Conforme |
+| Swagger OpenAPI | Conforme |
+| Gestion des rôles | Conforme |
+| Paiement sécurisé | En cours |
+| Multilingue | En cours |
+| Tests unitaires | À réaliser |
+| Tests d'intégration | À réaliser |
+| Déploiement | À réaliser |
+
+---
+
+# Évolutions Prévues
+
+## Front Office
+
 - Application multilingue
-- Back-office d'administration
+  - Français
+  - Anglais
+  - Arabe
+  - Espagnol
+
+- Géolocalisation
+- Carte interactive
+- Historique avancé
+- Gestion des favoris
+
+## Paiements
+
+- Paiement par QR Code
+- Paiement mobile
+- Paiement bancaire
+- Historique des transactions
+
+## Administration
+
+- Tableau de bord analytique
+- Rapports statistiques
+- Audit d'activité
+- Journalisation complète
+
+## Mobile
+
+- Progressive Web App (PWA)
+- Android APK
+- Application iOS
 
 ---
 
-Auteur
+# Déploiement Prévu
+
+Architecture cible :
+
+```text
+Utilisateur
+      │
+      ▼
+Frontend Angular
+      │
+      ▼
+API Spring Boot
+      │
+      ▼
+Base de données MySQL
+      │
+      ▼
+Serveur Linux VPS
+```
+
+Technologies envisagées :
+
+- Docker
+- Nginx
+- Linux Ubuntu Server
+- GitHub Actions
+- SSL HTTPS
+
+---
+
+# Auteur
 
 Youssef Qarnouf
 
@@ -242,18 +302,12 @@ Bachelier en Informatique – Développement d'Applications
 
 Institut des Carrières Commerciales (ICC)
 
-Année académique 2025–2026
+Année académique 2025-2026
 
 ---
 
-Propriété Intellectuelle
+# Licence
 
-Copyright © 2026 Youssef Qarnouf
-
-DriveMe est un projet développé dans le cadre du Travail de Fin d'Études (TFE) de l'ICC.
-
-Ce dépôt est publié à des fins académiques, d'évaluation et de démonstration technique.
-
-Toute reproduction, distribution, modification ou exploitation commerciale du code source, de la documentation ou des ressources associées est interdite sans autorisation écrite préalable de l'auteur.
+Projet réalisé dans le cadre du Travail de Fin d'Études ICC 2025-2026.
 
 Tous droits réservés.

@@ -1,0 +1,7 @@
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:8080/api',
+  appUrl: 'http://localhost:4200',
+  supportedLanguages: ['fr', 'en', 'ar', 'es'],
+  defaultCurrency: 'MAD'
+};

@@ -1,66 +1,68 @@
-# DriveMe – Smart Mobility Platform
+DriveMe – Smart Mobility Platform
 
-> Application VTC moderne développée dans le cadre du Travail de Fin d'Études (TFE) ICC 2025 - 2026.
+Présentation
 
-## Présentation
+DriveMe est une plateforme de mobilité intelligente développée dans le cadre du Travail de Fin d'Études (TFE) ICC 2025–2026.
 
-DriveMe est une plateforme de mobilité intelligente inspirée des acteurs internationaux du transport à la demande.
+L'application vise à mettre en relation des passagers et des chauffeurs via une plateforme sécurisée, moderne et évolutive. Inspirée des leaders internationaux du transport à la demande, DriveMe a été conçue pour répondre aux besoins du marché marocain tout en respectant les standards techniques d'une solution professionnelle pouvant évoluer vers un déploiement commercial.
 
-L'objectif du projet est de proposer une solution moderne, sécurisée et évolutive permettant la mise en relation entre passagers et chauffeurs via une application web basée sur une architecture professionnelle.
-
-Le projet cible initialement le marché marocain avec une vision d'expansion internationale.
+L'objectif du projet est de proposer une alternative moderne offrant sécurité, transparence, simplicité d'utilisation et gestion centralisée des opérations.
 
 ---
 
-## Aperçu du projet
+Fonctionnalités Principales
 
-### Espace Passager
+Espace Passager
 
-* Création de compte
-* Authentification sécurisée
-* Demande de course
-* Suivi des trajets
-* Historique des déplacements
-* Évaluation des chauffeurs
+- Création et gestion de compte
+- Authentification sécurisée
+- Demande de course
+- Consultation de l'historique des trajets
+- Suivi du statut des courses
+- Évaluation des chauffeurs
+- Gestion du profil utilisateur
 
-### Espace Chauffeur
+Espace Chauffeur
 
-* Gestion du profil
-* Validation administrative
-* Acceptation des courses
-* Historique des revenus
-* Gestion du crédit DriveMe
+- Création et gestion de compte chauffeur
+- Validation administrative du dossier
+- Consultation et acceptation des courses
+- Gestion du profil professionnel
+- Historique des activités
+- Gestion du crédit DriveMe
+- Consultation des revenus
 
-### Espace Administrateur
+Espace Administrateur
 
-* Tableau de bord centralisé
-* Gestion des chauffeurs
-* Gestion des passagers
-* Gestion des courses
-* Gestion des paiements
-* Gestion des avis
-
----
-
-## Architecture Technique
-
-| Domaine         | Technologie           |
-| --------------- | --------------------- |
-| Backend         | Spring Boot 3         |
-| Langage         | Java 17               |
-| Sécurité        | Spring Security + JWT |
-| Base de données | MySQL                 |
-| ORM             | Hibernate / JPA       |
-| Frontend        | Angular Standalone    |
-| API             | REST JSON             |
-| Documentation   | Swagger OpenAPI       |
-| Versioning      | Git / GitHub          |
+- Tableau de bord centralisé
+- Gestion des chauffeurs
+- Gestion des passagers
+- Gestion des courses
+- Gestion des paiements
+- Gestion des avis
+- Contrôle et supervision de la plateforme
 
 ---
 
-## Architecture du Projet
+Architecture Technique
 
-```text
+Domaine| Technologie
+Backend| Spring Boot 3
+Langage Backend| Java 17
+Frontend| Angular 17 Standalone
+Sécurité| Spring Security + JWT
+Base de données| MySQL
+ORM| Hibernate / JPA
+API| RESTful JSON
+Documentation API| Swagger OpenAPI
+Versioning| Git / GitHub
+Build Tool| Maven
+Déploiement cible| Docker / VPS Linux
+
+---
+
+Architecture du Projet
+
 DriveMe
 │
 ├── backend/
@@ -74,154 +76,155 @@ DriveMe
 ├── docs/
 │
 └── README.md
-```
 
 ---
 
-## Fonctionnalités Implémentées
+Fonctionnalités Implémentées
 
-### Authentification
+Authentification et Sécurité
 
-* JWT sécurisé
-* Gestion des rôles
-* Protection des routes
-* Contrôle d'accès
+- Authentification JWT
+- Gestion des rôles
+- Protection des endpoints REST
+- Contrôle d'accès basé sur les rôles
+- Validation des données
+- Architecture sécurisée Spring Security
 
-### Gestion des Courses
+Gestion des Courses
 
-Workflow métier :
+Workflow métier actuel :
 
-```text
 EN_ATTENTE
-     ↓
+    ↓
 ACCEPTEE
-     ↓
+    ↓
 TERMINEE
-```
 
-### Gestion des Paiements
+Gestion des Paiements
 
-* Paiement généré automatiquement
-* Suivi du statut
-* Historisation des transactions
+- Création automatique du paiement après validation d'une course
+- Historisation des transactions
+- Gestion des statuts de paiement
 
-### Administration
+Administration
 
-* Dashboard central
-* Statistiques globales
-* Gestion des utilisateurs
-* Contrôle de la plateforme
-
----
-
-## Fonctionnalités Frontend
-
-### Dashboard Administrateur
-
-* Interface moderne Angular
-* Sidebar de navigation
-* Cartes statistiques
-* Actions rapides
-
-### Gestion des Chauffeurs
-
-* Consultation
-* Suppression
-* Statut de validation
-
-### Gestion des Courses
-
-* Liste des trajets
-* Suivi du statut
-* Rafraîchissement dynamique
-
-### Authentification
-
-* Formulaire de connexion
-* Intégration API REST
-* Gestion JWT
+- Dashboard administrateur
+- Statistiques globales
+- Gestion centralisée des utilisateurs
+- Supervision des activités
 
 ---
 
-## Sécurité
+Frontend Angular
 
-DriveMe applique plusieurs mécanismes de sécurité :
+Interface Publique
 
-* Authentification JWT
-* Contrôle d'accès par rôle
-* Validation des données
-* Protection des endpoints REST
-* Architecture sécurisée Spring Security
+- Landing Page moderne
+- Présentation des services
+- Accès à l'authentification
+- Design responsive
 
----
+Dashboard Administrateur
 
-## Roadmap
+- Tableau de bord moderne
+- Cartes statistiques
+- Navigation latérale
+- Actions rapides
 
-### Version actuelle
+Gestion des Entités
 
-* Backend opérationnel
-* Frontend Angular opérationnel
-* Authentification JWT
-* Gestion des courses
-* Gestion des paiements
-* Dashboard administrateur
+- Chauffeurs
+- Passagers
+- Courses
+- Paiements
 
-### Prochaines évolutions
+Expérience Utilisateur
 
-* Carte interactive
-* Géolocalisation
-* Notifications temps réel
-* Version mobile
-* Multilingue FR / EN / AR / ES
-* Tableau de bord analytique
-* Déploiement Cloud
+- Responsive Desktop
+- Responsive Tablette
+- Responsive Mobile
+- Architecture évolutive pour application Android et iOS
 
 ---
 
-## Captures d'écran
+Sécurité
 
-### Dashboard Administrateur
+DriveMe applique plusieurs niveaux de sécurité :
 
-*Ajouter une capture du dashboard ici*
-
-### Gestion des Chauffeurs
-
-*Ajouter une capture ici*
-
-### Gestion des Courses
-
-*Ajouter une capture ici*
+- Authentification JWT
+- Gestion des rôles utilisateurs
+- Validation côté backend
+- Protection des routes Angular
+- Contrôle d'accès administrateur
+- Sécurisation des API REST
 
 ---
 
-## Objectifs Académiques
+Roadmap
 
-Ce projet répond aux exigences du Travail de Fin d'Études ICC :
+Version Actuelle
 
-* Architecture complète Backend / Frontend
-* API REST sécurisée
-* Gestion des rôles
-* Base de données relationnelle
-* Documentation technique
-* Versioning GitHub
-* Déploiement professionnel
+- Backend Spring Boot opérationnel
+- Frontend Angular opérationnel
+- Authentification JWT
+- Dashboard administrateur
+- Gestion des chauffeurs
+- Gestion des passagers
+- Gestion des courses
+- Gestion des paiements
+- Documentation Swagger
+
+Évolutions Prévues
+
+- Paiement électronique sécurisé
+- QR Code de paiement
+- Géolocalisation en temps réel
+- Cartographie interactive
+- Notifications temps réel
+- Gestion des avis
+- Multilingue (Français, Anglais, Arabe, Espagnol)
+- Application Android
+- Application iOS
+- Tableau de bord analytique avancé
+- Déploiement Cloud
 
 ---
 
-## Auteur
+Objectifs Académiques
 
-**Youssef Qarnouf**
+Ce projet répond aux principales exigences du Travail de Fin d'Études ICC :
+
+- Architecture Backend / Frontend complète
+- API RESTful sécurisée
+- Gestion des rôles et des accès
+- Base de données relationnelle normalisée
+- Documentation technique
+- Versioning GitHub
+- Déploiement professionnel
+- Sécurisation des données
+- Application multilingue
+- Back-office d'administration
+
+---
+
+Auteur
+
+Youssef Qarnouf
 
 Bachelier en Informatique – Développement d'Applications
 
-ICC 2025–2026
+Institut des Carrières Commerciales (ICC)
+
+Année académique 2025–2026
 
 ---
 
-## Licence
+Propriété Intellectuelle
 
-Projet académique réalisé dans le cadre du TFE ICC 2025 - 2026.
+Copyright © 2026 Youssef Qarnouf
 
-## Licence
+Projet développé dans le cadre du Travail de Fin d'Études ICC.
 
-Projet académique (TFE)
+Toute reproduction, diffusion, modification ou exploitation commerciale du code source ou de la documentation est interdite sans autorisation écrite de l'auteur.
+
+Tous droits réservés.

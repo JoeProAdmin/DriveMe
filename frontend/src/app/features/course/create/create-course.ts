@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../../core/api.service';
+
+// Déclaration pour s'interfacer avec la bibliothèque cartographique globale
+declare var L: any;
 
 @Component({
   selector: 'app-create-course',
@@ -11,20 +14,20 @@ import { ApiService } from '../../../core/api.service';
   templateUrl: './create-course.html',
   styleUrls: ['./create-course.css']
 })
-export class CreateCourse implements OnInit {
+export class CreateCourse implements OnInit, AfterViewInit {
 
-  // Modèle de formulaire aligné sur CourseCreateDTO.java
   public formModel = {
-    passagerId: 1, // Id extrait par défaut ou depuis la session locale
-    chauffeurId: 2, // Id du chauffeur sélectionné par le dispatcher/algorithme
+    passagerId: 1,
+    chauffeurId: 2,
     adresseDepart: '',
     adresseArrivee: '',
     prix: 0
   };
 
-  public isSubmitting: boolean = false;
-  public successMessage: string = '';
-  public errorMessage: string = '';
+  public isSubmitting = false;
+  public successMessage = '';
+  public errorMessage = '';
+  private map: any;
 
   constructor(
     public apiService: ApiService,
@@ -32,54 +35,69 @@ export class CreateCourse implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Récupération dynamique de l'ID du passager stocké lors du login si disponible
     const localId = localStorage.getItem('userId');
     if (localId) {
       this.formModel.passagerId = +localId;
     }
   }
 
+  ngAfterViewInit(): void {
+    this.initialiserCartographieMaroc();
+  }
+
   /**
-   * Calcule une estimation du prix de la course basée sur la distance théorique
+   * Initialise une vraie carte interactive centrée géographiquement sur le Maroc
    */
+  private initialiserCartographieMaroc(): void {
+    // Chargement dynamique du CSS de la carte si non présent
+    if (!document.getElementById('leaflet-css')) {
+      const link = document.createElement('link');
+      link.id = 'leaflet-css';
+      link.rel = 'stylesheet';
+      link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+      document.head.appendChild(link);
+    }
+
+    // Chargement dynamique du moteur de carte OpenStreetMap
+    const script = document.createElement('script');
+    script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    script.onload = () => {
+      // Centrage géographique sur les coordonnées du Maroc (Rabat/Casablanca)
+      this.map = L.map('driveme-live-map').setView([33.5731, -7.5898], 7);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(this.map);
+
+      // Ajout d'un marqueur de test animé sur l'axe central
+      L.marker([33.5731, -7.5898]).addTo(this.map)
+        .bindPopup('<b>Réseau DriveMe</b><br>Flotte de chauffeurs active.')
+        .openPopup();
+    };
+    document.body.appendChild(script);
+  }
+
   public estimerPrix(): void {
     const longueurSource = this.formModel.adresseDepart.length;
     const longueurCible = this.formModel.adresseArrivee.length;
 
     if (longueurSource > 3 && longueurCible > 3) {
-      // Formule d'estimation déterministe pour le TFE (Tarif de base + facteur longueur)
-      this.formModel.prix = 15 + (longueurSource + longueurCible) * 1.5;
+      this.formModel.prix = 20 + (longueurSource + longueurCible) * 1.35;
     } else {
       this.formModel.prix = 0;
     }
   }
 
-  /**
-   * Soumission du payload DTO valide vers ton CourseController.java
-   */
   public commanderCourse(): void {
-    if (!this.formModel.adresseDepart || !this.formModel.adresseArrivee || this.formModel.prix === 0) {
-      this.errorMessage = 'Veuillez renseigner des adresses valides pour calculer une estimation.';
-      return;
-    }
-
     this.isSubmitting = true;
-    this.errorMessage = '';
-    this.successMessage = '';
-
     this.apiService.createCourse(this.formModel).subscribe({
-      next: (response: any) => {
-        this.successMessage = 'Votre demande de course a été enregistrée avec succès !';
+      next: () => {
+        this.successMessage = 'Demande transmise aux chauffeurs à proximité !';
         this.isSubmitting = false;
-
-        // Redirection après un court délai vers le tableau de suivi des trajets
-        setTimeout(() => {
-          this.router.navigate(['/courses/list']);
-        }, 2000);
+        setTimeout(() => this.router.navigate(['/courses']), 2000);
       },
-      error: (err: any) => {
-        console.error('Erreur lors du dispatching de la course :', err);
-        this.errorMessage = 'Le serveur a rejeté la requête. Vérifiez vos autorisations JWT.';
+      error: () => {
+        this.errorMessage = 'Erreur lors de la liaison au serveur de dispatching.';
         this.isSubmitting = false;
       }
     });

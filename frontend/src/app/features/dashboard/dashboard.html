@@ -1,155 +1,49 @@
-<div class="driveme-app-shell" [attr.dir]="apiService.isRtlMode() ? 'rtl' : 'ltr'">
+<div style="display: flex; gap: 24px; flex-wrap: wrap;">
 
-  <!-- ZONE DE CONTENU PRINCIPALE -->
-  <div class="shell-workspace">
+  <div style="flex: 2; background-color: #ffffff; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; min-width: 300px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <h2 style="font-size: 16px; font-weight: 600; color: #0f172a; margin: 0;">
+        {{ labels[apiService.currentLanguage()].logTitle }}
+      </h2>
+      <span style="font-size: 11px; font-weight: 600; background-color: #eff6ff; color: #3b82f6; padding: 4px 10px; border-radius: 50px;">
+            {{ labels[apiService.currentLanguage()].sync }}
+          </span>
+    </div>
 
-    <!-- BARRE SUPÉRIEURE DE STATUT -->
-    <header class="workspace-topbar">
-      <div class="topbar-context-left">
-        <div class="sys-operational-pill">
-          <span class="pulse-node"></span>
-          <span class="pill-text">{{ labels[apiService.currentLanguage()].status }}</span>
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <div *ngFor="let item of recentActivities" style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background-color: #f8fafc; border-radius: 8px; border-left: 4px solid" [style.border-left-color]="item.color">
+        <div>
+          <span style="font-size: 11px; font-weight: 700; color: #94a3b8; display: block;">{{ item.id }}</span>
+          <span style="font-size: 14px; color: #334155; font-weight: 500;">{{ item.text }}</span>
         </div>
+        <span style="font-size: 12px; font-weight: 600; color: #475569;">{{ item.status }}</span>
       </div>
-      <div class="topbar-context-right">
-        <div class="user-profile-widget">
-          <div class="profile-avatar">YQ</div>
-          <div class="profile-details">
-            <span class="user-fullname">Youssef Qarnouf</span>
-            <span class="user-role-title">Lead Frontend Architect</span>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <!-- METRICS ET COMPTEURS D'EXPLOITATION -->
-    <main class="workspace-viewport">
-
-      <div class="viewport-title-block">
-        <h1>{{ labels[apiService.currentLanguage()].title }}</h1>
-        <p class="section-subtitle">{{ labels[apiService.currentLanguage()].subtitle }}</p>
-      </div>
-
-      <!-- GRILLE DE CARTES KPI SANS AUCUN ARTIFICE -->
-      <section class="kpi-dashboard-grid">
-
-        <div class="premium-kpi-card">
-          <div class="kpi-card-meta">
-            <span class="kpi-card-label">{{ labels[apiService.currentLanguage()].kpiDrivers }}</span>
-          </div>
-          <div class="kpi-card-core">
-            <h3 class="kpi-main-number">{{ stats.totalChauffeurs }}</h3>
-            <span class="kpi-growth-indicator up">+12.4%</span>
-          </div>
-          <p class="kpi-subtext">{{ labels[apiService.currentLanguage()].subDrivers }}</p>
-        </div>
-
-        <div class="premium-kpi-card">
-          <div class="kpi-card-meta">
-            <span class="kpi-card-label">{{ labels[apiService.currentLanguage()].kpiPassengers }}</span>
-          </div>
-          <div class="kpi-card-core">
-            <h3 class="kpi-main-number">{{ stats.totalPassagers }}</h3>
-            <span class="kpi-growth-indicator up">+14.2%</span>
-          </div>
-          <p class="kpi-subtext">{{ labels[apiService.currentLanguage()].subPassengers }}</p>
-        </div>
-
-        <div class="premium-kpi-card">
-          <div class="kpi-card-meta">
-            <span class="kpi-card-label">{{ labels[apiService.currentLanguage()].kpiTrips }}</span>
-          </div>
-          <div class="kpi-card-core">
-            <h3 class="kpi-main-number">{{ stats.totalCourses }}</h3>
-            <span class="kpi-growth-indicator down">-1.8%</span>
-          </div>
-          <p class="kpi-subtext">{{ labels[apiService.currentLanguage()].subTrips }}</p>
-        </div>
-
-        <div class="premium-kpi-card">
-          <div class="kpi-card-meta">
-            <span class="kpi-card-label">{{ labels[apiService.currentLanguage()].kpiVolume }}</span>
-          </div>
-          <div class="kpi-card-core">
-            <h3 class="kpi-main-number">
-              <span *ngIf="!apiService.isRtlMode()">{{ stats.totalPaiements }} </span>
-              <span class="kpi-currency-unit">{{ apiService.currentCurrency() }}</span>
-              <span *ngIf="apiService.isRtlMode()"> {{ stats.totalPaiements }}</span>
-            </h3>
-            <span class="kpi-growth-indicator up">+8.5%</span>
-          </div>
-          <p class="kpi-subtext">{{ labels[apiService.currentLanguage()].subVolume }}</p>
-        </div>
-
-      </section>
-
-      <!-- REGION TECHNIQUE : LOGS ET PROCESSUS -->
-      <div class="operational-split-layout">
-
-        <!-- JOURNAL LOGS SYSTEME -->
-        <div class="saas-data-table-card">
-          <div class="table-card-header">
-            <h2>{{ labels[apiService.currentLanguage()].logTitle }}</h2>
-            <span class="log-refresh-badge">{{ labels[apiService.currentLanguage()].sync }}</span>
-          </div>
-          <div class="system-logs-stack">
-            <div class="log-row">
-              <div class="log-indicator-node status-amber"></div>
-              <div class="log-body">
-                <p class="log-main-title">Nouvelle course enregistrée</p>
-                <span class="log-caption">Identifiant REST : REQ-9284 • Statut : <strong class="lbl-pending">EN_ATTENTE</strong></span>
-              </div>
-            </div>
-            <div class="log-row">
-              <div class="log-indicator-node status-emerald"></div>
-              <div class="log-body">
-                <p class="log-main-title">Validation d'un profil conducteur</p>
-                <span class="log-caption">Contrôle de conformité de l'assurance et du permis approuvé</span>
-              </div>
-            </div>
-            <div class="log-row">
-              <div class="log-indicator-node status-purple"></div>
-              <div class="log-body">
-                <p class="log-main-title">Compensation financière traitée</p>
-                <span class="log-caption">Transaction actée avec succès via le canal local CIH Pay</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ACCÈS ACTIONS ADMINISTRATEUR -->
-        <div class="saas-data-table-card">
-          <div class="table-card-header">
-            <h2>{{ labels[apiService.currentLanguage()].actionsTitle }}</h2>
-          </div>
-
-          <div class="kpi-action-buttons-list">
-            <button class="kpi-action-item btn-emerald" routerLink="/courses">
-              <div class="btn-inner-left">
-                <span>{{ labels[apiService.currentLanguage()].actionCourses }}</span>
-              </div>
-              <span class="action-chevron">></span>
-            </button>
-
-            <button class="kpi-action-item btn-blue" routerLink="/chauffeurs">
-              <div class="btn-inner-left">
-                <span>{{ labels[apiService.currentLanguage()].actionChauffeurs }}</span>
-              </div>
-              <span class="action-chevron">></span>
-            </button>
-
-            <!-- CADRE DE SPÉCIFICATIONS FUTURES -->
-            <div class="future-spec-preview-box">
-              <div class="spec-header">
-                <span>{{ labels[apiService.currentLanguage()].specTitle }}</span>
-              </div>
-              <p>{{ labels[apiService.currentLanguage()].specDesc }}</p>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-    </main>
+    </div>
   </div>
+
+  <div style="flex: 1; display: flex; flex-direction: column; gap: 20px; min-width: 250px;">
+
+    <div style="background-color: #ffffff; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 12px;">
+      <h2 style="font-size: 16px; font-weight: 600; color: #0f172a; margin: 0 0 4px 0;">
+        {{ labels[apiService.currentLanguage()].actionsTitle }}
+      </h2>
+      <button type="button" style="width: 100%; background-color: #f8fafc; color: #334155; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; text-align: start; cursor: pointer; font-family: inherit;">
+        {{ labels[apiService.currentLanguage()].actionVerify }}
+      </button>
+      <button type="button" style="width: 100%; background-color: #f8fafc; color: #334155; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; text-align: start; cursor: pointer; font-family: inherit;">
+        {{ labels[apiService.currentLanguage()].actionHistory }}
+      </button>
+    </div>
+
+    <div style="background-color: #ffffff; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0;">
+          <span style="font-size: 13px; font-weight: 700; color: #00C853; display: block; margin-bottom: 6px;">
+            {{ labels[apiService.currentLanguage()].specTitle }}
+          </span>
+      <p style="font-size: 12px; color: #64748b; line-height: 1.5; margin: 0;">
+        {{ labels[apiService.currentLanguage()].specDesc }}
+      </p>
+    </div>
+
+  </div>
+
 </div>

@@ -14,10 +14,18 @@
       </button>
 
       <div *ngIf="dropdownOpen" [style.right]="currentLang !== 'AR' ? '0' : 'auto'" [style.left]="currentLang === 'AR' ? '0' : 'auto'" style="position: absolute; top: 38px; background-color: #1e293b; border: 1px solid #334155; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); width: 120px; z-index: 100; display: flex; flex-direction: column; padding: 4px 0; box-sizing: border-box;">
-        <button type="button" (click)="changeLangViaDropdown('FR')" style="background: transparent; border: none; padding: 8px 12px; color: #ffffff; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; width: 100%; text-align: start; font-family: inherit;"><svg style="width: 18px; height: 12px; border-radius: 1px;" viewBox="0 0 3 2"><rect width="1" height="2" fill="#002395"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#ED2939"/></svg> FR</button>
-        <button type="button" (click)="changeLangViaDropdown('AR')" style="background: transparent; border: none; padding: 8px 12px; color: #ffffff; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; width: 100%; text-align: start; font-family: inherit;"><svg style="width: 18px; height: 12px; border-radius: 1px;" viewBox="0 0 900 600"><rect width="900" height="600" fill="#c1272d"/><polygon points="450,196 475,273 540,273 488,311 507,388 450,341 393,388 412,311 360,273 425,273" fill="none" stroke="#006233" stroke-width="18"/></svg> العربية</button>
-        <button type="button" (click)="changeLangViaDropdown('EN')" style="background: transparent; border: none; padding: 8px 12px; color: #ffffff; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; width: 100%; text-align: start; font-family: inherit;"><svg style="width: 18px; height: 12px; border-radius: 1px;" viewBox="0 0 60 30"><clipPath id="s_opt"><path d="M0,0 v30 h60 v-30 z"/></clipPath><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6" clip-path="url(#s_opt)"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="4" clip-path="url(#s_opt)"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></svg> EN</button>
-        <button type="button" (click)="changeLangViaDropdown('ES')" style="background: transparent; border: none; padding: 8px 12px; color: #ffffff; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; width: 100%; text-align: start; font-family: inherit;"><svg style="width: 18px; height: 12px; border-radius: 1px;" viewBox="0 0 3 2"><rect width="3" height="2" fill="#c1272d"/><rect y="0.5" width="3" height="1" fill="#fcd116"/></svg> ES</button>
+        <button type="button" (click)="changeLangViaDropdown('FR')" style="background: transparent; border: none; padding: 8px 12px; color: #ffffff; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; width: 100%; text-align: start; font-family: inherit;">
+          <svg style="width: 18px; height: 12px; border-radius: 1px;" viewBox="0 0 3 2"><rect width="1" height="2" fill="#002395"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#ED2939"/></svg> FR
+        </button>
+        <button type="button" (click)="changeLangViaDropdown('AR')" style="background: transparent; border: none; padding: 8px 12px; color: #ffffff; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; width: 100%; text-align: start; font-family: inherit;">
+          <svg style="width: 18px; height: 12px; border-radius: 1px;" viewBox="0 0 900 600"><rect width="900" height="600" fill="#c1272d"/><polygon points="450,196 475,273 540,273 488,311 507,388 450,341 393,388 412,311 360,273 425,273" fill="none" stroke="#006233" stroke-width="18"/></svg> العربية
+        </button>
+        <button type="button" (click)="changeLangViaDropdown('EN')" style="background: transparent; border: none; padding: 8px 12px; color: #ffffff; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; width: 100%; text-align: start; font-family: inherit;">
+          <svg style="width: 18px; height: 12px; border-radius: 1px;" viewBox="0 0 60 30"><clipPath id="s_opt"><path d="M0,0 v30 h60 v-30 z"/></clipPath><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6" clip-path="url(#s_opt)"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="4" clip-path="url(#s_opt)"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></svg> EN
+        </button>
+        <button type="button" (click)="changeLangViaDropdown('ES')" style="background: transparent; border: none; padding: 8px 12px; color: #ffffff; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; width: 100%; text-align: start; font-family: inherit;">
+          <svg style="width: 18px; height: 12px; border-radius: 1px;" viewBox="0 0 3 2"><rect width="3" height="2" fill="#c1272d"/><rect y="0.5" width="3" height="1" fill="#fcd116"/></svg> ES
+        </button>
       </div>
     </div>
   </header>
@@ -50,32 +58,4 @@
 
       <div style="display: flex; flex-direction: column; gap: 12px; width: 100%;">
         <button type="button" (click)="onSubmit()" style="width: 100%; background-color: #f8fafc; color: #0f172a; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer; font-family: inherit; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 12px;">
-          <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/></svg>
-          {{ dictionary[currentLang].google }}
-        </button>
-
-        <button type="button" (click)="onSubmit()" style="width: 100%; background-color: #f8fafc; color: #0f172a; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer; font-family: inherit; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 12px;">
-          <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="#000000"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.21.67-2.93 1.49-.62.69-1.16 1.84-1.01 2.96 1.12.09 2.27-.57 2.95-1.39z"/></svg>
-          {{ dictionary[currentLang].apple }}
-        </button>
-
-        <button type="button" (click)="toggleQrModal(true)" style="width: 100%; background-color: rgba(0, 200, 83, 0.06); color: #00C853; border: 1px solid rgba(0, 200, 83, 0.2); padding: 12px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 10px;">
-          <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zm3 3h4v4h-4zm-3 4h3v-3h-3zm7-3h1v-4h-4v1h3z"/></svg>
-          {{ dictionary[currentLang].qrCode }}
-        </button>
-      </div>
-
-      <p style="font-size: 12px; color: #64748b; line-height: 1.6; text-align: start; margin: 28px 0 0 0;">
-        {{ dictionary[currentLang].legal }}
-      </p>
-
-    </div>
-  </div>
-
-  <div *ngIf="showQrModal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(15, 23, 42, 0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 20px; box-sizing: border-box;">
-    <div style="background-color: #ffffff; padding: 36px 32px 32px 32px; border-radius: 16px; width: 100%; max-width: 400px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
-      <button type="button" (click)="toggleQrModal(false)" [style.right]="currentLang !== 'AR' ? '20px' : 'auto'" [style.left]="currentLang === 'AR' ? '20px' : 'auto'" style="position: absolute; top: 20px; background: transparent; border: none; font-size: 18px; font-weight: 700; cursor: pointer; color: #64748b; padding: 4px; line-height: 1; outline: none;">✕</button>
-      <h3 style="font-size: 20px; font-weight: 600; color: #0f172a; margin: 10px 0 12px 0;">{{ dictionary[currentLang].qrTitle }}</h3>
-      <p style="font-size: 14px; color: #64748b; margin: 0 0 24px 0; line-height: 1.5;">{{ dictionary[currentLang].qrDesc }}</p>
-      <div style="padding: 16px; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #f8fafc; margin-bottom: 8px; display: flex; justify-content: center; align-items: center;">
-        <svg style="width: 200px; height: 200px;" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="0.5"/><rect
+          <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.8

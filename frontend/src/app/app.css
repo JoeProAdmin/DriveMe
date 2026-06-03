@@ -1,19 +1,23 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
 
 body, html {
   margin: 0;
   padding: 0;
-  font-family: 'Roboto', sans-serif;
-  background-color: #f2f2f2; /* Gris clair officiel du rapport de l'ICC */
+  font-family: 'Poppins', sans-serif;
+  background-color: #f8fafc;
   overflow-x: hidden;
 }
 
-/* Base de l'App Shell Adaptatif */
 .driveme-responsive-shell {
   display: flex;
   width: 100vw;
   min-height: 100vh;
   box-sizing: border-box;
+}
+
+/* Modification dynamique de l'espace si layout admin actif */
+.driveme-responsive-shell.admin-layout .main-workspace-area {
+  background-color: #f1f5f9;
 }
 
 .main-workspace-area {
@@ -26,21 +30,20 @@ body, html {
 
 .viewport-router-scroll {
   flex: 1;
-  overflow-y: auto;
   width: 100%;
 }
 
 /* ==========================================================================
-   BREAKPOINTS RESPONSIFS (WEB PC, TABLETTE, MOBILE)
+   BREAKPOINTS RESPONSIFS STRICTS (WEB PC, TABLETTE, MOBILE)
    ========================================================================== */
 
-/* 1. MODE DESKTOP & GRANDS ÉCRANS */
 @media (min-width: 1025px) {
   .desktop-sidebar-container {
-    width: 260px;
-    min-width: 260px;
-    background-color: #1a1a1a; /* Gris foncé de structure */
+    width: 280px;
+    min-width: 280px;
+    background-color: #0f172a;
     display: block;
+    border-right: 1px solid #e2e8f0;
   }
 
   .mobile-bottom-tabbar {
@@ -48,46 +51,28 @@ body, html {
   }
 }
 
-/* 2. MODE TABLETTE */
-@media (min-width: 768px) and (max-width: 1024px) {
-  .desktop-sidebar-container {
-    width: 80px;
-    min-width: 80px;
-    display: block;
-  }
-
-  .mobile-bottom-tabbar {
-    display: none !important;
-  }
-}
-
-/* 3. MODE SMARTPHONE (Inspiration inDrive Maroc) */
-@media (max-width: 767px) {
+@media (max-width: 1024px) {
   .desktop-sidebar-container {
     display: none !important;
   }
 
   .mobile-bottom-tabbar {
-    height: 60px;
+    height: 64px;
     background-color: #ffffff;
-    border-top: 1px solid #cbd5e1;
+    border-top: 1px solid #e2e8f0;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    box-sizing: border-box;
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
     z-index: 999;
-  }
-
-  .viewport-router-scroll {
-    padding-bottom: 70px;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.03);
   }
 }
 
-/* STYLE DES ONGLETS MOBILES TEXTUELS SANS EMOJI */
+/* STYLE DES ONGLETS MOBILES */
 .tab-item {
   background: none;
   border: none;
@@ -96,21 +81,20 @@ body, html {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #94a3b8;
+  color: #64748b;
   text-decoration: none;
   height: 100%;
   flex: 1;
 }
 
 .tab-label {
-  font-size: 0.85rem;
-  font-weight: 700;
+  font-size: 0.8rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
 }
 
-/* Application du Vert Officiel de la charte sur l'onglet actif */
+/* Vert Premium #00C853 conforme à ton rapport de conception graphique */
 .tab-item.active {
   color: #00C853 !important;
-  border-top: 3px solid #00C853;
 }

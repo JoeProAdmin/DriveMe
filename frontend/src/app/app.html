@@ -1,20 +1,18 @@
-<div class="driveme-responsive-shell">
+<div class="driveme-responsive-shell" [class.admin-layout]="isDashboardRoute">
 
-  <!-- BARRE LATÉRALE (SIDEBAR) : Destinée au monitoring sur PC et Tablette -->
-  <aside class="desktop-sidebar-container">
+  <!-- BARRE LATÉRALE (SIDEBAR) : S'affiche uniquement sur les routes de gestion administrative -->
+  <aside class="desktop-sidebar-container" *ngIf="isDashboardRoute">
     <app-sidebar></app-sidebar>
   </aside>
 
-  <!-- ZONE DE TRAVAIL PRINCIPALE -->
+  <!-- ZONE DE RENDU DES PAGES -->
   <div class="main-workspace-area">
-
-    <!-- Conteneur d'affichage dynamique des vues -->
     <div class="viewport-router-scroll">
       <router-outlet></router-outlet>
     </div>
 
-    <!-- BARRE DE NAVIGATION INFÉRIEURE : Active uniquement sur Mobile (Style InDrive Maroc) -->
-    <nav class="mobile-bottom-tabbar">
+    <!-- BARRE TACTILE INFÉRIEURE : Active uniquement sur Mobile pour l'application chauffeur/passager -->
+    <nav class="mobile-bottom-tabbar" *ngIf="!isDashboardRoute">
       <button type="button" class="tab-item" routerLink="/create-course" routerLinkActive="active">
         <span class="tab-label">Home</span>
       </button>
@@ -28,6 +26,6 @@
         <span class="tab-label">Profil</span>
       </button>
     </nav>
-
   </div>
+
 </div>

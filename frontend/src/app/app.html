@@ -1,35 +1,33 @@
 <div class="driveme-responsive-shell">
 
-  <!-- BARRE LATÉRALE (SIDEBAR) : Visible UNIQUEMENT sur Desktop et Tablette -->
+  <!-- BARRE LATÉRALE (SIDEBAR) : Destinée au monitoring sur PC et Tablette -->
   <aside class="desktop-sidebar-container">
     <app-sidebar></app-sidebar>
   </aside>
 
-  <!-- WORKSPACE PRINCIPAL -->
+  <!-- ZONE DE TRAVAIL PRINCIPALE -->
   <div class="main-workspace-area">
+
+    <!-- Conteneur d'affichage dynamique des vues -->
     <div class="viewport-router-scroll">
       <router-outlet></router-outlet>
     </div>
 
-    <!-- BARRE TACTILE INFÉRIEURE : Visible UNIQUEMENT sur Mobile (Style Maquette App) -->
+    <!-- BARRE DE NAVIGATION INFÉRIEURE : Active uniquement sur Mobile (Style InDrive Maroc) -->
     <nav class="mobile-bottom-tabbar">
-      <button type="button" class="tab-item active" routerLink="/create-course">
-        <span class="tab-icon">🏠</span>
+      <button type="button" class="tab-item" routerLink="/create-course" routerLinkActive="active">
         <span class="tab-label">Home</span>
       </button>
-      <button type="button" class="nav-tab-item" routerLink="/courses">
-        <span class="tab-icon">🕒</span>
+      <button type="button" class="tab-item" routerLink="/courses" routerLinkActive="active">
         <span class="tab-label">Histo</span>
       </button>
-      <button type="button" class="nav-tab-item" routerLink="/payments">
-        <span class="tab-icon">💳</span>
+      <button type="button" class="tab-item" routerLink="/payments" routerLinkActive="active">
         <span class="tab-label">Wallet</span>
       </button>
-      <button type="button" class="nav-tab-item" routerLink="/dashboard">
-        <span class="tab-icon">👤</span>
+      <button type="button" class="tab-item" routerLink="/dashboard" routerLinkActive="active">
         <span class="tab-label">Profil</span>
       </button>
     </nav>
-  </div>
 
+  </div>
 </div>

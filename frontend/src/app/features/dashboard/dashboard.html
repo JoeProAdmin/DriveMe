@@ -1,7 +1,9 @@
 <div class="driveme-app-shell" [attr.dir]="apiService.isRtlMode() ? 'rtl' : 'ltr'">
 
+  <!-- ZONE DE CONTENU PRINCIPALE -->
   <div class="shell-workspace">
 
+    <!-- BARRE SUPÉRIEURE DE STATUT -->
     <header class="workspace-topbar">
       <div class="topbar-context-left">
         <div class="sys-operational-pill">
@@ -20,6 +22,7 @@
       </div>
     </header>
 
+    <!-- METRICS ET COMPTEURS D'EXPLOITATION -->
     <main class="workspace-viewport">
 
       <div class="viewport-title-block">
@@ -27,14 +30,12 @@
         <p class="section-subtitle">{{ labels[apiService.currentLanguage()].subtitle }}</p>
       </div>
 
+      <!-- GRILLE DE CARTES KPI SANS AUCUN ARTIFICE -->
       <section class="kpi-dashboard-grid">
 
         <div class="premium-kpi-card">
           <div class="kpi-card-meta">
             <span class="kpi-card-label">{{ labels[apiService.currentLanguage()].kpiDrivers }}</span>
-            <div class="kpi-icon-container box-emerald">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-            </div>
           </div>
           <div class="kpi-card-core">
             <h3 class="kpi-main-number">{{ stats.totalChauffeurs }}</h3>
@@ -46,9 +47,6 @@
         <div class="premium-kpi-card">
           <div class="kpi-card-meta">
             <span class="kpi-card-label">{{ labels[apiService.currentLanguage()].kpiPassengers }}</span>
-            <div class="kpi-icon-container box-blue">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-            </div>
           </div>
           <div class="kpi-card-core">
             <h3 class="kpi-main-number">{{ stats.totalPassagers }}</h3>
@@ -60,9 +58,6 @@
         <div class="premium-kpi-card">
           <div class="kpi-card-meta">
             <span class="kpi-card-label">{{ labels[apiService.currentLanguage()].kpiTrips }}</span>
-            <div class="kpi-icon-container box-amber">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-            </div>
           </div>
           <div class="kpi-card-core">
             <h3 class="kpi-main-number">{{ stats.totalCourses }}</h3>
@@ -74,9 +69,6 @@
         <div class="premium-kpi-card">
           <div class="kpi-card-meta">
             <span class="kpi-card-label">{{ labels[apiService.currentLanguage()].kpiVolume }}</span>
-            <div class="kpi-icon-container box-purple">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            </div>
           </div>
           <div class="kpi-card-core">
             <h3 class="kpi-main-number">
@@ -91,8 +83,10 @@
 
       </section>
 
+      <!-- REGION TECHNIQUE : LOGS ET PROCESSUS -->
       <div class="operational-split-layout">
 
+        <!-- JOURNAL LOGS SYSTEME -->
         <div class="saas-data-table-card">
           <div class="table-card-header">
             <h2>{{ labels[apiService.currentLanguage()].logTitle }}</h2>
@@ -123,6 +117,7 @@
           </div>
         </div>
 
+        <!-- ACCÈS ACTIONS ADMINISTRATEUR -->
         <div class="saas-data-table-card">
           <div class="table-card-header">
             <h2>{{ labels[apiService.currentLanguage()].actionsTitle }}</h2>
@@ -131,23 +126,21 @@
           <div class="kpi-action-buttons-list">
             <button class="kpi-action-item btn-emerald" routerLink="/courses">
               <div class="btn-inner-left">
-                <div class="action-icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
                 <span>{{ labels[apiService.currentLanguage()].actionCourses }}</span>
               </div>
-              <span class="action-chevron">→</span>
+              <span class="action-chevron">></span>
             </button>
 
             <button class="kpi-action-item btn-blue" routerLink="/chauffeurs">
               <div class="btn-inner-left">
-                <div class="action-icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
                 <span>{{ labels[apiService.currentLanguage()].actionChauffeurs }}</span>
               </div>
-              <span class="action-chevron">→</span>
+              <span class="action-chevron">></span>
             </button>
 
+            <!-- CADRE DE SPÉCIFICATIONS FUTURES -->
             <div class="future-spec-preview-box">
               <div class="spec-header">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><rect x="7" y="7" width="3" height="3"/><rect x="14" y="7" width="3" height="3"/><rect x="7" y="14" width="3" height="3"/></svg>
                 <span>{{ labels[apiService.currentLanguage()].specTitle }}</span>
               </div>
               <p>{{ labels[apiService.currentLanguage()].specDesc }}</p>

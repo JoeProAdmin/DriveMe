@@ -1,89 +1,41 @@
-<div class="driveme-vtc-screen" [attr.dir]="apiService.isRtlMode() ? 'rtl' : 'ltr'">
+<div style="position: relative; width: 100%; height: 100vh; overflow: hidden; font-family: 'Poppins', sans-serif;">
 
-  <!-- ZONE DE CARTOGRAPHIE PRINCIPALE (Prend tout l'arrière-plan) -->
-  <div class="map-container-layer">
-    <div id="driveme-live-map"></div>
-  </div>
+  <div id="driveme-interactive-map" style="width: 100%; height: 100%; z-index: 1;"></div>
 
-  <!-- PANNEAU COULISSANT INTERACTIF (STYLE INDRIVE TEXTURÉ) -->
-  <div class="interaction-sliding-sheet">
+  <div style="position: absolute; top: 24px; left: 24px; z-index: 10; width: 100%; max-width: 380px; background-color: #ffffff; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); padding: 24px; box-sizing: border-box;">
 
-    <!-- ÉTAPE A : SAISIE DE LA DEMANDE ET DU PRIX -->
-    <div *ngIf="courseStatus === 'CREATION'">
-      <header class="sheet-header">
-        <span class="drag-handle"></span>
-        <h3>Où allez-vous ?</h3>
-      </header>
+    <h2 style="font-size: 20px; font-weight: 600; color: #0f172a; margin: 0 0 20px 0;">Commander une course</h2>
 
-      <div class="input-routing-group">
-        <div class="routing-field">
-          <span class="dot-icon green"></span>
-          <input type="text" [(ngModel)]="formModel.adresseDepart" placeholder="Lieu de départ (ex: Bd Moulay Rachid)">
-        </div>
-        <div class="routing-field">
-          <span class="dot-icon red"></span>
-          <input type="text" [(ngModel)]="formModel.adresseArrivee" placeholder="Destination (ex: Gueliz, Casablanca...)">
-        </div>
-        <div class="routing-field price-input">
-          <span class="cash-icon">💰</span>
-          <input type="number" [(ngModel)]="formModel.prix" placeholder="Proposez votre prix (MAD)">
-        </div>
+    <form (ngSubmit)="onFindDriver()" style="display: flex; flex-direction: column; gap: 16px;">
+
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <label style="font-size: 11px; font-weight: 700; color: #64748b;">LIEU DE PRISE EN CHARGE</label>
+        <input type="text" name="departure" [(ngModel)]="formModel.adresseDepart" placeholder="Ex: Gare de Marrakech" required
+               style="width: 100%; padding: 12px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
       </div>
 
-      <button type="button" class="btn-indrive-neon" (click)="publierDemande()">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <label style="font-size: 11px; font-weight: 700; color: #64748b;">DESTINATION</label>
+        <input type="text" name="destination" [(ngModel)]="formModel.adresseArrivee" placeholder="Ex: Gueliz ou Casablanca" required
+               style="width: 100%; padding: 12px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <label style="font-size: 11px; font-weight: 700; color: #64748b;">VOTRE TARIF PROPOSÉ (MAD)</label>
+        <input type="number" name="price" [(ngModel)]="formModel.prix" placeholder="Ex: 30" required min="5"
+               style="width: 100%; padding: 12px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; font-weight: 600;">
+      </div>
+
+      <div style="background-color: #f8fafc; padding: 12px; border-radius: 8px; font-size: 13px; color: #334155;">
+        <p style="margin: 0 0 4px 0;"><strong>À:</strong> {{ formModel.adresseArrivee || '...' }}</p>
+        <p style="margin: 0;">Prix fixé : <span style="color: #00C853; font-weight: 700;">{{ formModel.prix || 0 }} MAD</span> (Cash)</p>
+      </div>
+
+      <button type="submit" [disabled]="!formModel.adresseDepart || !formModel.adresseArrivee || !formModel.prix"
+              style="width: 100%; background-color: #0f172a; color: #ffffff; border: none; padding: 14px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer;">
         Trouver un conducteur
       </button>
-    </div>
 
-    <!-- ÉTAPE B : ÉCRAN DE NÉGOCIATION / OFFRES CHAUFFEURS -->
-    <div *ngIf="courseStatus === 'NEGOCIATION'">
-      <header class="sheet-header">
-        <div class="loader-pulse-row" *ngIf="isSearching">
-          <div class="pulse-circle"></div>
-          <p>Recherche de chauffeurs à proximité...</p>
-        </div>
-        <h3 *ngIf="!isSearching">Choisissez votre conducteur</h3>
-      </header>
-
-      <div class="offers-list-container">
-        <div class="driver-offer-card" *ngFor="let offer of offers">
-          <div class="driver-avatar-block">
-            <div class="avatar-mock">👤</div>
-            <div class="driver-rating">★ {{ offer.note }}</div>
-          </div>
-
-          <div class="driver-details-block">
-            <h4>{{ offer.nom }}</h4>
-            <p class="car-info">{{ offer.vehicule }} • <span class="plate-badge">{{ offer.immatriculation }}</span></p>
-            <p class="arrival-meta">{{ offer.distance }} ({{ offer.tempsArrivee }} min)</p>
-          </div>
-
-          <div class="driver-action-block">
-            <div class="proposed-price">{{ offer.prixPropose }} MAD</div>
-            <button type="button" class="btn-accept-driver" (click)="accepterChauffeur(offer)">Accepter</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ÉTAPE C : TRAJET EN COURS & OPTIONS SÉCURITÉ CRITIQUES -->
-    <div *ngIf="courseStatus === 'EN_ROUTE'" class="active-ride-panel">
-      <header class="sheet-header">
-        <div class="status-badge-tracking">Le conducteur arrive dans ~{{ selectedChauffeur?.tempsArrivee }} min</div>
-        <h4>{{ selectedChauffeur?.vehicule }} • <span class="plate-badge-dark">{{ selectedChauffeur?.immatriculation }}</span></h4>
-      </header>
-
-      <div class="security-quick-actions">
-        <button type="button" class="sec-btn call">📞 Contacter {{ selectedChauffeur?.nom }}</button>
-        <button type="button" class="sec-btn sos" (click)="declencherSOS()">🛡️ Sécurité / SOS</button>
-      </div>
-
-      <div class="ride-summary-static">
-        <p><strong>De:</strong> {{ formModel.adresseDepart }}</p>
-        <p><strong>À:</strong> {{ formModel.adresseArrivee }}</p>
-        <p class="final-price">Prix fixé : <span>{{ formModel.prix }} MAD</span> (Cash)</p>
-      </div>
-    </div>
-
+    </form>
   </div>
 </div>

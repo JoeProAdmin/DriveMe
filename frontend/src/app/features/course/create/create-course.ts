@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 export class CreateCourseComponent implements OnInit, OnDestroy {
   private router = inject(Router);
 
-  // Modèle de formulaire unifié pour correspondre exactement aux lignes 83 et 84 de ton HTML
+  // Modèle d'ingénierie chaîné avec le template HTML
   public formModel = {
     adresseDepart: '',
     adresseArrivee: '',
@@ -30,12 +30,13 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
     const L = (window as any).L;
     if (!L) return;
 
-    // Centrage sur le Maroc (Marrakech)
+    // Rendu cartographique initialisé et centré sur Marrakech
     this.map = L.map('driveme-interactive-map', {
       zoomControl: false,
       attributionControl: false
     }).setView([31.6295, -7.9811], 12);
 
+    // Tuiles claires cartographiques professionnelles
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
       maxZoom: 19
     }).addTo(this.map);
@@ -44,6 +45,7 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   public onFindDriver(): void {
     if (!this.formModel.adresseDepart || !this.formModel.adresseArrivee || !this.formModel.prix) return;
 
+    // Transmission de la session et routage
     localStorage.setItem('pending_course_price', this.formModel.prix.toString());
     this.router.navigate(['/negotiation']);
   }
@@ -55,5 +57,5 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   }
 }
 
-// ✅ DOUBLE EXPORT : Aligne le composant avec l'import de la ligne 5 de app.routes.ts
+// Assure l'alignement strict avec app.routes.ts ligne 5
 export { CreateCourseComponent as CreateCourse };

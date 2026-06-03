@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
 
       <div *ngIf="userRole === 'ADMIN'">
         <h2>Statistiques Administrateur</h2>
-        </div>
+      </div>
 
       <div *ngIf="userRole === 'CHAUFFEUR'">
         <h2>Gestion de mes trajets</h2>
@@ -25,13 +25,12 @@ import { CommonModule } from '@angular/common';
     </div>
   `
 })
-export class DashboardComponent implements OnInit {
+export class Dashboard implements OnInit {
   private api = inject(ApiService);
   private router = inject(Router);
   public userRole: string | null = null;
 
   ngOnInit() {
-    // Récupération du rôle depuis le localStorage (ou mieux, via ton ApiService)
     this.userRole = localStorage.getItem('userRole');
 
     if (!this.userRole) {

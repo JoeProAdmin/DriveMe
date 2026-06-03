@@ -1,49 +1,93 @@
-<div style="display: flex; gap: 24px; flex-wrap: wrap;">
+<div style="width: 100vw; min-height: 100vh; background-color: #f8fafc; display: flex; font-family: 'Poppins', sans-serif; box-sizing: border-box;">
 
-  <div style="flex: 2; background-color: #ffffff; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; min-width: 300px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-      <h2 style="font-size: 16px; font-weight: 600; color: #0f172a; margin: 0;">
-        {{ labels[apiService.currentLanguage()].logTitle }}
-      </h2>
-      <span style="font-size: 11px; font-weight: 600; background-color: #eff6ff; color: #3b82f6; padding: 4px 10px; border-radius: 50px;">
-            {{ labels[apiService.currentLanguage()].sync }}
-          </span>
+  <!-- BARRE LATÉRALE CLARE DE GESTION -->
+  <aside style="width: 260px; background-color: #0f172a; color: #ffffff; display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 10; box-sizing: border-box;">
+    <div style="padding: 24px; border-bottom: 1px solid #1e293b; font-size: 22px; font-weight: 800; letter-spacing: -0.04em;">
+      Drive<span style="color: #00C853;">Me</span>
     </div>
+    <nav style="flex: 1; padding: 24px 12px; display: flex; flex-direction: column; gap: 8px;">
+      <button type="button" (click)="activeTab = 'overview'" [style.background-color]="activeTab === 'overview' ? '#00C853' : 'transparent'" style="width: 100%; border: none; padding: 12px; border-radius: 8px; color: #ffffff; font-weight: 600; text-align: left; cursor: pointer; font-family: inherit; outline: none;">
+        Vue d'ensemble
+      </button>
+      <button type="button" (click)="activeTab = 'inscriptions'" [style.background-color]="activeTab === 'inscriptions' ? '#00C853' : 'transparent'" style="width: 100%; border: none; padding: 12px; border-radius: 8px; color: #ffffff; font-weight: 600; text-align: left; cursor: pointer; font-family: inherit; outline: none;">
+        Suivi Inscriptions ({{ pendingDrivers.length }})
+      </button>
+    </nav>
+    <div style="padding: 20px; border-top: 1px solid #1e293b;">
+      <button type="button" (click)="logout()" style="width: 100%; background-color: #ef4444; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer; font-family: inherit;">
+        Déconnexion
+      </button>
+    </div>
+  </aside>
 
-    <div style="display: flex; flex-direction: column; gap: 16px;">
-      <div *ngFor="let item of recentActivities" style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background-color: #f8fafc; border-radius: 8px; border-left: 4px solid" [style.border-left-color]="item.color">
-        <div>
-          <span style="font-size: 11px; font-weight: 700; color: #94a3b8; display: block;">{{ item.id }}</span>
-          <span style="font-size: 14px; color: #334155; font-weight: 500;">{{ item.text }}</span>
+  <!-- ZONE TECHNIQUE PRINCIPALE -->
+  <main style="flex: 1; margin-left: 260px; padding: 40px; box-sizing: border-box;">
+
+    <!-- CONTENU : VUE D'ENSEMBLE -->
+    <div *ngIf="activeTab === 'overview'">
+      <h1 style="font-size: 26px; font-weight: 700; color: #0f172a; margin: 0 0 24px 0; letter-spacing: -0.02em;">Tableau de bord d'exploitation</h1>
+
+      <!-- CARTES ANALYTIQUES ISSUES DU CORPORATE PLAN -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-bottom: 32px;">
+        <div style="background: white; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.01);">
+          <span style="font-size: 11px; font-weight: 700; color: #64748b; letter-spacing: 0.05em;">CHAUFFEURS CIBLES (MAROC)</span>
+          <div style="font-size: 32px; font-weight: 700; color: #0f172a; margin-top: 8px;">{{ stats.conducteursInscrits }}</div>
         </div>
-        <span style="font-size: 12px; font-weight: 600; color: #475569;">{{ item.status }}</span>
+        <div style="background: white; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.01);">
+          <span style="font-size: 11px; font-weight: 700; color: #64748b; letter-spacing: 0.05em;">COMPTES PASSAGERS ACTIFS</span>
+          <div style="font-size: 32px; font-weight: 700; color: #0f172a; margin-top: 8px;">{{ stats.passagersActifs }}</div>
+        </div>
+        <div style="background: white; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.01);">
+          <span style="font-size: 11px; font-weight: 700; color: #64748b; letter-spacing: 0.05em;">CHIFFRE D'AFFAIRES ANNUEL CIBLE</span>
+          <div style="font-size: 32px; font-weight: 700; color: #00C853; margin-top: 8px;">{{ stats.caPrevisionnel }} €</div>
+        </div>
+      </div>
+
+      <!-- TÉLÉMÉTRIE EN DIRECT -->
+      <div style="background: white; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.01);">
+        <h3 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 600; color: #0f172a;">Flux d'activité réseau</h3>
+        <div style="display: flex; flex-direction: column;">
+          <div *ngFor="let log of recentLogs" style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #334155; display: flex; align-items: center;">
+            <strong style="color: #64748b; margin-right: 16px; min-width: 65px;">{{ log.time }}</strong>
+            <span>{{ log.text }}</span>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div style="flex: 1; display: flex; flex-direction: column; gap: 20px; min-width: 250px;">
+    <!-- CONTENU : MODÉRATION DES INSCRIPTIONS -->
+    <div *ngIf="activeTab === 'inscriptions'">
+      <h1 style="font-size: 26px; font-weight: 700; color: #0f172a; margin: 0 0 4px 0; letter-spacing: -0.02em;">Modération documentaire</h1>
+      <p style="color: #64748b; font-size: 14px; margin: 0 0 24px 0;">Validation des dossiers d'enregistrement pour garantir un réseau de covoiturage de confiance.</p>
 
-    <div style="background-color: #ffffff; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 12px;">
-      <h2 style="font-size: 16px; font-weight: 600; color: #0f172a; margin: 0 0 4px 0;">
-        {{ labels[apiService.currentLanguage()].actionsTitle }}
-      </h2>
-      <button type="button" style="width: 100%; background-color: #f8fafc; color: #334155; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; text-align: start; cursor: pointer; font-family: inherit;">
-        {{ labels[apiService.currentLanguage()].actionVerify }}
-      </button>
-      <button type="button" style="width: 100%; background-color: #f8fafc; color: #334155; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; text-align: start; cursor: pointer; font-family: inherit;">
-        {{ labels[apiService.currentLanguage()].actionHistory }}
-      </button>
+      <div style="background: white; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.01);">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; margin: 0; padding: 0;">
+          <thead style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+          <tr>
+            <th style="padding: 16px; color: #475569; font-size: 13px; font-weight: 600;">ID Registre</th>
+            <th style="padding: 16px; color: #475569; font-size: 13px; font-weight: 600;">Nom complet</th>
+            <th style="padding: 16px; color: #475569; font-size: 13px; font-weight: 600;">Région d'exploitation</th>
+            <th style="padding: 16px; color: #475569; font-size: 13px; font-weight: 600;">Justificatifs fournis</th>
+            <th style="padding: 16px; color: #475569; font-size: 13px; font-weight: 600;">Action réglementaire</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let driver of pendingDrivers" style="border-bottom: 1px solid #f1f5f9; transition: background-color 0.2s;">
+            <td style="padding: 16px; font-weight: 600; color: #0f172a;">{{ driver.id }}</td>
+            <td style="padding: 16px; color: #334155; font-weight: 500;">{{ driver.name }}</td>
+            <td style="padding: 16px; color: #334155;"><span style="background: #f1f5f9; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">{{ driver.city }}</span></td>
+            <td style="padding: 16px; color: #64748b; font-size: 13px;">{{ driver.doc }}</td>
+            <td style="padding: 16px;">
+              <button type="button" (click)="approveDriver(driver.id)" style="background-color: #00C853; color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: 600; cursor: pointer; font-family: inherit; font-size: 13px;">Approuver le profil</button>
+            </td>
+          </tr>
+          <tr *ngIf="pendingDrivers.length === 0">
+            <td colspan="5" style="padding: 40px; text-align: center; color: #94a3b8; font-weight: 500;">Aucun nouveau dossier d'inscription en attente de traitement.</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <div style="background-color: #ffffff; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0;">
-          <span style="font-size: 13px; font-weight: 700; color: #00C853; display: block; margin-bottom: 6px;">
-            {{ labels[apiService.currentLanguage()].specTitle }}
-          </span>
-      <p style="font-size: 12px; color: #64748b; line-height: 1.5; margin: 0;">
-        {{ labels[apiService.currentLanguage()].specDesc }}
-      </p>
-    </div>
-
-  </div>
-
+  </main>
 </div>

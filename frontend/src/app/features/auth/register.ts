@@ -1,59 +1,68 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { ApiService } from '../../core/api.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
-  templateUrl: './register.html',
-  styleUrls: ['./register.css']
+  templateUrl: './register.html'
 })
 export class RegisterComponent {
-  public registerModel = {
-    nom: '',
-    prenom: '',
-    email: '',
-    telephone: '',
-    motDePasse: '',
-    role: 'PASSAGER' as 'PASSAGER' | 'CHAUFFEUR'
+  private router = inject(Router);
+
+  public currentFlow: 'PASSAGER' | 'CONDUCTEUR' | null = null;
+  public currentStep = 1;
+  public isSubmitting = false;
+
+  public passengerForm = { nom: '', prenom: '', telephone: '', email: '', selfieBase64: '' };
+  public driverForm = {
+    nom: '', prenom: '', dateNaissance: '', email: '', telephone: '', adresseResidence: '',
+    vehicule: { marque: '', modele: '', annee: null as number | null, immatriculation: '' },
+    documents: { cinBase64: '', permisBase64: '', carteGriseBase64: '', assuranceBase64: '', selfieControleBase64: '' },
+    photosVehicule: { faceAvantBase64: '', faceArriereBase64: '', plaqueBase64: '' }
   };
+  public previews: { [key: string]: string } = {};
 
-  public isSubmitting: boolean = false;
-  public errorMessage: string = '';
-  public successMessage: string = '';
+  public selectFlow(flow: 'PASSAGER' | 'CONDUCTEUR'): void {
+    this.currentFlow = flow;
+    this.currentStep = 1;
+    this.previews = {};
+  }
 
-  constructor(
-    private http: HttpClient,
-    private router: Router,
-    public apiService: ApiService
-  ) {}
+  public resetFlow(): void {
+    this.currentFlow = null;
+    this.currentStep = 1;
+  }
 
-  public executerInscription(): void {
-    if (!this.registerModel.nom || !this.registerModel.prenom || !this.registerModel.telephone) {
-      this.errorMessage = 'Les champs obligatoires doivent être renseignés.';
-      return;
+  public nextStep(): void { if (this.currentStep < 4) this.currentStep++; }
+  public prevStep(): void { if (this.currentStep > 1) this.currentStep--; }
+
+  public onFileSelected(event: Event, targetKey: string): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.previews[targetKey] = e.target.result;
+      };
+      reader.readAsDataURL(input.files[0]);
     }
+  }
 
+  public submitPassenger(): void {
     this.isSubmitting = true;
-    this.errorMessage = '';
+    setTimeout(() => {
+      this.isSubmitting = false;
+      this.router.navigate(['/login']);
+    }, 1000);
+  }
 
-    this.http.post(`${localStorage.getItem('apiUrl') || 'http://localhost:8080/api'}/auth/register`, this.registerModel)
-      .subscribe({
-        next: (res: any) => {
-          this.successMessage = 'Compte DriveMe créé avec succès ! Redirection...';
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 2000);
-        },
-        error: (err) => {
-          console.error(err);
-          this.errorMessage = "Échec de l'inscription. Ce numéro de téléphone est probablement déjà utilisé.";
-          this.isSubmitting = false;
-        }
-      });
+  public submitDriver(): void {
+    this.isSubmitting = true;
+    setTimeout(() => {
+      this.isSubmitting = false;
+      this.router.navigate(['/login']);
+    }, 1000);
   }
 }

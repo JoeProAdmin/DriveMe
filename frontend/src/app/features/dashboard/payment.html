@@ -1,0 +1,72 @@
+<div style="width: 100vw; min-height: 100vh; background-color: #f1f5f9; display: flex; justify-content: center; align-items: center; font-family: 'Poppins', sans-serif; padding: 20px; box-sizing: border-box; margin: 0;">
+
+  <div style="background-color: #ffffff; border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05); width: 100%; max-width: 440px; padding: 32px; box-sizing: border-box; border: 1px solid #e2e8f0;">
+
+    <!-- EN-TÊTE CORPORATE PASSERELLE -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+      <h2 style="font-size: 20px; font-weight: 700; color: #0f172a; margin: 0; letter-spacing: -0.02em;">Payez en ligne</h2>
+      <span style="color: #00C853; font-weight: 700; font-size: 13px; background-color: #f0fdf4; padding: 4px 10px; border-radius: 50px;">DriveMe Pay</span>
+    </div>
+
+    <!-- GRILLE DE SÉLECTION DU PLAN FINANCIER -->
+    <label style="font-size: 11px; font-weight: 700; color: #64748b; display: block; margin-bottom: 10px; letter-spacing: 0.05em;">SÉLECTIONNEZ VOTRE RECHARGE POINTS-KM</label>
+    <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; width: 100%; box-sizing: border-box;">
+
+      <!-- Option 20€ -->
+      <div (click)="changePack(20, 200, 'Pack Initial')" [style.border-color]="selectedPack.price === 20 ? '#00C853' : '#e2e8f0'" [style.background-color]="selectedPack.price === 20 ? '#f0fdf4' : '#ffffff'" style="border: 2px solid; padding: 12px; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;">
+        <div><strong style="color: #0f172a; font-size: 14px;">Pack Initial : 200 km</strong></div>
+        <div style="font-weight: 700; color: #00C853; font-size: 15px;">20 €</div>
+      </div>
+
+      <!-- Option 50€ -->
+      <div (click)="changePack(50, 550, 'Pack Éco')" [style.border-color]="selectedPack.price === 50 ? '#00C853' : '#e2e8f0'" [style.background-color]="selectedPack.price === 50 ? '#f0fdf4' : '#ffffff'" style="border: 2px solid; padding: 12px; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;">
+        <div>
+          <strong style="color: #0f172a; font-size: 14px;">Pack Éco : 550 km</strong>
+          <span style="display:block; font-size: 11px; color: #64748b; font-weight: 500;">Inclus +50 km de bonus</span>
+        </div>
+        <div style="font-weight: 700; color: #00C853; font-size: 15px;">50 €</div>
+      </div>
+
+      <!-- Option 100€ -->
+      <div (click)="changePack(100, 1200, 'Pack Pro')" [style.border-color]="selectedPack.price === 100 ? '#00C853' : '#e2e8f0'" [style.background-color]="selectedPack.price === 100 ? '#f0fdf4' : '#ffffff'" style="border: 2px solid; padding: 12px; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;">
+        <div>
+          <strong style="color: #0f172a; font-size: 14px;">Pack Pro : 1200 km</strong>
+          <span style="display:block; font-size: 11px; color: #64748b; font-weight: 500;">Inclus +200 km de bonus pour les pros</span>
+        </div>
+        <div style="font-weight: 700; color: #00C853; font-size: 15px;">100 €</div>
+      </div>
+
+    </div>
+
+    <!-- FORMULAIRE BANCAIRE FORMEL -->
+    <form (ngSubmit)="executePayment()" style="display: flex; flex-direction: column; gap: 16px; width: 100%; box-sizing: border-box;">
+
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <label style="font-size: 12px; font-weight: 600; color: #475569;">Nom du titulaire</label>
+        <input type="text" [(ngModel)]="cardName" name="cName" placeholder="Youssef Qarnouf" required style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 14px; font-family: inherit; box-sizing: border-box;">
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <label style="font-size: 12px; font-weight: 600; color: #475569;">Numéro de carte de crédit</label>
+        <input type="text" [(ngModel)]="cardNumber" name="cNumber" placeholder="4000 1234 5678 9010" required style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 14px; font-family: inherit; box-sizing: border-box;">
+      </div>
+
+      <div style="display: flex; gap: 16px; width: 100%; box-sizing: border-box;">
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600; color: #475569;">Date d'expiration</label>
+          <input type="text" [(ngModel)]="expiry" name="cExp" placeholder="MM/AA" required style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 14px; text-align: center; font-family: inherit; box-sizing: border-box;">
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 12px; font-weight: 600; color: #475569;">Cryptogramme (CVC)</label>
+          <input type="text" [(ngModel)]="cvc" name="cCvc" placeholder="123" required style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 14px; text-align: center; font-family: inherit; box-sizing: border-box;">
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="isProcessing || !cardName || !cardNumber || !expiry || !cvc" style="width: 100%; background-color: #0f172a; color: white; border: none; padding: 14px; border-radius: 8px; font-weight: 600; font-size: 15px; cursor: pointer; margin-top: 12px; font-family: inherit; box-sizing: border-box; transition: background-color 0.2s;">
+        {{ isProcessing ? 'Autorisation en cours...' : 'Payer ' + selectedPack.price + ' €' }}
+      </button>
+
+    </form>
+
+  </div>
+</div>

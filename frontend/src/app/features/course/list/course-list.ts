@@ -29,12 +29,13 @@ export class CourseList implements OnInit {
     this.loading = true;
     this.errorMessage = '';
 
+    // Typage explicite ajouté ici pour data et error
     this.apiService.getCourses().subscribe({
-      next: (data) => {
+      next: (data: any[]) => {
         this.courses = data;
         this.loading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error(error);
         this.errorMessage = 'Erreur lors du chargement des courses.';
         this.loading = false;

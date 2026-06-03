@@ -3,13 +3,10 @@
   <header class="view-action-bar">
     <div class="action-bar-left">
       <h1>Gestion des chauffeurs</h1>
-      <p class="view-caption">Suivi de la flotte, validation documentaire et monitoring de la conformité administrative.</p>
+      <p class="view-caption">Suivi de la flotte, validation documentaire et monitoring.</p>
     </div>
     <div class="action-bar-right">
       <button class="btn-action-refresh" (click)="loadChauffeurs()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
-        </svg>
         <span>Rafraîchir</span>
       </button>
     </div>
@@ -19,10 +16,7 @@
     <div class="mini-metric-card">
       <div class="metric-card-inner">
         <span class="metric-label">Total conducteurs</span>
-        <h3>{{ totalChauffeurs }}</h3>
-      </div>
-      <div class="metric-badge-icon icon-bg-gray">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        <h3>{{ chauffeurs.length }}</h3>
       </div>
     </div>
 
@@ -31,18 +25,12 @@
         <span class="metric-label">Profils activés</span>
         <h3>{{ chauffeursValides }}</h3>
       </div>
-      <div class="metric-badge-icon icon-bg-emerald">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-      </div>
     </div>
 
     <div class="mini-metric-card">
       <div class="metric-card-inner">
         <span class="metric-label">En attente</span>
         <h3>{{ chauffeursEnAttente }}</h3>
-      </div>
-      <div class="metric-badge-icon icon-bg-amber">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
       </div>
     </div>
   </section>
@@ -57,7 +45,7 @@
         <th>Note moyenne</th>
         <th>Solde crédit</th>
         <th>Statut</th>
-        <th class="align-table-right">Actions de validation</th>
+        <th class="align-table-right">Actions</th>
       </tr>
       </thead>
       <tbody>
@@ -75,33 +63,18 @@
           </div>
         </td>
         <td class="cell-phone">{{ item.telephone }}</td>
-        <td>
-          <div class="rating-cell-box">
-            <svg class="star-icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <span>{{ item.noteMoyenne || '5.00' }}</span>
-          </div>
-        </td>
+        <td>{{ item.noteMoyenne || '5.00' }}</td>
         <td class="solde-value">{{ item.soldeCredit || '0.00' }} MAD</td>
         <td>
-          <span class="saas-status-badge tag-emerald" *ngIf="item.statutValidation === 'APPROUVE' || item.statutValidation === '1'">Approuvé</span>
-          <span class="saas-status-badge tag-amber" *ngIf="item.statutValidation === 'EN_ATTENTE' || item.statutValidation === '0'">En attente</span>
-          <span class="saas-status-badge tag-red" *ngIf="item.statutValidation === 'REJETE' || item.statutValidation === '2'">Rejeté</span>
+          <span class="saas-status-badge tag-emerald" *ngIf="item.statutValidation === 1">Approuvé</span>
+          <span class="saas-status-badge tag-amber" *ngIf="item.statutValidation === 0">En attente</span>
+          <span class="saas-status-badge tag-red" *ngIf="item.statutValidation === 2">Rejeté</span>
         </td>
         <td class="align-table-right">
           <div class="actions-buttons-cluster">
-            <button class="btn-action-inline green" (click)="approuver(item.id)" title="Approuver le dossier">
-              Approuver
-            </button>
-            <button class="btn-action-inline red" (click)="rejeter(item.id)" title="Rejeter le dossier">
-              Rejeter
-            </button>
+            <button class="btn-action-inline green" (click)="approuver(item.id)">Approuver</button>
+            <button class="btn-action-inline red" (click)="rejeter(item.id)">Rejeter</button>
           </div>
-        </td>
-      </tr>
-
-      <tr *ngIf="chauffeurs.length === 0">
-        <td colspan="7" class="table-empty-placeholder">
-          <p>Aucun dossier chauffeur synchrone n'a été intercepté sur la passerelle MySQL.</p>
         </td>
       </tr>
       </tbody>

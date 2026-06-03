@@ -72,7 +72,7 @@ export class CourseReview {
       next: () => {
         this.isSent = true;
       },
-      error: (err) => console.error('Erreur envoi avis', err)
+      error: (err: any) => console.error('Erreur envoi avis', err)
     });
   }
 }

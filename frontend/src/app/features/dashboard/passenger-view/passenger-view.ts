@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-passenger-view',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './passenger-view.html',
-  styleUrl: './passenger-view.css',
+  styleUrls: ['./passenger-view.css']
 })
-export class PassengerView {}
+export class PassengerViewComponent {}

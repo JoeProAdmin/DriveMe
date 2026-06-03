@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-driver-view',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './driver-view.html',
-  styleUrl: './driver-view.css',
+  styleUrls: ['./driver-view.css']
 })
-export class DriverView {}
+export class DriverViewComponent {}

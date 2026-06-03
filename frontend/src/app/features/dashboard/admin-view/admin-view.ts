@@ -24,8 +24,8 @@ export class AdminViewComponent implements OnInit {
 
   ngOnInit() {
     this.api.getAdminStats().subscribe({
-      next: (data) => this.stats = data,
-      error: (err) => console.error('Erreur stats', err)
+      next: (data: AdminStats) => this.stats = data,
+      error: (err: any) => console.error('Erreur stats', err)
     });
   }
 }

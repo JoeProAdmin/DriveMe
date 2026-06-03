@@ -29,24 +29,10 @@ export class RegisterComponent {
 
   public previews: { [key: string]: string } = {};
 
-  public selectFlow(flow: 'PASSAGER' | 'CONDUCTEUR'): void {
-    this.currentFlow = flow;
-    this.currentStep = 1;
-    this.previews = {};
-  }
-
-  public resetFlow(): void {
-    this.currentFlow = null;
-    this.currentStep = 1;
-  }
-
-  public nextStep(): void {
-    if (this.currentStep < 4) this.currentStep++;
-  }
-
-  public prevStep(): void {
-    if (this.currentStep > 1) this.currentStep--;
-  }
+  public selectFlow(flow: 'PASSAGER' | 'CONDUCTEUR'): void { this.currentFlow = flow; this.currentStep = 1; this.previews = {}; }
+  public resetFlow(): void { this.currentFlow = null; this.currentStep = 1; }
+  public nextStep(): void { if (this.currentStep < 4) this.currentStep++; }
+  public prevStep(): void { if (this.currentStep > 1) this.currentStep--; }
 
   public onFileSelected(event: Event, targetKey: string): void {
     const input = event.target as HTMLInputElement;
@@ -55,10 +41,7 @@ export class RegisterComponent {
       reader.onload = (e: ProgressEvent<FileReader>) => {
         if (e.target?.result) {
           this.previews[targetKey] = e.target.result as string;
-          // Mise à jour automatique du formulaire avec la donnée en base64
-          if (this.currentFlow === 'PASSAGER') {
-            (this.passengerForm as any)[targetKey] = e.target.result as string;
-          }
+          if (this.currentFlow === 'PASSAGER') (this.passengerForm as any)[targetKey] = e.target.result as string;
         }
       };
       reader.readAsDataURL(input.files[0]);
@@ -68,30 +51,16 @@ export class RegisterComponent {
   public submitPassenger(): void {
     this.isSubmitting = true;
     this.api.registerUser(this.passengerForm).subscribe({
-      next: () => {
-        this.isSubmitting = false;
-        this.router.navigate(['/login']);
-      },
-      error: (err) => {
-        this.isSubmitting = false;
-        console.error('Erreur inscription Passager:', err);
-        alert('Erreur lors de l\'inscription. Vérifie la console.');
-      }
+      next: () => { this.isSubmitting = false; this.router.navigate(['/login']); },
+      error: (err: any) => { this.isSubmitting = false; console.error('Erreur Passager:', err); }
     });
   }
 
   public submitDriver(): void {
     this.isSubmitting = true;
     this.api.registerUser(this.driverForm).subscribe({
-      next: () => {
-        this.isSubmitting = false;
-        this.router.navigate(['/login']);
-      },
-      error: (err) => {
-        this.isSubmitting = false;
-        console.error('Erreur inscription Conducteur:', err);
-        alert('Erreur lors de l\'inscription. Vérifie la console.');
-      }
+      next: () => { this.isSubmitting = false; this.router.navigate(['/login']); },
+      error: (err: any) => { this.isSubmitting = false; console.error('Erreur Conducteur:', err); }
     });
   }
 }

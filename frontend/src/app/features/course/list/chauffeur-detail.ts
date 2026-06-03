@@ -17,7 +17,6 @@ export class ChauffeurDetail implements OnInit {
   public isLoading: boolean = true;
   public errorMessage: string = '';
 
-  // Simulation des documents requis pour le TFE (Permis, Assurance, Carte Grise)
   public documents = [
     { type: 'Permis de Conduire', statut: 'Valide', dateDepot: '2026-05-10' },
     { type: 'Assurance Véhicule', statut: 'En attente de vérification', dateDepot: '2026-06-01' },
@@ -42,20 +41,16 @@ export class ChauffeurDetail implements OnInit {
 
   private loadChauffeurData(id: number): void {
     this.isLoading = true;
-    // On réutilise la méthode du controleur pour récupérer le profil spécifique
     this.apiService.getAllChauffeurs().subscribe({
       next: (list: ChauffeurResponseDTO[]) => {
         const found = list.find(c => c.id === id);
-        if (found) {
-          this.chauffeur = found;
-        } else {
-          this.errorMessage = 'Chauffeur introuvable.';
-        }
+        this.chauffeur = found || null;
+        if (!found) this.errorMessage = 'Chauffeur introuvable.';
         this.isLoading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error(err);
-        this.errorMessage = 'Impossible de charger les données du serveur.';
+        this.errorMessage = 'Impossible de charger les données.';
         this.isLoading = false;
       }
     });
@@ -66,15 +61,15 @@ export class ChauffeurDetail implements OnInit {
     this.apiService.validerChauffeur(this.chauffeur.id, statutByte).subscribe({
       next: () => {
         if (this.chauffeur) {
-          // Mise à jour locale immédiate de l'interface pour éviter un rechargement lourd
-          this.chauffeur.statutValidation = statutByte.toString();
+          // CORRECTION CRITIQUE : on affecte le nombre, pas une chaîne
+          this.chauffeur.statutValidation = Number(statutByte);
         }
       },
-      error: (err) => console.error('Erreur lors du changement de statut', err)
+      error: (err: any) => console.error('Erreur lors du changement de statut', err)
     });
   }
 
   public retourner(): void {
-    this.router.navigate(['/courses/chauffeurs']); // Ajuste la route selon ton routing
+    this.router.navigate(['/courses/chauffeurs']);
   }
 }

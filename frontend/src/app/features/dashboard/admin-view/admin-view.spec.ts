@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AdminViewComponent } from './admin-view';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-import { AdminView } from './admin-view';
-
-describe('AdminView', () => {
-  let component: AdminView;
-  let fixture: ComponentFixture<AdminView>;
+describe('AdminViewComponent', () => {
+  let component: AdminViewComponent;
+  let fixture: ComponentFixture<AdminViewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AdminView],
+      imports: [AdminViewComponent, HttpClientTestingModule],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AdminView);
+    fixture = TestBed.createComponent(AdminViewComponent);
     component = fixture.componentInstance;
-    await fixture.whenStable();
+    fixture.detectChanges();
   });
 
   it('should create', () => {

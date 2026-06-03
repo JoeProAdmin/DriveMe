@@ -4,9 +4,18 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
-// Interfaces
+// Interfaces complètes pour correspondre à tes templates
 export interface AvisDTO { id?: number; courseId: number; note: number; commentaire: string; dateCreation?: string; }
-export interface ChauffeurResponseDTO { id: number; nom?: string; prenom?: string; statutValidation: string | number; }
+export interface ChauffeurResponseDTO {
+  id: number;
+  nom?: string;
+  prenom?: string;
+  email?: string;
+  telephone?: string;
+  statutValidation: string | number;
+  noteMoyenne?: number;
+  soldeCredit?: number;
+}
 export interface AdminStats { totalChauffeurs: number; totalPassagers: number; totalCourses: number; totalPaiements: number; }
 export interface UserSession { token: string; userId: string; role: 'ADMIN' | 'CHAUFFEUR' | 'PASSAGER'; }
 
@@ -17,7 +26,6 @@ export class ApiService {
 
   public currentLanguage: WritableSignal<'fr' | 'en' | 'ar' | 'es'> = signal('fr');
   public isRtlMode: WritableSignal<boolean> = signal(false);
-
   private authSubject = new BehaviorSubject<UserSession | null>(null);
   public auth$ = this.authSubject.asObservable();
 
@@ -59,11 +67,18 @@ export class ApiService {
     return this.http.get<ChauffeurResponseDTO[]>(`${this.baseUrl}/chauffeurs`);
   }
 
-  validerChauffeur(id: number, statutByte: number): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/chauffeurs/${id}/validation?statut=${statutByte}`, {});
+  validerChauffeur(id: number, statut: number): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/chauffeurs/${id}/validation?statut=${statut}`, {});
   }
 
-  // --- UI & Language ---
+  // --- Uploads ---
+  uploadSelfieVerification(chauffeurId: number, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('selfie', file);
+    return this.http.post<any>(`${this.baseUrl}/chauffeurs/${chauffeurId}/selfie`, formData);
+  }
+
+  // --- UI ---
   setLanguage(lang: 'fr' | 'en' | 'ar' | 'es'): void {
     this.currentLanguage.set(lang);
     this.isRtlMode.set(lang === 'ar');

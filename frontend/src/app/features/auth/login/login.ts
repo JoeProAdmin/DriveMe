@@ -12,12 +12,17 @@ import { Router, RouterModule } from '@angular/router';
 export class LoginComponent {
   private router = inject(Router);
 
-  // Variable de langue unifiée sur 4 déclinaisons
+  // Variable de langue unifiée sur 4 déclinaisons (Français, Arabe, Anglais, Espagnol)
   public currentLang: 'FR' | 'AR' | 'EN' | 'ES' = 'FR';
+
+  // États de visibilité des composants d'interface
   public showQrModal = false;
+  public dropdownOpen = false;
+
+  // Modèle de capture d'authentification utilisateur
   public userInput = '';
 
-  // Matrice de traduction quadrilingue professionnelle
+  // Matrice de traduction quadrilingue professionnelle pour l'ancrage territorial
   public dictionary = {
     FR: {
       title: 'Indiquez votre numéro de téléphone ou votre adresse e-mail',
@@ -65,18 +70,27 @@ export class LoginComponent {
       qrCode: 'Iniciar sesión con código QR',
       legal: 'Al continuar, acepta recibir un código de verificación por SMS o WhatsApp. Se pueden aplicar tarifas de red.',
       qrTitle: 'Inicio con Código QR',
-      qrDesc: 'Escanee este código con su aplicación DriveMe para iniciar sesión de inmediato.'
+      qrDesc: 'Escanee este code con su aplicación DriveMe para iniciar sesión de inmediato.'
     }
   };
 
-  // Sélecteur explicite de langue
-  public setLanguage(lang: 'FR' | 'AR' | 'EN' | 'ES'): void {
+  /**
+   * Modifie la langue active de l'application via le menu déroulant corporate
+   * et ajuste dynamiquement l'orientation du document (RTL / LTR)
+   */
+  public changeLangViaDropdown(lang: 'FR' | 'AR' | 'EN' | 'ES'): void {
     this.currentLang = lang;
+    this.dropdownOpen = false; // Fermeture automatique de la liste d'options après sélection
     document.documentElement.dir = lang === 'AR' ? 'rtl' : 'ltr';
   }
 
+  /**
+   * Gère le traitement du formulaire et effectue une redirection métier étanche
+   * Masque l'existence de l'administration pour le grand public
+   */
   public onSubmit(): void {
     if (!this.userInput.trim()) return;
+
     if (this.userInput.includes('admin')) {
       this.router.navigate(['/dashboard']);
     } else {
@@ -84,6 +98,9 @@ export class LoginComponent {
     }
   }
 
+  /**
+   * Commute la visibilité de la modale de synchronisation par QR Code
+   */
   public toggleQrModal(status: boolean): void {
     this.showQrModal = status;
   }

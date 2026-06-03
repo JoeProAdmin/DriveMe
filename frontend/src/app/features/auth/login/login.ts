@@ -12,10 +12,12 @@ import { Router, RouterModule } from '@angular/router';
 export class LoginComponent {
   private router = inject(Router);
 
-  public currentLang: 'FR' | 'AR' = 'FR';
+  // Variable de langue unifiée sur 4 déclinaisons
+  public currentLang: 'FR' | 'AR' | 'EN' | 'ES' = 'FR';
   public showQrModal = false;
   public userInput = '';
 
+  // Matrice de traduction quadrilingue professionnelle
   public dictionary = {
     FR: {
       title: 'Indiquez votre numéro de téléphone ou votre adresse e-mail',
@@ -40,12 +42,37 @@ export class LoginComponent {
       legal: 'بالمتابعة، فإنك توافق على تلقي رمز التحقق عبر الرسائل النصية القصيرة أو WhatsApp. قد يتم تطبيق رسوم البيانات والرسائل في المغرب.',
       qrTitle: 'تسجيل الدخول عبر رمز QR',
       qrDesc: 'امسح هذا الرمز باستخدام تطبيق DriveMe الخاص بك لتسجيل الدخول الفوري.'
+    },
+    EN: {
+      title: 'Enter your phone number or email address',
+      placeholder: 'Enter your phone number or email address',
+      btnContinue: 'Continue',
+      or: 'or',
+      google: 'Continue with Google',
+      apple: 'Continue with Apple',
+      qrCode: 'Log in with QR code',
+      legal: 'By proceeding, you agree to receive a verification code via SMS or WhatsApp. Message and data rates may apply.',
+      qrTitle: 'QR Code Login',
+      qrDesc: 'Scan this code with your DriveMe app to log in instantly.'
+    },
+    ES: {
+      title: 'Introduzca su número de teléfono o correo electrónico',
+      placeholder: 'Introduzca su número de teléfono o correo electrónico',
+      btnContinue: 'Continuar',
+      or: 'o',
+      google: 'Continuar con Google',
+      apple: 'Continuar con Apple',
+      qrCode: 'Iniciar sesión con código QR',
+      legal: 'Al continuar, acepta recibir un código de verificación por SMS o WhatsApp. Se pueden aplicar tarifas de red.',
+      qrTitle: 'Inicio con Código QR',
+      qrDesc: 'Escanee este código con su aplicación DriveMe para iniciar sesión de inmediato.'
     }
   };
 
-  public toggleLanguage(): void {
-    this.currentLang = this.currentLang === 'FR' ? 'AR' : 'FR';
-    document.documentElement.dir = this.currentLang === 'AR' ? 'rtl' : 'ltr';
+  // Sélecteur explicite de langue
+  public setLanguage(lang: 'FR' | 'AR' | 'EN' | 'ES'): void {
+    this.currentLang = lang;
+    document.documentElement.dir = lang === 'AR' ? 'rtl' : 'ltr';
   }
 
   public onSubmit(): void {

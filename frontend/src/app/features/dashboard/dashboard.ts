@@ -2,37 +2,31 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ApiService } from '../../core/api.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AdminViewComponent } from './admin-view/admin-view.component';
+import { DriverViewComponent } from './driver-view/driver-view.component';
+import { PassengerViewComponent } from './passenger-view/passenger-view.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, AdminViewComponent, DriverViewComponent, PassengerViewComponent],
   template: `
     <div class="dashboard-container">
       <h1>Bienvenue sur votre Dashboard</h1>
 
-      <div *ngIf="userRole === 'ADMIN'">
-        <h2>Statistiques Administrateur</h2>
-      </div>
+      <app-admin-view *ngIf="userRole === 'ADMIN'"></app-admin-view>
+      <app-driver-view *ngIf="userRole === 'CHAUFFEUR'"></app-driver-view>
+      <app-passenger-view *ngIf="userRole === 'PASSAGER'"></app-passenger-view>
 
-      <div *ngIf="userRole === 'CHAUFFEUR'">
-        <h2>Gestion de mes trajets</h2>
-      </div>
-
-      <div *ngIf="userRole === 'PASSAGER'">
-        <h2>Recherche de trajet</h2>
-      </div>
     </div>
   `
 })
 export class Dashboard implements OnInit {
-  private api = inject(ApiService);
   private router = inject(Router);
   public userRole: string | null = null;
 
   ngOnInit() {
     this.userRole = localStorage.getItem('userRole');
-
     if (!this.userRole) {
       this.router.navigate(['/login']);
     }

@@ -1,313 +1,91 @@
-# DriveMe
+# DriveMe – Enterprise Smart Mobility Platform
 
-## Présentation
+DriveMe est une plateforme technologique distribuée de mobilité urbaine et de transport à la demande (VTC). Conçue selon les standards industriels de haute disponibilité, de sécurité et d'évolutivité, la plateforme permet une mise en relation temps réel et sécurisée entre passagers et conducteurs certifiés.
 
-DriveMe est une plateforme de mobilité intelligente développée dans le cadre du Travail de Fin d'Études (TFE) ICC 2025-2026.
+L'architecture technique est orientée micro-services découplés, garantissant une forte résilience, une maintenance isolée et une transition transparente vers une infrastructure conteneurisée.
 
-L'objectif du projet est de proposer une solution moderne, sécurisée et évolutive permettant la mise en relation entre passagers et chauffeurs via une architecture professionnelle basée sur Spring Boot, Angular et MySQL.
+## Fonctionnalités du Système
 
-Le projet vise initialement le marché marocain avec une perspective d'évolution vers une plateforme de mobilité internationale.
+### Espace Passager (Client App)
+* **Onboarding et Gestion de Compte** : Authentification sécurisée et cycle de vie client isolé.
+* **Moteur de Dispatching** : Demande de course optimisée avec routage vers les conducteurs du segment réseau le plus proche.
+* **Suivi de Transit** : Suivi dynamique des états de la course (EN_ATTENTE, ACCEPTEE, TERMINEE).
+* **Registre de Facturation** : Historique complet des déplacements et des reçus financiers associés.
+* **Système d'Évaluation** : Matrice d'analyse de la qualité de service avec notation des conducteurs.
 
----
+### Espace Chauffeur (Driver Operations)
+* **Console d'Activité** : Commutateur de disponibilité et gestion de l'état opérationnel sur le réseau de transit.
+* **Conformité Administrative** : Tunnel de téléversement et de vérification des pièces justificatives obligatoires.
+* **Gestion des Flux Financiers** : Suivi en direct des revenus, gestion du solde de crédits de la plateforme et historique des transactions.
+* **Routage Métier** : Interface de capture, d'acceptation et de complétion des ordres de transit.
 
-# Objectifs du Projet
+### Espace Super-Administrateur (Control Tower Dashboard)
+* **Dashboard KPI Centralisé** : Télémétrie en temps réel du volume de transactions, du taux d'activité des chauffeurs et du taux de complétion des courses[cite: 2, 3, 4].
+* **Gestion des Comptes et Rôles** : Contrôle total des profils utilisateurs pour les chauffeurs et les passagers.
+* **Audit de Conformité** : Module d'approbation et de pré-validation des dossiers administratifs des chauffeurs.
+* **Registre d'Exploitation** : Supervision globale de l'intégralité des courses et des flux monétaires du réseau[cite: 2, 3, 4].
 
-DriveMe a été conçu pour répondre aux besoins suivants :
+## Architecture Technique et Stack
 
-- Réservation de trajets en temps réel
-- Gestion des chauffeurs et passagers
-- Paiement sécurisé
-- Gestion des avis et évaluations
-- Administration centralisée
-- Architecture RESTful moderne
-- Application multilingue
-- Compatibilité Web, Mobile et Tablette
-- Déploiement professionnel sur serveur Linux
+| Domaine | Technologie | Spécification / Rôle |
+| :--- | :--- | :--- |
+| Backend Framework | Spring Boot 3.x | Core Engine, API RESTful sans état (Stateless) |
+| Langage Core | Java 17 | Programmation orientée objet, Typage strict, Performances accrues |
+| Sécurité & Accès | Spring Security + JWT | Chiffrement de bout en bout, Authentification par jetons signés |
+| Persistance | MySQL 8.x | Base de données relationnelle hautement normalisée (3NF) |
+| ORM / Data | Hibernate / JPA | Couche d'abstraction de données et d'intégrité relationnelle[cite: 2, 3] |
+| Frontend Framework | Angular 17 Standalone | Interface Single Page Application (SPA), Composants isolés[cite: 2, 3] |
+| Documentation | Swagger OpenAPI 3.0 | Spécification, test et documentation des endpoints REST[cite: 2, 3] |
+| Gestion de Code | Git / GitHub | Gestionnaire de versions distribué[cite: 2, 3] |
 
----
-
-# Architecture Technique
-
-| Domaine | Technologie |
-|----------|-------------|
-| Backend | Spring Boot 3 |
-| Langage Backend | Java 17 |
-| Frontend | Angular 17 Standalone |
-| Sécurité | Spring Security + JWT |
-| Base de données | MySQL |
-| ORM | Hibernate / JPA |
-| API | RESTful JSON |
-| Documentation API | Swagger OpenAPI |
-| Versioning | Git / GitHub |
-| Build Tool | Maven |
-| Déploiement cible | Docker / VPS Linux |
-
----
-
-# Organisation du Projet
-
-Le projet est structuré selon une architecture moderne Frontend / Backend.
+## Organisation de l'Écosystème
 
 ```text
-DriveMe
-│
-├── backend
-│   └── DriveMe-Spring
-│
-├── frontend
-│   └── Angular
-│
-├── sql
-│
-├── docs
-│
-└── README.md
-```
-
----
-
-# Fonctionnalités Implémentées
-
-## Authentification et Sécurité
-
-- Authentification JWT
-- Gestion des rôles
-- Protection des endpoints REST
-- Contrôle d'accès basé sur les rôles
-- Hashage des mots de passe avec BCrypt
-
-## Gestion des Utilisateurs
-
-### Passagers
-
-- Création de compte
-- Connexion sécurisée
-- Gestion du profil
-- Historique des trajets
-
-### Chauffeurs
-
-- Gestion du profil
-- Validation administrative
-- Consultation des courses
-- Gestion du crédit DriveMe
-
-## Gestion des Courses
-
-Workflow métier actuel :
-
-```text
-EN_ATTENTE
-     ↓
-ACCEPTEE
-     ↓
-TERMINEE
-```
-
-Fonctionnalités :
-
-- Création de course
-- Affectation chauffeur
-- Suivi du statut
-- Historisation
-
-## Gestion des Paiements
-
-- Génération automatique du paiement
-- Historisation
-- Association aux courses
-- Gestion du statut de paiement
-
-## Administration
-
-- Dashboard centralisé
-- Gestion des chauffeurs
-- Gestion des passagers
-- Gestion des courses
-- Gestion des paiements
-
----
-
-# Fonctionnalités Frontend
-
-## Landing Page
-
-- Présentation publique de DriveMe
-- Design responsive
-- Compatible Desktop, Mobile et Tablette
-
-## Authentification
-
-- Interface de connexion
-- Intégration API JWT
-- Protection des routes Angular
-
-## Dashboard Administrateur
-
-- Statistiques globales
-- Vue d'ensemble de la plateforme
-- Actions rapides
-- Interface moderne responsive
-
-## Gestion des Chauffeurs
-
-- Consultation
-- Validation
-- Suppression
-
-## Gestion des Passagers
-
-- Consultation
-- Gestion administrative
-
-## Gestion des Courses
-
-- Liste des trajets
-- Mise à jour des statuts
-- Consultation détaillée
-
----
-
-# Sécurité
-
-Le projet applique plusieurs mécanismes de sécurité :
-
-- Spring Security
-- JWT Authentication
-- BCrypt Password Encoder
-- Contrôle d'accès par rôles
-- Validation des données
-- Protection des routes Angular
-- Architecture REST sécurisée
-
----
-
-# État d'Avancement
-
-| Module | Statut |
-|----------|----------|
-| Backend Spring Boot | Terminé |
-| Base de données MySQL | Terminé |
-| Authentification JWT | Terminé |
-| Swagger OpenAPI | Terminé |
-| API REST | Terminé |
-| Dashboard Administrateur | En cours d'amélioration |
-| Gestion Chauffeurs | Fonctionnel |
-| Gestion Passagers | Fonctionnel |
-| Gestion Courses | Fonctionnel |
-| Gestion Paiements | Fonctionnel |
-| Landing Page | En cours |
-| Gestion Avis | En cours |
-| Multilingue | En cours |
-| QR Code Paiement | Planifié |
-| Notifications Temps Réel | Planifié |
-| Déploiement VPS Linux | Planifié |
-| Application Android | Planifié |
-| Application iOS | Planifié |
-
----
-
-# Conformité TFE ICC
-
-| Exigence | Statut |
-|-----------|---------|
-| Versioning GitHub | Conforme |
-| API RESTful | Conforme |
-| Back-office sécurisé | Conforme |
-| Authentification JWT | Conforme |
-| Base de données relationnelle | Conforme |
-| Documentation API | Conforme |
-| Swagger OpenAPI | Conforme |
-| Gestion des rôles | Conforme |
-| Paiement sécurisé | En cours |
-| Multilingue | En cours |
-| Tests unitaires | À réaliser |
-| Tests d'intégration | À réaliser |
-| Déploiement | À réaliser |
-
----
-
-# Évolutions Prévues
-
-## Front Office
-
-- Application multilingue
-  - Français
-  - Anglais
-  - Arabe
-  - Espagnol
-
-- Géolocalisation
-- Carte interactive
-- Historique avancé
-- Gestion des favoris
-
-## Paiements
-
-- Paiement par QR Code
-- Paiement mobile
-- Paiement bancaire
-- Historique des transactions
-
-## Administration
-
-- Tableau de bord analytique
-- Rapports statistiques
-- Audit d'activité
-- Journalisation complète
-
-## Mobile
-
-- Progressive Web App (PWA)
-- Android APK
-- Application iOS
-
----
-
-# Déploiement Prévu
-
-Architecture cible :
-
-```text
-Utilisateur
-      │
-      ▼
-Frontend Angular
-      │
-      ▼
-API Spring Boot
-      │
-      ▼
-Base de données MySQL
-      │
-      ▼
-Serveur Linux VPS
-```
-
-Technologies envisagées :
-
-- Docker
-- Nginx
-- Linux Ubuntu Server
-- GitHub Actions
-- SSL HTTPS
-
----
-
-# Auteur
-
-Youssef Qarnouf
-
-Bachelier en Informatique – Développement d'Applications
-
-Institut des Carrières Commerciales (ICC)
-
-Année académique 2025-2026
-
----
-
-# Licence
-
-Projet réalisé dans le cadre du Travail de Fin d'Études ICC 2025-2026.
-
-Tous droits réservés.
+DriveMe/
+├── backend/            # Code source de l'API Spring Boot 3
+│   └── DriveMe-Spring/ # Logique métier, Security, Entities, Controllers, DTOs
+├── frontend/           # Application Single Page Application Angular 17
+│   └── src/            # Core, Layouts, Features (Dashboard, Auth, Course)
+├── sql/                # Scripts d'initialisation et structures DDL de la base de données
+├── docs/               # Architecture logicielle, diagrammes de séquence et spécifications
+└── README.md           # Documentation maîtresse du projet
+
+### Sécurité, Conformité et Gestion des Risques
+
+La plateforme DriveMe applique le paradigme du Security by Design et intègre des contre-mesures strictes pour couvrir les failles majeures du OWASP Top 10 :
+
+* **Authentification sans état (Stateless JWT)** : Aucun état de session n'est stocké côté serveur. Chaque transaction HTTP est authentifiée via un jeton signé de manière cryptographique et vérifié par un filtre Spring Security[cite: 2, 3].
+* **Contrôle d'Accès basé sur les Rôles (RBAC)** : Les routes de l'API sont protégées au niveau méthode via l'annotation `@PreAuthorize(hasRole(...))`, empêchant toute faille de type IDOR ou escalade de privilèges.
+* **Chiffrement des Données Sensibles** : Aucun mot de passe ne réside en clair en base de données[cite: 2, 3]. L'application utilise l'algorithme de hachage BCrypt associé à un sel adaptatif pour interdire les attaques par force brute ou tables de correspondance.
+* **Conformité de Confidentialité** : Traçabilité du traitement, isolation complète des données personnelles, horodatage automatisé via hooks `@PrePersist` et chiffrement des métadonnées de conformité téléversées par les chauffeurs[cite: 2, 3].
+
+### Feuille de Route d'Ingénierie (Roadmap)
+
+#### Étape 1 : Noyau Fonctionnel (Opérationnel)
+- [x] Architecture API Restful découplée[cite: 2, 3]
+- [x] Authentification centralisée JWT et contrôle RBAC[cite: 2, 3]
+- [x] Dashboard d'administration centralisé avec télémétrie des KPI[cite: 2, 3, 4]
+- [x] Registre de gestion et d'approbation rapide des conducteurs partenaires[cite: 2, 3]
+- [x] Persistance MySQL normalisée avec mapping relationnel strict[cite: 2, 3]
+
+#### Étape 2 : Extensions Métiers (En cours de déploiement)
+- [ ] Moteur d'estimation de prix dynamique et calcul d'itinéraires[cite: 2, 3]
+- [ ] Passerelles de paiements locales (CIH Pay) et internationales[cite: 2, 3, 4]
+- [ ] Système d'architecture multilingue natif (Français, Anglais, Arabe avec support RTL complet)[cite: 2, 3]
+- [ ] Composant de validation pour les certificats de transport et reçus de paiement[cite: 2, 3, 4]
+
+#### Étape 3 : Hybridation et Distribution Mobile
+- [ ] Configuration de l'application en PWA (Progressive Web App) installable[cite: 2, 3]
+- [ ] Compilation en application native Android (APK) et iOS via Capacitor[cite: 2, 3]
+- [ ] Déploiement avec serveur proxy inverse Nginx et SSL Let's Encrypt
+
+### Équipe d'Ingénierie et Direction Technique
+
+* Youssef Qarnouf - Lead Frontend Architect et Product Owner[cite: 2, 3]
+* Site Internet : [https://driveme.ma](https://driveme.ma)
+* API Endpoints : [https://api.driveme.ma](https://api.driveme.ma)
+
+### Licence et Propriété Intellectuelle
+
+DriveMe Platform © 2026. Tous droits réservés.  
+Ce logiciel et sa documentation associée sont la propriété exclusive de DriveMe Mobility Platform. Toute reproduction, distribution ou modification non autorisée de ce code source est strictement interdite.

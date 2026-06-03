@@ -36,8 +36,12 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseResponseDTO createCourse(CourseCreateDTO dto) {
+    public long count() {
+        return courseRepository.count();
+    }
 
+    @Override
+    public CourseResponseDTO createCourse(CourseCreateDTO dto) {
         Passager passager = passagerRepository.findById(dto.getPassagerId())
                 .orElseThrow(() -> new ResourceNotFoundException("Passager introuvable"));
 
@@ -53,68 +57,30 @@ public class CourseServiceImpl implements CourseService {
         course.setStatut(CourseStatus.EN_ATTENTE);
 
         Course saved = courseRepository.save(course);
-
         return mapToDTO(saved);
     }
 
     @Override
     public List<CourseResponseDTO> getAllCourses() {
-        return courseRepository.findAll()
-                .stream()
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
+        return courseRepository.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
     @Override
     public List<CourseResponseDTO> getCoursesByChauffeur(Long chauffeurId) {
-        return courseRepository.findByChauffeurId(chauffeurId)
-                .stream()
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
+        return courseRepository.findByChauffeurId(chauffeurId).stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
     @Override
     public List<CourseResponseDTO> getCoursesByPassager(Long passagerId) {
-        return courseRepository.findByPassagerId(passagerId)
-                .stream()
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
+        return courseRepository.findByPassagerId(passagerId).stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
     @Override
     public CourseResponseDTO updateStatus(Long id, String status) {
-
-        Course course = courseRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Course introuvable"));
-
+        Course course = courseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Course introuvable"));
         CourseStatus newStatus = CourseStatus.valueOf(status.toUpperCase());
 
-        if (newStatus == CourseStatus.ACCEPTEE) {
-            if (course.getStatut() != CourseStatus.EN_ATTENTE) {
-                throw new RuntimeException("Seules les courses EN_ATTENTE peuvent être acceptées");
-            }
-
-            if (course.getChauffeur() == null
-                    || course.getChauffeur().getStatutValidation() == null
-                    || course.getChauffeur().getStatutValidation() == 0) {
-                throw new RuntimeException("Chauffeur non validé");
-            }
-        }
-
-        if (newStatus == CourseStatus.TERMINEE) {
-            if (course.getStatut() != CourseStatus.ACCEPTEE) {
-                throw new RuntimeException("Seules les courses ACCEPTEES peuvent être terminées");
-            }
-        }
-
-        if (newStatus == CourseStatus.ANNULEE) {
-            if (course.getStatut() == CourseStatus.TERMINEE) {
-                throw new RuntimeException("Impossible d'annuler une course terminée");
-            }
-        }
-
         course.setStatut(newStatus);
-
         Course updated = courseRepository.save(course);
 
         if (newStatus == CourseStatus.TERMINEE) {

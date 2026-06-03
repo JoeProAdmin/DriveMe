@@ -11,7 +11,6 @@ import com.driveme.repository.PassagerRepository;
 import com.driveme.repository.UtilisateurRepository;
 import com.driveme.service.PassagerService;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,15 +20,18 @@ public class PassagerServiceImpl implements PassagerService {
     private final PassagerRepository passagerRepository;
     private final UtilisateurRepository utilisateurRepository;
 
-    public PassagerServiceImpl(PassagerRepository passagerRepository,
-                               UtilisateurRepository utilisateurRepository) {
+    public PassagerServiceImpl(PassagerRepository passagerRepository, UtilisateurRepository utilisateurRepository) {
         this.passagerRepository = passagerRepository;
         this.utilisateurRepository = utilisateurRepository;
     }
 
     @Override
-    public PassagerResponseDTO createPassager(PassagerCreateDTO dto) {
+    public long count() {
+        return passagerRepository.count();
+    }
 
+    @Override
+    public PassagerResponseDTO createPassager(PassagerCreateDTO dto) {
         Utilisateur utilisateur = new Utilisateur();
         utilisateur.setNom(dto.getNom());
         utilisateur.setPrenom(dto.getPrenom());
@@ -38,74 +40,43 @@ public class PassagerServiceImpl implements PassagerService {
         utilisateur.setMotDePasse("test123");
         utilisateur.setRole(Role.PASSAGER);
         utilisateur.setLanguage(Language.FR);
-
         utilisateur = utilisateurRepository.save(utilisateur);
 
         Passager passager = new Passager();
         passager.setUtilisateur(utilisateur);
         passager.setPhotoUrl(dto.getPhotoUrl());
-
-        passager = passagerRepository.save(passager);
-
-        return mapToDTO(passager);
+        return mapToDTO(passagerRepository.save(passager));
     }
 
     @Override
     public List<PassagerResponseDTO> getAllPassagers() {
-        return passagerRepository.findAll()
-                .stream()
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
+        return passagerRepository.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
     @Override
     public PassagerResponseDTO getPassagerById(Long id) {
-        Passager passager = passagerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Passager introuvable"));
-
-        return mapToDTO(passager);
+        return mapToDTO(passagerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Passager introuvable")));
     }
 
     @Override
     public PassagerResponseDTO updatePassager(Long id, PassagerCreateDTO dto) {
-
-        Passager passager = passagerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Passager introuvable"));
-
+        Passager passager = passagerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Passager introuvable"));
         Utilisateur utilisateur = passager.getUtilisateur();
-
         utilisateur.setNom(dto.getNom());
         utilisateur.setPrenom(dto.getPrenom());
         utilisateur.setTelephone(dto.getTelephone());
         utilisateur.setEmail(dto.getEmail());
-
         utilisateurRepository.save(utilisateur);
-
         passager.setPhotoUrl(dto.getPhotoUrl());
-
-        passager = passagerRepository.save(passager);
-
-        return mapToDTO(passager);
+        return mapToDTO(passagerRepository.save(passager));
     }
 
     @Override
     public void deletePassager(Long id) {
-
-        Passager passager = passagerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Passager introuvable"));
-
-        passagerRepository.delete(passager);
+        passagerRepository.deleteById(id);
     }
 
     private PassagerResponseDTO mapToDTO(Passager passager) {
-        return new PassagerResponseDTO(
-                passager.getId(),
-                passager.getUtilisateur().getNom(),
-                passager.getUtilisateur().getPrenom(),
-                passager.getUtilisateur().getTelephone(),
-                passager.getUtilisateur().getEmail(),
-                passager.getPhotoUrl(),
-                passager.getDateCreation()
-        );
+        return new PassagerResponseDTO(passager.getId(), passager.getUtilisateur().getNom(), passager.getUtilisateur().getPrenom(), passager.getUtilisateur().getTelephone(), passager.getUtilisateur().getEmail(), passager.getPhotoUrl(), passager.getDateCreation());
     }
 }

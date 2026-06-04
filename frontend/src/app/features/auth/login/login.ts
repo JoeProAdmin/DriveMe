@@ -1,93 +1,34 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../core/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
-  templateUrl: './login.html'
+  imports: [FormsModule],
+  template: `
+    <div class="login-container">
+      <input [(ngModel)]="credentials.email" type="email" placeholder="Email" name="email">
+      <input [(ngModel)]="credentials.password" type="password" placeholder="Mot de passe" name="password">
+      <button (click)="onLogin()">Se connecter</button>
+    </div>
+  `
 })
 export class LoginComponent {
-  private router = inject(Router);
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
 
-  // Configuration bilingue / multilingue
-  public currentLang: 'FR' | 'AR' | 'EN' | 'ES' = 'FR';
-  public showQrModal = false;
-  public dropdownOpen = false;
-  public userInput = '';
+  public credentials = { email: '', password: '' };
 
-  // Dictionnaire de traduction
-  public dictionary = {
-    FR: {
-      title: 'Indiquez votre numéro de téléphone ou votre adresse e-mail',
-      placeholder: 'Saisissez un numéro de téléphone ou une adresse e-mail',
-      btnContinue: 'Continuer',
-      or: 'ou',
-      google: 'Continuer avec Google',
-      apple: 'Continuer avec Apple',
-      qrCode: 'Connectez-vous avec le QR code',
-      legal: 'Vous acceptez de recevoir un code de vérification par SMS ou sur WhatsApp. Des frais de messagerie SMS et de traitement de données réseau peuvent s\'appliquer au Maroc.',
-      qrTitle: 'Connexion par QR Code',
-      qrDesc: 'Scannez ce code avec votre application mobile DriveMe Passager ou Chauffeur pour vous connecter instantanément.'
-    },
-    AR: {
-      title: 'أدخل رقم الهاتف أو البريد الإلكتروني',
-      placeholder: 'أدخل رقم الهاتف أو البريد الإلكتروني الخاص بك',
-      btnContinue: 'متابعة',
-      or: 'أأو',
-      google: 'المتابعة باستخدام Google',
-      apple: 'المتابعة باستخدام Apple',
-      qrCode: 'تسجيل الدخول باستخدام رمز QR',
-      legal: 'بالمتابعة، فإنك توافق على تلقي رمز التحقق عبر الرسائل النصية القصيرة أو WhatsApp. قد يتم تطبيق رسوم البيانات والرسائل في المغرب.',
-      qrTitle: 'تسجيل الدخول عبر رمز QR',
-      qrDesc: 'امسح هذا الرمز باستخدام تطبيق DriveMe الخاص بك لتسجيل الدخول الفوري.'
-    },
-    EN: {
-      title: 'Enter your phone number or email address',
-      placeholder: 'Enter your phone number or email address',
-      btnContinue: 'Continue',
-      or: 'or',
-      google: 'Continue with Google',
-      apple: 'Continue with Apple',
-      qrCode: 'Log in with QR code',
-      legal: 'By proceeding, you agree to receive a verification code via SMS or WhatsApp. Message and data rates may apply.',
-      qrTitle: 'QR Code Login',
-      qrDesc: 'Scan this code with your DriveMe app to log in instantly.'
-    },
-    ES: {
-      title: 'Introduzca su número de teléfono o correo electrónico',
-      placeholder: 'Introduzca su número de teléfono o correo electrónico',
-      btnContinue: 'Continuar',
-      or: 'o',
-      google: 'Continuar con Apple',
-      apple: 'Continuar con Apple',
-      qrCode: 'Iniciar sesión con código QR',
-      legal: 'Al continuar, acepta recibir un código de verificación por SMS o WhatsApp. Se pueden aplicar tarifas de red.',
-      qrTitle: 'Inicio con Código QR',
-      qrDesc: 'Escanee este código con su aplicación DriveMe para iniciar sesión de inmediato.'
-    }
-  };
-
-  public changeLangViaDropdown(lang: 'FR' | 'AR' | 'EN' | 'ES'): void {
-    this.currentLang = lang;
-    this.dropdownOpen = false;
-    document.documentElement.dir = lang === 'AR' ? 'rtl' : 'ltr';
-  }
-
-  public onSubmit(): void {
-    if (!this.userInput.trim()) return;
-
-    // 1. Enregistrement du token pour débloquer le AuthGuard
-    localStorage.setItem('token', 'session-active-driveme-2026');
-
-    // 2. Routage intelligent vers le dashboard (protégé par le guard)
-    // Le dashboard se chargera de vérifier le rôle après redirection
-    this.router.navigate(['/dashboard']);
-  }
-
-  public toggleQrModal(status: boolean): void {
-    this.showQrModal = status;
+  public onLogin(): void {
+    this.auth.login(this.credentials).subscribe({
+      next: () => {
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => {
+        console.error('Erreur de connexion', err);
+      }
+    });
   }
 }

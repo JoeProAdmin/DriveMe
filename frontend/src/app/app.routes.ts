@@ -17,7 +17,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'chauffeurs', component: ChauffeurList },
-      { path: 'create-course', component: CreateCourse },
+      { path: 'create-course', component: CreateCourse }
     ]
   },
   { path: '**', redirectTo: 'login' }

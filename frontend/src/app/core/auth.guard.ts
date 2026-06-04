@@ -1,14 +1,14 @@
 import { inject } from '@angular/core';
-import { Router, CanActivateFn } from '@angular/router';
+import { Router, type CanActivateFn } from '@angular/router';
 
-export const authGuard: CanActivateFn = (route, state) => {
+export const authGuard: CanActivateFn = () => {
   const router = inject(Router);
-  const token = localStorage.getItem('token'); // Ou ta méthode de vérification
+  const token = localStorage.getItem('token');
 
   if (token) {
-    return true; // Accès autorisé
-  } else {
-    router.navigate(['/login']); // Redirection vers le login
-    return false; // Accès bloqué
+    return true;
   }
+
+  router.navigate(['/login']);
+  return false;
 };

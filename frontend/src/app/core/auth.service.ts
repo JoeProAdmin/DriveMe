@@ -1,29 +1,26 @@
-import { Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthService } from '../../../core/auth.service';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '@env/environment';
 
-@Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [FormsModule],
-  template: `
-    <div class="login-container">
-      <input [(ngModel)]="credentials.email" type="email" placeholder="Email">
-      <input [(ngModel)]="credentials.password" type="password" placeholder="Mot de passe">
-      <button (click)="onLogin()">Se connecter</button>
-    </div>
-  `
-})
-export class LoginComponent {
-  private auth = inject(AuthService);
-  private router = inject(Router);
-  public credentials = { email: '', password: '' };
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  private readonly http = inject(HttpClient);
+  private readonly url = `${environment.apiUrl}/auth`;
 
-  public onLogin(): void {
-    this.auth.login(this.credentials).subscribe({
-      next: () => this.router.navigate(['/dashboard']),
-      error: (err) => console.error('Erreur de connexion', err)
-    });
+  public login(credentials: object): Observable<any> {
+    return this.http.post(`${this.url}/login`, credentials);
+  }
+
+  public logout(): void {
+    localStorage.clear();
+  }
+
+  public isLoggedIn(): boolean {
+    return !!localStorage.getItem('token');
+  }
+
+  public getUserRole(): string | null {
+    return localStorage.getItem('userRole');
   }
 }

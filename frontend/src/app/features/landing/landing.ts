@@ -7,10 +7,10 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './landing.html',
-  styleUrls: ['./landing.css']
+  // landing.css est laissé vide comme demandé pour préserver le design en ligne
 })
 export class Landing {
-  // État de contrôle pour l'affichage du QR Code inDrive style
+  // État pour le QR Code inDrive style, prêt à être utilisé si tu ajoutes une modale
   public isQrModalOpen: boolean = false;
 
   public ouvrirPopUpQr(): void {

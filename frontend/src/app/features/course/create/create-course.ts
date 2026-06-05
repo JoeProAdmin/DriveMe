@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ApiService } from '../../../core/api.service';
 
 @Component({
   selector: 'app-create-course',
@@ -9,16 +10,11 @@ import { Router } from '@angular/router';
   imports: [CommonModule, FormsModule],
   templateUrl: './create-course.html'
 })
-export class CreateCourseComponent implements OnInit, OnDestroy {
+export class CreateCourse implements OnInit, OnDestroy {
   private router = inject(Router);
+  private api = inject(ApiService);
 
-  // Modèle d'ingénierie chaîné avec le template HTML
-  public formModel = {
-    adresseDepart: '',
-    adresseArrivee: '',
-    prix: null as number | null
-  };
-
+  public formModel = { adresseDepart: '', adresseArrivee: '', prix: null as number | null };
   private map: any;
 
   ngOnInit(): void {
@@ -26,36 +22,24 @@ export class CreateCourseComponent implements OnInit, OnDestroy {
   }
 
   private initMap(): void {
-    if (typeof window === 'undefined') return;
-    const L = (window as any).L;
-    if (!L) return;
-
-    // Rendu cartographique initialisé et centré sur Marrakech
-    this.map = L.map('driveme-interactive-map', {
-      zoomControl: false,
-      attributionControl: false
-    }).setView([31.6295, -7.9811], 12);
-
-    // Tuiles claires cartographiques professionnelles
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      maxZoom: 19
-    }).addTo(this.map);
+    if (typeof window !== 'undefined' && (window as any).L) {
+      const L = (window as any).L;
+      this.map = L.map('driveme-live-map', { zoomControl: false }).setView([31.6295, -7.9811], 12);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(this.map);
+    }
   }
 
   public onFindDriver(): void {
     if (!this.formModel.adresseDepart || !this.formModel.adresseArrivee || !this.formModel.prix) return;
 
-    // Transmission de la session et routage
-    localStorage.setItem('pending_course_price', this.formModel.prix.toString());
-    this.router.navigate(['/negotiation']);
+    // Appel au service corrigé
+    this.api.requestCourse(this.formModel).subscribe({
+      next: () => this.router.navigate(['/negotiation']),
+      error: (err: any) => console.error('Erreur soumission course:', err)
+    });
   }
 
   ngOnDestroy(): void {
-    if (this.map) {
-      this.map.remove();
-    }
+    if (this.map) this.map.remove();
   }
 }
-
-// Assure l'alignement strict avec app.routes.ts ligne 5
-export { CreateCourseComponent as CreateCourse };

@@ -1,42 +1,32 @@
-<div [style.direction]="currentLang === 'AR' ? 'rtl' : 'ltr'" style="width: 100vw; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; font-family: 'Poppins', 'Segoe UI', sans-serif; box-sizing: border-box; overflow-x: hidden; margin: 0; padding: 0;">
-
-  <header style="background-color: #0f172a; color: #ffffff; display: flex; justify-content: space-between; align-items: center; padding: 0 40px; height: 64px; box-sizing: border-box; width: 100%; border-bottom: 2px solid #00C853; position: relative;">
-    <div style="font-size: 24px; font-weight: 700; letter-spacing: -0.04em;">Drive<span style="color: #00C853;">Me</span></div>
-
-    <div style="position: relative; display: inline-block;">
-      <button type="button" (click)="dropdownOpen = !dropdownOpen" style="background: #1e293b; border: 1px solid #334155; padding: 6px 12px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: inherit; font-size: 13px; font-weight: 700; color: #ffffff; outline: none;">
-        <span>{{ currentLang === 'AR' ? 'MA' : currentLang }}</span>
-        <span style="font-size: 10px; color: #94a3b8;">▼</span>
-      </button>
-
-      <div *ngIf="dropdownOpen" [style.right]="currentLang !== 'AR' ? '0' : 'auto'" [style.left]="currentLang === 'AR' ? '0' : 'auto'" style="position: absolute; top: 38px; background-color: #1e293b; border: 1px solid #334155; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); width: 120px; z-index: 100; display: flex; flex-direction: column; padding: 4px 0; box-sizing: border-box;">
-        <button type="button" (click)="changeLangViaDropdown('FR')" style="background: transparent; border: none; padding: 8px 12px; color: #ffffff; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%; text-align: start; font-family: inherit;">FR</button>
-        <button type="button" (click)="changeLangViaDropdown('AR')" style="background: transparent; border: none; padding: 8px 12px; color: #ffffff; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%; text-align: start; font-family: inherit;">AR</button>
-      </div>
-    </div>
+<div [style.direction]="currentLang === 'AR' ? 'rtl' : 'ltr'" style="width: 100vw; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; font-family: 'Poppins', sans-serif;">
+  <header style="background-color: #0f172a; color: #ffffff; display: flex; justify-content: space-between; align-items: center; padding: 0 40px; height: 64px; border-bottom: 2px solid #00C853;">
+    <div style="font-size: 24px; font-weight: 700;">Drive<span style="color: #00C853;">Me</span></div>
+    <div style="cursor: pointer;" (click)="dropdownOpen = !dropdownOpen">FR ▼</div>
   </header>
 
-  <div style="flex: 1; display: flex; justify-content: center; align-items: center; padding: 40px 20px; box-sizing: border-box; background-color: #ffffff; width: 100%;">
-    <div style="width: 100%; max-width: 380px; display: flex; flex-direction: column; box-sizing: border-box;">
+  <div style="flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px;">
+    <div style="width: 100%; max-width: 400px;">
+      <h1 style="font-size: 24px; font-weight: 600; margin-bottom: 24px;">{{ dictionary[currentLang].title }}</h1>
 
-      <h1 style="font-size: 24px; font-weight: 600; color: #0f172a; margin: 0 0 24px 0; text-align: start;">
-        {{ dictionary[currentLang].title }}
-      </h1>
+      <form (ngSubmit)="onSubmit()" style="display: flex; flex-direction: column; gap: 16px;">
+        <input type="email" name="email" [(ngModel)]="loginData.email" placeholder="Email..."
+               style="width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px;">
 
-      <form (ngSubmit)="onSubmit()" style="display: flex; flex-direction: column; gap: 14px; width: 100%;">
-        <input type="email" name="email" [(ngModel)]="loginData.email"
-               [placeholder]="dictionary[currentLang].placeholderEmail" required
-               style="width: 100%; padding: 14px 16px; background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; box-sizing: border-box;">
+        <input type="password" name="motDePasse" [(ngModel)]="loginData.motDePasse" placeholder="Mot de passe..."
+               style="width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px;">
 
-        <input type="password" name="motDePasse" [(ngModel)]="loginData.motDePasse"
-               [placeholder]="dictionary[currentLang].placeholderPass" required
-               style="width: 100%; padding: 14px 16px; background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; box-sizing: border-box;">
-
-        <button type="submit" style="width: 100%; background-color: #0f172a; color: #ffffff; border: none; padding: 14px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
+        <button type="submit" style="background: #0f172a; color: #fff; padding: 14px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer;">
           {{ dictionary[currentLang].btnContinue }}
         </button>
       </form>
 
+      <div style="margin: 24px 0; text-align: center; color: #64748b;">ou</div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc; cursor: pointer;">Google</button>
+        <button style="padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc; cursor: pointer;">Apple</button>
+        <button (click)="toggleQrModal(true)" style="padding: 12px; border: 1px solid #00C853; border-radius: 8px; background: #f0fdf4; color: #00C853; cursor: pointer;">Connexion par QR</button>
+      </div>
     </div>
   </div>
 </div>

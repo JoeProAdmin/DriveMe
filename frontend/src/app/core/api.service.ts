@@ -33,6 +33,7 @@ export class ApiService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.apiUrl;
 
+  // Signaux pour le multilingue
   public readonly currentLanguage: WritableSignal<'fr' | 'en' | 'ar' | 'es'> = signal('fr');
   public readonly isRtlMode: WritableSignal<boolean> = signal(false);
 
@@ -41,16 +42,14 @@ export class ApiService {
     this.isRtlMode.set(lang === 'ar');
   }
 
+  // --- Méthodes Dashboard Admin ---
   public getAdminStats(): Observable<AdminStats> {
     return this.http.get<AdminStats>(`${this.baseUrl}/admin/stats`);
   }
 
+  // --- Méthodes Chauffeurs ---
   public getAllChauffeurs(): Observable<ChauffeurResponseDTO[]> {
     return this.http.get<ChauffeurResponseDTO[]>(`${this.baseUrl}/chauffeurs`);
-  }
-
-  public getCourses(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/courses`);
   }
 
   public validerChauffeur(id: number, statut: number): Observable<void> {
@@ -61,6 +60,16 @@ export class ApiService {
     return this.validerChauffeur(id, 2);
   }
 
+  // --- Méthodes Courses ---
+  public getCourses(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/courses`);
+  }
+
+  public requestCourse(courseData: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/courses/request`, courseData);
+  }
+
+  // --- Méthodes Avis & Autres ---
   public soumettreAvis(avis: AvisDTO): Observable<void> {
     return this.http.post<void>(`${this.baseUrl}/avis`, avis);
   }

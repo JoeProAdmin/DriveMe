@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ApiService } from '../../core/api.service';
+import { ApiService } from '../core/api.service'; // <--- CORRIGÉ ICI
 
 @Component({
   selector: 'app-dashboard-layout',

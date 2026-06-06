@@ -1,120 +1,49 @@
 <div [style.direction]="currentLang === 'AR' ? 'rtl' : 'ltr'" style="width: 100vw; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; font-family: 'Poppins', 'Segoe UI', sans-serif; box-sizing: border-box; overflow-x: hidden; margin: 0; padding: 0;">
 
-  <header style="background-color: #0f172a; color: #ffffff; display: flex; justify-content: space-between; align-items: center; padding: 0 40px; height: 64px; box-sizing: border-box; width: 100%; border-bottom: 2px solid #00C853; position: relative;">
-
-    <div style="font-size: 24px; font-weight: 700; letter-spacing: -0.04em;">
-      Drive<span style="color: #00C853;">Me</span>
-    </div>
-
-    <div style="position: relative; display: inline-block;">
-
-      <button
-        type="button"
-        (click)="dropdownOpen = !dropdownOpen"
-        style="background: #1e293b; border: 1px solid #334155; padding: 6px 12px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: inherit; font-size: 13px; font-weight: 700; color: #ffffff; outline: none;">
-
+  <header style="background-color: #0f172a; color: #ffffff; display: flex; justify-content: space-between; align-items: center; padding: 0 40px; height: 64px; border-bottom: 2px solid #00C853;">
+    <div style="font-size: 24px; font-weight: 700; letter-spacing: -0.04em;">Drive<span style="color: #00C853;">Me</span></div>
+    <div style="position: relative;">
+      <button type="button" (click)="dropdownOpen = !dropdownOpen" style="background: #1e293b; border: 1px solid #334155; padding: 6px 12px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: #ffffff;">
         <span>{{ currentLang === 'AR' ? 'MA' : currentLang }}</span>
-        <span style="font-size: 10px; color: #94a3b8;">▼</span>
-
+        <span>▼</span>
       </button>
-
-      <div
-        *ngIf="dropdownOpen"
-        [style.right]="currentLang !== 'AR' ? '0' : 'auto'"
-        [style.left]="currentLang === 'AR' ? '0' : 'auto'"
-        style="position: absolute; top: 38px; background-color: #1e293b; border: 1px solid #334155; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); width: 120px; z-index: 100; display: flex; flex-direction: column; padding: 4px 0; box-sizing: border-box;">
-
-        <button type="button" (click)="changeLangViaDropdown('FR')" style="background: transparent; border: none; padding: 8px 12px; color: #ffffff; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%; text-align: start;">
-          FR
-        </button>
-
-        <button type="button" (click)="changeLangViaDropdown('AR')" style="background: transparent; border: none; padding: 8px 12px; color: #ffffff; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%; text-align: start;">
-          AR
-        </button>
-
-        <button type="button" (click)="changeLangViaDropdown('EN')" style="background: transparent; border: none; padding: 8px 12px; color: #ffffff; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%; text-align: start;">
-          EN
-        </button>
-
-        <button type="button" (click)="changeLangViaDropdown('ES')" style="background: transparent; border: none; padding: 8px 12px; color: #ffffff; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%; text-align: start;">
-          ES
-        </button>
-
+      <div *ngIf="dropdownOpen" style="position: absolute; right: 0; top: 40px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; width: 100px; z-index: 100;">
+        <button (click)="changeLangViaDropdown('FR')" style="display:block; width:100%; border:none; background:none; color:#fff; padding:8px; cursor:pointer; text-align:left;">FR</button>
+        <button (click)="changeLangViaDropdown('AR')" style="display:block; width:100%; border:none; background:none; color:#fff; padding:8px; cursor:pointer; text-align:left;">AR</button>
+        <button (click)="changeLangViaDropdown('EN')" style="display:block; width:100%; border:none; background:none; color:#fff; padding:8px; cursor:pointer; text-align:left;">EN</button>
+        <button (click)="changeLangViaDropdown('ES')" style="display:block; width:100%; border:none; background:none; color:#fff; padding:8px; cursor:pointer; text-align:left;">ES</button>
       </div>
-
     </div>
-
   </header>
 
-  <div style="flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px;">
+  <div style="flex: 1; display: flex; justify-content: center; align-items: center; padding: 40px 20px;">
+    <div style="width: 100%; max-width: 380px;">
+      <h1 style="font-size: 24px; font-weight: 600; color: #0f172a; margin-bottom: 24px;">Indiquez votre numéro ou email</h1>
 
-    <div style="width: 100%; max-width: 400px;">
-
-      <h1 style="font-size: 24px; font-weight: 600; color: #0f172a; margin: 0 0 24px 0; text-align: start;">
-        {{ dictionary[currentLang].title }}
-      </h1>
-
-      <form (ngSubmit)="onSubmit()" style="display: flex; flex-direction: column; gap: 14px; width: 100%;">
-
-        <input
-          type="email"
-          name="email"
-          [(ngModel)]="loginData.email"
-          [placeholder]="dictionary[currentLang].placeholderEmail"
-          required
-          style="width: 100%; padding: 14px 16px; background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; box-sizing: border-box;">
-
-        <input
-          type="password"
-          name="motDePasse"
-          [(ngModel)]="loginData.motDePasse"
-          [placeholder]="dictionary[currentLang].placeholderPass"
-          required
-          style="width: 100%; padding: 14px 16px; background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; box-sizing: border-box;">
-
-        <button
-          type="submit"
-          style="width: 100%; background-color: #0f172a; color: #ffffff; border: none; padding: 14px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
-
-          {{ dictionary[currentLang].btnContinue }}
-
-        </button>
-
+      <form (ngSubmit)="onSubmit()" style="display: flex; flex-direction: column; gap: 14px;">
+        <input type="email" name="email" [(ngModel)]="loginData.email" [placeholder]="dictionary[currentLang].placeholderEmail" required style="width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px;">
+        <input type="password" name="motDePasse" [(ngModel)]="loginData.motDePasse" [placeholder]="dictionary[currentLang].placeholderPass" required style="width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px;">
+        <button type="submit" style="width: 100%; background-color: #0f172a; color: #ffffff; border: none; padding: 14px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">Continuer</button>
       </form>
 
-      <div style="display: flex; align-items: center; text-align: center; margin: 24px 0; color: #cbd5e1; font-size: 14px;">
-        <div style="flex: 1; border-bottom: 1px solid #e2e8f0;"></div>
-        <span style="padding: 0 12px; color: #64748b; font-weight: 500;">ou</span>
-        <div style="flex: 1; border-bottom: 1px solid #e2e8f0;"></div>
-      </div>
+      <div style="margin: 24px 0; text-align: center; color: #94a3b8; font-size: 14px;">ou</div>
 
-      <div style="display: flex; flex-direction: column; gap: 12px; width: 100%;">
-
-        <button type="button" style="width: 100%; background-color: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px;">
-          Google
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <button type="button" style="width: 100%; background: #fff; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer;">
+          <svg width="24" height="24" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/></svg> Continuer avec Google
         </button>
-
-        <button type="button" style="width: 100%; background-color: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px;">
-          Apple
+        <button type="button" style="width: 100%; background: #fff; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer;">
+          <svg width="24" height="24" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.21.67-2.93 1.49-.62.69-1.16 1.84-1.01 2.96 1.12.09 2.27-.57 2.95-1.39z"/></svg> Continuer avec Apple
         </button>
-
-        <button
-          type="button"
-          (click)="toggleQrModal(true)"
-          style="width: 100%; background-color: rgba(0,200,83,0.06); color: #00C853; border: 1px solid rgba(0,200,83,0.2); padding: 12px; border-radius: 8px; font-weight: 600;">
-
-          Connexion par QR
-
+        <button type="button" (click)="toggleQrModal(true)" style="width: 100%; background: #f0fdf4; color: #00C853; border: 1px solid #00C853; padding: 12px; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 600; cursor: pointer;">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zm3 3h4v4h-4zm-3 4h3v-3h-3zm7-3h1v-4h-4v1h3z"/></svg> Connexion par QR
         </button>
-
       </div>
 
       <p style="font-size: 12px; color: #64748b; margin-top: 28px; line-height: 1.5;">
-        {{ dictionary[currentLang].legal }}
+        Vous acceptez de recevoir un code de vérification par SMS ou sur WhatsApp. Des frais de messagerie SMS et de transfert de données peuvent s'appliquer.
       </p>
 
     </div>
-
   </div>
-
 </div>

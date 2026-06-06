@@ -1,22 +1,25 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { PassengerViewComponent } from './passenger-view';
 
-import { PassengerView } from './passenger-view';
+describe('PassengerViewComponent', () => {
 
-describe('PassengerView', () => {
-  let component: PassengerView;
-  let fixture: ComponentFixture<PassengerView>;
+  let component: PassengerViewComponent;
+  let fixture: ComponentFixture<PassengerViewComponent>;
 
   beforeEach(async () => {
+
     await TestBed.configureTestingModule({
-      imports: [PassengerView],
+      imports: [PassengerViewComponent]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PassengerView);
+    fixture = TestBed.createComponent(PassengerViewComponent);
     component = fixture.componentInstance;
-    await fixture.whenStable();
+
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
 });

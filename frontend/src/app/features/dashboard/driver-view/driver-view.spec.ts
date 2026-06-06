@@ -1,22 +1,25 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DriverViewComponent } from './driver-view';
 
-import { DriverView } from './driver-view';
+describe('DriverViewComponent', () => {
 
-describe('DriverView', () => {
-  let component: DriverView;
-  let fixture: ComponentFixture<DriverView>;
+  let component: DriverViewComponent;
+  let fixture: ComponentFixture<DriverViewComponent>;
 
   beforeEach(async () => {
+
     await TestBed.configureTestingModule({
-      imports: [DriverView],
+      imports: [DriverViewComponent]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DriverView);
+    fixture = TestBed.createComponent(DriverViewComponent);
     component = fixture.componentInstance;
-    await fixture.whenStable();
+
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
 });

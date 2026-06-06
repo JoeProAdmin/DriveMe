@@ -1,1 +1,58 @@
-<p>passenger-view works!</p>
+<section class="passenger-dashboard">
+
+  <div class="dashboard-header">
+    <div>
+      <h1>Espace passager</h1>
+      <p>Commandez une course, suivez vos trajets et consultez votre activité DriveMe.</p>
+    </div>
+
+    <a routerLink="/create-course" class="primary-action">
+      Commander une course
+    </a>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span>Total courses</span>
+      <strong>{{ stats.totalCourses }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>En attente</span>
+      <strong>{{ stats.coursesEnAttente }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>Terminées</span>
+      <strong>{{ stats.coursesTerminees }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>Avis donnés</span>
+      <strong>{{ stats.avisDonnes }}</strong>
+    </div>
+  </div>
+
+  <div class="action-grid">
+
+    <a routerLink="/create-course" class="action-card">
+      <h2>Nouvelle course</h2>
+      <p>Indiquez un départ, une destination et proposez votre prix.</p>
+      <span>Créer une demande</span>
+    </a>
+
+    <a routerLink="/courses" class="action-card">
+      <h2>Mes courses</h2>
+      <p>Consultez les courses en attente, acceptées ou terminées.</p>
+      <span>Voir l’historique</span>
+    </a>
+
+    <a routerLink="/paiements" class="action-card">
+      <h2>Paiements</h2>
+      <p>Suivez les paiements et la logique de facturation DriveMe.</p>
+      <span>Accéder aux paiements</span>
+    </a>
+
+  </div>
+
+</section>

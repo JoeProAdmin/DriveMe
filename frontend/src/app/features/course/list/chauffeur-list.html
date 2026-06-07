@@ -3,8 +3,11 @@
   <header class="view-action-bar">
     <div class="action-bar-left">
       <h1>Gestion des chauffeurs</h1>
-      <p class="view-caption">Suivi de la flotte, validation documentaire et monitoring.</p>
+      <p class="view-caption">
+        Suivi de la flotte, validation documentaire et monitoring.
+      </p>
     </div>
+
     <div class="action-bar-right">
       <button class="btn-action-refresh" (click)="loadChauffeurs()">
         <span>Rafraîchir</span>
@@ -13,6 +16,7 @@
   </header>
 
   <section class="metrics-cards-row">
+
     <div class="mini-metric-card">
       <div class="metric-card-inner">
         <span class="metric-label">Total conducteurs</span>
@@ -33,10 +37,13 @@
         <h3>{{ chauffeursEnAttente }}</h3>
       </div>
     </div>
+
   </section>
 
   <div class="saas-table-wrapper">
+
     <table class="saas-data-table">
+
       <thead>
       <tr>
         <th>ID</th>
@@ -48,36 +55,65 @@
         <th class="align-table-right">Actions</th>
       </tr>
       </thead>
+
       <tbody>
+
       <tr *ngFor="let item of chauffeurs">
-        <td class="cell-id">#{{ item.id }}</td>
+
+        <td>#{{ item.id }}</td>
+
         <td>
-          <div class="driver-profile-cell">
-            <div class="driver-avatar-placeholder">
-              {{ item.prenom ? item.prenom.charAt(0) : 'C' }}
-            </div>
-            <div class="driver-identity">
-              <span class="driver-fullname">{{ item.prenom }} {{ item.nom }}</span>
-              <span class="driver-email-caption">{{ item.email }}</span>
-            </div>
-          </div>
+          {{ item.prenom }} {{ item.nom }}
         </td>
-        <td class="cell-phone">{{ item.telephone }}</td>
-        <td>{{ item.noteMoyenne || '5.00' }}</td>
-        <td class="solde-value">{{ item.soldeCredit || '0.00' }} MAD</td>
+
         <td>
-          <span class="saas-status-badge tag-emerald" *ngIf="item.statutValidation === 1">Approuvé</span>
-          <span class="saas-status-badge tag-amber" *ngIf="item.statutValidation === 0">En attente</span>
-          <span class="saas-status-badge tag-red" *ngIf="item.statutValidation === 2">Rejeté</span>
+          {{ item.telephone }}
         </td>
+
+        <td>
+          {{ item.noteMoyenne || 0 }}
+        </td>
+
+        <td>
+          {{ item.soldeCredit || 0 }} MAD
+        </td>
+
+        <td>
+          <span *ngIf="item.statutValidation === 1">Approuvé</span>
+          <span *ngIf="item.statutValidation === 0">En attente</span>
+          <span *ngIf="item.statutValidation === 2">Rejeté</span>
+        </td>
+
         <td class="align-table-right">
-          <div class="actions-buttons-cluster">
-            <button class="btn-action-inline green" (click)="approuver(item.id)">Approuver</button>
-            <button class="btn-action-inline red" (click)="rejeter(item.id)">Rejeter</button>
-          </div>
+
+          <button
+            *ngIf="item.statutValidation !== 1"
+            class="btn-action-inline green"
+            (click)="approuver(item.id)">
+            Approuver
+          </button>
+
+          <button
+            *ngIf="item.statutValidation !== 2"
+            class="btn-action-inline red"
+            (click)="rejeter(item.id)">
+            Rejeter
+          </button>
+
+        </td>
+
+      </tr>
+
+      <tr *ngIf="chauffeurs.length === 0">
+        <td colspan="7" style="text-align:center;padding:20px;">
+          Aucun chauffeur trouvé.
         </td>
       </tr>
+
       </tbody>
+
     </table>
+
   </div>
+
 </div>

@@ -11,6 +11,7 @@ import { ApiService, ChauffeurResponseDTO } from '../../../core/api.service';
   styleUrls: ['./chauffeur-list.css']
 })
 export class ChauffeurList implements OnInit {
+
   public chauffeurs: ChauffeurResponseDTO[] = [];
 
   constructor(public apiService: ApiService) {}
@@ -20,15 +21,25 @@ export class ChauffeurList implements OnInit {
   }
 
   public loadChauffeurs(): void {
+
+    console.log('=== CHARGEMENT CHAUFFEURS ===');
+
     this.apiService.getAllChauffeurs().subscribe({
       next: (data: ChauffeurResponseDTO[]) => {
-        this.chauffeurs = data;
+
+        console.log('CHAUFFEURS RECUS :', data);
+
+        this.chauffeurs = [...data];
+
+        console.log('TABLEAU FINAL :', this.chauffeurs);
+
       },
-      error: (err: any) => console.error('Erreur :', err)
+      error: (err: any) => {
+        console.error('Erreur API Chauffeurs :', err);
+      }
     });
   }
 
-  // Ces getters évitent les erreurs "Property does not exist" dans le HTML
   get chauffeursValides(): number {
     return this.chauffeurs.filter(c => c.statutValidation === 1).length;
   }
@@ -40,14 +51,14 @@ export class ChauffeurList implements OnInit {
   public approuver(id: number): void {
     this.apiService.validerChauffeur(id, 1).subscribe({
       next: () => this.loadChauffeurs(),
-      error: (err) => console.error(err)
+      error: (err: any) => console.error(err)
     });
   }
 
   public rejeter(id: number): void {
     this.apiService.rejeter(id).subscribe({
       next: () => this.loadChauffeurs(),
-      error: (err) => console.error(err)
+      error: (err: any) => console.error(err)
     });
   }
 }

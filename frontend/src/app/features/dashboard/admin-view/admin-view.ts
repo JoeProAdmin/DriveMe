@@ -7,79 +7,76 @@ import { ApiService, AdminStats } from '../../../core/api.service';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="admin-dashboard">
 
-      <div class="dashboard-header">
-        <div>
-          <h1>Centre de pilotage DriveMe</h1>
-          <p>
-            Supervision des chauffeurs, passagers, courses et paiements.
-          </p>
-        </div>
-      </div>
+<div class="admin-dashboard">
 
-      <div *ngIf="stats" class="stats-grid">
+  <div class="dashboard-header">
 
-        <div class="card">
-          <span class="label">CHAUFFEURS</span>
-          <p>{{ stats.totalChauffeurs }}</p>
-        </div>
+    <div>
 
-        <div class="card">
-          <span class="label">PASSAGERS</span>
-          <p>{{ stats.totalPassagers }}</p>
-        </div>
+      <h1>
+        {{ texts[currentLang].title }}
+      </h1>
 
-        <div class="card">
-          <span class="label">COURSES</span>
-          <p>{{ stats.totalCourses }}</p>
-        </div>
-
-        <div class="card">
-          <span class="label">PAIEMENTS</span>
-          <p>{{ stats.totalPaiements }}</p>
-        </div>
-
-      </div>
-
-      <div class="quick-actions">
-
-        <div class="action-card">
-          <h3>Gestion Chauffeurs</h3>
-          <p>
-            Validation et suivi des chauffeurs inscrits.
-          </p>
-        </div>
-
-        <div class="action-card">
-          <h3>Gestion Passagers</h3>
-          <p>
-            Consultation des comptes passagers.
-          </p>
-        </div>
-
-        <div class="action-card">
-          <h3>Suivi des Courses</h3>
-          <p>
-            Contrôle des trajets en cours et terminés.
-          </p>
-        </div>
-
-        <div class="action-card">
-          <h3>Paiements</h3>
-          <p>
-            Vérification des transactions DriveMe.
-          </p>
-        </div>
-
-      </div>
-
-      <div *ngIf="!stats" class="loading">
-        Chargement des statistiques...
-      </div>
+      <p>
+        {{ texts[currentLang].subtitle }}
+      </p>
 
     </div>
-  `,
+
+  </div>
+
+  <div *ngIf="stats" class="stats-grid">
+
+    <div class="card">
+      <span class="label">{{ texts[currentLang].drivers }}</span>
+      <p>{{ stats.totalChauffeurs }}</p>
+    </div>
+
+    <div class="card">
+      <span class="label">{{ texts[currentLang].passengers }}</span>
+      <p>{{ stats.totalPassagers }}</p>
+    </div>
+
+    <div class="card">
+      <span class="label">{{ texts[currentLang].trips }}</span>
+      <p>{{ stats.totalCourses }}</p>
+    </div>
+
+    <div class="card">
+      <span class="label">{{ texts[currentLang].payments }}</span>
+      <p>{{ stats.totalPaiements }}</p>
+    </div>
+
+  </div>
+
+  <div class="quick-actions">
+
+    <div class="action-card">
+      <h3>{{ texts[currentLang].driverManagement }}</h3>
+      <p>{{ texts[currentLang].driverDescription }}</p>
+    </div>
+
+    <div class="action-card">
+      <h3>{{ texts[currentLang].passengerManagement }}</h3>
+      <p>{{ texts[currentLang].passengerDescription }}</p>
+    </div>
+
+    <div class="action-card">
+      <h3>{{ texts[currentLang].tripManagement }}</h3>
+      <p>{{ texts[currentLang].tripDescription }}</p>
+    </div>
+
+    <div class="action-card">
+      <h3>{{ texts[currentLang].paymentManagement }}</h3>
+      <p>{{ texts[currentLang].paymentDescription }}</p>
+    </div>
+
+  </div>
+
+</div>
+
+`,
   styles: [`
 
     .admin-dashboard{
@@ -100,7 +97,6 @@ import { ApiService, AdminStats } from '../../../core/api.service';
     .dashboard-header p{
       margin-top:10px;
       color:#64748b;
-      font-size:15px;
     }
 
     .stats-grid{
@@ -112,10 +108,9 @@ import { ApiService, AdminStats } from '../../../core/api.service';
 
     .card{
       background:white;
-      border:1px solid #e5e7eb;
       border-radius:14px;
       padding:24px;
-      box-shadow:0 2px 8px rgba(0,0,0,0.05);
+      border:1px solid #e5e7eb;
     }
 
     .label{
@@ -123,7 +118,6 @@ import { ApiService, AdminStats } from '../../../core/api.service';
       font-size:12px;
       font-weight:700;
       color:#64748b;
-      letter-spacing:1px;
     }
 
     .card p{
@@ -141,27 +135,9 @@ import { ApiService, AdminStats } from '../../../core/api.service';
 
     .action-card{
       background:white;
-      border:1px solid #e5e7eb;
       border-radius:14px;
       padding:20px;
-    }
-
-    .action-card h3{
-      margin:0 0 10px 0;
-      color:#0f172a;
-      font-size:18px;
-    }
-
-    .action-card p{
-      margin:0;
-      color:#64748b;
-      line-height:1.5;
-    }
-
-    .loading{
-      padding:30px;
-      text-align:center;
-      color:#64748b;
+      border:1px solid #e5e7eb;
     }
 
   `]
@@ -172,16 +148,86 @@ export class AdminViewComponent implements OnInit {
 
   public stats: AdminStats | null = null;
 
+  get currentLang(): 'fr' | 'en' | 'ar' | 'es' {
+    return this.api.currentLanguage();
+  }
+
+  public texts:any = {
+
+    fr:{
+      title:'Centre de pilotage DriveMe',
+      subtitle:'Supervision des chauffeurs, passagers, courses et paiements.',
+      drivers:'CHAUFFEURS',
+      passengers:'PASSAGERS',
+      trips:'COURSES',
+      payments:'PAIEMENTS',
+      driverManagement:'Gestion Chauffeurs',
+      driverDescription:'Validation et suivi des chauffeurs inscrits.',
+      passengerManagement:'Gestion Passagers',
+      passengerDescription:'Consultation des comptes passagers.',
+      tripManagement:'Suivi des Courses',
+      tripDescription:'Contrôle des trajets en cours et terminés.',
+      paymentManagement:'Paiements',
+      paymentDescription:'Vérification des transactions DriveMe.'
+    },
+
+    en:{
+      title:'DriveMe Control Center',
+      subtitle:'Drivers, passengers, trips and payments supervision.',
+      drivers:'DRIVERS',
+      passengers:'PASSENGERS',
+      trips:'TRIPS',
+      payments:'PAYMENTS',
+      driverManagement:'Driver Management',
+      driverDescription:'Validation and monitoring of drivers.',
+      passengerManagement:'Passenger Management',
+      passengerDescription:'Passenger account supervision.',
+      tripManagement:'Trip Management',
+      tripDescription:'Control active and completed trips.',
+      paymentManagement:'Payments',
+      paymentDescription:'Monitor financial transactions.'
+    },
+
+    ar:{
+      title:'مركز إدارة DriveMe',
+      subtitle:'إدارة السائقين والركاب والرحلات والمدفوعات.',
+      drivers:'السائقون',
+      passengers:'الركاب',
+      trips:'الرحلات',
+      payments:'المدفوعات',
+      driverManagement:'إدارة السائقين',
+      driverDescription:'متابعة واعتماد السائقين.',
+      passengerManagement:'إدارة الركاب',
+      passengerDescription:'إدارة حسابات الركاب.',
+      tripManagement:'إدارة الرحلات',
+      tripDescription:'متابعة الرحلات الجارية والمنتهية.',
+      paymentManagement:'المدفوعات',
+      paymentDescription:'متابعة المعاملات المالية.'
+    },
+
+    es:{
+      title:'Centro de Control DriveMe',
+      subtitle:'Supervisión de conductores, pasajeros, viajes y pagos.',
+      drivers:'CONDUCTORES',
+      passengers:'PASAJEROS',
+      trips:'VIAJES',
+      payments:'PAGOS',
+      driverManagement:'Gestión Conductores',
+      driverDescription:'Validación y seguimiento.',
+      passengerManagement:'Gestión Pasajeros',
+      passengerDescription:'Administración de cuentas.',
+      tripManagement:'Gestión Viajes',
+      tripDescription:'Control de viajes activos.',
+      paymentManagement:'Pagos',
+      paymentDescription:'Seguimiento financiero.'
+    }
+  };
+
   ngOnInit(): void {
 
     this.api.getAdminStats().subscribe({
-      next: (data: AdminStats) => {
-        console.log('STATS ADMIN :', data);
-        this.stats = data;
-      },
-      error: (err: any) => {
-        console.error('Erreur stats admin', err);
-      }
+      next: data => this.stats = data,
+      error: err => console.error(err)
     });
 
   }

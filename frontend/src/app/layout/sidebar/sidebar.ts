@@ -19,29 +19,42 @@ export class SidebarComponent {
       passengers: 'Passagers',
       trips: 'Courses',
       payments: 'Paiements',
-      emergency: 'ALERTE URGENCE (SOS)',
+      emergency: 'SOS Urgence',
       profile: 'Mon profil',
       logout: 'Déconnexion'
     },
+
     en: {
-      overview: 'Overview Portal',
-      drivers: 'Drivers Registry',
-      passengers: 'Passengers Core',
-      trips: 'Transit Tracks',
-      payments: 'Financial Flows',
-      emergency: 'PANIC ALERT (SOS)',
+      overview: 'Overview',
+      drivers: 'Drivers',
+      passengers: 'Passengers',
+      trips: 'Trips',
+      payments: 'Payments',
+      emergency: 'Emergency SOS',
       profile: 'My Profile',
       logout: 'Logout'
     },
+
     ar: {
       overview: 'لوحة التحكم العامة',
       drivers: 'إدارة السائقين',
       passengers: 'إدارة الركاب',
       trips: 'الرحلات النشطة',
       payments: 'المدفوعات والمالية',
-      emergency: 'إشارة طوارئ (SOS)',
+      emergency: 'SOS طوارئ',
       profile: 'ملفي الشخصي',
       logout: 'تسجيل الخروج'
+    },
+
+    es: {
+      overview: 'Panel General',
+      drivers: 'Conductores',
+      passengers: 'Pasajeros',
+      trips: 'Viajes',
+      payments: 'Pagos',
+      emergency: 'SOS Emergencia',
+      profile: 'Mi perfil',
+      logout: 'Cerrar sesión'
     }
   };
 
@@ -53,11 +66,10 @@ export class SidebarComponent {
   onLanguageChange(event: Event): void {
     const select = event.target as HTMLSelectElement;
     const lang = select.value as 'fr' | 'en' | 'ar' | 'es';
-
     this.apiService.setLanguage(lang);
   }
 
-  get currentLang(): string {
+  get currentLang(): 'fr' | 'en' | 'ar' | 'es' {
     return this.apiService.currentLanguage();
   }
 
@@ -70,7 +82,6 @@ export class SidebarComponent {
   }
 
   logout(): void {
-
     localStorage.removeItem('token');
     localStorage.removeItem('userRole');
     localStorage.removeItem('userId');

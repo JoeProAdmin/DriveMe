@@ -13,10 +13,12 @@
       <option value="fr">Français (FR)</option>
       <option value="en">English (EN)</option>
       <option value="ar">العربية (AR)</option>
+      <option value="es">Español (ES)</option>
     </select>
   </div>
 
   <nav class="sidebar-nav-links">
+
     <a class="nav-link-item" routerLink="/dashboard" routerLinkActive="active">
       <span>{{ labels[currentLang].overview }}</span>
     </a>
@@ -36,6 +38,7 @@
     <a class="nav-link-item" routerLink="/paiements" routerLinkActive="active">
       <span>{{ labels[currentLang].payments }}</span>
     </a>
+
   </nav>
 
   <div class="sidebar-user-section">
@@ -60,7 +63,7 @@
     </button>
 
     <button class="btn-sos">
-      SOS Urgence
+      {{ labels[currentLang].emergency }}
     </button>
 
   </div>

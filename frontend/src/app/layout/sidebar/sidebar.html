@@ -1,25 +1,7 @@
 <aside class="shell-sidebar">
 
   <div class="sidebar-brand-block">
-    <div class="brand-icon-wrapper">
-      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <linearGradient id="sideGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#10b981" />
-          <stop offset="100%" stop-color="#059669" />
-        </linearGradient>
-        <path d="M25 15C25 15 50 5 75 15V45C75 65 50 85 50 85C50 85 25 65 25 45V15Z"
-              stroke="url(#sideGrad)"
-              stroke-width="10"
-              stroke-linecap="round"
-              stroke-linejoin="round"/>
-        <path d="M43 35L58 50L43 65"
-              stroke="#ffffff"
-              stroke-width="10"
-              stroke-linecap="round"
-              stroke-linejoin="round"/>
-      </svg>
-    </div>
-
+    <div class="brand-logo">DM</div>
     <div class="brand-meta">
       <span class="brand-title">DriveMe</span>
       <span class="brand-scope">Enterprise v1.0</span>
@@ -27,14 +9,7 @@
   </div>
 
   <div class="i18n-selector-container">
-    <svg class="selector-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <circle cx="12" cy="12" r="10"/>
-      <line x1="2" y1="12" x2="22" y2="12"/>
-      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-    </svg>
-
-    <select (change)="onLanguageChange($event)"
-            [value]="apiService.currentLanguage()">
+    <select (change)="onLanguageChange($event)" [value]="apiService.currentLanguage()">
       <option value="fr">Français (FR)</option>
       <option value="en">English (EN)</option>
       <option value="ar">العربية (AR)</option>
@@ -42,67 +17,45 @@
   </div>
 
   <nav class="sidebar-nav-links">
-
-    <a class="nav-link-item"
-       routerLink="/dashboard"
-       routerLinkActive="active">
+    <a class="nav-link-item" routerLink="/dashboard" routerLinkActive="active">
       <span>{{ labels[currentLang].overview }}</span>
     </a>
 
-    <a class="nav-link-item"
-       routerLink="/chauffeurs"
-       routerLinkActive="active">
+    <a class="nav-link-item" routerLink="/chauffeurs" routerLinkActive="active">
       <span>{{ labels[currentLang].drivers }}</span>
     </a>
 
-    <a class="nav-link-item"
-       routerLink="/passagers"
-       routerLinkActive="active">
+    <a class="nav-link-item" routerLink="/passagers" routerLinkActive="active">
       <span>{{ labels[currentLang].passengers }}</span>
     </a>
 
-    <a class="nav-link-item"
-       routerLink="/courses"
-       routerLinkActive="active">
+    <a class="nav-link-item" routerLink="/courses" routerLinkActive="active">
       <span>{{ labels[currentLang].trips }}</span>
     </a>
 
-    <a class="nav-link-item"
-       routerLink="/paiements"
-       routerLinkActive="active">
+    <a class="nav-link-item" routerLink="/paiements" routerLinkActive="active">
       <span>{{ labels[currentLang].payments }}</span>
     </a>
-
   </nav>
 
   <div class="sidebar-user-section">
 
     <div class="user-card">
-
       <div class="user-avatar">
         {{ userRole.charAt(0) }}
       </div>
 
       <div class="user-info">
-
-        <div class="user-role">
-          {{ userRole }}
-        </div>
-
-        <div class="user-email">
-          {{ userEmail }}
-        </div>
-
+        <div class="user-role">{{ userRole }}</div>
+        <div class="user-email">{{ userEmail }}</div>
       </div>
-
     </div>
 
     <button class="btn-profile">
       {{ labels[currentLang].profile }}
     </button>
 
-    <button class="btn-logout"
-            (click)="logout()">
+    <button class="btn-logout" (click)="logout()">
       {{ labels[currentLang].logout }}
     </button>
 

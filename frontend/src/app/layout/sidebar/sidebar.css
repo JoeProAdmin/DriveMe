@@ -1,3 +1,101 @@
+:host {
+  display: block;
+  width: 280px;
+  height: 100vh;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.shell-sidebar {
+  width: 100%;
+  height: 100%;
+  background-color: #0b0f19;
+  border-right: 1px solid #1e293b;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-brand-block {
+  padding: 22px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid #1e293b;
+}
+
+.brand-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #00C853;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 15px;
+}
+
+.brand-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.brand-scope {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.i18n-selector-container {
+  padding: 14px 18px;
+  border-bottom: 1px solid #1e293b;
+}
+
+.i18n-selector-container select {
+  width: 100%;
+  background-color: #111827;
+  color: #cbd5e1;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 10px;
+  font-weight: 600;
+}
+
+.sidebar-nav-links {
+  padding: 18px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.nav-link-item {
+  padding: 12px 14px;
+  color: #94a3b8;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.nav-link-item:hover {
+  background-color: #1e293b;
+  color: #ffffff;
+}
+
+.nav-link-item.active {
+  background-color: #059669;
+  color: #ffffff;
+}
+
 .sidebar-user-section {
   padding: 16px;
   border-top: 1px solid #1e293b;
@@ -18,20 +116,16 @@
   border-radius: 50%;
   background: #00C853;
   color: #ffffff;
-  font-weight: 700;
+  font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.user-info {
-  flex: 1;
-}
-
 .user-role {
   color: #ffffff;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .user-email {
@@ -47,32 +141,20 @@
   border-radius: 8px;
   padding: 10px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .btn-profile {
   background: #1e293b;
-  color: white;
-}
-
-.btn-profile:hover {
-  background: #334155;
+  color: #ffffff;
 }
 
 .btn-logout {
   background: #dc2626;
-  color: white;
-}
-
-.btn-logout:hover {
-  background: #b91c1c;
+  color: #ffffff;
 }
 
 .btn-sos {
   background: #f59e0b;
-  color: white;
-}
-
-.btn-sos:hover {
-  background: #d97706;
+  color: #ffffff;
 }

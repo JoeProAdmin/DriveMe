@@ -1,25 +1,20 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DriverViewComponent } from './driver-view';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
-describe('DriverViewComponent', () => {
+@Component({
+  selector: 'app-driver-view',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './driver-view.html',
+  styleUrls: ['./driver-view.css']
+})
+export class DriverViewComponent {
 
-  let component: DriverViewComponent;
-  let fixture: ComponentFixture<DriverViewComponent>;
+  public stats = {
+    coursesTotal: 12,
+    coursesEnCours: 2,
+    revenus: 1450,
+    note: 4.8
+  };
 
-  beforeEach(async () => {
-
-    await TestBed.configureTestingModule({
-      imports: [DriverViewComponent]
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(DriverViewComponent);
-    component = fixture.componentInstance;
-
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-});
+}

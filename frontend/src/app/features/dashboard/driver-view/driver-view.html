@@ -1,1 +1,67 @@
-<p>driver-view works!</p>
+<section class="driver-dashboard">
+
+  <div class="dashboard-header">
+
+    <div>
+      <h1>Espace Chauffeur</h1>
+      <p>
+        Gérez vos courses, vos revenus et votre activité DriveMe.
+      </p>
+    </div>
+
+    <button class="btn-primary">
+      Disponible
+    </button>
+
+  </div>
+
+  <div class="stats-grid">
+
+    <div class="stat-card">
+      <span>Total Courses</span>
+      <strong>{{ stats.coursesTotal }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>En cours</span>
+      <strong>{{ stats.coursesEnCours }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>Revenus (MAD)</span>
+      <strong>{{ stats.revenus }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>Note Moyenne</span>
+      <strong>{{ stats.note }}</strong>
+    </div>
+
+  </div>
+
+  <div class="action-grid">
+
+    <div class="action-card">
+      <h2>Courses disponibles</h2>
+      <p>
+        Consultez les demandes de trajets proches de vous.
+      </p>
+    </div>
+
+    <div class="action-card">
+      <h2>Mes trajets</h2>
+      <p>
+        Gérez vos courses acceptées et terminées.
+      </p>
+    </div>
+
+    <div class="action-card">
+      <h2>Mes revenus</h2>
+      <p>
+        Consultez vos paiements et commissions.
+      </p>
+    </div>
+
+  </div>
+
+</section>

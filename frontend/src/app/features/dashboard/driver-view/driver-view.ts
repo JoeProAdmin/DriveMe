@@ -8,4 +8,13 @@ import { CommonModule } from '@angular/common';
   templateUrl: './driver-view.html',
   styleUrls: ['./driver-view.css']
 })
-export class DriverViewComponent {}
+export class DriverViewComponent {
+
+  public stats = {
+    coursesTotal: 12,
+    coursesEnCours: 2,
+    revenus: 1450,
+    note: 4.8
+  };
+
+}

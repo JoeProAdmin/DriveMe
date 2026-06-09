@@ -1,72 +1,189 @@
-<div style="width: 100vw; min-height: 100vh; background-color: #f1f5f9; display: flex; justify-content: center; align-items: center; font-family: 'Poppins', sans-serif; padding: 20px; box-sizing: border-box; margin: 0;">
+<section style="width:100%; min-height:100vh; background-color:#f1f5f9; font-family:'Poppins', sans-serif; padding:32px; box-sizing:border-box;">
 
-  <div style="background-color: #ffffff; border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05); width: 100%; max-width: 440px; padding: 32px; box-sizing: border-box; border: 1px solid #e2e8f0;">
+  <div style="width:100%; max-width:none; margin:0;">
 
-    <!-- EN-TÊTE CORPORATE PASSERELLE -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-      <h2 style="font-size: 20px; font-weight: 700; color: #0f172a; margin: 0; letter-spacing: -0.02em;">Payez en ligne</h2>
-      <span style="color: #00C853; font-weight: 700; font-size: 13px; background-color: #f0fdf4; padding: 4px 10px; border-radius: 50px;">DriveMe Pay</span>
+    <header style="margin-bottom:28px;">
+      <h1 style="font-size:32px; color:#0f172a; margin:0; font-weight:800;">
+        Paiements et recharges DriveMe
+      </h1>
+      <p style="color:#64748b; margin-top:8px; font-size:15px;">
+        Gestion des recharges chauffeurs, paiements clients et moyens de paiement locaux.
+      </p>
+    </header>
+
+    <div style="display:grid; grid-template-columns:minmax(620px, 1.4fr) minmax(360px, 0.8fr); gap:24px; align-items:start; width:100%;">
+
+      <div style="background:white; border-radius:18px; padding:28px; border:1px solid #e2e8f0; box-shadow:0 10px 25px rgba(15,23,42,0.05); width:100%; box-sizing:border-box;">
+
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:20px; margin-bottom:24px;">
+          <div>
+            <h2 style="margin:0; color:#0f172a; font-size:22px;">
+              Recharge chauffeur
+            </h2>
+            <p style="margin:6px 0 0 0; color:#64748b; line-height:1.6;">
+              Les chauffeurs achètent des crédits DriveMe pour recevoir et gérer des courses.
+            </p>
+          </div>
+
+          <span style="background:#dcfce7; color:#00C853; padding:8px 14px; border-radius:999px; font-weight:800; font-size:13px; white-space:nowrap;">
+            DriveMe Pay
+          </span>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:14px; margin-bottom:28px;">
+
+          <button type="button"
+                  (click)="changePack(100, 100, 'Pack Initial')"
+                  [style.border-color]="selectedPack.price === 100 ? '#00C853' : '#e2e8f0'"
+                  [style.background-color]="selectedPack.price === 100 ? '#f0fdf4' : '#ffffff'"
+                  style="border:2px solid; border-radius:14px; padding:18px; text-align:left; cursor:pointer; min-height:130px;">
+            <strong style="display:block; color:#0f172a; font-size:16px;">Pack Initial</strong>
+            <span style="display:block; color:#64748b; margin-top:6px;">100 crédits</span>
+            <span style="display:block; color:#00C853; font-weight:800; font-size:22px; margin-top:18px;">100 MAD</span>
+          </button>
+
+          <button type="button"
+                  (click)="changePack(250, 275, 'Pack Éco')"
+                  [style.border-color]="selectedPack.price === 250 ? '#00C853' : '#e2e8f0'"
+                  [style.background-color]="selectedPack.price === 250 ? '#f0fdf4' : '#ffffff'"
+                  style="border:2px solid; border-radius:14px; padding:18px; text-align:left; cursor:pointer; min-height:130px;">
+            <strong style="display:block; color:#0f172a; font-size:16px;">Pack Éco</strong>
+            <span style="display:block; color:#64748b; margin-top:6px;">275 crédits inclus</span>
+            <span style="display:block; color:#00C853; font-weight:800; font-size:22px; margin-top:18px;">250 MAD</span>
+          </button>
+
+          <button type="button"
+                  (click)="changePack(500, 600, 'Pack Pro')"
+                  [style.border-color]="selectedPack.price === 500 ? '#00C853' : '#e2e8f0'"
+                  [style.background-color]="selectedPack.price === 500 ? '#f0fdf4' : '#ffffff'"
+                  style="border:2px solid; border-radius:14px; padding:18px; text-align:left; cursor:pointer; min-height:130px;">
+            <strong style="display:block; color:#0f172a; font-size:16px;">Pack Pro</strong>
+            <span style="display:block; color:#64748b; margin-top:6px;">600 crédits inclus</span>
+            <span style="display:block; color:#00C853; font-weight:800; font-size:22px; margin-top:18px;">500 MAD</span>
+          </button>
+
+        </div>
+
+        <h3 style="font-size:16px; color:#0f172a; margin:0 0 14px 0;">
+          Moyen de paiement
+        </h3>
+
+        <div style="display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:12px; margin-bottom:24px;">
+
+          <button type="button"
+                  (click)="changeMethod('CARD')"
+                  [style.border-color]="selectedMethod === 'CARD' ? '#00C853' : '#e2e8f0'"
+                  [style.background-color]="selectedMethod === 'CARD' ? '#f0fdf4' : '#ffffff'"
+                  style="border:2px solid; border-radius:12px; padding:16px; cursor:pointer; font-weight:800; color:#0f172a;">
+            Visa / Mastercard
+          </button>
+
+          <button type="button"
+                  (click)="changeMethod('CASH')"
+                  [style.border-color]="selectedMethod === 'CASH' ? '#00C853' : '#e2e8f0'"
+                  [style.background-color]="selectedMethod === 'CASH' ? '#f0fdf4' : '#ffffff'"
+                  style="border:2px solid; border-radius:12px; padding:16px; cursor:pointer; font-weight:800; color:#0f172a;">
+            Cash client
+          </button>
+
+          <button type="button"
+                  (click)="changeMethod('LOCAL_WALLET')"
+                  [style.border-color]="selectedMethod === 'LOCAL_WALLET' ? '#00C853' : '#e2e8f0'"
+                  [style.background-color]="selectedMethod === 'LOCAL_WALLET' ? '#f0fdf4' : '#ffffff'"
+                  style="border:2px solid; border-radius:12px; padding:16px; cursor:pointer; font-weight:800; color:#0f172a;">
+            CIH / Wafacash
+          </button>
+
+        </div>
+
+        <form (ngSubmit)="executePayment()" style="display:flex; flex-direction:column; gap:14px; width:100%;">
+
+          <div *ngIf="selectedMethod === 'CARD'" style="display:flex; flex-direction:column; gap:14px;">
+
+            <div style="display:flex; gap:10px; flex-wrap:wrap; font-weight:800; color:#0f172a;">
+              <span style="background:#f8fafc; border:1px solid #e2e8f0; padding:8px 12px; border-radius:8px;">VISA</span>
+              <span style="background:#f8fafc; border:1px solid #e2e8f0; padding:8px 12px; border-radius:8px;">Mastercard</span>
+              <span style="background:#f8fafc; border:1px solid #e2e8f0; padding:8px 12px; border-radius:8px;">3D Secure</span>
+              <span style="background:#f8fafc; border:1px solid #e2e8f0; padding:8px 12px; border-radius:8px;">CIH Pay</span>
+            </div>
+
+            <input type="text" [(ngModel)]="cardName" name="cardName" placeholder="Nom du titulaire"
+                   style="padding:14px; border:1px solid #cbd5e1; border-radius:10px; width:100%; box-sizing:border-box;">
+
+            <input type="text" [(ngModel)]="cardNumber" name="cardNumber" placeholder="4000 1234 5678 9010"
+                   style="padding:14px; border:1px solid #cbd5e1; border-radius:10px; width:100%; box-sizing:border-box;">
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <input type="text" [(ngModel)]="expiry" name="expiry" placeholder="MM/AA"
+                     style="padding:14px; border:1px solid #cbd5e1; border-radius:10px; width:100%; box-sizing:border-box;">
+              <input type="text" [(ngModel)]="cvc" name="cvc" placeholder="CVC"
+                     style="padding:14px; border:1px solid #cbd5e1; border-radius:10px; width:100%; box-sizing:border-box;">
+            </div>
+
+          </div>
+
+          <div *ngIf="selectedMethod === 'CASH'" style="background:#fffbeb; border:1px solid #facc15; padding:16px; border-radius:12px; color:#92400e; line-height:1.6;">
+            Le passager peut payer le chauffeur en espèces. DriveMe ne prélève pas directement le cash client : le revenu principal de la plateforme provient des recharges prépayées des chauffeurs.
+          </div>
+
+          <div *ngIf="selectedMethod === 'LOCAL_WALLET'" style="background:#eff6ff; border:1px solid #93c5fd; padding:16px; border-radius:12px; color:#1e40af; line-height:1.6;">
+            Simulation de paiement local : CIH Pay, Wafacash, agence partenaire, recharge télécom ou portefeuille mobile.
+          </div>
+
+          <button type="submit"
+                  [disabled]="isProcessing"
+                  style="background:#0f172a; color:white; border:none; padding:16px; border-radius:12px; font-weight:800; cursor:pointer; margin-top:8px; width:100%;">
+            {{ isProcessing ? 'Traitement en cours...' : 'Valider la recharge ' + selectedPack.price + ' MAD' }}
+          </button>
+
+        </form>
+
+      </div>
+
+      <aside style="background:#0f172a; color:white; border-radius:18px; padding:28px; box-shadow:0 10px 25px rgba(15,23,42,0.12); width:100%; box-sizing:border-box;">
+
+        <h2 style="margin:0 0 18px 0;">
+          Modèle économique DriveMe
+        </h2>
+
+        <div style="display:grid; grid-template-columns:1fr; gap:14px;">
+
+          <div style="background:#111827; border-radius:14px; padding:18px;">
+            <span style="color:#94a3b8;">Pack sélectionné</span>
+            <strong style="display:block; font-size:24px; margin-top:8px;">{{ selectedPack.label }}</strong>
+          </div>
+
+          <div style="background:#111827; border-radius:14px; padding:18px;">
+            <span style="color:#94a3b8;">Montant payé</span>
+            <strong style="display:block; font-size:30px; color:#00C853; margin-top:8px;">{{ selectedPack.price }} MAD</strong>
+          </div>
+
+          <div style="background:#111827; border-radius:14px; padding:18px;">
+            <span style="color:#94a3b8;">Crédits chauffeur</span>
+            <strong style="display:block; font-size:30px; color:#00C853; margin-top:8px;">{{ selectedPack.credits }}</strong>
+          </div>
+
+        </div>
+
+        <p style="color:#cbd5e1; line-height:1.7; margin-top:22px;">
+          Le chauffeur recharge son compte DriveMe. À chaque course, une partie du crédit peut être consommée selon la politique commerciale de la plateforme.
+        </p>
+
+        <div style="border-top:1px solid #334155; margin-top:20px; padding-top:20px;">
+          <strong>Sources de revenus prévues</strong>
+          <ul style="color:#cbd5e1; line-height:1.9; padding-left:18px;">
+            <li>Recharges chauffeurs prépayées</li>
+            <li>Commissions par course</li>
+            <li>Options premium chauffeurs</li>
+            <li>Partenariats locaux</li>
+            <li>Recharges locales : CIH, Wafacash, télécoms</li>
+          </ul>
+        </div>
+
+      </aside>
+
     </div>
-
-    <!-- GRILLE DE SÉLECTION DU PLAN FINANCIER -->
-    <label style="font-size: 11px; font-weight: 700; color: #64748b; display: block; margin-bottom: 10px; letter-spacing: 0.05em;">SÉLECTIONNEZ VOTRE RECHARGE POINTS-KM</label>
-    <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; width: 100%; box-sizing: border-box;">
-
-      <!-- Option 20€ -->
-      <div (click)="changePack(20, 200, 'Pack Initial')" [style.border-color]="selectedPack.price === 20 ? '#00C853' : '#e2e8f0'" [style.background-color]="selectedPack.price === 20 ? '#f0fdf4' : '#ffffff'" style="border: 2px solid; padding: 12px; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;">
-        <div><strong style="color: #0f172a; font-size: 14px;">Pack Initial : 200 km</strong></div>
-        <div style="font-weight: 700; color: #00C853; font-size: 15px;">20 €</div>
-      </div>
-
-      <!-- Option 50€ -->
-      <div (click)="changePack(50, 550, 'Pack Éco')" [style.border-color]="selectedPack.price === 50 ? '#00C853' : '#e2e8f0'" [style.background-color]="selectedPack.price === 50 ? '#f0fdf4' : '#ffffff'" style="border: 2px solid; padding: 12px; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;">
-        <div>
-          <strong style="color: #0f172a; font-size: 14px;">Pack Éco : 550 km</strong>
-          <span style="display:block; font-size: 11px; color: #64748b; font-weight: 500;">Inclus +50 km de bonus</span>
-        </div>
-        <div style="font-weight: 700; color: #00C853; font-size: 15px;">50 €</div>
-      </div>
-
-      <!-- Option 100€ -->
-      <div (click)="changePack(100, 1200, 'Pack Pro')" [style.border-color]="selectedPack.price === 100 ? '#00C853' : '#e2e8f0'" [style.background-color]="selectedPack.price === 100 ? '#f0fdf4' : '#ffffff'" style="border: 2px solid; padding: 12px; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;">
-        <div>
-          <strong style="color: #0f172a; font-size: 14px;">Pack Pro : 1200 km</strong>
-          <span style="display:block; font-size: 11px; color: #64748b; font-weight: 500;">Inclus +200 km de bonus pour les pros</span>
-        </div>
-        <div style="font-weight: 700; color: #00C853; font-size: 15px;">100 €</div>
-      </div>
-
-    </div>
-
-    <!-- FORMULAIRE BANCAIRE FORMEL -->
-    <form (ngSubmit)="executePayment()" style="display: flex; flex-direction: column; gap: 16px; width: 100%; box-sizing: border-box;">
-
-      <div style="display: flex; flex-direction: column; gap: 6px;">
-        <label style="font-size: 12px; font-weight: 600; color: #475569;">Nom du titulaire</label>
-        <input type="text" [(ngModel)]="cardName" name="cName" placeholder="Youssef Qarnouf" required style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 14px; font-family: inherit; box-sizing: border-box;">
-      </div>
-
-      <div style="display: flex; flex-direction: column; gap: 6px;">
-        <label style="font-size: 12px; font-weight: 600; color: #475569;">Numéro de carte de crédit</label>
-        <input type="text" [(ngModel)]="cardNumber" name="cNumber" placeholder="4000 1234 5678 9010" required style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 14px; font-family: inherit; box-sizing: border-box;">
-      </div>
-
-      <div style="display: flex; gap: 16px; width: 100%; box-sizing: border-box;">
-        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-          <label style="font-size: 12px; font-weight: 600; color: #475569;">Date d'expiration</label>
-          <input type="text" [(ngModel)]="expiry" name="cExp" placeholder="MM/AA" required style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 14px; text-align: center; font-family: inherit; box-sizing: border-box;">
-        </div>
-        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-          <label style="font-size: 12px; font-weight: 600; color: #475569;">Cryptogramme (CVC)</label>
-          <input type="text" [(ngModel)]="cvc" name="cCvc" placeholder="123" required style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 14px; text-align: center; font-family: inherit; box-sizing: border-box;">
-        </div>
-      </div>
-
-      <button type="submit" [disabled]="isProcessing || !cardName || !cardNumber || !expiry || !cvc" style="width: 100%; background-color: #0f172a; color: white; border: none; padding: 14px; border-radius: 8px; font-weight: 600; font-size: 15px; cursor: pointer; margin-top: 12px; font-family: inherit; box-sizing: border-box; transition: background-color 0.2s;">
-        {{ isProcessing ? 'Autorisation en cours...' : 'Payer ' + selectedPack.price + ' €' }}
-      </button>
-
-    </form>
 
   </div>
-</div>
+
+</section>

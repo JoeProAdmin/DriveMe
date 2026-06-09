@@ -8,17 +8,27 @@ public class ChauffeurResponseDTO {
     private String telephone;
     private Integer statutValidation;
     private Double noteMoyenne;
+    private Double soldeCredit;
 
     public ChauffeurResponseDTO() {
     }
 
-    public ChauffeurResponseDTO(Long id, String nom, String prenom, String telephone, Integer statutValidation, Double noteMoyenne) {
+    public ChauffeurResponseDTO(
+            Long id,
+            String nom,
+            String prenom,
+            String telephone,
+            Integer statutValidation,
+            Double noteMoyenne,
+            Double soldeCredit) {
+
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
         this.telephone = telephone;
         this.statutValidation = statutValidation;
         this.noteMoyenne = noteMoyenne;
+        this.soldeCredit = soldeCredit;
     }
 
     public Long getId() {
@@ -45,6 +55,10 @@ public class ChauffeurResponseDTO {
         return noteMoyenne;
     }
 
+    public Double getSoldeCredit() {
+        return soldeCredit;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -67,5 +81,9 @@ public class ChauffeurResponseDTO {
 
     public void setNoteMoyenne(Double noteMoyenne) {
         this.noteMoyenne = noteMoyenne;
+    }
+
+    public void setSoldeCredit(Double soldeCredit) {
+        this.soldeCredit = soldeCredit;
     }
 }

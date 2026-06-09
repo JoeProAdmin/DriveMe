@@ -1,0 +1,11 @@
+Copyright (c) 2025-2026 Youssef Qarnouf
+
+Tous droits réservés.
+
+Ce projet a été développé dans le cadre du Travail de Fin d'Études (TFE) ICC Bruxelles.
+
+Aucune permission n'est accordée pour copier, modifier, redistribuer, publier, vendre, héberger, réutiliser ou exploiter tout ou partie du code source, de l'architecture, des documents, des maquettes ou des ressources associées sans autorisation écrite préalable de l'auteur.
+
+Ce dépôt est publié uniquement à des fins académiques, de démonstration et d'évaluation.
+
+Aucune licence Open Source n'est accordée.

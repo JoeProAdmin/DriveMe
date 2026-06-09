@@ -3,9 +3,15 @@
   <div class="dashboard-header">
 
     <div>
-      <h1>Espace Chauffeur</h1>
+      <h1>
+        Espace Chauffeur
+        <span *ngIf="chauffeur">
+          - {{ chauffeur.prenom }} {{ chauffeur.nom }}
+        </span>
+      </h1>
+
       <p>
-        Gérez vos courses, vos revenus et votre activité DriveMe.
+        Gérez vos courses, vos crédits DriveMe, votre note et votre activité chauffeur.
       </p>
     </div>
 
@@ -28,13 +34,13 @@
     </div>
 
     <div class="stat-card">
-      <span>Revenus (MAD)</span>
-      <strong>{{ stats.revenus }}</strong>
+      <span>Crédits DriveMe</span>
+      <strong>{{ stats.soldeCredit }} MAD</strong>
     </div>
 
     <div class="stat-card">
       <span>Note Moyenne</span>
-      <strong>{{ stats.note }}</strong>
+      <strong>{{ stats.note }}/5</strong>
     </div>
 
   </div>
@@ -44,21 +50,28 @@
     <div class="action-card">
       <h2>Courses disponibles</h2>
       <p>
-        Consultez les demandes de trajets proches de vous.
+        Consultez les demandes de trajets proches de vous et acceptez les courses selon votre disponibilité.
       </p>
     </div>
 
     <div class="action-card">
       <h2>Mes trajets</h2>
       <p>
-        Gérez vos courses acceptées et terminées.
+        Gérez vos courses acceptées, en cours et terminées.
       </p>
     </div>
 
     <div class="action-card">
       <h2>Mes revenus</h2>
       <p>
-        Consultez vos paiements et commissions.
+        Consultez vos revenus estimés, vos paiements et la logique de facturation DriveMe.
+      </p>
+    </div>
+
+    <div class="action-card">
+      <h2>Réputation chauffeur</h2>
+      <p>
+        Votre note moyenne est calculée automatiquement à partir des avis passagers validés après les courses.
       </p>
     </div>
 

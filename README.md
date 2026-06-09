@@ -1,37 +1,51 @@
 # DriveMe
 
-## Présentation
+## © 2025-2026 Youssef Qarnouf - Tous droits réservés
 
-DriveMe est une application de mise en relation entre passagers et chauffeurs développée dans le cadre d’un Travail de Fin d’Études (TFE).
+Projet réalisé dans le cadre du Travail de Fin d'Études (TFE) ICC Bruxelles.
 
-L’objectif du projet est de proposer une plateforme moderne de réservation de courses permettant :
-
-* l’inscription et l’authentification des utilisateurs ;
-* la gestion des chauffeurs et des passagers ;
-* la création et le suivi des courses ;
-* la gestion des paiements ;
-* l’administration centralisée de la plateforme ;
-* une architecture sécurisée basée sur JWT.
-
-Le projet cible principalement le marché marocain tout en restant extensible à d’autres pays.
+Toute reproduction, distribution, modification ou réutilisation partielle ou totale du code source est interdite sans autorisation écrite préalable de l'auteur.
 
 ---
 
-## Technologies utilisées
+## Présentation
+
+DriveMe est une plateforme de mobilité intelligente mettant en relation passagers et chauffeurs.
+
+Fonctionnalités principales :
+
+* Authentification sécurisée JWT
+* Gestion des chauffeurs
+* Gestion des passagers
+* Gestion des courses
+* Gestion des paiements
+* Gestion des avis et notations
+* Dashboard Administrateur
+* Dashboard Chauffeur
+* Dashboard Passager
+* Interface multilingue (FR / EN / AR / ES)
+
+Marché cible principal : Maroc
+
+Domaine réservé : driveme.cloud
+
+---
+
+## Technologies
 
 ### Backend
 
 * Java 17
 * Spring Boot 3
 * Spring Security
-* JWT Authentication
-* Spring Data JPA
+* JWT
 * Hibernate
+* Spring Data JPA
 * MySQL
 
 ### Frontend
 
-* Angular 17 Standalone
+* Angular
 * TypeScript
 * HTML5
 * CSS3
@@ -42,77 +56,66 @@ Le projet cible principalement le marché marocain tout en restant extensible à
 * IntelliJ IDEA
 * Git
 * GitHub
+* Maven
 * Swagger OpenAPI
 
 ---
 
-## Fonctionnalités implémentées
+## Fonctionnalités disponibles
 
 ### Authentification
 
-* Inscription utilisateur
-* Connexion sécurisée
+* Inscription
+* Connexion JWT
 * Gestion des rôles
-* Protection des routes via JWT
 
 ### Gestion des utilisateurs
 
-* Chauffeurs
-* Passagers
-* Administrateurs
+* Administrateur
+* Chauffeur
+* Passager
+
+### Gestion des chauffeurs
+
+* Validation des profils
+* Solde de crédits
+* Note moyenne
+* Gestion administrative
 
 ### Gestion des courses
 
-* Création d’une course
-* Consultation des courses
-* Suivi des statuts
-
-### Administration
-
-* Tableau de bord administrateur
-* Gestion des chauffeurs
-* Validation des profils chauffeurs
+* Création
+* Suivi
+* Historique
+* Gestion des statuts
 
 ### Paiements
 
-* Interface de paiement
-* Préparation à l’intégration d’une passerelle réelle
+* Recharges chauffeurs
+* Gestion des crédits
+* Simulation de paiement
+
+### Avis
+
+* Évaluation des chauffeurs
+* Commentaires
+* Calcul automatique de la note moyenne
+
+### Administration
+
+* Gestion Chauffeurs
+* Gestion Passagers
+* Gestion Courses
+* Gestion Paiements
 
 ---
 
-## Structure du projet
-
-```text
-DriveMe
-│
-├── backend
-│   ├── controller
-│   ├── dto
-│   ├── entity
-│   ├── repository
-│   ├── security
-│   └── service
-│
-├── frontend
-│   ├── src
-│   │   ├── app
-│   │   ├── core
-│   │   ├── features
-│   │   └── layout
-│
-├── sql
-├── docs
-└── README.md
-```
-
 ## Sécurité
 
-Le projet utilise :
-
-* JWT (JSON Web Token)
-* BCrypt pour le hachage des mots de passe
+* JWT Authentication
+* BCrypt Password Hashing
 * Spring Security
-* Contrôle d’accès basé sur les rôles
+* Contrôle d'accès basé sur les rôles
 
 Rôles disponibles :
 
@@ -122,34 +125,55 @@ Rôles disponibles :
 
 ---
 
+## Architecture
+
+DriveMe
+
+* backend
+
+  * controller
+  * dto
+  * entity
+  * repository
+  * security
+  * service
+
+* frontend
+
+  * app
+  * core
+  * features
+  * layout
+
+* docs
+
+* sql
+
+---
+
 ## Lancement du projet
 
 ### Backend
 
-```bash
-cd backend
-mvn spring-boot:run
-```
+cd backend/DriveMe-Spring
 
-Backend disponible sur :
+mvnw spring-boot:run
 
-```text
+Application disponible sur :
+
 http://localhost:8080
-```
 
 ### Frontend
 
-```bash
 cd frontend
+
 npm install
+
 ng serve
-```
 
-Frontend disponible sur :
+Application disponible sur :
 
-```text
 http://localhost:4200
-```
 
 ---
 
@@ -157,31 +181,32 @@ http://localhost:4200
 
 Swagger :
 
-```text
 http://localhost:8080/swagger-ui/index.html
-```
 
 ---
 
-## État actuel du projet
+## État du projet
 
 Fonctionnel :
 
-* Authentification JWT
-* Gestion utilisateurs
-* Gestion chauffeurs
-* Gestion passagers
-* Gestion courses
-* Dashboard Angular
-* API REST sécurisée
-* Base MySQL
+* JWT
+* API REST
+* Chauffeurs
+* Passagers
+* Courses
+* Paiements
+* Avis
+* Dashboard Admin
+* Dashboard Chauffeur
+* Dashboard Passager
+* Multilingue FR / EN / AR / ES
 
-En cours d’amélioration :
+En cours :
 
-* Paiement réel
 * Géolocalisation
 * Notifications
-* Déploiement production
+* Paiement réel
+* Déploiement OVH
 
 ---
 
@@ -189,6 +214,18 @@ En cours d’amélioration :
 
 Youssef Qarnouf
 
-Travail de Fin d'Études – ICC Bruxelles
+Travail de Fin d'Études
+
+ICC Bruxelles
 
 Année académique 2025-2026
+
+---
+
+## Licence
+
+Tous droits réservés.
+
+Ce dépôt est publié uniquement à des fins académiques et de démonstration.
+
+Aucune licence Open Source n'est accordée.

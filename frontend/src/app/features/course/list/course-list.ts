@@ -26,21 +26,73 @@ export class CourseList implements OnInit {
   }
 
   loadCourses(): void {
+
     this.loading = true;
     this.errorMessage = '';
 
-    // Typage explicite ajouté ici pour data et error
-    this.apiService.getCourses().subscribe({
-      next: (data: any[]) => {
-        this.courses = data;
-        this.loading = false;
-      },
-      error: (error: any) => {
-        console.error(error);
-        this.errorMessage = 'Erreur lors du chargement des courses.';
-        this.loading = false;
-      }
-    });
+    const role = localStorage.getItem('userRole');
+
+    /*
+     * ADMIN
+     */
+    if (role === 'ADMIN') {
+
+      this.apiService.getCourses().subscribe({
+        next: (data: any[]) => {
+          this.courses = data;
+          this.loading = false;
+        },
+        error: (error: any) => {
+          console.error(error);
+          this.errorMessage = 'Erreur chargement courses';
+          this.loading = false;
+        }
+      });
+
+      return;
+    }
+
+    /*
+     * PASSAGER
+     */
+    if (role === 'PASSAGER') {
+
+      this.apiService.getCoursesByPassager(1).subscribe({
+        next: (data: any[]) => {
+          this.courses = data;
+          this.loading = false;
+        },
+        error: (error: any) => {
+          console.error(error);
+          this.errorMessage = 'Erreur chargement courses passager';
+          this.loading = false;
+        }
+      });
+
+      return;
+    }
+
+    /*
+     * CHAUFFEUR
+     */
+    if (role === 'CHAUFFEUR') {
+
+      this.apiService.getCoursesByChauffeur(1).subscribe({
+        next: (data: any[]) => {
+          this.courses = data;
+          this.loading = false;
+        },
+        error: (error: any) => {
+          console.error(error);
+          this.errorMessage = 'Erreur chargement courses chauffeur';
+          this.loading = false;
+        }
+      });
+
+      return;
+    }
+
+    this.loading = false;
   }
 
   goToDashboard(): void {

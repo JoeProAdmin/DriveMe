@@ -11,56 +11,111 @@ import { ApiService } from '../../../core/api.service';
   templateUrl: './register.html'
 })
 export class RegisterComponent {
-  private router = inject(Router);
-  private api = inject(ApiService);
+  private readonly router = inject(Router);
+  private readonly api = inject(ApiService);
 
   public currentFlow: 'PASSAGER' | 'CONDUCTEUR' | null = null;
   public currentStep = 1;
   public isSubmitting = false;
 
-  public passengerForm = { nom: '', prenom: '', telephone: '', email: '', selfieBase64: '' };
-
-  public driverForm = {
-    nom: '', prenom: '', dateNaissance: '', email: '', telephone: '', adresseResidence: '',
-    vehicule: { marque: '', modele: '', annee: null as number | null, immatriculation: '' },
-    documents: { cinBase64: '', permisBase64: '', carteGriseBase64: '', assuranceBase64: '', selfieControleBase64: '' },
-    photosVehicule: { faceAvantBase64: '', faceArriereBase64: '', plaqueBase64: '' }
+  public passengerForm = {
+    nom: '',
+    prenom: '',
+    telephone: '',
+    email: ''
   };
 
-  public previews: { [key: string]: string } = {};
+  public driverForm = {
+    nom: '',
+    prenom: '',
+    telephone: '',
+    email: ''
+  };
 
-  public selectFlow(flow: 'PASSAGER' | 'CONDUCTEUR'): void { this.currentFlow = flow; this.currentStep = 1; this.previews = {}; }
-  public resetFlow(): void { this.currentFlow = null; this.currentStep = 1; }
-  public nextStep(): void { if (this.currentStep < 4) this.currentStep++; }
-  public prevStep(): void { if (this.currentStep > 1) this.currentStep--; }
+  public selectFlow(flow: 'PASSAGER' | 'CONDUCTEUR'): void {
+    this.currentFlow = flow;
+    this.currentStep = 1;
+  }
 
-  public onFileSelected(event: Event, targetKey: string): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const reader = new FileReader();
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        if (e.target?.result) {
-          this.previews[targetKey] = e.target.result as string;
-          if (this.currentFlow === 'PASSAGER') (this.passengerForm as any)[targetKey] = e.target.result as string;
-        }
-      };
-      reader.readAsDataURL(input.files[0]);
+  public resetFlow(): void {
+    this.currentFlow = null;
+    this.currentStep = 1;
+    this.isSubmitting = false;
+  }
+
+  public nextStep(): void {
+    if (this.currentStep < 4) {
+      this.currentStep++;
+    }
+  }
+
+  public prevStep(): void {
+    if (this.currentStep > 1) {
+      this.currentStep--;
     }
   }
 
   public submitPassenger(): void {
+    if (!this.passengerForm.nom || !this.passengerForm.prenom || !this.passengerForm.telephone) {
+      alert('Veuillez compléter le nom, le prénom et le téléphone.');
+      return;
+    }
+
+    const payload = {
+      nom: this.passengerForm.nom.trim(),
+      prenom: this.passengerForm.prenom.trim(),
+      telephone: this.passengerForm.telephone.trim(),
+      email: this.passengerForm.email && this.passengerForm.email.trim() !== ''
+        ? this.passengerForm.email.trim()
+        : `${this.passengerForm.telephone.trim()}@driveme.local`,
+      motDePasse: '123456',
+      role: 'PASSAGER'
+    };
+
     this.isSubmitting = true;
-    this.api.registerUser(this.passengerForm).subscribe({
-      next: () => { this.isSubmitting = false; this.router.navigate(['/login']); },
-      error: (err: any) => { this.isSubmitting = false; console.error('Erreur Passager:', err); }
+
+    this.api.registerUser(payload).subscribe({
+      next: () => {
+        this.isSubmitting = false;
+        alert('Inscription passager réussie. Mot de passe de test : 123456');
+        this.router.navigate(['/login']);
+      },
+      error: (err: any) => {
+        this.isSubmitting = false;
+        console.error('Erreur inscription passager :', err);
+        alert('Erreur inscription passager. Essayez un autre email ou téléphone.');
+      }
     });
   }
 
   public submitDriver(): void {
+    if (!this.driverForm.nom || !this.driverForm.prenom || !this.driverForm.telephone || !this.driverForm.email) {
+      alert('Veuillez compléter le nom, le prénom, le téléphone et l’email.');
+      return;
+    }
+
+    const payload = {
+      nom: this.driverForm.nom.trim(),
+      prenom: this.driverForm.prenom.trim(),
+      telephone: this.driverForm.telephone.trim(),
+      email: this.driverForm.email.trim(),
+      motDePasse: '123456',
+      role: 'CHAUFFEUR'
+    };
+
     this.isSubmitting = true;
-    this.api.registerUser(this.driverForm).subscribe({
-      next: () => { this.isSubmitting = false; this.router.navigate(['/login']); },
-      error: (err: any) => { this.isSubmitting = false; console.error('Erreur Conducteur:', err); }
+
+    this.api.registerUser(payload).subscribe({
+      next: () => {
+        this.isSubmitting = false;
+        alert('Inscription chauffeur réussie. Mot de passe de test : 123456');
+        this.router.navigate(['/login']);
+      },
+      error: (err: any) => {
+        this.isSubmitting = false;
+        console.error('Erreur inscription chauffeur :', err);
+        alert('Erreur inscription chauffeur. Essayez un autre email ou téléphone.');
+      }
     });
   }
 }

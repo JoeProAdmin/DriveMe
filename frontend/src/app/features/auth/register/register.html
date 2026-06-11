@@ -1,188 +1,65 @@
-<div style="width: 100vw; min-height: 100vh; background-color: #f8fafc; display: flex; flex-direction: column; font-family: 'Poppins', 'Segoe UI', sans-serif; box-sizing: border-box; margin: 0; padding: 0;">
-
-  <header style="background-color: #0f172a; color: #ffffff; display: flex; justify-content: space-between; align-items: center; padding: 0 40px; height: 64px; box-sizing: border-box; width: 100%; border-bottom: 2px solid #00C853; flex-shrink: 0;">
-    <div style="font-size: 24px; font-weight: 700; letter-spacing: -0.04em; cursor: pointer;" (click)="resetFlow()">Drive<span style="color: #00C853;">Me</span></div>
-    <button *ngIf="currentFlow" type="button" (click)="resetFlow()" style="background: transparent; border: 1px solid #334155; color: #cbd5e1; padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">Retour</button>
+<div style="min-height:100vh; background:#f8fafc; font-family:'Poppins','Segoe UI',sans-serif;">
+  <header style="height:64px; background:#0f172a; color:white; display:flex; align-items:center; justify-content:space-between; padding:0 40px; border-bottom:2px solid #00C853;">
+    <div style="font-size:24px; font-weight:700; cursor:pointer;" (click)="resetFlow()">Drive<span style="color:#00C853;">Me</span></div>
+    <button *ngIf="currentFlow" type="button" (click)="resetFlow()" style="background:transparent; border:1px solid #334155; color:white; padding:8px 18px; border-radius:6px; cursor:pointer;">Retour</button>
   </header>
 
-  <div style="flex: 1; display: flex; justify-content: center; align-items: center; padding: 40px 20px; box-sizing: border-box;">
+  <main style="min-height:calc(100vh - 64px); display:flex; align-items:center; justify-content:center; padding:40px 20px;">
 
-    <div *ngIf="!currentFlow" style="width: 100%; max-width: 500px; background-color: #ffffff; padding: 32px; border-radius: 16px; box-shadow: 0 4px 20px rgba(15,23,42,0.03); border: 1px solid #e2e8f0; text-align: center;">
-      <h1 style="font-size: 28px; font-weight: 700; color: #0f172a; margin: 0 0 8px 0; letter-spacing: -0.02em;">Créer un compte DriveMe</h1>
-      <p style="font-size: 14px; color: #64748b; margin: 0 0 32px 0;">Sélectionnez votre profil pour commencer à partager vos trajets au Maroc.</p>
+    <section *ngIf="!currentFlow" style="width:100%; max-width:520px; background:white; padding:32px; border-radius:16px; border:1px solid #e2e8f0;">
+      <h1 style="margin:0 0 12px 0; color:#0f172a;">Créer un compte DriveMe</h1>
+      <p style="color:#64748b; margin-bottom:28px;">Sélectionnez votre profil.</p>
 
-      <div style="display: flex; flex-direction: column; gap: 16px;">
-        <div (click)="selectFlow('PASSAGER')" style="border: 2px solid #e2e8f0; padding: 20px; border-radius: 12px; cursor: pointer; text-align: left; transition: all 0.2s;" onmouseover="this.style.borderColor='#0f172a'" onmouseout="this.style.borderColor='#e2e8f0'">
-          <div style="font-weight: 700; font-size: 16px; color: #0f172a; margin-bottom: 4px;">Je suis Passager</div>
-          <div style="font-size: 13px; color: #64748b;">Voyagez de gré à gré en toute sécurité au prix qui vous convient.</div>
-        </div>
+      <button type="button" (click)="selectFlow('PASSAGER')" style="width:100%; text-align:left; padding:20px; margin-bottom:14px; background:white; border:2px solid #e2e8f0; border-radius:12px; cursor:pointer;">
+        <strong>Je suis Passager</strong><br>
+        <span>Commander une course au prix proposé.</span>
+      </button>
 
-        <div (click)="selectFlow('CONDUCTEUR')" style="border: 2px solid #e2e8f0; padding: 20px; border-radius: 12px; cursor: pointer; text-align: left; transition: all 0.2s;" onmouseover="this.style.borderColor='#00C853'" onmouseout="this.style.borderColor='#e2e8f0'">
-          <div style="font-weight: 700; font-size: 16px; color: #0f172a; margin-bottom: 4px;">Je suis Conducteur</div>
-          <div style="font-size: 13px; color: #64748b;">Partagez vos frais de route et rentabilisez votre véhicule sans commission.</div>
-        </div>
-      </div>
-    </div>
+      <button type="button" (click)="selectFlow('CONDUCTEUR')" style="width:100%; text-align:left; padding:20px; background:white; border:2px solid #e2e8f0; border-radius:12px; cursor:pointer;">
+        <strong>Je suis Chauffeur</strong><br>
+        <span>Recevoir des demandes et gérer mon activité.</span>
+      </button>
+    </section>
 
-    <div *ngIf="currentFlow === 'PASSAGER'" style="width: 100%; max-width: 420px; background-color: #ffffff; padding: 32px; border-radius: 16px; box-shadow: 0 4px 20px rgba(15,23,42,0.03); border: 1px solid #e2e8f0;">
-      <h2 style="font-size: 22px; font-weight: 700; color: #0f172a; margin: 0 0 24px 0;">Inscription Passager</h2>
+    <section *ngIf="currentFlow === 'PASSAGER'" style="width:100%; max-width:440px; background:white; padding:32px; border-radius:16px; border:1px solid #e2e8f0;">
+      <h2 style="margin-top:0; color:#0f172a;">Inscription Passager</h2>
 
-      <form (ngSubmit)="submitPassenger()" style="display: flex; flex-direction: column; gap: 16px;">
-        <div style="display: flex; gap: 12px;">
-          <div style="flex: 1;"><label style="font-size: 11px; font-weight: 700; color: #475569;">NOM</label><input type="text" name="pNom" [(ngModel)]="passengerForm.nom" placeholder="Alami" required style="width:100%; padding:11px; border:1px solid #cbd5e1; border-radius:6px; margin-top:4px; outline:none;"></div>
-          <div style="flex: 1;"><label style="font-size: 11px; font-weight: 700; color: #475569;">PRÉNOM</label><input type="text" name="pPrenom" [(ngModel)]="passengerForm.prenom" placeholder="Youssef" required style="width:100%; padding:11px; border:1px solid #cbd5e1; border-radius:6px; margin-top:4px; outline:none;"></div>
-        </div>
-        <div><label style="font-size: 11px; font-weight: 700; color: #475569;">NUMÉRO DE TÉLÉPHONE (OBLIGATOIRE)</label><input type="tel" name="pPhone" [(ngModel)]="passengerForm.telephone" placeholder="0600000000" required style="width:100%; padding:11px; border:1px solid #cbd5e1; border-radius:6px; margin-top:4px; outline:none;"></div>
-        <div><label style="font-size: 11px; font-weight: 700; color: #475569;">ADRESSE EMAIL (FACULTATIVE)</label><input type="email" name="pEmail" [(ngModel)]="passengerForm.email" placeholder="youssef@example.com" style="width:100%; padding:11px; border:1px solid #cbd5e1; border-radius:6px; margin-top:4px; outline:none;"></div>
+      <label>Nom</label>
+      <input name="pNom" [(ngModel)]="passengerForm.nom" type="text" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
 
-        <div>
-          <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">SELFIE RÉCENT OBLIGATOIRE (IDENTIFICATION SÉCURITÉ)</label>
-          <div style="border: 2px dashed #cbd5e1; padding: 20px; border-radius: 8px; text-align: center; background-color: #f8fafc; position: relative;">
-            <input type="file" accept="image/*" (change)="onFileSelected($event, 'passengerSelfie')" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer;">
-            <div *ngIf="!previews['passengerSelfie']" style="font-size: 13px; color: #64748b;">Cliquez pour prendre ou charger votre selfie</div>
-            <img *ngIf="previews['passengerSelfie']" [src]="previews['passengerSelfie']" style="max-height: 120px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-          </div>
-        </div>
+      <label>Prénom</label>
+      <input name="pPrenom" [(ngModel)]="passengerForm.prenom" type="text" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
 
-        <button type="submit" [disabled]="isSubmitting || !passengerForm.nom || !passengerForm.prenom || !passengerForm.telephone || !passengerForm.selfieBase64" style="width:100%; background-color:#0f172a; color:white; border:none; padding:14px; border-radius:8px; font-weight:600; cursor:pointer; margin-top:8px;">
-          {{ isSubmitting ? 'Finalisation...' : 'Valider mon inscription' }}
-        </button>
-      </form>
-    </div>
+      <label>Téléphone obligatoire</label>
+      <input name="pTelephone" [(ngModel)]="passengerForm.telephone" type="tel" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
 
-    <div *ngIf="currentFlow === 'CONDUCTEUR'" style="width: 100%; max-width: 550px; background-color: #ffffff; padding: 36px; border-radius: 16px; box-shadow: 0 4px 20px rgba(15,23,42,0.03); border: 1px solid #e2e8f0;">
+      <label>Email facultatif</label>
+      <input name="pEmail" [(ngModel)]="passengerForm.email" type="email" style="width:100%; padding:12px; margin:6px 0 20px; border:1px solid #cbd5e1; border-radius:8px;">
 
-      <div style="margin-bottom: 28px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-          <h2 style="font-size: 20px; font-weight: 700; color: #0f172a; margin: 0;">Dossier Candidature Conducteur</h2>
-          <span style="font-size: 13px; font-weight: 700; color: #00C853;">Étape {{ currentStep }} sur 4</span>
-        </div>
-        <div style="width: 100%; height: 6px; background-color: #e2e8f0; border-radius: 10px; overflow: hidden;">
-          <div [style.width]="(currentStep * 25) + '%'" style="height: 100%; background-color: #00C853; transition: width 0.3s ease;"></div>
-        </div>
-      </div>
+      <button type="button" (click)="submitPassenger()" [disabled]="isSubmitting" style="width:100%; padding:14px; background:#0f172a; color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
+        {{ isSubmitting ? 'Inscription...' : 'Valider mon inscription' }}
+      </button>
+    </section>
 
-      <form (ngSubmit)="$event.preventDefault()">
+    <section *ngIf="currentFlow === 'CONDUCTEUR'" style="width:100%; max-width:440px; background:white; padding:32px; border-radius:16px; border:1px solid #e2e8f0;">
+      <h2 style="margin-top:0; color:#0f172a;">Inscription Chauffeur</h2>
 
-        <div *ngIf="currentStep === 1" style="display: flex; flex-direction: column; gap: 16px;">
-          <div style="font-size: 14px; font-weight: 600; color: #0f172a; border-left: 3px solid #00C853; padding-left: 8px; margin-bottom: 4px;">Informations Personnelles</div>
-          <div style="display: flex; gap: 12px;">
-            <div style="flex: 1;"><label style="font-size: 11px; font-weight: 700; color: #475569;">NOM</label><input type="text" [(ngModel)]="driverForm.nom" name="dNom" required style="width:100%; padding:11px; border:1px solid #cbd5e1; border-radius:6px; margin-top:4px; outline:none;"></div>
-            <div style="flex: 1;"><label style="font-size: 11px; font-weight: 700; color: #475569;">PRÉNOM</label><input type="text" [(ngModel)]="driverForm.prenom" name="dPrenom" required style="width:100%; padding:11px; border:1px solid #cbd5e1; border-radius:6px; margin-top:4px; outline:none;"></div>
-          </div>
-          <div style="display: flex; gap: 12px;">
-            <div style="flex: 1;"><label style="font-size: 11px; font-weight: 700; color: #475569;">DATE DE NAISSANCE</label><input type="date" [(ngModel)]="driverForm.dateNaissance" name="dBirth" required style="width:100%; padding:11px; border:1px solid #cbd5e1; border-radius:6px; margin-top:4px; outline:none;"></div>
-            <div style="flex: 1;"><label style="font-size: 11px; font-weight: 700; color: #475569;">TÉLÉPHONE</label><input type="tel" [(ngModel)]="driverForm.telephone" name="dPhone" placeholder="0600000000" required style="width:100%; padding:11px; border:1px solid #cbd5e1; border-radius:6px; margin-top:4px; outline:none;"></div>
-          </div>
-          <div><label style="font-size: 11px; font-weight: 700; color: #475569;">ADRESSE EMAIL</label><input type="email" [(ngModel)]="driverForm.email" name="dEmail" required style="width:100%; padding:11px; border:1px solid #cbd5e1; border-radius:6px; margin-top:4px; outline:none;"></div>
-          <div><label style="font-size: 11px; font-weight: 700; color: #475569;">ADRESSE DE RÉSIDENCE (MAROC)</label><input type="text" [(ngModel)]="driverForm.adresseResidence" name="dAddr" placeholder="N°, Rue, Quartier, Ville" required style="width:100%; padding:11px; border:1px solid #cbd5e1; border-radius:6px; margin-top:4px; outline:none;"></div>
-        </div>
+      <label>Nom</label>
+      <input name="dNom" [(ngModel)]="driverForm.nom" type="text" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
 
-        <div *ngIf="currentStep === 2" style="display: flex; flex-direction: column; gap: 16px;">
-          <div style="font-size: 14px; font-weight: 600; color: #0f172a; border-left: 3px solid #00C853; padding-left: 8px; margin-bottom: 4px;">Téléversement des Pièces Justificatives</div>
+      <label>Prénom</label>
+      <input name="dPrenom" [(ngModel)]="driverForm.prenom" type="text" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
 
-          <div style="display: flex; gap: 16px;">
-            <div style="flex: 1;">
-              <label style="font-size: 11px; font-weight: 700; color: #475569;">CIN (FACE AVANT/ARRIÈRE REUNIES)</label>
-              <div style="border: 2px dashed #cbd5e1; padding: 14px; border-radius: 6px; text-align: center; background-color: #f8fafc; position: relative; margin-top:4px;">
-                <input type="file" accept="image/*" (change)="onFileSelected($event, 'cin')" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer;">
-                <span *ngIf="!previews['cin']" style="font-size: 12px; color: #64748b;">Charger la CIN</span>
-                <img *ngIf="previews['cin']" [src]="previews['cin']" style="max-height: 60px; border-radius: 4px;">
-              </div>
-            </div>
-            <div style="flex: 1;">
-              <label style="font-size: 11px; font-weight: 700; color: #475569;">PERMIS DE CONDUIRE VALIDE</label>
-              <div style="border: 2px dashed #cbd5e1; padding: 14px; border-radius: 6px; text-align: center; background-color: #f8fafc; position: relative; margin-top:4px;">
-                <input type="file" accept="image/*" (change)="onFileSelected($event, 'permis')" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer;">
-                <span *ngIf="!previews['permis']" style="font-size: 12px; color: #64748b;">Charger le Permis</span>
-                <img *ngIf="previews['permis']" [src]="previews['permis']" style="max-height: 60px; border-radius: 4px;">
-              </div>
-            </div>
-          </div>
+      <label>Téléphone obligatoire</label>
+      <input name="dTelephone" [(ngModel)]="driverForm.telephone" type="tel" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
 
-          <div style="display: flex; gap: 16px;">
-            <div style="flex: 1;">
-              <label style="font-size: 11px; font-weight: 700; color: #475569;">CARTE GRISE DU VÉHICULE</label>
-              <div style="border: 2px dashed #cbd5e1; padding: 14px; border-radius: 6px; text-align: center; background-color: #f8fafc; position: relative; margin-top:4px;">
-                <input type="file" accept="image/*" (change)="onFileSelected($event, 'carteGrise')" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer;">
-                <span *ngIf="!previews['carteGrise']" style="font-size: 12px; color: #64748b;">Charger Carte Grise</span>
-                <img *ngIf="previews['carteGrise']" [src]="previews['carteGrise']" style="max-height: 60px; border-radius: 4px;">
-              </div>
-            </div>
-            <div style="flex: 1;">
-              <label style="font-size: 11px; font-weight: 700; color: #475569;">ATTESTATION D'ASSURANCE</label>
-              <div style="border: 2px dashed #cbd5e1; padding: 14px; border-radius: 6px; text-align: center; background-color: #f8fafc; position: relative; margin-top:4px;">
-                <input type="file" accept="image/*" (change)="onFileSelected($event, 'assurance')" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer;">
-                <span *ngIf="!previews['assurance']" style="font-size: 12px; color: #64748b;">Charger l'Assurance</span>
-                <img *ngIf="previews['assurance']" [src]="previews['assurance']" style="max-height: 60px; border-radius: 4px;">
-              </div>
-            </div>
-          </div>
-        </div>
+      <label>Email obligatoire</label>
+      <input name="dEmail" [(ngModel)]="driverForm.email" type="email" style="width:100%; padding:12px; margin:6px 0 20px; border:1px solid #cbd5e1; border-radius:8px;">
 
-        <div *ngIf="currentStep === 3" style="display: flex; flex-direction: column; gap: 16px;">
-          <div style="font-size: 14px; font-weight: 600; color: #0f172a; border-left: 3px solid #00C853; padding-left: 8px; margin-bottom: 4px;">Spécifications du Véhicule</div>
-          <div style="display: flex; gap: 12px;">
-            <div style="flex: 1;"><label style="font-size: 11px; font-weight: 700; color: #475569;">MARQUE</label><input type="text" [(ngModel)]="driverForm.vehicule.marque" name="vMarque" placeholder="Dacia, Renault..." required style="width:100%; padding:11px; border:1px solid #cbd5e1; border-radius:6px; margin-top:4px; outline:none;"></div>
-            <div style="flex: 1;"><label style="font-size: 11px; font-weight: 700; color: #475569;">MODÈLE</label><input type="text" [(ngModel)]="driverForm.vehicule.modele" name="vModele" placeholder="Logan, Clio..." required style="width:100%; padding:11px; border:1px solid #cbd5e1; border-radius:6px; margin-top:4px; outline:none;"></div>
-          </div>
-          <div style="display: flex; gap: 12px;">
-            <div style="flex: 1;"><label style="font-size: 11px; font-weight: 700; color: #475569;">ANNÉE DE MISE EN CIRCULATION</label><input type="number" [(ngModel)]="driverForm.vehicule.annee" name="vAnnee" placeholder="2022" required style="width:100%; padding:11px; border:1px solid #cbd5e1; border-radius:6px; margin-top:4px; outline:none;"></div>
-            <div style="flex: 1;"><label style="font-size: 11px; font-weight: 700; color: #475569;">MATRICULE (IMMATRICULATION)</label><input type="text" [(ngModel)]="driverForm.vehicule.immatriculation" name="vMatr" placeholder="12345-أ-6" required style="width:100%; padding:11px; border:1px solid #cbd5e1; border-radius:6px; margin-top:4px; outline:none;"></div>
-          </div>
+      <button type="button" (click)="submitDriver()" [disabled]="isSubmitting" style="width:100%; padding:14px; background:#00C853; color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
+        {{ isSubmitting ? 'Inscription...' : 'Valider mon inscription chauffeur' }}
+      </button>
+    </section>
 
-          <div style="display: flex; gap: 12px;">
-            <div style="flex: 1;">
-              <label style="font-size: 10px; font-weight: 700; color: #475569;">PHOTO FACE AVANT</label>
-              <div style="border: 1px dashed #cbd5e1; padding: 10px; border-radius: 6px; text-align: center; background-color: #f8fafc; position: relative; height: 55px; display: flex; justify-content: center; align-items: center; margin-top:2px;">
-                <input type="file" accept="image/*" (change)="onFileSelected($event, 'avant')" style="position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
-                <span *ngIf="!previews['avant']" style="font-size: 11px; color: #64748b;">Avant</span>
-                <img *ngIf="previews['avant']" [src]="previews['avant']" style="max-height: 45px; border-radius: 2px;">
-              </div>
-            </div>
-            <div style="flex: 1;">
-              <label style="font-size: 10px; font-weight: 700; color: #475569;">PHOTO FACE ARRIÈRE</label>
-              <div style="border: 1px dashed #cbd5e1; padding: 10px; border-radius: 6px; text-align: center; background-color: #f8fafc; position: relative; height: 55px; display: flex; justify-content: center; align-items: center; margin-top:2px;">
-                <input type="file" accept="image/*" (change)="onFileSelected($event, 'arriere')" style="position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
-                <span *ngIf="!previews['arriere']" style="font-size: 11px; color: #64748b;">Arrière</span>
-                <img *ngIf="previews['arriere']" [src]="previews['arriere']" style="max-height: 45px; border-radius: 2px;">
-              </div>
-            </div>
-            <div style="flex: 1;">
-              <label style="font-size: 10px; font-weight: 700; color: #475569;">PLAQUE MINÉRALOGIQUE</label>
-              <div style="border: 1px dashed #cbd5e1; padding: 10px; border-radius: 6px; text-align: center; background-color: #f8fafc; position: relative; height: 55px; display: flex; justify-content: center; align-items: center; margin-top:2px;">
-                <input type="file" accept="image/*" (change)="onFileSelected($event, 'plaque')" style="position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
-                <span *ngIf="!previews['plaque']" style="font-size: 11px; color: #64748b;">Plaque</span>
-                <img *ngIf="previews['plaque']" [src]="previews['plaque']" style="max-height: 45px; border-radius: 2px;">
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div *ngIf="currentStep === 4" style="display: flex; flex-direction: column; gap: 16px;">
-          <div style="font-size: 14px; font-weight: 600; color: #ef4444; border-left: 3px solid #ef4444; padding-left: 8px; margin-bottom: 4px;">Contrôle d'Identité Biométrique Renforcé</div>
-
-          <div style="background-color: #fef2f2; border: 1px solid #fee2e2; padding: 12px; border-radius: 8px; font-size: 12px; color: #991b1b; line-height: 1.5;">
-            <strong>Procédure obligatoire de sécurité :</strong> Prenez un selfie net en tenant votre pièce d'identité (CIN) directement sous votre visage. Les informations de la carte doivent être lisibles à l'écran. Cette mesure prévient les usurpations d'identité et protège l'ensemble de la communauté Maroc.
-          </div>
-
-          <div style="border: 2px dashed #cbd5e1; padding: 24px; border-radius: 12px; text-align: center; background-color: #f8fafc; position: relative;">
-            <input type="file" accept="image/*" (change)="onFileSelected($event, 'selfieControle')" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer;">
-            <div *ngIf="!previews['selfieControle']" style="font-size: 13px; color: #64748b; font-weight: 500;">Cliquez pour capturer ou charger votre selfie réglementaire CIN</div>
-            <img *ngIf="previews['selfieControle']" [src]="previews['selfieControle']" style="max-height: 160px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-          </div>
-        </div>
-
-        <div style="display: flex; justify-content: space-between; margin-top: 28px; padding-top: 16px; border-top: 1px solid #f1f5f9;">
-          <button type="button" *ngIf="currentStep > 1" (click)="prevStep()" style="background-color: #f1f5f9; color: #475569; border: none; padding: 11px 22px; border-radius: 6px; font-weight: 600; cursor: pointer; font-family: inherit;">Précédent</button>
-          <div *ngIf="currentStep === 1"></div> <button type="button" *ngIf="currentStep < 4" (click)="nextStep()" style="background-color: #0f172a; color: white; border: none; padding: 11px 22px; border-radius: 6px; font-weight: 600; cursor: pointer; font-family: inherit;">Suivant</button>
-          <button type="button" *ngIf="currentStep === 4" (click)="submitDriver()" [disabled]="isSubmitting || !driverForm.documents.selfieControleBase64" style="background-color: #00C853; color: white; border: none; padding: 11px 24px; border-radius: 6px; font-weight: 700; cursor: pointer; font-family: inherit;">
-            {{ isSubmitting ? 'Traitement du dossier...' : 'Soumettre ma candidature' }}
-          </button>
-        </div>
-
-      </form>
-    </div>
-
-  </div>
+  </main>
 </div>

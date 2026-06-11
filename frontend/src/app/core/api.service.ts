@@ -28,59 +28,134 @@ export interface ChauffeurResponseDTO {
   soldeCredit?: number;
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class ApiService {
+
   private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.apiUrl;
 
-  public readonly currentLanguage: WritableSignal<'fr' | 'en' | 'ar' | 'es'> = signal('fr');
-  public readonly isRtlMode: WritableSignal<boolean> = signal(false);
+  public readonly currentLanguage: WritableSignal<'fr' | 'en' | 'ar' | 'es'> =
+    signal('fr');
+
+  public readonly isRtlMode: WritableSignal<boolean> =
+    signal(false);
 
   public setLanguage(lang: 'fr' | 'en' | 'ar' | 'es'): void {
     this.currentLanguage.set(lang);
     this.isRtlMode.set(lang === 'ar');
   }
 
-  // MÉTHODE LOGIN AJOUTÉE POUR CORRIGER L'ERREUR
-  public login(credentials: { email: string, motDePasse: string }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/auth/login`, credentials);
+  public login(credentials: {
+    email: string;
+    motDePasse: string;
+  }): Observable<any> {
+
+    return this.http.post(
+      `${this.baseUrl}/auth/login`,
+      credentials
+    );
+  }
+
+  public registerUser(data: any): Observable<any> {
+
+    return this.http.post(
+      `${this.baseUrl}/auth/register`,
+      data
+    );
   }
 
   public getAdminStats(): Observable<AdminStats> {
-    return this.http.get<AdminStats>(`${this.baseUrl}/admin/stats`);
+
+    return this.http.get<AdminStats>(
+      `${this.baseUrl}/admin/stats`
+    );
   }
 
   public getAllChauffeurs(): Observable<ChauffeurResponseDTO[]> {
-    return this.http.get<ChauffeurResponseDTO[]>(`${this.baseUrl}/chauffeurs`);
+
+    return this.http.get<ChauffeurResponseDTO[]>(
+      `${this.baseUrl}/chauffeurs`
+    );
   }
 
-  public validerChauffeur(id: number, statut: number): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}/chauffeurs/${id}/validation?statut=${statut}`, {});
+  public validerChauffeur(
+    id: number,
+    statut: number
+  ): Observable<void> {
+
+    return this.http.put<void>(
+      `${this.baseUrl}/chauffeurs/${id}/validation?statut=${statut}`,
+      {}
+    );
   }
 
   public rejeter(id: number): Observable<void> {
+
     return this.validerChauffeur(id, 2);
   }
 
   public getCourses(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/courses`);
+
+    return this.http.get<any[]>(
+      `${this.baseUrl}/courses`
+    );
   }
 
-  public requestCourse(courseData: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/courses/request`, courseData);
+  public getCoursesByPassager(
+    passagerId: number
+  ): Observable<any[]> {
+
+    return this.http.get<any[]>(
+      `${this.baseUrl}/courses/passager/${passagerId}`
+    );
   }
 
-  public soumettreAvis(avis: AvisDTO): Observable<void> {
-    return this.http.post<void>(`${this.baseUrl}/avis`, avis);
+  public getCoursesByChauffeur(
+    chauffeurId: number
+  ): Observable<any[]> {
+
+    return this.http.get<any[]>(
+      `${this.baseUrl}/courses/chauffeur/${chauffeurId}`
+    );
   }
 
-  public registerUser(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/auth/register`, data);
+  public requestCourse(
+    courseData: any
+  ): Observable<any> {
+
+    return this.http.post(
+      `${this.baseUrl}/courses`,
+      courseData
+    );
   }
 
-  public uploadSelfieVerification(id: number, file: File): Observable<any> {
+  public soumettreAvis(
+    avis: AvisDTO
+  ): Observable<void> {
+
+    return this.http.post<void>(
+      `${this.baseUrl}/avis`,
+      avis
+    );
+  }
+
+  public uploadSelfieVerification(
+    id: number,
+    file: File
+  ): Observable<any> {
+
     const formData = new FormData();
-    formData.append('file', file);
-    return this.http.post(`${this.baseUrl}/chauffeurs/${id}/selfie`, formData);
+
+    formData.append(
+      'file',
+      file
+    );
+
+    return this.http.post(
+      `${this.baseUrl}/chauffeurs/${id}/selfie`,
+      formData
+    );
   }
 }

@@ -1,104 +1,147 @@
-<div style="width: 100vw; min-height: 100vh; background-color: #ffffff; display: flex; flex-direction: column; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; overflow-x: hidden;">
+<div class="landing" [class.rtl]="currentLang === 'AR'">
 
-  <header style="background-color: #0f172a; color: #ffffff; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; height: 72px; width: 100%; border-bottom: 3px solid #00C853; position: sticky; top: 0; z-index: 1000; box-sizing: border-box;">
+  <header class="topbar">
+    <div class="logo">Drive<span>Me</span></div>
 
-    <div style="font-size: 26px; font-weight: 800; letter-spacing: -0.04em;">
-      Drive<span style="color: #00C853;">Me</span>
-    </div>
-
-    <div style="display:flex;align-items:center;gap:12px;">
-
-      <select
-        [(ngModel)]="currentLang"
-        style="padding:8px 12px;border-radius:8px;border:none;font-weight:600;cursor:pointer;">
-
+    <nav class="nav">
+      <select [(ngModel)]="currentLang" (ngModelChange)="changeLang($event)">
         <option value="FR">FR</option>
         <option value="EN">EN</option>
         <option value="AR">AR</option>
         <option value="ES">ES</option>
-
       </select>
 
-      <button
-        type="button"
-        routerLink="/login"
-        style="background:transparent;border:none;color:white;font-size:14px;font-weight:600;cursor:pointer;">
-
-        {{ texts[currentLang].login }}
-
-      </button>
-
-      <button
-        type="button"
-        routerLink="/register"
-        style="background-color:#00C853;color:white;border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">
-
-        {{ texts[currentLang].register }}
-
-      </button>
-
-    </div>
-
+      <a routerLink="/login" class="login-link">{{ texts[currentLang].login }}</a>
+      <a routerLink="/register" class="register-link">{{ texts[currentLang].register }}</a>
+    </nav>
   </header>
 
-  <main style="flex:1;display:flex;height:calc(100vh - 72px);width:100%;overflow:hidden;">
+  <main class="hero">
+    <section class="hero-content">
+      <span class="badge">{{ texts[currentLang].badge }}</span>
 
-    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:60px;box-sizing:border-box;max-width:650px;">
+      <h1>{{ texts[currentLang].title }}</h1>
 
-      <span style="background-color:rgba(0,200,83,0.1);color:#00C853;padding:6px 16px;border-radius:50px;font-size:13px;font-weight:700;margin-bottom:24px;display:inline-block;width:fit-content;">
-        {{ texts[currentLang].badge }}
-      </span>
-
-      <h1 style="font-size:38px;font-weight:700;color:#0f172a;line-height:1.25;margin:0 0 20px 0;">
-        {{ texts[currentLang].title }}
-      </h1>
-
-      <p style="font-size:15px;color:#475569;line-height:1.6;margin:0 0 32px 0;">
+      <p class="description">
         {{ texts[currentLang].description }}
       </p>
 
-      <div style="display:flex;gap:16px;flex-wrap:wrap;">
+      <div class="search-card">
+        <div class="field">
+          <label>{{ texts[currentLang].depart }}</label>
+          <input [(ngModel)]="searchForm.depart" placeholder="Marrakech, Gare ONCF">
+        </div>
 
-        <button
-          routerLink="/login"
-          style="background-color:#0f172a;color:white;border:none;padding:16px 32px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;">
+        <div class="field">
+          <label>{{ texts[currentLang].destination }}</label>
+          <input [(ngModel)]="searchForm.destination" placeholder="Jemaa El Fna, Casablanca...">
+        </div>
 
-          {{ texts[currentLang].trip }}
+        <div class="field-row">
+          <div class="field">
+            <label>{{ texts[currentLang].date }}</label>
+            <input type="date" [(ngModel)]="searchForm.date">
+          </div>
 
+          <div class="field">
+            <label>{{ texts[currentLang].passengers }}</label>
+            <input type="number" min="1" [(ngModel)]="searchForm.passengers">
+          </div>
+        </div>
+
+        <button class="location-btn" type="button" (click)="useLocation()">
+          {{ isLocating ? 'Localisation...' : texts[currentLang].locate }}
         </button>
 
-        <button
-          routerLink="/register"
-          style="background-color:#f1f5f9;color:#0f172a;border:1px solid #cbd5e1;padding:16px 32px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;">
+        <p *ngIf="detectedLocation" class="location-result">
+          {{ detectedLocation }}
+        </p>
 
-          {{ texts[currentLang].vehicle }}
-
-        </button>
-
+        <div class="actions">
+          <a routerLink="/login" class="primary-btn">{{ texts[currentLang].search }}</a>
+          <a routerLink="/register" class="secondary-btn">{{ texts[currentLang].driver }}</a>
+        </div>
       </div>
+    </section>
 
-    </div>
+    <section class="map-panel">
+      <div class="map-box">
+        <div class="map-header">
+          <strong>{{ texts[currentLang].mapTitle }}</strong>
+          <span>{{ texts[currentLang].mapText }}</span>
+        </div>
 
-    <div
-      style="
-      flex:1.2;
-      background-image:url('https://images.unsplash.com/photo-1489749798305-4fea3ae63d43?auto=format&fit=crop&w=1200&q=80');
-      background-size:cover;
-      background-position:center;
-      position:relative;">
-
-      <div
-        style="
-        position:absolute;
-        top:0;
-        left:0;
-        width:100%;
-        height:100%;
-        background:linear-gradient(to right,#ffffff 0%,rgba(255,255,255,0) 20%);">
+        <div class="fake-map">
+          <div class="route-line"></div>
+          <div class="pin pin-a">A</div>
+          <div class="pin pin-b">B</div>
+          <div class="driver-dot driver-1"></div>
+          <div class="driver-dot driver-2"></div>
+          <div class="driver-dot driver-3"></div>
+        </div>
       </div>
-
-    </div>
-
+    </section>
   </main>
+
+  <section class="trust-section">
+    <h2>{{ texts[currentLang].safetyTitle }}</h2>
+
+    <div class="trust-grid">
+      <div class="trust-card">
+        <strong>Chauffeurs vérifiés</strong>
+        <p>Permis, identité, assurance et véhicule contrôlés.</p>
+      </div>
+
+      <div class="trust-card">
+        <strong>SOS intégré</strong>
+        <p>Accès rapide à l’assistance et aux informations de course.</p>
+      </div>
+
+      <div class="trust-card">
+        <strong>Prix transparent</strong>
+        <p>Le passager propose, le chauffeur accepte ou négocie.</p>
+      </div>
+
+      <div class="trust-card">
+        <strong>Paiement flexible</strong>
+        <p>Cash prioritaire, wallet chauffeur et moyens locaux marocains.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="how-section">
+    <h2>{{ texts[currentLang].howTitle }}</h2>
+
+    <div class="steps">
+      <div class="step">
+        <span>1</span>
+        <strong>Rechercher</strong>
+        <p>Indiquez départ, destination et date.</p>
+      </div>
+
+      <div class="step">
+        <span>2</span>
+        <strong>Négocier</strong>
+        <p>Proposez ou acceptez un prix clair.</p>
+      </div>
+
+      <div class="step">
+        <span>3</span>
+        <strong>Voyager</strong>
+        <p>Suivez la course et gardez une trace.</p>
+      </div>
+
+      <div class="step">
+        <span>4</span>
+        <strong>Évaluer</strong>
+        <p>Notez le chauffeur et améliorez la confiance.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <strong>DriveMe.cloud</strong>
+    <span>Plateforme de mise en relation entre passagers et chauffeurs indépendants.</span>
+  </footer>
 
 </div>

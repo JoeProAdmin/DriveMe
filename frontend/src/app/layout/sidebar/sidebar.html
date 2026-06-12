@@ -19,24 +19,52 @@
 
   <nav class="sidebar-nav-links">
 
-    <a class="nav-link-item" routerLink="/dashboard" routerLinkActive="active">
+    <a class="nav-link-item"
+       routerLink="/dashboard"
+       routerLinkActive="active">
       <span>{{ labels[currentLang].overview }}</span>
     </a>
 
-    <a class="nav-link-item" routerLink="/chauffeurs" routerLinkActive="active">
+    <!-- ADMIN UNIQUEMENT -->
+
+    <a *ngIf="userRole === 'ADMIN'"
+       class="nav-link-item"
+       routerLink="/chauffeurs"
+       routerLinkActive="active">
       <span>{{ labels[currentLang].drivers }}</span>
     </a>
 
-    <a class="nav-link-item" routerLink="/passagers" routerLinkActive="active">
+    <a *ngIf="userRole === 'ADMIN'"
+       class="nav-link-item"
+       routerLink="/passagers"
+       routerLinkActive="active">
       <span>{{ labels[currentLang].passengers }}</span>
     </a>
 
-    <a class="nav-link-item" routerLink="/courses" routerLinkActive="active">
+    <!-- ADMIN + CHAUFFEUR -->
+
+    <a *ngIf="userRole === 'ADMIN' || userRole === 'CHAUFFEUR'"
+       class="nav-link-item"
+       routerLink="/courses"
+       routerLinkActive="active">
       <span>{{ labels[currentLang].trips }}</span>
     </a>
 
-    <a class="nav-link-item" routerLink="/paiements" routerLinkActive="active">
+    <!-- ADMIN + CHAUFFEUR -->
+
+    <a *ngIf="userRole === 'ADMIN' || userRole === 'CHAUFFEUR'"
+       class="nav-link-item"
+       routerLink="/paiements"
+       routerLinkActive="active">
       <span>{{ labels[currentLang].payments }}</span>
+    </a>
+
+    <!-- PASSAGER -->
+
+    <a *ngIf="userRole === 'PASSAGER'"
+       class="nav-link-item"
+       routerLink="/courses">
+      <span>{{ labels[currentLang].trips }}</span>
     </a>
 
   </nav>
@@ -44,6 +72,7 @@
   <div class="sidebar-user-section">
 
     <div class="user-card">
+
       <div class="user-avatar">
         {{ userRole.charAt(0) }}
       </div>
@@ -52,6 +81,7 @@
         <div class="user-role">{{ userRole }}</div>
         <div class="user-email">{{ userEmail }}</div>
       </div>
+
     </div>
 
     <button class="btn-profile">

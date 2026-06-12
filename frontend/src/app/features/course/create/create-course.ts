@@ -142,6 +142,33 @@ export class CreateCourse implements OnInit, OnDestroy {
           prix: this.formModel.prix
         };
 
+        console.log('PAYLOAD ENVOYE :', payload);
+
+        console.log('PAYLOAD ENVOYE :', payload);
+
+        this.api.requestCourse(payload).subscribe({
+          next: () => {
+
+            this.loading = false;
+
+            this.successMessage = 'Course créée avec succès.';
+
+            console.log('COURSE CREEE');
+
+            this.router.navigate(['/courses']);
+          },
+
+          error: (error: any) => {
+
+            console.error('Erreur création course :', error);
+
+            this.loading = false;
+
+            this.errorMessage =
+              'Erreur lors de la création de la course.';
+          }
+        });
+
         this.api.requestCourse(payload).subscribe({
           next: () => {
             this.loading = false;

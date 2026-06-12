@@ -16,6 +16,7 @@ export class CourseList implements OnInit, OnDestroy {
   courses: any[] = [];
   loading = false;
   errorMessage = '';
+  userRole = '';
 
   private refreshSubscription?: Subscription;
 
@@ -25,6 +26,7 @@ export class CourseList implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.userRole = localStorage.getItem('userRole') || '';
     this.loadCourses();
 
     this.refreshSubscription = interval(5000).subscribe(() => {
@@ -48,11 +50,11 @@ export class CourseList implements OnInit, OnDestroy {
 
     if (role === 'ADMIN') {
       this.apiService.getCourses().subscribe({
-        next: data => {
+        next: (data: any[]) => {
           this.courses = data;
           this.loading = false;
         },
-        error: error => {
+        error: (error: any) => {
           console.error(error);
           this.errorMessage = 'Erreur chargement courses admin';
           this.loading = false;
@@ -63,7 +65,7 @@ export class CourseList implements OnInit, OnDestroy {
 
     if (role === 'PASSAGER' && email) {
       this.apiService.getAllPassagers().subscribe({
-        next: passagers => {
+        next: (passagers: any[]) => {
           const passager = passagers.find((p: any) => p.email === email);
 
           if (!passager) {
@@ -73,18 +75,18 @@ export class CourseList implements OnInit, OnDestroy {
           }
 
           this.apiService.getCoursesByPassager(passager.id).subscribe({
-            next: data => {
+            next: (data: any[]) => {
               this.courses = data;
               this.loading = false;
             },
-            error: error => {
+            error: (error: any) => {
               console.error(error);
               this.errorMessage = 'Erreur chargement courses passager';
               this.loading = false;
             }
           });
         },
-        error: error => {
+        error: (error: any) => {
           console.error(error);
           this.errorMessage = 'Erreur récupération profil passager';
           this.loading = false;
@@ -94,31 +96,18 @@ export class CourseList implements OnInit, OnDestroy {
     }
 
     if (role === 'CHAUFFEUR' && email) {
-      this.apiService.getAllChauffeurs().subscribe({
-        next: chauffeurs => {
-          const chauffeur = chauffeurs.find((c: any) => c.email === email);
-
-          if (!chauffeur) {
-            this.courses = [];
-            this.loading = false;
-            return;
-          }
-
-          this.apiService.getCoursesByChauffeur(chauffeur.id).subscribe({
-            next: data => {
-              this.courses = data;
-              this.loading = false;
-            },
-            error: error => {
-              console.error(error);
-              this.errorMessage = 'Erreur chargement courses chauffeur';
-              this.loading = false;
-            }
-          });
+      this.apiService.getCourses().subscribe({
+        next: (data: any[]) => {
+          this.courses = data.filter(
+            (course: any) =>
+              course.statut === 'EN_ATTENTE' ||
+              course.statut === 'ACCEPTEE'
+          );
+          this.loading = false;
         },
-        error: error => {
+        error: (error: any) => {
           console.error(error);
-          this.errorMessage = 'Erreur récupération profil chauffeur';
+          this.errorMessage = 'Erreur chargement courses chauffeur';
           this.loading = false;
         }
       });
@@ -127,6 +116,20 @@ export class CourseList implements OnInit, OnDestroy {
 
     this.courses = [];
     this.loading = false;
+  }
+
+  acceptCourse(courseId: number): void {
+    this.apiService.updateCourseStatus(courseId, 'ACCEPTEE').subscribe({
+      next: () => this.loadCourses(),
+      error: (error: any) => console.error(error)
+    });
+  }
+
+  finishCourse(courseId: number): void {
+    this.apiService.updateCourseStatus(courseId, 'TERMINEE').subscribe({
+      next: () => this.loadCourses(),
+      error: (error: any) => console.error(error)
+    });
   }
 
   goToDashboard(): void {

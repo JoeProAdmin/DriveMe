@@ -165,4 +165,14 @@ export class ApiService {
       formData
     );
   }
+  public updateCourseStatus(
+    courseId: number,
+    status: string
+  ): Observable<any> {
+
+    return this.http.put(
+      `${this.baseUrl}/courses/${courseId}/status?status=${status}`,
+      {}
+    );
+  }
 }

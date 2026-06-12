@@ -160,3 +160,28 @@
   }
 
 }
+.course-tracking {
+  margin-top: 15px;
+  padding: 12px;
+  background: #F8FAFC;
+  border-radius: 12px;
+}
+
+.tracking-step {
+  margin-bottom: 8px;
+  padding: 10px;
+  border-radius: 8px;
+  background: #E5E7EB;
+  color: #666;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.tracking-step:last-child {
+  margin-bottom: 0;
+}
+
+.tracking-step.completed {
+  background: #00C853;
+  color: #FFFFFF;
+}

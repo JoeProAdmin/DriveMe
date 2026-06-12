@@ -75,11 +75,25 @@
             Terminer la course
           </button>
 
-          <button
-            *ngIf="userRole === 'PASSAGER'"
-            class="details-btn">
-            Voir le suivi
-          </button>
+          <div *ngIf="userRole === 'PASSAGER'" class="course-tracking">
+
+            <div class="tracking-step completed">
+              Demande envoyée
+            </div>
+
+            <div
+              class="tracking-step"
+              [class.completed]="course.statut === 'ACCEPTEE' || course.statut === 'TERMINEE'">
+              Chauffeur accepté
+            </div>
+
+            <div
+              class="tracking-step"
+              [class.completed]="course.statut === 'TERMINEE'">
+              Course terminée
+            </div>
+
+          </div>
 
         </div>
 

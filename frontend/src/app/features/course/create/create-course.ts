@@ -81,12 +81,14 @@ export class CreateCourse implements OnInit, OnDestroy {
 
     navigator.geolocation.getCurrentPosition(
       (position: GeolocationPosition) => {
+
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
 
         this.formModel.adresseDepart = 'Ma position actuelle';
 
         if (this.map && this.L) {
+
           this.map.setView([latitude, longitude], 14);
 
           this.L.circleMarker([latitude, longitude], {
@@ -94,7 +96,10 @@ export class CreateCourse implements OnInit, OnDestroy {
             color: '#0f172a',
             fillColor: '#0288D1',
             fillOpacity: 1
-          }).addTo(this.map).bindPopup('Votre position actuelle').openPopup();
+          })
+            .addTo(this.map)
+            .bindPopup('Votre position actuelle')
+            .openPopup();
         }
 
         this.locating = false;
@@ -107,30 +112,45 @@ export class CreateCourse implements OnInit, OnDestroy {
   }
 
   public onFindDriver(): void {
+
     this.errorMessage = '';
     this.successMessage = '';
 
-    if (!this.formModel.adresseDepart || !this.formModel.adresseArrivee || !this.formModel.prix) {
-      this.errorMessage = 'Veuillez compléter le départ, la destination et le prix proposé.';
+    if (
+      !this.formModel.adresseDepart ||
+      !this.formModel.adresseArrivee ||
+      !this.formModel.prix
+    ) {
+      this.errorMessage =
+        'Veuillez compléter le départ, la destination et le prix proposé.';
       return;
     }
 
     const email = localStorage.getItem('userEmail');
 
     if (!email) {
-      this.errorMessage = 'Session utilisateur introuvable. Veuillez vous reconnecter.';
+      this.errorMessage =
+        'Session utilisateur introuvable. Veuillez vous reconnecter.';
       return;
     }
 
     this.loading = true;
 
     this.api.getAllPassagers().subscribe({
+
       next: (passagers: any[]) => {
-        const passager = passagers.find((p: any) => p.email === email);
+
+        const passager = passagers.find(
+          (p: any) => p.email === email
+        );
 
         if (!passager) {
+
           this.loading = false;
-          this.errorMessage = 'Profil passager introuvable pour cet utilisateur.';
+
+          this.errorMessage =
+            'Profil passager introuvable pour cet utilisateur.';
+
           return;
         }
 
@@ -144,14 +164,14 @@ export class CreateCourse implements OnInit, OnDestroy {
 
         console.log('PAYLOAD ENVOYE :', payload);
 
-        console.log('PAYLOAD ENVOYE :', payload);
-
         this.api.requestCourse(payload).subscribe({
+
           next: () => {
 
             this.loading = false;
 
-            this.successMessage = 'Course créée avec succès.';
+            this.successMessage =
+              'Course créée avec succès.';
 
             console.log('COURSE CREEE');
 
@@ -160,7 +180,10 @@ export class CreateCourse implements OnInit, OnDestroy {
 
           error: (error: any) => {
 
-            console.error('Erreur création course :', error);
+            console.error(
+              'Erreur création course :',
+              error
+            );
 
             this.loading = false;
 
@@ -168,24 +191,19 @@ export class CreateCourse implements OnInit, OnDestroy {
               'Erreur lors de la création de la course.';
           }
         });
-
-        this.api.requestCourse(payload).subscribe({
-          next: () => {
-            this.loading = false;
-            this.successMessage = 'Course créée avec succès.';
-            this.router.navigate(['/courses']);
-          },
-          error: (error: any) => {
-            console.error('Erreur création course :', error);
-            this.loading = false;
-            this.errorMessage = 'Erreur lors de la création de la course.';
-          }
-        });
       },
+
       error: (error: any) => {
-        console.error('Erreur récupération passagers :', error);
+
+        console.error(
+          'Erreur récupération passagers :',
+          error
+        );
+
         this.loading = false;
-        this.errorMessage = 'Impossible de récupérer le profil passager.';
+
+        this.errorMessage =
+          'Impossible de récupérer le profil passager.';
       }
     });
   }

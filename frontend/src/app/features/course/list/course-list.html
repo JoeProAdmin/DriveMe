@@ -81,22 +81,27 @@
 
         <p>
           <strong>Départ</strong><br>
-          {{ course.depart || 'Non renseigné' }}
+          {{ course.adresseDepart }}
         </p>
 
         <p>
           <strong>Destination</strong><br>
-          {{ course.destination || 'Non renseignée' }}
+          {{ course.adresseArrivee }}
         </p>
 
         <p>
           <strong>Passager</strong><br>
-          {{ course.passagerId }}
+          {{ course.passagerNom }}
         </p>
 
         <p>
           <strong>Chauffeur</strong><br>
-          {{ course.chauffeurId }}
+          {{ course.chauffeurNom }}
+        </p>
+
+        <p>
+          <strong>Prix</strong><br>
+          {{ course.prix }} MAD
         </p>
 
       </div>

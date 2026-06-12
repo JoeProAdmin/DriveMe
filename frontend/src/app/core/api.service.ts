@@ -80,6 +80,13 @@ export class ApiService {
     );
   }
 
+  public getAllPassagers(): Observable<any[]> {
+
+    return this.http.get<any[]>(
+      `${this.baseUrl}/passagers`
+    );
+  }
+
   public validerChauffeur(
     id: number,
     statut: number

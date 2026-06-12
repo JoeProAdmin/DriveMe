@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { Subscription, interval } from 'rxjs';
 import { ApiService } from '../../../core/api.service';
 
 @Component({
@@ -10,11 +11,13 @@ import { ApiService } from '../../../core/api.service';
   templateUrl: './course-list.html',
   styleUrls: ['./course-list.css']
 })
-export class CourseList implements OnInit {
+export class CourseList implements OnInit, OnDestroy {
 
   courses: any[] = [];
   loading = false;
   errorMessage = '';
+
+  private refreshSubscription?: Subscription;
 
   constructor(
     private apiService: ApiService,
@@ -23,75 +26,106 @@ export class CourseList implements OnInit {
 
   ngOnInit(): void {
     this.loadCourses();
+
+    this.refreshSubscription = interval(5000).subscribe(() => {
+      this.loadCourses(false);
+    });
   }
 
-  loadCourses(): void {
+  ngOnDestroy(): void {
+    this.refreshSubscription?.unsubscribe();
+  }
 
-    this.loading = true;
+  loadCourses(showLoading: boolean = true): void {
+    if (showLoading) {
+      this.loading = true;
+    }
+
     this.errorMessage = '';
 
     const role = localStorage.getItem('userRole');
+    const email = localStorage.getItem('userEmail');
 
-    /*
-     * ADMIN
-     */
     if (role === 'ADMIN') {
-
       this.apiService.getCourses().subscribe({
-        next: (data: any[]) => {
+        next: data => {
           this.courses = data;
           this.loading = false;
         },
-        error: (error: any) => {
+        error: error => {
           console.error(error);
-          this.errorMessage = 'Erreur chargement courses';
+          this.errorMessage = 'Erreur chargement courses admin';
           this.loading = false;
         }
       });
-
       return;
     }
 
-    /*
-     * PASSAGER
-     */
-    if (role === 'PASSAGER') {
+    if (role === 'PASSAGER' && email) {
+      this.apiService.getAllPassagers().subscribe({
+        next: passagers => {
+          const passager = passagers.find((p: any) => p.email === email);
 
-      this.apiService.getCoursesByPassager(1).subscribe({
-        next: (data: any[]) => {
-          this.courses = data;
-          this.loading = false;
+          if (!passager) {
+            this.courses = [];
+            this.loading = false;
+            return;
+          }
+
+          this.apiService.getCoursesByPassager(passager.id).subscribe({
+            next: data => {
+              this.courses = data;
+              this.loading = false;
+            },
+            error: error => {
+              console.error(error);
+              this.errorMessage = 'Erreur chargement courses passager';
+              this.loading = false;
+            }
+          });
         },
-        error: (error: any) => {
+        error: error => {
           console.error(error);
-          this.errorMessage = 'Erreur chargement courses passager';
+          this.errorMessage = 'Erreur récupération profil passager';
           this.loading = false;
         }
       });
-
       return;
     }
 
-    /*
-     * CHAUFFEUR
-     */
-    if (role === 'CHAUFFEUR') {
+    if (role === 'CHAUFFEUR' && email) {
+      this.apiService.getAllChauffeurs().subscribe({
+        next: chauffeurs => {
+          const chauffeur = chauffeurs.find((c: any) => c.email === email);
 
-      this.apiService.getCoursesByChauffeur(1).subscribe({
-        next: (data: any[]) => {
-          this.courses = data;
-          this.loading = false;
+          if (!chauffeur) {
+            this.courses = [];
+            this.loading = false;
+            return;
+          }
+
+          this.apiService.getCoursesByChauffeur(chauffeur.id).subscribe({
+            next: data => {
+              this.courses = data;
+              this.loading = false;
+            },
+            error: error => {
+              console.error(error);
+              this.errorMessage = 'Erreur chargement courses chauffeur';
+              this.loading = false;
+            }
+          });
         },
-        error: (error: any) => {
+        error: error => {
           console.error(error);
-          this.errorMessage = 'Erreur chargement courses chauffeur';
+          this.errorMessage = 'Erreur récupération profil chauffeur';
           this.loading = false;
         }
       });
-
       return;
     }
 
+    this.courses = [];
     this.loading = false;
   }
 

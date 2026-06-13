@@ -81,7 +81,16 @@ export class SidebarComponent {
     return localStorage.getItem('userEmail') || 'Utilisateur DriveMe';
   }
 
+  goToProfile(): void {
+    this.router.navigate(['/profile']);
+  }
+
+  goToSOS(): void {
+    this.router.navigate(['/sos']);
+  }
+
   logout(): void {
+
     localStorage.removeItem('token');
     localStorage.removeItem('userRole');
     localStorage.removeItem('userId');

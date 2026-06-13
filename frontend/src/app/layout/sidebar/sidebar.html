@@ -9,62 +9,77 @@
   </div>
 
   <div class="i18n-selector-container">
-    <select (change)="onLanguageChange($event)" [value]="apiService.currentLanguage()">
+    <select
+      (change)="onLanguageChange($event)"
+      [value]="apiService.currentLanguage()">
+
       <option value="fr">Français (FR)</option>
       <option value="en">English (EN)</option>
       <option value="ar">العربية (AR)</option>
       <option value="es">Español (ES)</option>
+
     </select>
   </div>
 
   <nav class="sidebar-nav-links">
 
-    <a class="nav-link-item"
-       routerLink="/dashboard"
-       routerLinkActive="active">
+    <a
+      class="nav-link-item"
+      routerLink="/dashboard"
+      routerLinkActive="active">
+
       <span>{{ labels[currentLang].overview }}</span>
+
     </a>
 
-    <!-- ADMIN UNIQUEMENT -->
+    <a
+      *ngIf="userRole === 'ADMIN'"
+      class="nav-link-item"
+      routerLink="/chauffeurs"
+      routerLinkActive="active">
 
-    <a *ngIf="userRole === 'ADMIN'"
-       class="nav-link-item"
-       routerLink="/chauffeurs"
-       routerLinkActive="active">
       <span>{{ labels[currentLang].drivers }}</span>
+
     </a>
 
-    <a *ngIf="userRole === 'ADMIN'"
-       class="nav-link-item"
-       routerLink="/passagers"
-       routerLinkActive="active">
+    <a
+      *ngIf="userRole === 'ADMIN'"
+      class="nav-link-item"
+      routerLink="/passagers"
+      routerLinkActive="active">
+
       <span>{{ labels[currentLang].passengers }}</span>
+
     </a>
 
-    <!-- ADMIN + CHAUFFEUR -->
+    <a
+      *ngIf="userRole === 'ADMIN' || userRole === 'CHAUFFEUR'"
+      class="nav-link-item"
+      routerLink="/courses"
+      routerLinkActive="active">
 
-    <a *ngIf="userRole === 'ADMIN' || userRole === 'CHAUFFEUR'"
-       class="nav-link-item"
-       routerLink="/courses"
-       routerLinkActive="active">
       <span>{{ labels[currentLang].trips }}</span>
+
     </a>
 
-    <!-- ADMIN + CHAUFFEUR -->
+    <a
+      *ngIf="userRole === 'ADMIN' || userRole === 'CHAUFFEUR'"
+      class="nav-link-item"
+      routerLink="/paiements"
+      routerLinkActive="active">
 
-    <a *ngIf="userRole === 'ADMIN' || userRole === 'CHAUFFEUR'"
-       class="nav-link-item"
-       routerLink="/paiements"
-       routerLinkActive="active">
       <span>{{ labels[currentLang].payments }}</span>
+
     </a>
 
-    <!-- PASSAGER -->
+    <a
+      *ngIf="userRole === 'PASSAGER'"
+      class="nav-link-item"
+      routerLink="/courses"
+      routerLinkActive="active">
 
-    <a *ngIf="userRole === 'PASSAGER'"
-       class="nav-link-item"
-       routerLink="/courses">
       <span>{{ labels[currentLang].trips }}</span>
+
     </a>
 
   </nav>
@@ -84,16 +99,28 @@
 
     </div>
 
-    <button class="btn-profile">
+    <button
+      class="btn-profile"
+      (click)="goToProfile()">
+
       {{ labels[currentLang].profile }}
+
     </button>
 
-    <button class="btn-logout" (click)="logout()">
+    <button
+      class="btn-logout"
+      (click)="logout()">
+
       {{ labels[currentLang].logout }}
+
     </button>
 
-    <button class="btn-sos">
+    <button
+      class="btn-sos"
+      (click)="goToSOS()">
+
       {{ labels[currentLang].emergency }}
+
     </button>
 
   </div>

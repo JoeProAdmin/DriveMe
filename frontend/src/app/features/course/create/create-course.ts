@@ -35,6 +35,7 @@ export class CreateCourse implements OnInit, OnDestroy {
   }
 
   private initMap(): void {
+
     if (typeof window === 'undefined') {
       return;
     }
@@ -42,14 +43,15 @@ export class CreateCourse implements OnInit, OnDestroy {
     this.L = (window as any).L;
 
     if (!this.L) {
-      console.warn('Leaflet non chargé. Affichage carte simulée uniquement.');
+      console.warn('Leaflet non chargé.');
       return;
     }
 
-    const mapElement = document.getElementById('driveme-live-map');
+    const mapElement =
+      document.getElementById('driveme-live-map');
 
     if (!mapElement) {
-      console.error('Élément carte introuvable : driveme-live-map');
+      console.error('Carte introuvable.');
       return;
     }
 
@@ -57,46 +59,63 @@ export class CreateCourse implements OnInit, OnDestroy {
       zoomControl: false
     }).setView([31.6295, -7.9811], 12);
 
-    this.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: 'OpenStreetMap'
-    }).addTo(this.map);
+    this.L.tileLayer(
+      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      {
+        attribution: 'OpenStreetMap'
+      }
+    ).addTo(this.map);
 
     this.L.circleMarker([31.6295, -7.9811], {
       radius: 9,
       color: '#0f172a',
       fillColor: '#00C853',
       fillOpacity: 1
-    }).addTo(this.map).bindPopup('Marrakech - zone DriveMe');
+    })
+      .addTo(this.map)
+      .bindPopup('Marrakech - zone DriveMe');
   }
 
   public useMyLocation(): void {
+
     this.locating = true;
     this.errorMessage = '';
 
     if (!navigator.geolocation) {
-      this.errorMessage = 'La géolocalisation n’est pas disponible sur ce navigateur.';
+
+      this.errorMessage =
+        'La géolocalisation n’est pas disponible sur ce navigateur.';
+
       this.locating = false;
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
+
       (position: GeolocationPosition) => {
 
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
 
-        this.formModel.adresseDepart = 'Ma position actuelle';
+        this.formModel.adresseDepart =
+          'Ma position actuelle';
 
         if (this.map && this.L) {
 
-          this.map.setView([latitude, longitude], 14);
+          this.map.setView(
+            [latitude, longitude],
+            14
+          );
 
-          this.L.circleMarker([latitude, longitude], {
-            radius: 10,
-            color: '#0f172a',
-            fillColor: '#0288D1',
-            fillOpacity: 1
-          })
+          this.L.circleMarker(
+            [latitude, longitude],
+            {
+              radius: 10,
+              color: '#0f172a',
+              fillColor: '#0288D1',
+              fillOpacity: 1
+            }
+          )
             .addTo(this.map)
             .bindPopup('Votre position actuelle')
             .openPopup();
@@ -104,8 +123,12 @@ export class CreateCourse implements OnInit, OnDestroy {
 
         this.locating = false;
       },
+
       () => {
-        this.errorMessage = 'Autorisation de localisation refusée.';
+
+        this.errorMessage =
+          'Autorisation de localisation refusée.';
+
         this.locating = false;
       }
     );
@@ -121,16 +144,21 @@ export class CreateCourse implements OnInit, OnDestroy {
       !this.formModel.adresseArrivee ||
       !this.formModel.prix
     ) {
+
       this.errorMessage =
         'Veuillez compléter le départ, la destination et le prix proposé.';
+
       return;
     }
 
-    const email = localStorage.getItem('userEmail');
+    const email =
+      localStorage.getItem('userEmail');
 
     if (!email) {
+
       this.errorMessage =
-        'Session utilisateur introuvable. Veuillez vous reconnecter.';
+        'Session utilisateur introuvable.';
+
       return;
     }
 
@@ -149,20 +177,29 @@ export class CreateCourse implements OnInit, OnDestroy {
           this.loading = false;
 
           this.errorMessage =
-            'Profil passager introuvable pour cet utilisateur.';
+            'Profil passager introuvable.';
 
           return;
         }
 
         const payload = {
+
           passagerId: passager.id,
-          chauffeurId: 1,
-          adresseDepart: this.formModel.adresseDepart.trim(),
-          adresseArrivee: this.formModel.adresseArrivee.trim(),
-          prix: this.formModel.prix
+
+          adresseDepart:
+            this.formModel.adresseDepart.trim(),
+
+          adresseArrivee:
+            this.formModel.adresseArrivee.trim(),
+
+          prix:
+          this.formModel.prix
         };
 
-        console.log('PAYLOAD ENVOYE :', payload);
+        console.log(
+          'PAYLOAD ENVOYE :',
+          payload
+        );
 
         this.api.requestCourse(payload).subscribe({
 
@@ -173,9 +210,9 @@ export class CreateCourse implements OnInit, OnDestroy {
             this.successMessage =
               'Course créée avec succès.';
 
-            console.log('COURSE CREEE');
-
-            this.router.navigate(['/courses']);
+            this.router.navigate(
+              ['/courses']
+            );
           },
 
           error: (error: any) => {
@@ -213,6 +250,7 @@ export class CreateCourse implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+
     if (this.map) {
       this.map.remove();
     }

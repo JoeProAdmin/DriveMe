@@ -47,51 +47,33 @@ export class ApiService {
     this.isRtlMode.set(lang === 'ar');
   }
 
-  public login(credentials: {
-    email: string;
-    motDePasse: string;
-  }): Observable<any> {
-
-    return this.http.post(
-      `${this.baseUrl}/auth/login`,
-      credentials
-    );
+  public login(credentials: { email: string; motDePasse: string }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/login`, credentials);
   }
 
   public registerUser(data: any): Observable<any> {
-
-    return this.http.post(
-      `${this.baseUrl}/auth/register`,
-      data
-    );
+    return this.http.post(`${this.baseUrl}/auth/register`, data);
   }
 
   public getAdminStats(): Observable<AdminStats> {
-
-    return this.http.get<AdminStats>(
-      `${this.baseUrl}/admin/stats`
-    );
+    return this.http.get<AdminStats>(`${this.baseUrl}/admin/stats`);
   }
 
   public getAllChauffeurs(): Observable<ChauffeurResponseDTO[]> {
+    return this.http.get<ChauffeurResponseDTO[]>(`${this.baseUrl}/chauffeurs`);
+  }
 
-    return this.http.get<ChauffeurResponseDTO[]>(
-      `${this.baseUrl}/chauffeurs`
+  public getChauffeurByEmail(email: string): Observable<ChauffeurResponseDTO> {
+    return this.http.get<ChauffeurResponseDTO>(
+      `${this.baseUrl}/chauffeurs/email/${encodeURIComponent(email)}`
     );
   }
 
   public getAllPassagers(): Observable<any[]> {
-
-    return this.http.get<any[]>(
-      `${this.baseUrl}/passagers`
-    );
+    return this.http.get<any[]>(`${this.baseUrl}/passagers`);
   }
 
-  public validerChauffeur(
-    id: number,
-    statut: number
-  ): Observable<void> {
-
+  public validerChauffeur(id: number, statut: number): Observable<void> {
     return this.http.put<void>(
       `${this.baseUrl}/chauffeurs/${id}/validation?statut=${statut}`,
       {}
@@ -99,80 +81,40 @@ export class ApiService {
   }
 
   public rejeter(id: number): Observable<void> {
-
     return this.validerChauffeur(id, 2);
   }
 
   public getCourses(): Observable<any[]> {
-
-    return this.http.get<any[]>(
-      `${this.baseUrl}/courses`
-    );
+    return this.http.get<any[]>(`${this.baseUrl}/courses`);
   }
 
-  public getCoursesByPassager(
-    passagerId: number
-  ): Observable<any[]> {
-
-    return this.http.get<any[]>(
-      `${this.baseUrl}/courses/passager/${passagerId}`
-    );
+  public getCoursesByPassager(passagerId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/courses/passager/${passagerId}`);
   }
 
-  public getCoursesByChauffeur(
-    chauffeurId: number
-  ): Observable<any[]> {
-
-    return this.http.get<any[]>(
-      `${this.baseUrl}/courses/chauffeur/${chauffeurId}`
-    );
+  public getCoursesByChauffeur(chauffeurId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/courses/chauffeur/${chauffeurId}`);
   }
 
-  public requestCourse(
-    courseData: any
-  ): Observable<any> {
-
-    return this.http.post(
-      `${this.baseUrl}/courses`,
-      courseData
-    );
+  public requestCourse(courseData: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/courses`, courseData);
   }
 
-  public soumettreAvis(
-    avis: AvisDTO
-  ): Observable<void> {
-
-    return this.http.post<void>(
-      `${this.baseUrl}/avis`,
-      avis
-    );
-  }
-
-  public uploadSelfieVerification(
-    id: number,
-    file: File
-  ): Observable<any> {
-
-    const formData = new FormData();
-
-    formData.append(
-      'file',
-      file
-    );
-
-    return this.http.post(
-      `${this.baseUrl}/chauffeurs/${id}/selfie`,
-      formData
-    );
-  }
-  public updateCourseStatus(
-    courseId: number,
-    status: string
-  ): Observable<any> {
-
+  public updateCourseStatus(courseId: number, status: string): Observable<any> {
     return this.http.put(
       `${this.baseUrl}/courses/${courseId}/status?status=${status}`,
       {}
     );
+  }
+
+  public soumettreAvis(avis: AvisDTO): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/avis`, avis);
+  }
+
+  public uploadSelfieVerification(id: number, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post(`${this.baseUrl}/chauffeurs/${id}/selfie`, formData);
   }
 }

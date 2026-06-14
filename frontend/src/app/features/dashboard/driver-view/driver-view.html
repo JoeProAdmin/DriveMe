@@ -11,7 +11,7 @@
       </h1>
 
       <p>
-        Gérez vos courses, vos crédits DriveMe, votre note et votre activité chauffeur.
+        Gérez vos courses, vos revenus, vos crédits DriveMe et votre réputation.
       </p>
     </div>
 
@@ -29,8 +29,18 @@
     </div>
 
     <div class="stat-card">
-      <span>En cours</span>
+      <span>Courses En Cours</span>
       <strong>{{ stats.coursesEnCours }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>Courses Terminées</span>
+      <strong>{{ stats.coursesTerminees }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>Revenus Estimés</span>
+      <strong>{{ stats.revenus }} MAD</strong>
     </div>
 
     <div class="stat-card">
@@ -48,31 +58,61 @@
   <div class="action-grid">
 
     <div class="action-card">
+
       <h2>Courses disponibles</h2>
+
       <p>
-        Consultez les demandes de trajets proches de vous et acceptez les courses selon votre disponibilité.
+        Consultez les demandes de trajets proches de vous et acceptez les nouvelles courses.
       </p>
+
+      <strong>
+        {{ stats.coursesEnCours }}
+        course(s) active(s)
+      </strong>
+
     </div>
 
     <div class="action-card">
+
       <h2>Mes trajets</h2>
+
       <p>
         Gérez vos courses acceptées, en cours et terminées.
       </p>
+
+      <strong>
+        {{ stats.coursesTotal }}
+        trajet(s)
+      </strong>
+
     </div>
 
     <div class="action-card">
+
       <h2>Mes revenus</h2>
+
       <p>
-        Consultez vos revenus estimés, vos paiements et la logique de facturation DriveMe.
+        Revenus calculés automatiquement à partir des courses terminées.
       </p>
+
+      <strong>
+        {{ stats.revenus }} MAD
+      </strong>
+
     </div>
 
     <div class="action-card">
-      <h2>Réputation chauffeur</h2>
+
+      <h2>Réputation Chauffeur</h2>
+
       <p>
-        Votre note moyenne est calculée automatiquement à partir des avis passagers validés après les courses.
+        Votre réputation est calculée à partir des avis passagers.
       </p>
+
+      <strong>
+        {{ stats.note }}/5
+      </strong>
+
     </div>
 
   </div>

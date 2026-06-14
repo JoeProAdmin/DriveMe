@@ -49,68 +49,17 @@ export class CourseList implements OnInit, OnDestroy {
     const email = localStorage.getItem('userEmail');
 
     if (role === 'ADMIN') {
-      this.apiService.getCourses().subscribe({
-        next: (data: any[]) => {
-          this.courses = data;
-          this.loading = false;
-        },
-        error: (error: any) => {
-          console.error(error);
-          this.errorMessage = 'Erreur chargement courses admin';
-          this.loading = false;
-        }
-      });
+      this.loadAdminCourses();
       return;
     }
 
     if (role === 'PASSAGER' && email) {
-      this.apiService.getAllPassagers().subscribe({
-        next: (passagers: any[]) => {
-          const passager = passagers.find((p: any) => p.email === email);
-
-          if (!passager) {
-            this.courses = [];
-            this.loading = false;
-            return;
-          }
-
-          this.apiService.getCoursesByPassager(passager.id).subscribe({
-            next: (data: any[]) => {
-              this.courses = data;
-              this.loading = false;
-            },
-            error: (error: any) => {
-              console.error(error);
-              this.errorMessage = 'Erreur chargement courses passager';
-              this.loading = false;
-            }
-          });
-        },
-        error: (error: any) => {
-          console.error(error);
-          this.errorMessage = 'Erreur récupération profil passager';
-          this.loading = false;
-        }
-      });
+      this.loadPassengerCourses(email);
       return;
     }
 
     if (role === 'CHAUFFEUR' && email) {
-      this.apiService.getCourses().subscribe({
-        next: (data: any[]) => {
-          this.courses = data.filter(
-            (course: any) =>
-              course.statut === 'EN_ATTENTE' ||
-              course.statut === 'ACCEPTEE'
-          );
-          this.loading = false;
-        },
-        error: (error: any) => {
-          console.error(error);
-          this.errorMessage = 'Erreur chargement courses chauffeur';
-          this.loading = false;
-        }
-      });
+      this.loadDriverCourses();
       return;
     }
 
@@ -118,17 +67,92 @@ export class CourseList implements OnInit, OnDestroy {
     this.loading = false;
   }
 
+  private loadAdminCourses(): void {
+    this.apiService.getCourses().subscribe({
+      next: (data: any[]) => {
+        this.courses = data;
+        this.loading = false;
+      },
+      error: (error: any) => {
+        console.error(error);
+        this.errorMessage = 'Erreur chargement courses admin';
+        this.loading = false;
+      }
+    });
+  }
+
+  private loadPassengerCourses(email: string): void {
+    this.apiService.getAllPassagers().subscribe({
+      next: (passagers: any[]) => {
+        const passager = passagers.find(
+          (p: any) => p.email === email
+        );
+
+        if (!passager) {
+          this.courses = [];
+          this.loading = false;
+          return;
+        }
+
+        this.apiService.getCoursesByPassager(passager.id).subscribe({
+          next: (data: any[]) => {
+            this.courses = data;
+            this.loading = false;
+          },
+          error: (error: any) => {
+            console.error(error);
+            this.errorMessage = 'Erreur chargement courses passager';
+            this.loading = false;
+          }
+        });
+      },
+      error: (error: any) => {
+        console.error(error);
+        this.errorMessage = 'Erreur récupération profil passager';
+        this.loading = false;
+      }
+    });
+  }
+
+  private loadDriverCourses(): void {
+    this.apiService.getCourses().subscribe({
+      next: (data: any[]) => {
+        this.courses = data.filter(
+          (course: any) =>
+            course.statut === 'EN_ATTENTE' ||
+            course.statut === 'ACCEPTEE'
+        );
+        this.loading = false;
+      },
+      error: (error: any) => {
+        console.error(error);
+        this.errorMessage = 'Erreur chargement courses chauffeur';
+        this.loading = false;
+      }
+    });
+  }
+
   acceptCourse(courseId: number): void {
     this.apiService.updateCourseStatus(courseId, 'ACCEPTEE').subscribe({
-      next: () => this.loadCourses(),
-      error: (error: any) => console.error(error)
+      next: () => {
+        this.loadCourses(true);
+      },
+      error: (error: any) => {
+        console.error(error);
+        this.errorMessage = 'Erreur acceptation course';
+      }
     });
   }
 
   finishCourse(courseId: number): void {
     this.apiService.updateCourseStatus(courseId, 'TERMINEE').subscribe({
-      next: () => this.loadCourses(),
-      error: (error: any) => console.error(error)
+      next: () => {
+        this.loadCourses(true);
+      },
+      error: (error: any) => {
+        console.error(error);
+        this.errorMessage = 'Erreur terminaison course';
+      }
     });
   }
 

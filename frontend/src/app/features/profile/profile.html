@@ -1,25 +1,74 @@
-<div class="page-container">
+<div class="profile-container">
 
-  <h1>Mon Profil</h1>
+  <div class="profile-header">
+    <div class="profile-avatar">
+      {{ userRole.charAt(0) }}
+    </div>
 
-  <div class="profile-card">
+    <div>
+      <h1>Mon Profil</h1>
+      <p>Informations personnelles DriveMe</p>
+    </div>
+  </div>
 
-    <h3>Informations utilisateur</h3>
+  <div class="profile-grid">
 
-    <p>
-      <strong>Email :</strong>
-      {{ userEmail }}
-    </p>
+    <div class="profile-card">
+      <h2>Compte utilisateur</h2>
 
-    <p>
-      <strong>Rôle :</strong>
-      {{ userRole }}
-    </p>
+      <div class="info-row">
+        <span>Email</span>
+        <strong>{{ userEmail }}</strong>
+      </div>
 
-    <p>
-      <strong>Plateforme :</strong>
-      DriveMe Production
-    </p>
+      <div class="info-row">
+        <span>Rôle</span>
+        <strong>{{ userRole }}</strong>
+      </div>
+
+      <div class="info-row">
+        <span>Statut</span>
+        <strong class="success">Validé</strong>
+      </div>
+
+      <div class="info-row">
+        <span>Plateforme</span>
+        <strong>DriveMe Production</strong>
+      </div>
+    </div>
+
+    <div class="profile-card" *ngIf="userRole === 'CHAUFFEUR'">
+      <h2>Espace Chauffeur</h2>
+
+      <div class="metric-box">
+        <span>Note moyenne</span>
+        <strong>{{ noteMoyenne }}/5</strong>
+      </div>
+
+      <div class="metric-box">
+        <span>Crédits DriveMe</span>
+        <strong class="success">{{ soldeCredit }} MAD</strong>
+      </div>
+    </div>
+
+    <div class="profile-card">
+      <h2>Sécurité</h2>
+
+      <div class="info-row">
+        <span>Authentification</span>
+        <strong>JWT active</strong>
+      </div>
+
+      <div class="info-row">
+        <span>Connexion</span>
+        <strong>Sécurisée</strong>
+      </div>
+
+      <div class="info-row">
+        <span>Dernière activité</span>
+        <strong>{{ today | date:'dd/MM/yyyy HH:mm' }}</strong>
+      </div>
+    </div>
 
   </div>
 

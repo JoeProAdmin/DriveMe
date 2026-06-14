@@ -1,20 +1,124 @@
-<div class="page-container">
+<div class="sos-container">
 
-  <h1>SOS Urgence</h1>
+  <div class="sos-header">
+    <div class="sos-badge">SOS</div>
 
-  <div class="sos-card">
+    <div>
+      <h1>SOS Urgence DriveMe</h1>
+      <p>
+        En cas de danger immédiat, contactez les autorités locales compétentes.
+        DriveMe enregistre l’incident et alerte la plateforme.
+      </p>
+    </div>
+  </div>
 
-    <p>
-      Utilisez ce bouton uniquement en cas d'urgence.
-    </p>
+  <div class="sos-grid">
 
-    <button
-      class="btn-sos"
-      (click)="sendAlert()">
+    <div class="sos-card danger-card">
+      <h2>Services d’urgence au Maroc</h2>
 
-      Envoyer une alerte SOS
+      <p class="warning-text">
+        DriveMe ne remplace pas la police, la gendarmerie ou les services médicaux.
+        En cas de danger réel, contactez immédiatement les secours.
+      </p>
 
-    </button>
+      <div class="emergency-buttons">
+        <button class="emergency-btn" (click)="callPolice()">
+          Police 19
+        </button>
+
+        <button class="emergency-btn" (click)="callGendarmerie()">
+          Gendarmerie 177
+        </button>
+
+        <button class="emergency-btn" (click)="callAmbulance()">
+          Ambulance 15
+        </button>
+      </div>
+    </div>
+
+    <div class="sos-card">
+      <h2>Déclarer un incident à DriveMe</h2>
+
+      <div class="form-group">
+        <label>Utilisateur</label>
+        <div class="readonly-field">
+          {{ userEmail }} — {{ userRole }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Type d’incident</label>
+        <select [(ngModel)]="selectedType">
+          <option *ngFor="let type of emergencyTypes" [value]="type">
+            {{ type }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea
+          [(ngModel)]="description"
+          placeholder="Décrivez brièvement la situation..."
+          rows="4">
+        </textarea>
+      </div>
+
+      <div class="location-box">
+        <div>
+          <strong>Position GPS</strong>
+          <p *ngIf="latitude && longitude">
+            Latitude : {{ latitude }}<br>
+            Longitude : {{ longitude }}
+          </p>
+          <p *ngIf="!latitude || !longitude">
+            Position non encore détectée.
+          </p>
+        </div>
+
+        <button
+          class="secondary-btn"
+          (click)="detectLocation()"
+          [disabled]="locating">
+          {{ locating ? 'Localisation...' : 'Détecter ma position' }}
+        </button>
+      </div>
+
+      <div *ngIf="errorMessage" class="error-box">
+        {{ errorMessage }}
+      </div>
+
+      <button class="main-sos-btn" (click)="sendAlert()">
+        Envoyer l’alerte à DriveMe
+      </button>
+
+      <div *ngIf="alertSent" class="success-box">
+        Incident enregistré localement. La future version production transmettra cette alerte au back-office DriveMe.
+      </div>
+    </div>
+
+    <div class="sos-card">
+      <h2>Historique local des incidents</h2>
+
+      <div *ngIf="incidentHistory.length === 0" class="empty-state">
+        Aucun incident enregistré sur cet appareil.
+      </div>
+
+      <div class="incident-item" *ngFor="let incident of incidentHistory">
+        <div class="incident-top">
+          <strong>{{ incident.type }}</strong>
+          <span>{{ incident.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+
+        <p>{{ incident.description }}</p>
+
+        <small>
+          {{ incident.userEmail }} — {{ incident.userRole }}<br>
+          Statut : {{ incident.status }}
+        </small>
+      </div>
+    </div>
 
   </div>
 

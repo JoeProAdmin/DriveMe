@@ -7,8 +7,7 @@ public class CourseCreateDTO {
 
     @NotNull(message = "Le passagerId est obligatoire")
     private Long passagerId;
-
-    @NotNull(message = "Le chauffeurId est obligatoire")
+    
     private Long chauffeurId;
 
     @NotBlank(message = "L'adresse de départ est obligatoire")

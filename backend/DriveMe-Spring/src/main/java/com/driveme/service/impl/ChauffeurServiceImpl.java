@@ -19,8 +19,10 @@ public class ChauffeurServiceImpl implements ChauffeurService {
     private final ChauffeurRepository chauffeurRepository;
     private final UtilisateurRepository utilisateurRepository;
 
-    public ChauffeurServiceImpl(ChauffeurRepository chauffeurRepository,
-                                UtilisateurRepository utilisateurRepository) {
+    public ChauffeurServiceImpl(
+            ChauffeurRepository chauffeurRepository,
+            UtilisateurRepository utilisateurRepository
+    ) {
         this.chauffeurRepository = chauffeurRepository;
         this.utilisateurRepository = utilisateurRepository;
     }
@@ -40,32 +42,64 @@ public class ChauffeurServiceImpl implements ChauffeurService {
 
     @Override
     public ChauffeurResponseDTO getChauffeurById(Long id) {
+
         Chauffeur chauffeur = chauffeurRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Chauffeur introuvable"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Chauffeur introuvable"));
+
+        return mapToDTO(chauffeur);
+    }
+
+    @Override
+    public ChauffeurResponseDTO getChauffeurByEmail(String email) {
+
+        Chauffeur chauffeur = chauffeurRepository
+                .findByUtilisateurEmail(email)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Chauffeur introuvable : " + email));
 
         return mapToDTO(chauffeur);
     }
 
     @Override
     public ChauffeurResponseDTO createChauffeur(ChauffeurCreateDTO dto) {
-        Utilisateur user = utilisateurRepository.findById(dto.getUtilisateurId())
-                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable"));
+
+        Utilisateur user = utilisateurRepository
+                .findById(dto.getUtilisateurId())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Utilisateur introuvable"));
 
         Chauffeur chauffeur = new Chauffeur();
-        chauffeur.setUtilisateur(user);
-        chauffeur.setStatutValidation(dto.getStatutValidation().byteValue());
 
-        return mapToDTO(chauffeurRepository.save(chauffeur));
+        chauffeur.setUtilisateur(user);
+
+        chauffeur.setStatutValidation(
+                dto.getStatutValidation().byteValue()
+        );
+
+        return mapToDTO(
+                chauffeurRepository.save(chauffeur)
+        );
     }
 
     @Override
-    public ChauffeurResponseDTO updateChauffeur(Long id, ChauffeurCreateDTO dto) {
-        Chauffeur chauffeur = chauffeurRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Chauffeur introuvable"));
+    public ChauffeurResponseDTO updateChauffeur(
+            Long id,
+            ChauffeurCreateDTO dto
+    ) {
 
-        chauffeur.setStatutValidation(dto.getStatutValidation().byteValue());
+        Chauffeur chauffeur = chauffeurRepository
+                .findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Chauffeur introuvable"));
 
-        return mapToDTO(chauffeurRepository.save(chauffeur));
+        chauffeur.setStatutValidation(
+                dto.getStatutValidation().byteValue()
+        );
+
+        return mapToDTO(
+                chauffeurRepository.save(chauffeur)
+        );
     }
 
     @Override
@@ -73,7 +107,10 @@ public class ChauffeurServiceImpl implements ChauffeurService {
         chauffeurRepository.deleteById(id);
     }
 
-    private ChauffeurResponseDTO mapToDTO(Chauffeur chauffeur) {
+    private ChauffeurResponseDTO mapToDTO(
+            Chauffeur chauffeur
+    ) {
+
         return new ChauffeurResponseDTO(
                 chauffeur.getId(),
                 chauffeur.getUtilisateur().getNom(),
@@ -82,7 +119,7 @@ public class ChauffeurServiceImpl implements ChauffeurService {
                 chauffeur.getStatutValidation().intValue(),
                 chauffeur.getNoteMoyenne() != null
                         ? chauffeur.getNoteMoyenne().doubleValue()
-                        : null,
+                        : 0.0,
                 chauffeur.getSoldeCredit() != null
                         ? chauffeur.getSoldeCredit().doubleValue()
                         : 0.0

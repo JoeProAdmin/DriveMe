@@ -16,7 +16,7 @@ public class Course {
     private Passager passager;
 
     @ManyToOne
-    @JoinColumn(name = "chauffeur_id", nullable = false)
+    @JoinColumn(name = "chauffeur_id")
     private Chauffeur chauffeur;
 
     @Column(name = "adresse_depart", nullable = false)

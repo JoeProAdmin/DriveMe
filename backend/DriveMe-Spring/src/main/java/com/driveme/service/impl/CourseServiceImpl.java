@@ -25,10 +25,12 @@ public class CourseServiceImpl implements CourseService {
     private final ChauffeurRepository chauffeurRepository;
     private final PaiementService paiementService;
 
-    public CourseServiceImpl(CourseRepository courseRepository,
-                             PassagerRepository passagerRepository,
-                             ChauffeurRepository chauffeurRepository,
-                             PaiementService paiementService) {
+    public CourseServiceImpl(
+            CourseRepository courseRepository,
+            PassagerRepository passagerRepository,
+            ChauffeurRepository chauffeurRepository,
+            PaiementService paiementService
+    ) {
         this.courseRepository = courseRepository;
         this.passagerRepository = passagerRepository;
         this.chauffeurRepository = chauffeurRepository;
@@ -42,45 +44,75 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseResponseDTO createCourse(CourseCreateDTO dto) {
-        Passager passager = passagerRepository.findById(dto.getPassagerId())
-                .orElseThrow(() -> new ResourceNotFoundException("Passager introuvable"));
 
-        Chauffeur chauffeur = chauffeurRepository.findById(dto.getChauffeurId())
-                .orElseThrow(() -> new ResourceNotFoundException("Chauffeur introuvable"));
+        Passager passager = passagerRepository.findById(dto.getPassagerId())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Passager introuvable"));
 
         Course course = new Course();
+
         course.setPassager(passager);
-        course.setChauffeur(chauffeur);
+
+        if (dto.getChauffeurId() != null) {
+
+            Chauffeur chauffeur = chauffeurRepository
+                    .findById(dto.getChauffeurId())
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException("Chauffeur introuvable"));
+
+            course.setChauffeur(chauffeur);
+        }
+
         course.setAdresseDepart(dto.getAdresseDepart());
         course.setAdresseArrivee(dto.getAdresseArrivee());
         course.setPrix(dto.getPrix());
+
         course.setStatut(CourseStatus.EN_ATTENTE);
 
         Course saved = courseRepository.save(course);
+
         return mapToDTO(saved);
     }
 
     @Override
     public List<CourseResponseDTO> getAllCourses() {
-        return courseRepository.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());
+
+        return courseRepository.findAll()
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<CourseResponseDTO> getCoursesByChauffeur(Long chauffeurId) {
-        return courseRepository.findByChauffeurId(chauffeurId).stream().map(this::mapToDTO).collect(Collectors.toList());
+
+        return courseRepository.findByChauffeurId(chauffeurId)
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<CourseResponseDTO> getCoursesByPassager(Long passagerId) {
-        return courseRepository.findByPassagerId(passagerId).stream().map(this::mapToDTO).collect(Collectors.toList());
+
+        return courseRepository.findByPassagerId(passagerId)
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     public CourseResponseDTO updateStatus(Long id, String status) {
-        Course course = courseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Course introuvable"));
-        CourseStatus newStatus = CourseStatus.valueOf(status.toUpperCase());
+
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Course introuvable"));
+
+        CourseStatus newStatus =
+                CourseStatus.valueOf(status.toUpperCase());
 
         course.setStatut(newStatus);
+
         Course updated = courseRepository.save(course);
 
         if (newStatus == CourseStatus.TERMINEE) {
@@ -91,10 +123,21 @@ public class CourseServiceImpl implements CourseService {
     }
 
     private CourseResponseDTO mapToDTO(Course course) {
+
+        String chauffeurNom = null;
+
+        if (course.getChauffeur() != null) {
+
+            chauffeurNom =
+                    course.getChauffeur()
+                            .getUtilisateur()
+                            .getNom();
+        }
+
         return new CourseResponseDTO(
                 course.getId(),
                 course.getPassager().getUtilisateur().getNom(),
-                course.getChauffeur().getUtilisateur().getNom(),
+                chauffeurNom,
                 course.getAdresseDepart(),
                 course.getAdresseArrivee(),
                 course.getPrix(),

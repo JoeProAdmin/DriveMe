@@ -115,18 +115,41 @@ export class CourseList implements OnInit, OnDestroy {
   }
 
   private loadDriverCourses(): void {
-    this.apiService.getCourses().subscribe({
-      next: (data: any[]) => {
-        this.courses = data.filter(
-          (course: any) =>
-            course.statut === 'EN_ATTENTE' ||
-            course.statut === 'ACCEPTEE'
-        );
-        this.loading = false;
+
+    const email = localStorage.getItem('userEmail');
+
+    if (!email) {
+      this.courses = [];
+      this.loading = false;
+      return;
+    }
+
+    this.apiService.getChauffeurByEmail(email).subscribe({
+      next: (chauffeur) => {
+
+        this.apiService.getCoursesByChauffeur(chauffeur.id).subscribe({
+          next: (data: any[]) => {
+
+            this.courses = data;
+
+            console.log(
+              'COURSES CHAUFFEUR PAGE COURSES',
+              data
+            );
+
+            this.loading = false;
+          },
+          error: (error: any) => {
+            console.error(error);
+            this.errorMessage = 'Erreur chargement courses chauffeur';
+            this.loading = false;
+          }
+        });
+
       },
       error: (error: any) => {
         console.error(error);
-        this.errorMessage = 'Erreur chargement courses chauffeur';
+        this.errorMessage = 'Erreur récupération chauffeur';
         this.loading = false;
       }
     });

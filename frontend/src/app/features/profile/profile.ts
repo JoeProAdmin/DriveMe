@@ -18,65 +18,35 @@ export class ProfileComponent implements OnInit {
 
   chauffeur?: ChauffeurResponseDTO;
 
-  noteMoyenne = 0;
-  soldeCredit = 0;
-
-  loading = true;
+  noteMoyenne = Number(localStorage.getItem('chauffeurNoteMoyenne') || 0);
+  soldeCredit = Number(localStorage.getItem('chauffeurSoldeCredit') || 0);
 
   constructor(
     private apiService: ApiService
   ) {}
 
   ngOnInit(): void {
-
     this.userRole = localStorage.getItem('userRole') || '';
     this.userEmail = localStorage.getItem('userEmail') || '';
 
-    if (
-      this.userRole !== 'CHAUFFEUR' ||
-      !this.userEmail
-    ) {
-      this.loading = false;
-      return;
+    if (this.userRole === 'CHAUFFEUR' && this.userEmail) {
+      this.loadChauffeurProfile();
     }
-
-    this.loadChauffeurProfile();
   }
 
   private loadChauffeurProfile(): void {
-
-    this.loading = true;
-
     this.apiService.getChauffeurByEmail(this.userEmail).subscribe({
-
       next: (chauffeur: ChauffeurResponseDTO) => {
-
         this.chauffeur = chauffeur;
 
-        this.noteMoyenne = Number(
-          chauffeur.noteMoyenne ?? 0
-        );
+        this.noteMoyenne = Number(chauffeur.noteMoyenne ?? 0);
+        this.soldeCredit = Number(chauffeur.soldeCredit ?? 0);
 
-        this.soldeCredit = Number(
-          chauffeur.soldeCredit ?? 0
-        );
-
-        this.loading = false;
-
-        console.log('PROFIL CHAUFFEUR FINAL', chauffeur);
+        localStorage.setItem('chauffeurNoteMoyenne', String(this.noteMoyenne));
+        localStorage.setItem('chauffeurSoldeCredit', String(this.soldeCredit));
       },
-
       error: (err: any) => {
-
-        console.error(
-          'Erreur chargement profil chauffeur',
-          err
-        );
-
-        this.noteMoyenne = 0;
-        this.soldeCredit = 0;
-
-        this.loading = false;
+        console.error('Erreur chargement profil chauffeur', err);
       }
     });
   }

@@ -5,20 +5,21 @@
     <div class="header-left">
 
       <h1>
-        Espace Chauffeur
+        {{ labels[currentLang].title }}
+
         <span *ngIf="chauffeur">
           - {{ chauffeur.prenom }} {{ chauffeur.nom }}
         </span>
       </h1>
 
       <p>
-        Gérez vos courses, vos revenus, vos crédits DriveMe et votre réputation.
+        {{ labels[currentLang].subtitle }}
       </p>
 
     </div>
 
     <div class="status-badge">
-      Disponible
+      {{ labels[currentLang].available }}
     </div>
 
   </div>
@@ -26,32 +27,32 @@
   <div class="stats-grid">
 
     <div class="stat-card">
-      <span>Total Courses</span>
+      <span>{{ labels[currentLang].totalCourses }}</span>
       <strong>{{ stats.coursesTotal }}</strong>
     </div>
 
     <div class="stat-card">
-      <span>Courses En Cours</span>
+      <span>{{ labels[currentLang].activeCourses }}</span>
       <strong>{{ stats.coursesEnCours }}</strong>
     </div>
 
     <div class="stat-card">
-      <span>Courses Terminées</span>
+      <span>{{ labels[currentLang].finishedCourses }}</span>
       <strong>{{ stats.coursesTerminees }}</strong>
     </div>
 
     <div class="stat-card">
-      <span>Revenus Estimés</span>
+      <span>{{ labels[currentLang].estimatedIncome }}</span>
       <strong>{{ stats.revenus }} MAD</strong>
     </div>
 
     <div class="stat-card">
-      <span>Crédits DriveMe</span>
+      <span>{{ labels[currentLang].credits }}</span>
       <strong>{{ stats.soldeCredit }} MAD</strong>
     </div>
 
     <div class="stat-card">
-      <span>Note Moyenne</span>
+      <span>{{ labels[currentLang].rating }}</span>
       <strong>{{ stats.note }}/5</strong>
     </div>
 
@@ -60,53 +61,67 @@
   <div class="action-grid">
 
     <div class="action-card">
-      <h2>Courses disponibles</h2>
+
+      <h2>
+        {{ labels[currentLang].availableTrips }}
+      </h2>
 
       <p>
-        Consultez les demandes de trajets proches de vous et acceptez les nouvelles courses.
+        {{ labels[currentLang].subtitle }}
       </p>
 
       <strong>
         {{ stats.coursesEnCours }}
-        course(s) active(s)
       </strong>
+
     </div>
 
     <div class="action-card">
-      <h2>Mes trajets</h2>
+
+      <h2>
+        {{ labels[currentLang].myTrips }}
+      </h2>
 
       <p>
-        Gérez vos courses acceptées, en cours et terminées.
+        {{ labels[currentLang].subtitle }}
       </p>
 
       <strong>
         {{ stats.coursesTotal }}
-        trajet(s)
       </strong>
+
     </div>
 
     <div class="action-card">
-      <h2>Mes revenus</h2>
+
+      <h2>
+        {{ labels[currentLang].myIncome }}
+      </h2>
 
       <p>
-        Revenus calculés automatiquement à partir des courses terminées.
+        {{ labels[currentLang].estimatedIncome }}
       </p>
 
       <strong>
         {{ stats.revenus }} MAD
       </strong>
+
     </div>
 
     <div class="action-card">
-      <h2>Réputation Chauffeur</h2>
+
+      <h2>
+        {{ labels[currentLang].reputation }}
+      </h2>
 
       <p>
-        Votre réputation est calculée à partir des avis passagers.
+        {{ labels[currentLang].rating }}
       </p>
 
       <strong>
         {{ stats.note }}/5
       </strong>
+
     </div>
 
   </div>

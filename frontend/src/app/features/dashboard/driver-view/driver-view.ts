@@ -22,24 +22,98 @@ export class DriverViewComponent implements OnInit {
     soldeCredit: 0
   };
 
+  public labels: any = {
+
+    fr: {
+      title: 'Espace Chauffeur',
+      subtitle: 'Gérez vos courses, vos revenus, vos crédits DriveMe et votre réputation.',
+      available: 'Disponible',
+      totalCourses: 'Total Courses',
+      activeCourses: 'Courses En Cours',
+      finishedCourses: 'Courses Terminées',
+      estimatedIncome: 'Revenus Estimés',
+      credits: 'Crédits DriveMe',
+      rating: 'Note Moyenne',
+      availableTrips: 'Courses disponibles',
+      myTrips: 'Mes trajets',
+      myIncome: 'Mes revenus',
+      reputation: 'Réputation Chauffeur'
+    },
+
+    en: {
+      title: 'Driver Area',
+      subtitle: 'Manage your trips, earnings, DriveMe credits and reputation.',
+      available: 'Available',
+      totalCourses: 'Total Trips',
+      activeCourses: 'Active Trips',
+      finishedCourses: 'Completed Trips',
+      estimatedIncome: 'Estimated Earnings',
+      credits: 'DriveMe Credits',
+      rating: 'Average Rating',
+      availableTrips: 'Available Trips',
+      myTrips: 'My Trips',
+      myIncome: 'My Earnings',
+      reputation: 'Driver Reputation'
+    },
+
+    ar: {
+      title: 'مساحة السائق',
+      subtitle: 'إدارة الرحلات والأرباح ورصيد DriveMe والتقييم.',
+      available: 'متاح',
+      totalCourses: 'إجمالي الرحلات',
+      activeCourses: 'الرحلات النشطة',
+      finishedCourses: 'الرحلات المكتملة',
+      estimatedIncome: 'الأرباح',
+      credits: 'رصيد DriveMe',
+      rating: 'التقييم',
+      availableTrips: 'الرحلات المتاحة',
+      myTrips: 'رحلاتي',
+      myIncome: 'أرباحي',
+      reputation: 'سمعة السائق'
+    },
+
+    es: {
+      title: 'Espacio Conductor',
+      subtitle: 'Gestiona tus viajes, ingresos, créditos DriveMe y reputación.',
+      available: 'Disponible',
+      totalCourses: 'Total Viajes',
+      activeCourses: 'Viajes Activos',
+      finishedCourses: 'Viajes Finalizados',
+      estimatedIncome: 'Ingresos',
+      credits: 'Créditos DriveMe',
+      rating: 'Valoración',
+      availableTrips: 'Viajes Disponibles',
+      myTrips: 'Mis Viajes',
+      myIncome: 'Mis Ingresos',
+      reputation: 'Reputación del Conductor'
+    }
+  };
+
   constructor(
-    private apiService: ApiService
+    public apiService: ApiService
   ) {}
+
+  get currentLang(): 'fr' | 'en' | 'ar' | 'es' {
+    return this.apiService.currentLanguage();
+  }
 
   ngOnInit(): void {
     this.loadDriverData();
   }
 
   private loadDriverData(): void {
+
     const email = localStorage.getItem('userEmail');
 
     if (!email) {
-      console.error('Aucun email utilisateur trouvé dans le localStorage');
+      console.error('Aucun email utilisateur trouvé');
       return;
     }
 
     this.apiService.getChauffeurByEmail(email).subscribe({
+
       next: (chauffeur: ChauffeurResponseDTO) => {
+
         this.chauffeur = chauffeur;
 
         this.stats = {
@@ -50,29 +124,33 @@ export class DriverViewComponent implements OnInit {
 
         this.loadCoursesForCurrentDriver();
       },
+
       error: (err: any) => {
-        console.error('Erreur chargement chauffeur connecté', err);
+        console.error('Erreur chargement chauffeur', err);
       }
     });
   }
 
   private loadCoursesForCurrentDriver(): void {
+
     if (!this.chauffeur) {
       return;
     }
 
     this.apiService.getCoursesByChauffeur(this.chauffeur.id).subscribe({
+
       next: (courses: any[]) => {
+
         const coursesAcceptees = courses.filter(
-          (course: any) => course.statut === 'ACCEPTEE'
+          c => c.statut === 'ACCEPTEE'
         );
 
         const coursesTerminees = courses.filter(
-          (course: any) => course.statut === 'TERMINEE'
+          c => c.statut === 'TERMINEE'
         );
 
         const revenus = coursesTerminees.reduce(
-          (total: number, course: any) => total + (course.prix || 0),
+          (total, c) => total + (c.prix || 0),
           0
         );
 
@@ -84,8 +162,9 @@ export class DriverViewComponent implements OnInit {
           revenus: revenus
         };
       },
+
       error: (err: any) => {
-        console.error('Erreur chargement courses du chauffeur connecté', err);
+        console.error('Erreur chargement courses', err);
       }
     });
   }

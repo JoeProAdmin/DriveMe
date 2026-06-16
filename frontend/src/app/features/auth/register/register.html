@@ -1,65 +1,59 @@
-<div style="min-height:100vh; background:#f8fafc; font-family:'Poppins','Segoe UI',sans-serif;">
+<div style="min-height:100vh; background:#f8fafc; font-family:'Poppins','Segoe UI',sans-serif;" [style.direction]="currentLang === 'AR' ? 'rtl' : 'ltr'">
   <header style="height:64px; background:#0f172a; color:white; display:flex; align-items:center; justify-content:space-between; padding:0 40px; border-bottom:2px solid #00C853;">
     <div style="font-size:24px; font-weight:700; cursor:pointer;" (click)="resetFlow()">Drive<span style="color:#00C853;">Me</span></div>
-    <button *ngIf="currentFlow" type="button" (click)="resetFlow()" style="background:transparent; border:1px solid #334155; color:white; padding:8px 18px; border-radius:6px; cursor:pointer;">Retour</button>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <select [(ngModel)]="currentLang" style="padding:5px; border-radius:4px;">
+        <option value="FR">FR</option><option value="EN">EN</option><option value="AR">AR</option><option value="ES">ES</option>
+      </select>
+      <button *ngIf="currentFlow" type="button" (click)="resetFlow()" style="background:transparent; border:1px solid #334155; color:white; padding:8px 18px; border-radius:6px; cursor:pointer;">{{ texts[currentLang].back }}</button>
+    </div>
   </header>
 
   <main style="min-height:calc(100vh - 64px); display:flex; align-items:center; justify-content:center; padding:40px 20px;">
 
     <section *ngIf="!currentFlow" style="width:100%; max-width:520px; background:white; padding:32px; border-radius:16px; border:1px solid #e2e8f0;">
-      <h1 style="margin:0 0 12px 0; color:#0f172a;">Créer un compte DriveMe</h1>
-      <p style="color:#64748b; margin-bottom:28px;">Sélectionnez votre profil.</p>
+      <h1 style="margin:0 0 12px 0; color:#0f172a;">{{ texts[currentLang].title }}</h1>
+      <p style="color:#64748b; margin-bottom:28px;">{{ texts[currentLang].subtitle }}</p>
 
-      <button type="button" (click)="selectFlow('PASSAGER')" style="width:100%; text-align:left; padding:20px; margin-bottom:14px; background:white; border:2px solid #e2e8f0; border-radius:12px; cursor:pointer;">
-        <strong>Je suis Passager</strong><br>
-        <span>Commander une course au prix proposé.</span>
+      <button type="button" (click)="selectFlow('PASSAGER')" style="width:100%; text-align:inherit; padding:20px; margin-bottom:14px; background:white; border:2px solid #e2e8f0; border-radius:12px; cursor:pointer;">
+        <strong>{{ texts[currentLang].passager }}</strong><br>
+        <span>{{ texts[currentLang].passagerDesc }}</span>
       </button>
 
-      <button type="button" (click)="selectFlow('CONDUCTEUR')" style="width:100%; text-align:left; padding:20px; background:white; border:2px solid #e2e8f0; border-radius:12px; cursor:pointer;">
-        <strong>Je suis Chauffeur</strong><br>
-        <span>Recevoir des demandes et gérer mon activité.</span>
+      <button type="button" (click)="selectFlow('CONDUCTEUR')" style="width:100%; text-align:inherit; padding:20px; background:white; border:2px solid #e2e8f0; border-radius:12px; cursor:pointer;">
+        <strong>{{ texts[currentLang].chauffeur }}</strong><br>
+        <span>{{ texts[currentLang].chauffeurDesc }}</span>
       </button>
     </section>
 
     <section *ngIf="currentFlow === 'PASSAGER'" style="width:100%; max-width:440px; background:white; padding:32px; border-radius:16px; border:1px solid #e2e8f0;">
-      <h2 style="margin-top:0; color:#0f172a;">Inscription Passager</h2>
-
-      <label>Nom</label>
-      <input name="pNom" [(ngModel)]="passengerForm.nom" type="text" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
-
-      <label>Prénom</label>
-      <input name="pPrenom" [(ngModel)]="passengerForm.prenom" type="text" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
-
-      <label>Téléphone obligatoire</label>
-      <input name="pTelephone" [(ngModel)]="passengerForm.telephone" type="tel" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
-
-      <label>Email facultatif</label>
-      <input name="pEmail" [(ngModel)]="passengerForm.email" type="email" style="width:100%; padding:12px; margin:6px 0 20px; border:1px solid #cbd5e1; border-radius:8px;">
-
-      <button type="button" (click)="submitPassenger()" [disabled]="isSubmitting" style="width:100%; padding:14px; background:#0f172a; color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
-        {{ isSubmitting ? 'Inscription...' : 'Valider mon inscription' }}
+      <h2 style="margin-top:0; color:#0f172a;">{{ texts[currentLang].regPassager }}</h2>
+      <label>{{ texts[currentLang].nom }}</label>
+      <input [(ngModel)]="passengerForm.nom" type="text" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
+      <label>{{ texts[currentLang].prenom }}</label>
+      <input [(ngModel)]="passengerForm.prenom" type="text" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
+      <label>{{ texts[currentLang].tel }}</label>
+      <input [(ngModel)]="passengerForm.telephone" type="tel" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
+      <label>{{ texts[currentLang].email }}</label>
+      <input [(ngModel)]="passengerForm.email" type="email" style="width:100%; padding:12px; margin:6px 0 20px; border:1px solid #cbd5e1; border-radius:8px;">
+      <button (click)="submitPassenger()" [disabled]="isSubmitting" style="width:100%; padding:14px; background:#0f172a; color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
+        {{ isSubmitting ? texts[currentLang].submitting : texts[currentLang].submit }}
       </button>
     </section>
 
     <section *ngIf="currentFlow === 'CONDUCTEUR'" style="width:100%; max-width:440px; background:white; padding:32px; border-radius:16px; border:1px solid #e2e8f0;">
-      <h2 style="margin-top:0; color:#0f172a;">Inscription Chauffeur</h2>
-
-      <label>Nom</label>
-      <input name="dNom" [(ngModel)]="driverForm.nom" type="text" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
-
-      <label>Prénom</label>
-      <input name="dPrenom" [(ngModel)]="driverForm.prenom" type="text" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
-
-      <label>Téléphone obligatoire</label>
-      <input name="dTelephone" [(ngModel)]="driverForm.telephone" type="tel" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
-
-      <label>Email obligatoire</label>
-      <input name="dEmail" [(ngModel)]="driverForm.email" type="email" style="width:100%; padding:12px; margin:6px 0 20px; border:1px solid #cbd5e1; border-radius:8px;">
-
-      <button type="button" (click)="submitDriver()" [disabled]="isSubmitting" style="width:100%; padding:14px; background:#00C853; color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
-        {{ isSubmitting ? 'Inscription...' : 'Valider mon inscription chauffeur' }}
+      <h2 style="margin-top:0; color:#0f172a;">{{ texts[currentLang].regChauffeur }}</h2>
+      <label>{{ texts[currentLang].nom }}</label>
+      <input [(ngModel)]="driverForm.nom" type="text" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
+      <label>{{ texts[currentLang].prenom }}</label>
+      <input [(ngModel)]="driverForm.prenom" type="text" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
+      <label>{{ texts[currentLang].tel }}</label>
+      <input [(ngModel)]="driverForm.telephone" type="tel" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
+      <label>{{ texts[currentLang].emailReq }}</label>
+      <input [(ngModel)]="driverForm.email" type="email" style="width:100%; padding:12px; margin:6px 0 20px; border:1px solid #cbd5e1; border-radius:8px;">
+      <button (click)="submitDriver()" [disabled]="isSubmitting" style="width:100%; padding:14px; background:#00C853; color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
+        {{ isSubmitting ? texts[currentLang].submitting : texts[currentLang].submitDriver }}
       </button>
     </section>
-
   </main>
 </div>

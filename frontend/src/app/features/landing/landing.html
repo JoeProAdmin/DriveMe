@@ -1,147 +1,45 @@
 <div class="landing" [class.rtl]="currentLang === 'AR'">
-
   <header class="topbar">
     <div class="logo">Drive<span>Me</span></div>
-
     <nav class="nav">
       <select [(ngModel)]="currentLang" (ngModelChange)="changeLang($event)">
-        <option value="FR">FR</option>
-        <option value="EN">EN</option>
-        <option value="AR">AR</option>
-        <option value="ES">ES</option>
+        <option value="FR">FR</option><option value="EN">EN</option><option value="AR">AR</option><option value="ES">ES</option>
       </select>
-
-      <a routerLink="/login" class="login-link">{{ texts[currentLang].login }}</a>
-      <a routerLink="/register" class="register-link">{{ texts[currentLang].register }}</a>
+      <a routerLink="/login">{{ texts[currentLang].login }}</a>
+      <a routerLink="/register" class="reg">{{ texts[currentLang].register }}</a>
     </nav>
   </header>
 
   <main class="hero">
     <section class="hero-content">
       <span class="badge">{{ texts[currentLang].badge }}</span>
-
       <h1>{{ texts[currentLang].title }}</h1>
-
-      <p class="description">
-        {{ texts[currentLang].description }}
-      </p>
+      <p class="desc">{{ texts[currentLang].description }}</p>
 
       <div class="search-card">
-        <div class="field">
-          <label>{{ texts[currentLang].depart }}</label>
-          <input [(ngModel)]="searchForm.depart" [placeholder]="texts[currentLang].phDepart">
+        <div class="form-grid">
+          <div class="field"><input [(ngModel)]="searchForm.depart" [placeholder]="texts[currentLang].phDepart"></div>
+          <div class="field"><input [(ngModel)]="searchForm.destination" [placeholder]="texts[currentLang].phDest"></div>
+          <div class="field"><input type="date" [(ngModel)]="searchForm.date"></div>
         </div>
-
-        <div class="field">
-          <label>{{ texts[currentLang].destination }}</label>
-          <input [(ngModel)]="searchForm.destination" [placeholder]="texts[currentLang].phDest">
-        </div>
-
-        <div class="field-row">
-          <div class="field">
-            <label>{{ texts[currentLang].date }}</label>
-            <input type="date" [(ngModel)]="searchForm.date">
-          </div>
-
-          <div class="field">
-            <label>{{ texts[currentLang].passengers }}</label>
-            <input type="number" min="1" [(ngModel)]="searchForm.passengers">
-          </div>
-        </div>
-
-        <button class="location-btn" type="button" (click)="useLocation()">
-          {{ isLocating ? texts[currentLang].locating : texts[currentLang].locate }}
-        </button>
-
-        <p *ngIf="detectedLocation" class="location-result">
-          {{ detectedLocation }}
-        </p>
-
+        <button (click)="useLocation()">{{ isLocating ? texts[currentLang].locating : texts[currentLang].locate }}</button>
         <div class="actions">
-          <a routerLink="/login" class="primary-btn">{{ texts[currentLang].search }}</a>
-          <a routerLink="/register" class="secondary-btn">{{ texts[currentLang].driver }}</a>
+          <a routerLink="/login" class="btn-main">{{ texts[currentLang].search }}</a>
         </div>
       </div>
     </section>
 
     <section class="map-panel">
-      <div class="map-box">
-        <div class="map-header">
-          <strong>{{ texts[currentLang].mapTitle }}</strong>
-          <span>{{ texts[currentLang].mapText }}</span>
-        </div>
-
-        <div class="fake-map">
-          <div class="route-line"></div>
-          <div class="pin pin-a">A</div>
-          <div class="pin pin-b">B</div>
-          <div class="driver-dot driver-1"></div>
-          <div class="driver-dot driver-2"></div>
-          <div class="driver-dot driver-3"></div>
-        </div>
-      </div>
+      <div class="fake-map"></div>
     </section>
   </main>
 
-  <section class="trust-section">
-    <h2>{{ texts[currentLang].safetyTitle }}</h2>
-
-    <div class="trust-grid">
-      <div class="trust-card">
-        <strong>{{ texts[currentLang].s1Title }}</strong>
-        <p>{{ texts[currentLang].s1Text }}</p>
-      </div>
-
-      <div class="trust-card">
-        <strong>{{ texts[currentLang].s2Title }}</strong>
-        <p>{{ texts[currentLang].s2Text }}</p>
-      </div>
-
-      <div class="trust-card">
-        <strong>{{ texts[currentLang].s3Title }}</strong>
-        <p>{{ texts[currentLang].s3Text }}</p>
-      </div>
-
-      <div class="trust-card">
-        <strong>{{ texts[currentLang].s4Title }}</strong>
-        <p>{{ texts[currentLang].s4Text }}</p>
-      </div>
+  <section class="features">
+    <div class="grid">
+      <div class="card"><strong>{{ texts[currentLang].s1Title }}</strong><p>{{ texts[currentLang].s1Text }}</p></div>
+      <div class="card"><strong>{{ texts[currentLang].s2Title }}</strong><p>{{ texts[currentLang].s2Text }}</p></div>
+      <div class="card"><strong>{{ texts[currentLang].s3Title }}</strong><p>{{ texts[currentLang].s3Text }}</p></div>
+      <div class="card"><strong>{{ texts[currentLang].s4Title }}</strong><p>{{ texts[currentLang].s4Text }}</p></div>
     </div>
   </section>
-
-  <section class="how-section">
-    <h2>{{ texts[currentLang].howTitle }}</h2>
-
-    <div class="steps">
-      <div class="step">
-        <span>1</span>
-        <strong>{{ texts[currentLang].h1Title }}</strong>
-        <p>{{ texts[currentLang].h1Text }}</p>
-      </div>
-
-      <div class="step">
-        <span>2</span>
-        <strong>{{ texts[currentLang].h2Title }}</strong>
-        <p>{{ texts[currentLang].h2Text }}</p>
-      </div>
-
-      <div class="step">
-        <span>3</span>
-        <strong>{{ texts[currentLang].h3Title }}</strong>
-        <p>{{ texts[currentLang].h3Text }}</p>
-      </div>
-
-      <div class="step">
-        <span>4</span>
-        <strong>{{ texts[currentLang].h4Title }}</strong>
-        <p>{{ texts[currentLang].h4Text }}</p>
-      </div>
-    </div>
-  </section>
-
-  <footer class="footer">
-    <strong>DriveMe.cloud</strong>
-    <span>{{ texts[currentLang].footerText }}</span>
-  </footer>
-
 </div>

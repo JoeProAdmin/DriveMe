@@ -1,4 +1,8 @@
-<div class="profile-container">
+<div class="profile-container" [style.direction]="currentLang === 'AR' ? 'rtl' : 'ltr'">
+
+  <select [(ngModel)]="currentLang" style="margin-bottom: 20px;">
+    <option value="FR">FR</option><option value="EN">EN</option><option value="AR">AR</option><option value="ES">ES</option>
+  </select>
 
   <div class="profile-header">
     <div class="profile-avatar">
@@ -6,66 +10,66 @@
     </div>
 
     <div>
-      <h1>Mon Profil</h1>
-      <p>Informations personnelles DriveMe</p>
+      <h1>{{ texts[currentLang].title }}</h1>
+      <p>{{ texts[currentLang].subtitle }}</p>
     </div>
   </div>
 
   <div class="profile-grid">
 
     <div class="profile-card">
-      <h2>Compte utilisateur</h2>
+      <h2>{{ texts[currentLang].account }}</h2>
 
       <div class="info-row">
-        <span>Email</span>
+        <span>{{ texts[currentLang].email }}</span>
         <strong>{{ userEmail }}</strong>
       </div>
 
       <div class="info-row">
-        <span>Rôle</span>
+        <span>{{ texts[currentLang].role }}</span>
         <strong>{{ userRole }}</strong>
       </div>
 
       <div class="info-row">
-        <span>Statut</span>
-        <strong class="success">Validé</strong>
+        <span>{{ texts[currentLang].status }}</span>
+        <strong class="success">{{ texts[currentLang].statusVal }}</strong>
       </div>
 
       <div class="info-row">
-        <span>Plateforme</span>
+        <span>{{ texts[currentLang].platform }}</span>
         <strong>DriveMe Production</strong>
       </div>
     </div>
 
     <div class="profile-card" *ngIf="userRole === 'CHAUFFEUR'">
-      <h2>Espace Chauffeur</h2>
+      <h2>{{ texts[currentLang].driverSpace }}</h2>
 
       <div class="metric-box">
-        <span>Note moyenne</span>
+        <span>{{ texts[currentLang].rating }}</span>
         <strong class="success">{{ noteMoyenne }}/5</strong>
       </div>
 
       <div class="metric-box">
-        <span>Crédits DriveMe</span>
+        <span>{{ texts[currentLang].credits }}</span>
         <strong class="success">{{ soldeCredit }} MAD</strong>
       </div>
     </div>
 
     <div class="profile-card">
-      <h2>Sécurité</h2>
+      <h2>{{ texts[currentLang].security }}</h2>
 
       <div class="info-row">
-        <span>Authentification</span>
+        <span>{{ texts[currentLang].auth }}</span>
         <strong>JWT active</strong>
       </div>
 
       <div class="info-row">
-        <span>Connexion</span>
-        <strong>Sécurisée</strong>
+        <span>{{ texts[currentLang].conn }}</span>
+        <strong>{{ texts[currentLang].connVal }}</strong>
       </div>
 
       <div class="info-row">
-        <span>Dernière activité</span>
+        <span>{{ texts[currentLang].lastAct }}</span>
         <strong>{{ today | date:'dd/MM/yyyy HH:mm' }}</strong>
       </div>
     </div>

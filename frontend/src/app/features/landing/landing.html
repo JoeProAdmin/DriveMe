@@ -29,12 +29,12 @@
       <div class="search-card">
         <div class="field">
           <label>{{ texts[currentLang].depart }}</label>
-          <input [(ngModel)]="searchForm.depart" placeholder="Marrakech, Gare ONCF">
+          <input [(ngModel)]="searchForm.depart" [placeholder]="texts[currentLang].phDepart">
         </div>
 
         <div class="field">
           <label>{{ texts[currentLang].destination }}</label>
-          <input [(ngModel)]="searchForm.destination" placeholder="Jemaa El Fna, Casablanca...">
+          <input [(ngModel)]="searchForm.destination" [placeholder]="texts[currentLang].phDest">
         </div>
 
         <div class="field-row">
@@ -50,7 +50,7 @@
         </div>
 
         <button class="location-btn" type="button" (click)="useLocation()">
-          {{ isLocating ? 'Localisation...' : texts[currentLang].locate }}
+          {{ isLocating ? texts[currentLang].locating : texts[currentLang].locate }}
         </button>
 
         <p *ngIf="detectedLocation" class="location-result">
@@ -88,23 +88,23 @@
 
     <div class="trust-grid">
       <div class="trust-card">
-        <strong>Chauffeurs vérifiés</strong>
-        <p>Permis, identité, assurance et véhicule contrôlés.</p>
+        <strong>{{ texts[currentLang].s1Title }}</strong>
+        <p>{{ texts[currentLang].s1Text }}</p>
       </div>
 
       <div class="trust-card">
-        <strong>SOS intégré</strong>
-        <p>Accès rapide à l’assistance et aux informations de course.</p>
+        <strong>{{ texts[currentLang].s2Title }}</strong>
+        <p>{{ texts[currentLang].s2Text }}</p>
       </div>
 
       <div class="trust-card">
-        <strong>Prix transparent</strong>
-        <p>Le passager propose, le chauffeur accepte ou négocie.</p>
+        <strong>{{ texts[currentLang].s3Title }}</strong>
+        <p>{{ texts[currentLang].s3Text }}</p>
       </div>
 
       <div class="trust-card">
-        <strong>Paiement flexible</strong>
-        <p>Cash prioritaire, wallet chauffeur et moyens locaux marocains.</p>
+        <strong>{{ texts[currentLang].s4Title }}</strong>
+        <p>{{ texts[currentLang].s4Text }}</p>
       </div>
     </div>
   </section>
@@ -115,33 +115,33 @@
     <div class="steps">
       <div class="step">
         <span>1</span>
-        <strong>Rechercher</strong>
-        <p>Indiquez départ, destination et date.</p>
+        <strong>{{ texts[currentLang].h1Title }}</strong>
+        <p>{{ texts[currentLang].h1Text }}</p>
       </div>
 
       <div class="step">
         <span>2</span>
-        <strong>Négocier</strong>
-        <p>Proposez ou acceptez un prix clair.</p>
+        <strong>{{ texts[currentLang].h2Title }}</strong>
+        <p>{{ texts[currentLang].h2Text }}</p>
       </div>
 
       <div class="step">
         <span>3</span>
-        <strong>Voyager</strong>
-        <p>Suivez la course et gardez une trace.</p>
+        <strong>{{ texts[currentLang].h3Title }}</strong>
+        <p>{{ texts[currentLang].h3Text }}</p>
       </div>
 
       <div class="step">
         <span>4</span>
-        <strong>Évaluer</strong>
-        <p>Notez le chauffeur et améliorez la confiance.</p>
+        <strong>{{ texts[currentLang].h4Title }}</strong>
+        <p>{{ texts[currentLang].h4Text }}</p>
       </div>
     </div>
   </section>
 
   <footer class="footer">
     <strong>DriveMe.cloud</strong>
-    <span>Plateforme de mise en relation entre passagers et chauffeurs indépendants.</span>
+    <span>{{ texts[currentLang].footerText }}</span>
   </footer>
 
 </div>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ApiService } from '../../core/api.service';
+import { ApiService, ChauffeurResponseDTO } from '../../core/api.service';
 
 @Component({
   selector: 'app-profile',
@@ -11,33 +11,73 @@ import { ApiService } from '../../core/api.service';
 })
 export class ProfileComponent implements OnInit {
 
-  userRole = localStorage.getItem('userRole') || '';
-  userEmail = localStorage.getItem('userEmail') || '';
+  userRole = '';
+  userEmail = '';
 
   today = new Date();
 
+  chauffeur?: ChauffeurResponseDTO;
+
   noteMoyenne = 0;
   soldeCredit = 0;
+
+  loading = true;
 
   constructor(
     private apiService: ApiService
   ) {}
 
   ngOnInit(): void {
-    if (this.userRole === 'CHAUFFEUR') {
-      this.apiService.getAllChauffeurs().subscribe({
-        next: (chauffeurs: any[]) => {
-          if (chauffeurs && chauffeurs.length > 0) {
-            const chauffeur = chauffeurs[0];
 
-            this.noteMoyenne = chauffeur.noteMoyenne || 0;
-            this.soldeCredit = chauffeur.soldeCredit || 0;
-          }
-        },
-        error: (err: any) => {
-          console.error('Erreur chargement chauffeur :', err);
-        }
-      });
+    this.userRole = localStorage.getItem('userRole') || '';
+    this.userEmail = localStorage.getItem('userEmail') || '';
+
+    if (
+      this.userRole !== 'CHAUFFEUR' ||
+      !this.userEmail
+    ) {
+      this.loading = false;
+      return;
     }
+
+    this.loadChauffeurProfile();
+  }
+
+  private loadChauffeurProfile(): void {
+
+    this.loading = true;
+
+    this.apiService.getChauffeurByEmail(this.userEmail).subscribe({
+
+      next: (chauffeur: ChauffeurResponseDTO) => {
+
+        this.chauffeur = chauffeur;
+
+        this.noteMoyenne = Number(
+          chauffeur.noteMoyenne ?? 0
+        );
+
+        this.soldeCredit = Number(
+          chauffeur.soldeCredit ?? 0
+        );
+
+        this.loading = false;
+
+        console.log('PROFIL CHAUFFEUR FINAL', chauffeur);
+      },
+
+      error: (err: any) => {
+
+        console.error(
+          'Erreur chargement profil chauffeur',
+          err
+        );
+
+        this.noteMoyenne = 0;
+        this.soldeCredit = 0;
+
+        this.loading = false;
+      }
+    });
   }
 }

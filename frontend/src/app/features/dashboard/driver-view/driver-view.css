@@ -22,19 +22,6 @@
   font-size:15px;
 }
 
-.btn-primary{
-  background:#00C853;
-  color:white;
-  border:none;
-  padding:14px 24px;
-  border-radius:10px;
-  font-weight:600;
-  cursor:pointer;
-}
-
-.btn-primary:hover{
-  opacity:0.9;
-}
 
 .stats-grid{
   display:grid;
@@ -90,4 +77,36 @@
   margin:0;
   color:#64748b;
   line-height:1.6;
+}
+.header-left{
+  display:flex;
+  flex-direction:column;
+}
+
+.status-badge{
+  background:#00C853;
+  color:white;
+  padding:10px 22px;
+  border-radius:999px;
+  font-weight:700;
+  font-size:14px;
+  min-width:140px;
+  text-align:center;
+  height:fit-content;
+}
+
+.stat-card strong{
+  display:block;
+  margin-top:12px;
+  font-size:28px;
+  color:#00C853;
+  font-weight:700;
+}
+
+.action-card strong{
+  display:block;
+  margin-top:15px;
+  font-size:24px;
+  color:#0f172a;
+  font-weight:700;
 }

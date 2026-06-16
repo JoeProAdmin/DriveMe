@@ -2,7 +2,8 @@
 
   <div class="dashboard-header">
 
-    <div>
+    <div class="header-left">
+
       <h1>
         Espace Chauffeur
         <span *ngIf="chauffeur">
@@ -13,11 +14,12 @@
       <p>
         Gérez vos courses, vos revenus, vos crédits DriveMe et votre réputation.
       </p>
+
     </div>
 
-    <button class="btn-primary">
+    <div class="status-badge">
       Disponible
-    </button>
+    </div>
 
   </div>
 
@@ -58,7 +60,6 @@
   <div class="action-grid">
 
     <div class="action-card">
-
       <h2>Courses disponibles</h2>
 
       <p>
@@ -69,11 +70,9 @@
         {{ stats.coursesEnCours }}
         course(s) active(s)
       </strong>
-
     </div>
 
     <div class="action-card">
-
       <h2>Mes trajets</h2>
 
       <p>
@@ -84,11 +83,9 @@
         {{ stats.coursesTotal }}
         trajet(s)
       </strong>
-
     </div>
 
     <div class="action-card">
-
       <h2>Mes revenus</h2>
 
       <p>
@@ -98,11 +95,9 @@
       <strong>
         {{ stats.revenus }} MAD
       </strong>
-
     </div>
 
     <div class="action-card">
-
       <h2>Réputation Chauffeur</h2>
 
       <p>
@@ -112,7 +107,6 @@
       <strong>
         {{ stats.note }}/5
       </strong>
-
     </div>
 
   </div>

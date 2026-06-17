@@ -41,19 +41,189 @@
       </button>
     </section>
 
-    <section *ngIf="currentFlow === 'CONDUCTEUR'" style="width:100%; max-width:440px; background:white; padding:32px; border-radius:16px; border:1px solid #e2e8f0;">
-      <h2 style="margin-top:0; color:#0f172a;">{{ texts[currentLang].regChauffeur }}</h2>
-      <label>{{ texts[currentLang].nom }}</label>
-      <input [(ngModel)]="driverForm.nom" type="text" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
-      <label>{{ texts[currentLang].prenom }}</label>
-      <input [(ngModel)]="driverForm.prenom" type="text" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
-      <label>{{ texts[currentLang].tel }}</label>
-      <input [(ngModel)]="driverForm.telephone" type="tel" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
-      <label>{{ texts[currentLang].emailReq }}</label>
-      <input [(ngModel)]="driverForm.email" type="email" style="width:100%; padding:12px; margin:6px 0 20px; border:1px solid #cbd5e1; border-radius:8px;">
-      <button (click)="submitDriver()" [disabled]="isSubmitting" style="width:100%; padding:14px; background:#00C853; color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
-        {{ isSubmitting ? texts[currentLang].submitting : texts[currentLang].submitDriver }}
-      </button>
+    <section *ngIf="currentFlow === 'CONDUCTEUR'" style="width:100%; max-width:700px; background:white; padding:32px; border-radius:16px; border:1px solid #e2e8f0;">
+
+      <h2 style="margin-top:0; color:#0f172a;">
+        {{ texts[currentLang].regChauffeur }}
+      </h2>
+
+      <div style="margin-bottom:25px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+          <strong>Dossier Conducteur DriveMe</strong>
+          <span style="color:#00C853;font-weight:700;">
+        Étape {{ currentStep }}/4
+      </span>
+        </div>
+
+        <div style="height:8px;background:#e2e8f0;border-radius:8px;">
+          <div
+            [style.width.%]="currentStep * 25"
+            style="height:8px;background:#00C853;border-radius:8px;">
+          </div>
+        </div>
+      </div>
+
+      <!-- ETAPE 1 -->
+      <div *ngIf="currentStep === 1">
+
+        <h3>Informations personnelles</h3>
+
+        <input
+          [(ngModel)]="driverForm.nom"
+          placeholder="Nom"
+          type="text"
+          style="width:100%;padding:12px;margin-bottom:12px;border:1px solid #cbd5e1;border-radius:8px;">
+
+        <input
+          [(ngModel)]="driverForm.prenom"
+          placeholder="Prénom"
+          type="text"
+          style="width:100%;padding:12px;margin-bottom:12px;border:1px solid #cbd5e1;border-radius:8px;">
+
+        <input
+          [(ngModel)]="driverForm.telephone"
+          placeholder="Téléphone"
+          type="tel"
+          style="width:100%;padding:12px;margin-bottom:12px;border:1px solid #cbd5e1;border-radius:8px;">
+
+        <input
+          [(ngModel)]="driverForm.email"
+          placeholder="Email"
+          type="email"
+          style="width:100%;padding:12px;margin-bottom:20px;border:1px solid #cbd5e1;border-radius:8px;">
+
+        <button
+          type="button"
+          (click)="nextStep()"
+          style="width:100%;padding:14px;background:#00C853;color:white;border:none;border-radius:8px;">
+          Continuer
+        </button>
+
+      </div>
+
+      <!-- ETAPE 2 -->
+      <div *ngIf="currentStep === 2">
+
+        <h3>Documents obligatoires</h3>
+
+        <label>CIN</label>
+        <input type="file" style="width:100%;margin-bottom:12px;">
+
+        <label>Permis de conduire</label>
+        <input type="file" style="width:100%;margin-bottom:12px;">
+
+        <label>Carte grise</label>
+        <input type="file" style="width:100%;margin-bottom:12px;">
+
+        <label>Assurance</label>
+        <input type="file" style="width:100%;margin-bottom:20px;">
+
+        <div style="display:flex;gap:10px;">
+
+          <button
+            type="button"
+            (click)="previousStep()"
+            style="flex:1;padding:14px;">
+            Retour
+          </button>
+
+          <button
+            type="button"
+            (click)="nextStep()"
+            style="flex:1;padding:14px;background:#00C853;color:white;border:none;">
+            Continuer
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- ETAPE 3 -->
+      <div *ngIf="currentStep === 3">
+
+        <h3>Informations du véhicule</h3>
+
+        <input
+          [(ngModel)]="driverForm.vehicule.marque"
+          placeholder="Marque"
+          type="text"
+          style="width:100%;padding:12px;margin-bottom:12px;border:1px solid #cbd5e1;border-radius:8px;">
+
+        <input
+          [(ngModel)]="driverForm.vehicule.modele"
+          placeholder="Modèle"
+          type="text"
+          style="width:100%;padding:12px;margin-bottom:12px;border:1px solid #cbd5e1;border-radius:8px;">
+
+        <input
+          [(ngModel)]="driverForm.vehicule.annee"
+          placeholder="Année"
+          type="number"
+          style="width:100%;padding:12px;margin-bottom:12px;border:1px solid #cbd5e1;border-radius:8px;">
+
+        <input
+          [(ngModel)]="driverForm.vehicule.immatriculation"
+          placeholder="Immatriculation"
+          type="text"
+          style="width:100%;padding:12px;margin-bottom:12px;border:1px solid #cbd5e1;border-radius:8px;">
+
+        <label>Photo avant</label>
+        <input type="file" style="width:100%;margin-bottom:12px;">
+
+        <label>Photo arrière</label>
+        <input type="file" style="width:100%;margin-bottom:20px;">
+
+        <div style="display:flex;gap:10px;">
+
+          <button
+            type="button"
+            (click)="previousStep()"
+            style="flex:1;padding:14px;">
+            Retour
+          </button>
+
+          <button
+            type="button"
+            (click)="nextStep()"
+            style="flex:1;padding:14px;background:#00C853;color:white;border:none;">
+            Continuer
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- ETAPE 4 -->
+      <div *ngIf="currentStep === 4">
+
+        <h3>Contrôle biométrique</h3>
+
+        <label>Selfie avec CIN</label>
+        <input type="file" style="width:100%;margin-bottom:20px;">
+
+        <div style="display:flex;gap:10px;">
+
+          <button
+            type="button"
+            (click)="previousStep()"
+            style="flex:1;padding:14px;">
+            Retour
+          </button>
+
+          <button
+            type="button"
+            (click)="submitDriver()"
+            [disabled]="isSubmitting"
+            style="flex:1;padding:14px;background:#00C853;color:white;border:none;border-radius:8px;">
+
+            {{ isSubmitting ? texts[currentLang].submitting : texts[currentLang].submitDriver }}
+
+          </button>
+
+        </div>
+
+      </div>
+
     </section>
   </main>
 </div>

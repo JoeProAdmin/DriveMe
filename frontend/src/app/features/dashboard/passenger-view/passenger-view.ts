@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ApiService } from '../../../core/api.service';
+import { ApiService, PassagerResponseDTO } from '../../../core/api.service';
 
 @Component({
   selector: 'app-passenger-view',
@@ -12,6 +12,7 @@ import { ApiService } from '../../../core/api.service';
 })
 export class PassengerViewComponent implements OnInit {
 
+  public passenger?: PassagerResponseDTO;
   public passengerName = 'Passager DriveMe';
 
   public stats = {
@@ -100,33 +101,91 @@ export class PassengerViewComponent implements OnInit {
     }
   };
 
-  constructor(public apiService: ApiService) {}
+  constructor(
+    public apiService: ApiService,
+    private readonly cdr: ChangeDetectorRef
+  ) {}
 
   get currentLang(): 'fr' | 'en' | 'ar' | 'es' {
     return this.apiService.currentLanguage();
   }
 
   ngOnInit(): void {
-    this.loadStats();
+    this.loadPassengerData();
   }
 
-  private loadStats(): void {
-    this.apiService.getCourses().subscribe({
-      next: (courses: any[]) => {
+  private loadPassengerData(): void {
+    const email = localStorage.getItem('userEmail');
 
-        this.stats.totalCourses = courses.length;
+    if (!email) {
+      console.error('Email passager absent du localStorage.');
+      this.resetStats();
+      this.cdr.detectChanges();
+      return;
+    }
 
-        this.stats.coursesEnAttente =
-          courses.filter(c => c.statut === 'EN_ATTENTE').length;
+    this.apiService.getPassagerByEmail(email).subscribe({
+      next: (passager: PassagerResponseDTO) => {
+        this.passenger = passager;
+        this.passengerName = `${passager.prenom ?? ''} ${passager.nom ?? ''}`.trim() || 'Passager DriveMe';
 
-        this.stats.coursesTerminees =
-          courses.filter(c => c.statut === 'TERMINEE').length;
-
-        this.stats.avisDonnes = 0;
+        this.loadCoursesForCurrentPassenger(passager.id);
       },
       error: (err: any) => {
-        console.error('Erreur chargement statistiques passager', err);
+        console.error('Erreur chargement passager connecté', err);
+        this.resetStats();
+        this.cdr.detectChanges();
       }
     });
+  }
+
+  private loadCoursesForCurrentPassenger(passagerId: number): void {
+    this.apiService.getCoursesByPassager(passagerId).subscribe({
+      next: (courses: any[]) => {
+        this.applyCourseStats(courses);
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        console.error('Erreur chargement courses passager', err);
+        this.resetStats();
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  private applyCourseStats(courses: any[]): void {
+    const safeCourses = Array.isArray(courses) ? courses : [];
+
+    this.stats.totalCourses = safeCourses.length;
+
+    this.stats.coursesEnAttente = safeCourses.filter(course =>
+      this.normalizeStatus(course?.statut) === 'EN_ATTENTE'
+    ).length;
+
+    this.stats.coursesTerminees = safeCourses.filter(course =>
+      this.normalizeStatus(course?.statut) === 'TERMINEE'
+    ).length;
+
+    this.stats.avisDonnes = safeCourses.filter(course =>
+      course?.avisId ||
+      course?.avis ||
+      course?.note ||
+      course?.commentaireAvis
+    ).length;
+  }
+
+  private resetStats(): void {
+    this.stats.totalCourses = 0;
+    this.stats.coursesEnAttente = 0;
+    this.stats.coursesTerminees = 0;
+    this.stats.avisDonnes = 0;
+  }
+
+  private normalizeStatus(status: any): string {
+    return String(status ?? '')
+      .trim()
+      .toUpperCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
   }
 }

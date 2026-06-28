@@ -146,6 +146,15 @@ export class DriverViewComponent implements OnInit {
         this.applyCourseStats(courses);
 
         console.log('STATS APPLIQUEES =', this.stats);
+        setTimeout(() => {
+          console.log('VERIFICATION APRES RENDU =', {
+            total: this.stats.coursesTotal,
+            terminees: this.stats.coursesTerminees,
+            revenus: this.stats.revenus,
+            note: this.stats.note,
+            credit: this.stats.soldeCredit
+          });
+        }, 2000);
       },
 
       error: (err: any) => {

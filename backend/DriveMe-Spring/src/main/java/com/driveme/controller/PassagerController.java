@@ -3,11 +3,11 @@ package com.driveme.controller;
 import com.driveme.dto.PassagerCreateDTO;
 import com.driveme.dto.PassagerResponseDTO;
 import com.driveme.service.PassagerService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -34,6 +34,11 @@ public class PassagerController {
     @GetMapping("/{id}")
     public ResponseEntity<PassagerResponseDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(passagerService.getPassagerById(id));
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<PassagerResponseDTO> getByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(passagerService.getPassagerByEmail(email));
     }
 
     @PutMapping("/{id}")

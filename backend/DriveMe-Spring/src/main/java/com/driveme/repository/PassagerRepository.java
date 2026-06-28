@@ -10,4 +10,5 @@ public interface PassagerRepository extends JpaRepository<Passager, Long> {
     boolean existsByUtilisateur_Telephone(String telephone);
 
     Optional<Passager> findByUtilisateur_Email(String email);
+
 }

@@ -20,4 +20,5 @@ public interface PassagerService {
     void deletePassager(Long id);
 
     long count();
+
 }

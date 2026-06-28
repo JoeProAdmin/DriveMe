@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService, AdminStats } from '../../../core/api.service';
 
@@ -13,20 +13,13 @@ import { ApiService, AdminStats } from '../../../core/api.service';
   <div class="dashboard-header">
 
     <div>
-
-      <h1>
-        {{ texts[currentLang].title }}
-      </h1>
-
-      <p>
-        {{ texts[currentLang].subtitle }}
-      </p>
-
+      <h1>{{ texts[currentLang].title }}</h1>
+      <p>{{ texts[currentLang].subtitle }}</p>
     </div>
 
   </div>
 
-  <div *ngIf="stats" class="stats-grid">
+  <div class="stats-grid">
 
     <div class="card">
       <span class="label">{{ texts[currentLang].drivers }}</span>
@@ -144,92 +137,115 @@ import { ApiService, AdminStats } from '../../../core/api.service';
 })
 export class AdminViewComponent implements OnInit {
 
-  private api = inject(ApiService);
+  private readonly api = inject(ApiService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
-  public stats: AdminStats | null = null;
+  public stats: AdminStats = {
+    totalChauffeurs: 0,
+    totalPassagers: 0,
+    totalCourses: 0,
+    totalPaiements: 0
+  };
 
   get currentLang(): 'fr' | 'en' | 'ar' | 'es' {
     return this.api.currentLanguage();
   }
 
-  public texts:any = {
+  public texts: any = {
 
-    fr:{
-      title:'Centre de pilotage DriveMe',
-      subtitle:'Supervision des chauffeurs, passagers, courses et paiements.',
-      drivers:'CHAUFFEURS',
-      passengers:'PASSAGERS',
-      trips:'COURSES',
-      payments:'PAIEMENTS',
-      driverManagement:'Gestion Chauffeurs',
-      driverDescription:'Validation et suivi des chauffeurs inscrits.',
-      passengerManagement:'Gestion Passagers',
-      passengerDescription:'Consultation des comptes passagers.',
-      tripManagement:'Suivi des Courses',
-      tripDescription:'Contrôle des trajets en cours et terminés.',
-      paymentManagement:'Paiements',
-      paymentDescription:'Vérification des transactions DriveMe.'
+    fr: {
+      title: 'Centre de pilotage DriveMe',
+      subtitle: 'Supervision des chauffeurs, passagers, courses et paiements.',
+      drivers: 'CHAUFFEURS',
+      passengers: 'PASSAGERS',
+      trips: 'COURSES',
+      payments: 'PAIEMENTS',
+      driverManagement: 'Gestion Chauffeurs',
+      driverDescription: 'Validation et suivi des chauffeurs inscrits.',
+      passengerManagement: 'Gestion Passagers',
+      passengerDescription: 'Consultation des comptes passagers.',
+      tripManagement: 'Suivi des Courses',
+      tripDescription: 'Contrôle des trajets en cours et terminés.',
+      paymentManagement: 'Paiements',
+      paymentDescription: 'Vérification des transactions DriveMe.'
     },
 
-    en:{
-      title:'DriveMe Control Center',
-      subtitle:'Drivers, passengers, trips and payments supervision.',
-      drivers:'DRIVERS',
-      passengers:'PASSENGERS',
-      trips:'TRIPS',
-      payments:'PAYMENTS',
-      driverManagement:'Driver Management',
-      driverDescription:'Validation and monitoring of drivers.',
-      passengerManagement:'Passenger Management',
-      passengerDescription:'Passenger account supervision.',
-      tripManagement:'Trip Management',
-      tripDescription:'Control active and completed trips.',
-      paymentManagement:'Payments',
-      paymentDescription:'Monitor financial transactions.'
+    en: {
+      title: 'DriveMe Control Center',
+      subtitle: 'Drivers, passengers, trips and payments supervision.',
+      drivers: 'DRIVERS',
+      passengers: 'PASSENGERS',
+      trips: 'TRIPS',
+      payments: 'PAYMENTS',
+      driverManagement: 'Driver Management',
+      driverDescription: 'Validation and monitoring of drivers.',
+      passengerManagement: 'Passenger Management',
+      passengerDescription: 'Passenger account supervision.',
+      tripManagement: 'Trip Management',
+      tripDescription: 'Control active and completed trips.',
+      paymentManagement: 'Payments',
+      paymentDescription: 'Monitor financial transactions.'
     },
 
-    ar:{
-      title:'مركز إدارة DriveMe',
-      subtitle:'إدارة السائقين والركاب والرحلات والمدفوعات.',
-      drivers:'السائقون',
-      passengers:'الركاب',
-      trips:'الرحلات',
-      payments:'المدفوعات',
-      driverManagement:'إدارة السائقين',
-      driverDescription:'متابعة واعتماد السائقين.',
-      passengerManagement:'إدارة الركاب',
-      passengerDescription:'إدارة حسابات الركاب.',
-      tripManagement:'إدارة الرحلات',
-      tripDescription:'متابعة الرحلات الجارية والمنتهية.',
-      paymentManagement:'المدفوعات',
-      paymentDescription:'متابعة المعاملات المالية.'
+    ar: {
+      title: 'مركز إدارة DriveMe',
+      subtitle: 'إدارة السائقين والركاب والرحلات والمدفوعات.',
+      drivers: 'السائقون',
+      passengers: 'الركاب',
+      trips: 'الرحلات',
+      payments: 'المدفوعات',
+      driverManagement: 'إدارة السائقين',
+      driverDescription: 'متابعة واعتماد السائقين.',
+      passengerManagement: 'إدارة الركاب',
+      passengerDescription: 'إدارة حسابات الركاب.',
+      tripManagement: 'إدارة الرحلات',
+      tripDescription: 'متابعة الرحلات الجارية والمنتهية.',
+      paymentManagement: 'المدفوعات',
+      paymentDescription: 'متابعة المعاملات المالية.'
     },
 
-    es:{
-      title:'Centro de Control DriveMe',
-      subtitle:'Supervisión de conductores, pasajeros, viajes y pagos.',
-      drivers:'CONDUCTORES',
-      passengers:'PASAJEROS',
-      trips:'VIAJES',
-      payments:'PAGOS',
-      driverManagement:'Gestión Conductores',
-      driverDescription:'Validación y seguimiento.',
-      passengerManagement:'Gestión Pasajeros',
-      passengerDescription:'Administración de cuentas.',
-      tripManagement:'Gestión Viajes',
-      tripDescription:'Control de viajes activos.',
-      paymentManagement:'Pagos',
-      paymentDescription:'Seguimiento financiero.'
+    es: {
+      title: 'Centro de Control DriveMe',
+      subtitle: 'Supervisión de conductores, pasajeros, viajes y pagos.',
+      drivers: 'CONDUCTORES',
+      passengers: 'PASAJEROS',
+      trips: 'VIAJES',
+      payments: 'PAGOS',
+      driverManagement: 'Gestión Conductores',
+      driverDescription: 'Validación y seguimiento.',
+      passengerManagement: 'Gestión Pasajeros',
+      passengerDescription: 'Administración de cuentas.',
+      tripManagement: 'Gestión Viajes',
+      tripDescription: 'Control de viajes activos.',
+      paymentManagement: 'Pagos',
+      paymentDescription: 'Seguimiento financiero.'
     }
   };
 
   ngOnInit(): void {
-
-    this.api.getAdminStats().subscribe({
-      next: data => this.stats = data,
-      error: err => console.error(err)
-    });
-
+    this.loadAdminStats();
   }
 
+  private loadAdminStats(): void {
+    this.api.getAdminStats().subscribe({
+      next: (data: AdminStats) => {
+        this.stats.totalChauffeurs = Number(data?.totalChauffeurs ?? 0);
+        this.stats.totalPassagers = Number(data?.totalPassagers ?? 0);
+        this.stats.totalCourses = Number(data?.totalCourses ?? 0);
+        this.stats.totalPaiements = Number(data?.totalPaiements ?? 0);
+
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        console.error('Erreur chargement statistiques administrateur', err);
+
+        this.stats.totalChauffeurs = 0;
+        this.stats.totalPassagers = 0;
+        this.stats.totalCourses = 0;
+        this.stats.totalPaiements = 0;
+
+        this.cdr.detectChanges();
+      }
+    });
+  }
 }

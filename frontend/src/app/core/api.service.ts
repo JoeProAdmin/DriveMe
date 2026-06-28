@@ -28,6 +28,16 @@ export interface ChauffeurResponseDTO {
   soldeCredit?: number;
 }
 
+export interface PassagerResponseDTO {
+  id: number;
+  nom?: string;
+  prenom?: string;
+  telephone?: string;
+  email?: string;
+  photoUrl?: string;
+  dateCreation?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -69,8 +79,20 @@ export class ApiService {
     );
   }
 
-  public getAllPassagers(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/passagers`);
+  public getAllPassagers(): Observable<PassagerResponseDTO[]> {
+    return this.http.get<PassagerResponseDTO[]>(
+      `${this.baseUrl}/passagers`
+    );
+  }
+
+  public getPassagerByEmail(
+    email: string
+  ): Observable<PassagerResponseDTO> {
+
+    return this.http.get<PassagerResponseDTO>(
+      `${this.baseUrl}/passagers/email/${encodeURIComponent(email)}`
+    );
+
   }
 
   public validerChauffeur(id: number, statut: number): Observable<void> {

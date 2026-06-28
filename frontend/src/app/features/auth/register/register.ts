@@ -125,6 +125,17 @@ export class RegisterComponent {
   public previews: { [key: string]: string } = {};
 
   public selectFlow(flow: 'PASSAGER' | 'CONDUCTEUR'): void { this.currentFlow = flow; this.currentStep = 1; }
+  public nextStep(): void {
+    if (this.currentStep < 4) {
+      this.currentStep++;
+    }
+  }
+
+  public previousStep(): void {
+    if (this.currentStep > 1) {
+      this.currentStep--;
+    }
+  }
   public resetFlow(): void { this.currentFlow = null; this.currentStep = 1; }
 
   public onFileSelected(event: Event, targetKey: string): void { /* Logique existante inchangée */ }

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription, interval } from 'rxjs';
-import { ApiService } from '../../../core/api.service';
+import { ApiService, ChauffeurResponseDTO, PassagerResponseDTO } from '../../../core/api.service';
 
 @Component({
   selector: 'app-course-list',
@@ -20,21 +20,116 @@ export class CourseList implements OnInit, OnDestroy {
   userRole = '';
 
   public currentLang: 'FR' | 'EN' | 'AR' | 'ES' = 'FR';
+
   public texts = {
-    FR: { title: 'Gestion des courses', subtitle: 'Suivi des courses DriveMe', dash: 'Dashboard', refresh: 'Rafraîchir', total: 'Total', waiting: 'En attente', accepted: 'Acceptées', finished: 'Terminées', loading: 'Chargement des courses...', errorLoad: 'Erreur chargement', dep: 'Départ', dest: 'Destination', pass: 'Passager', drv: 'Chauffeur', price: 'Prix', acc: 'Accepter la course', end: 'Terminer la course', t1: 'Demande envoyée', t2: 'Chauffeur accepté', t3: 'Course terminée', empty: 'Aucune course disponible.' },
-    EN: { title: 'Ride Management', subtitle: 'DriveMe ride tracking', dash: 'Dashboard', refresh: 'Refresh', total: 'Total', waiting: 'Pending', accepted: 'Accepted', finished: 'Finished', loading: 'Loading rides...', errorLoad: 'Error loading', dep: 'Departure', dest: 'Destination', pass: 'Passenger', drv: 'Driver', price: 'Price', acc: 'Accept ride', end: 'Finish ride', t1: 'Request sent', t2: 'Driver accepted', t3: 'Ride finished', empty: 'No rides available.' },
-    AR: { title: 'إدارة الرحلات', subtitle: 'تتبع رحلات DriveMe', dash: 'لوحة التحكم', refresh: 'تحديث', total: 'الإجمالي', waiting: 'قيد الانتظار', accepted: 'تم قبولها', finished: 'مكتملة', loading: 'جاري تحميل الرحلات...', errorLoad: 'خطأ في التحميل', dep: 'نقطة الانطلاق', dest: 'الوجهة', pass: 'الراكب', drv: 'السائق', price: 'السعر', acc: 'قبول الرحلة', end: 'إنهاء الرحلة', t1: 'تم إرسال الطلب', t2: 'تم قبول السائق', t3: 'اكتملت الرحلة', empty: 'لا توجد رحلات متاحة.' },
-    ES: { title: 'Gestión de viajes', subtitle: 'Seguimiento de viajes DriveMe', dash: 'Dashboard', refresh: 'Refrescar', total: 'Total', waiting: 'Pendiente', accepted: 'Aceptado', finished: 'Finalizado', loading: 'Cargando viajes...', errorLoad: 'Error de carga', dep: 'Salida', dest: 'Destino', pass: 'Pasajero', drv: 'Conductor', price: 'Precio', acc: 'Aceptar viaje', end: 'Terminar viaje', t1: 'Solicitud enviada', t2: 'Conductor aceptado', t3: 'Viaje terminado', empty: 'No hay viajes disponibles.' }
+    FR: {
+      title: 'Gestion des courses',
+      subtitle: 'Suivi des courses DriveMe',
+      dash: 'Dashboard',
+      refresh: 'Rafraîchir',
+      total: 'Total',
+      waiting: 'En attente',
+      accepted: 'Acceptées',
+      finished: 'Terminées',
+      loading: 'Chargement des courses...',
+      errorLoad: 'Erreur chargement',
+      dep: 'Départ',
+      dest: 'Destination',
+      pass: 'Passager',
+      drv: 'Chauffeur',
+      price: 'Prix',
+      acc: 'Accepter la course',
+      end: 'Terminer la course',
+      t1: 'Demande envoyée',
+      t2: 'Chauffeur accepté',
+      t3: 'Course terminée',
+      empty: 'Aucune course disponible.'
+    },
+    EN: {
+      title: 'Ride Management',
+      subtitle: 'DriveMe ride tracking',
+      dash: 'Dashboard',
+      refresh: 'Refresh',
+      total: 'Total',
+      waiting: 'Pending',
+      accepted: 'Accepted',
+      finished: 'Finished',
+      loading: 'Loading rides...',
+      errorLoad: 'Error loading',
+      dep: 'Departure',
+      dest: 'Destination',
+      pass: 'Passenger',
+      drv: 'Driver',
+      price: 'Price',
+      acc: 'Accept ride',
+      end: 'Finish ride',
+      t1: 'Request sent',
+      t2: 'Driver accepted',
+      t3: 'Ride finished',
+      empty: 'No rides available.'
+    },
+    AR: {
+      title: 'إدارة الرحلات',
+      subtitle: 'تتبع رحلات DriveMe',
+      dash: 'لوحة التحكم',
+      refresh: 'تحديث',
+      total: 'الإجمالي',
+      waiting: 'قيد الانتظار',
+      accepted: 'تم قبولها',
+      finished: 'مكتملة',
+      loading: 'جاري تحميل الرحلات...',
+      errorLoad: 'خطأ في التحميل',
+      dep: 'نقطة الانطلاق',
+      dest: 'الوجهة',
+      pass: 'الراكب',
+      drv: 'السائق',
+      price: 'السعر',
+      acc: 'قبول الرحلة',
+      end: 'إنهاء الرحلة',
+      t1: 'تم إرسال الطلب',
+      t2: 'تم قبول السائق',
+      t3: 'اكتملت الرحلة',
+      empty: 'لا توجد رحلات متاحة.'
+    },
+    ES: {
+      title: 'Gestión de viajes',
+      subtitle: 'Seguimiento de viajes DriveMe',
+      dash: 'Dashboard',
+      refresh: 'Refrescar',
+      total: 'Total',
+      waiting: 'Pendiente',
+      accepted: 'Aceptado',
+      finished: 'Finalizado',
+      loading: 'Cargando viajes...',
+      errorLoad: 'Error de carga',
+      dep: 'Salida',
+      dest: 'Destino',
+      pass: 'Pasajero',
+      drv: 'Conductor',
+      price: 'Precio',
+      acc: 'Aceptar viaje',
+      end: 'Terminar viaje',
+      t1: 'Solicitud enviada',
+      t2: 'Conductor aceptado',
+      t3: 'Viaje terminado',
+      empty: 'No hay viajes disponibles.'
+    }
   };
 
   private refreshSubscription?: Subscription;
 
-  constructor(private apiService: ApiService, private router: Router) {}
+  constructor(
+    private readonly apiService: ApiService,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
     this.userRole = localStorage.getItem('userRole') || '';
     this.loadCourses();
-    this.refreshSubscription = interval(5000).subscribe(() => this.loadCourses(false));
+
+    this.refreshSubscription = interval(5000).subscribe(() => {
+      this.loadCourses(false);
+    });
   }
 
   ngOnDestroy(): void {
@@ -42,57 +137,131 @@ export class CourseList implements OnInit, OnDestroy {
   }
 
   loadCourses(showLoading: boolean = true): void {
-    if (showLoading) this.loading = true;
+    if (showLoading) {
+      this.loading = true;
+    }
+
     this.errorMessage = '';
-    const role = localStorage.getItem('userRole');
-    const email = localStorage.getItem('userEmail');
-    if (role === 'ADMIN') { this.loadAdminCourses(); return; }
-    if (role === 'PASSAGER' && email) { this.loadPassengerCourses(email); return; }
-    if (role === 'CHAUFFEUR' && email) { this.loadDriverCourses(); return; }
-    this.courses = [];
-    this.loading = false;
+
+    const role = localStorage.getItem('userRole') || '';
+    const email = localStorage.getItem('userEmail') || '';
+
+    this.userRole = role;
+
+    if (role === 'ADMIN') {
+      this.loadAdminCourses();
+      return;
+    }
+
+    if (role === 'PASSAGER') {
+      this.loadPassengerCourses(email);
+      return;
+    }
+
+    if (role === 'CHAUFFEUR') {
+      this.loadDriverCourses(email);
+      return;
+    }
+
+    this.clearCourses();
   }
 
   private loadAdminCourses(): void {
     this.apiService.getCourses().subscribe({
-      next: (data: any[]) => { this.courses = data; this.loading = false; },
-      error: () => { this.errorMessage = this.texts[this.currentLang].errorLoad; this.loading = false; }
-    });
-  }
-
-  private loadPassengerCourses(email: string): void {
-    this.apiService.getAllPassagers().subscribe({
-      next: (passagers: any[]) => {
-        const passager = passagers.find((p: any) => p.email === email);
-        if (!passager) { this.courses = []; this.loading = false; return; }
-        this.apiService.getCoursesByPassager(passager.id).subscribe({
-          next: (data: any[]) => { this.courses = data; this.loading = false; },
-          error: () => { this.errorMessage = this.texts[this.currentLang].errorLoad; this.loading = false; }
-        });
+      next: (data: any[]) => {
+        this.courses = Array.isArray(data) ? data : [];
+        this.loading = false;
+      },
+      error: (err: any) => {
+        console.error('Erreur chargement courses admin', err);
+        this.errorMessage = this.texts[this.currentLang].errorLoad;
+        this.clearCourses();
       }
     });
   }
 
-  private loadDriverCourses(): void {
-    const email = localStorage.getItem('userEmail');
-    if (!email) { this.courses = []; this.loading = false; return; }
-    this.apiService.getChauffeurByEmail(email).subscribe({
-      next: (chauffeur) => {
-        this.apiService.getCoursesByChauffeur(chauffeur.id).subscribe({
-          next: (data: any[]) => { this.courses = data; this.loading = false; },
-          error: () => { this.errorMessage = this.texts[this.currentLang].errorLoad; this.loading = false; }
+  private loadPassengerCourses(email: string): void {
+    if (!email) {
+      this.clearCourses();
+      return;
+    }
+
+    this.apiService.getPassagerByEmail(email).subscribe({
+      next: (passager: PassagerResponseDTO) => {
+        this.apiService.getCoursesByPassager(passager.id).subscribe({
+          next: (data: any[]) => {
+            this.courses = Array.isArray(data) ? data : [];
+            this.loading = false;
+          },
+          error: (err: any) => {
+            console.error('Erreur chargement courses passager', err);
+            this.errorMessage = this.texts[this.currentLang].errorLoad;
+            this.clearCourses();
+          }
         });
+      },
+      error: (err: any) => {
+        console.error('Erreur récupération passager connecté', err);
+        this.errorMessage = this.texts[this.currentLang].errorLoad;
+        this.clearCourses();
+      }
+    });
+  }
+
+  private loadDriverCourses(email: string): void {
+    if (!email) {
+      this.clearCourses();
+      return;
+    }
+
+    this.apiService.getChauffeurByEmail(email).subscribe({
+      next: (chauffeur: ChauffeurResponseDTO) => {
+        this.apiService.getCoursesByChauffeur(chauffeur.id).subscribe({
+          next: (data: any[]) => {
+            this.courses = Array.isArray(data) ? data : [];
+            this.loading = false;
+          },
+          error: (err: any) => {
+            console.error('Erreur chargement courses chauffeur', err);
+            this.errorMessage = this.texts[this.currentLang].errorLoad;
+            this.clearCourses();
+          }
+        });
+      },
+      error: (err: any) => {
+        console.error('Erreur récupération chauffeur connecté', err);
+        this.errorMessage = this.texts[this.currentLang].errorLoad;
+        this.clearCourses();
       }
     });
   }
 
   acceptCourse(courseId: number): void {
-    this.apiService.updateCourseStatus(courseId, 'ACCEPTEE').subscribe(() => this.loadCourses(true));
+    this.apiService.updateCourseStatus(courseId, 'ACCEPTEE').subscribe({
+      next: () => this.loadCourses(true),
+      error: (err: any) => {
+        console.error('Erreur acceptation course', err);
+        this.errorMessage = this.texts[this.currentLang].errorLoad;
+      }
+    });
   }
 
   finishCourse(courseId: number): void {
-    this.apiService.updateCourseStatus(courseId, 'TERMINEE').subscribe(() => this.loadCourses(true));
+    this.apiService.updateCourseStatus(courseId, 'TERMINEE').subscribe({
+      next: () => this.loadCourses(true),
+      error: (err: any) => {
+        console.error('Erreur fin de course', err);
+        this.errorMessage = this.texts[this.currentLang].errorLoad;
+      }
+    });
   }
 
-  goToDashboard(): void { this.router.navigate(['/dashboard']); }
+  goToDashboard(): void {
+    this.router.navigate(['/dashboard']);
+  }
+
+  private clearCourses(): void {
+    this.courses = [];
+    this.loading = false;
+  }
 }

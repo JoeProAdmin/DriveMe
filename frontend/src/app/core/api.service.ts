@@ -38,6 +38,52 @@ export interface PassagerResponseDTO {
   dateCreation?: string;
 }
 
+/* =======================================================
+   INDRIVE
+======================================================= */
+
+export interface PropositionCreateDTO {
+
+  courseId: number;
+
+  chauffeurId: number;
+
+  prixPropose: number;
+
+  distanceChauffeurDepart?: number;
+
+  tempsEstimeMinutes?: number;
+
+  message?: string;
+
+}
+
+export interface PropositionResponseDTO {
+
+  id: number;
+
+  courseId: number;
+
+  chauffeurId: number;
+
+  chauffeurNom: string;
+
+  noteMoyenne: number;
+
+  prixPropose: number;
+
+  distanceChauffeurDepart: number;
+
+  tempsEstimeMinutes: number;
+
+  message: string;
+
+  statut: string;
+
+  dateCreation: string;
+
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -131,6 +177,41 @@ export class ApiService {
 
   public soumettreAvis(avis: AvisDTO): Observable<void> {
     return this.http.post<void>(`${this.baseUrl}/avis`, avis);
+  }
+
+  public creerProposition(
+    proposition: PropositionCreateDTO
+  ): Observable<PropositionResponseDTO> {
+    return this.http.post<PropositionResponseDTO>(
+      `${this.baseUrl}/propositions`,
+      proposition
+    );
+  }
+
+  public getPropositionsByCourse(
+    courseId: number
+  ): Observable<PropositionResponseDTO[]> {
+    return this.http.get<PropositionResponseDTO[]>(
+      `${this.baseUrl}/propositions/course/${courseId}`
+    );
+  }
+
+  public getPropositionsByChauffeur(
+    chauffeurId: number
+  ): Observable<PropositionResponseDTO[]> {
+    return this.http.get<PropositionResponseDTO[]>(
+      `${this.baseUrl}/propositions/chauffeur/${chauffeurId}`
+    );
+  }
+
+  public choisirProposition(
+    courseId: number,
+    propositionId: number
+  ): Observable<PropositionResponseDTO> {
+    return this.http.put<PropositionResponseDTO>(
+      `${this.baseUrl}/propositions/${courseId}/choisir/${propositionId}`,
+      {}
+    );
   }
 
   public uploadSelfieVerification(id: number, file: File): Observable<any> {

@@ -2,6 +2,8 @@ package com.driveme.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "course")
@@ -28,6 +30,12 @@ public class Course {
     @Column(nullable = false)
     private Double prix;
 
+    @Column(name = "prix_initial")
+    private Double prixInitial;
+
+    @Column(name = "prix_final")
+    private Double prixFinal;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private CourseStatus statut;
@@ -35,9 +43,15 @@ public class Course {
     @Column(name = "date_creation", nullable = false)
     private LocalDateTime dateCreation;
 
-    // ===== NOUVEAU : RELATION PAIEMENT =====
     @OneToOne(mappedBy = "course", cascade = CascadeType.ALL)
     private Paiement paiement;
+
+    @OneToMany(
+            mappedBy = "course",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<PropositionChauffeur> propositions = new ArrayList<>();
 
     public Course() {
     }
@@ -45,8 +59,17 @@ public class Course {
     @PrePersist
     public void prePersist() {
         this.dateCreation = LocalDateTime.now();
+
         if (this.statut == null) {
             this.statut = CourseStatus.EN_ATTENTE;
+        }
+
+        if (this.prixInitial == null && this.prix != null) {
+            this.prixInitial = this.prix;
+        }
+
+        if (this.prixFinal == null && this.prix != null) {
+            this.prixFinal = this.prix;
         }
     }
 
@@ -74,6 +97,14 @@ public class Course {
         return prix;
     }
 
+    public Double getPrixInitial() {
+        return prixInitial;
+    }
+
+    public Double getPrixFinal() {
+        return prixFinal;
+    }
+
     public CourseStatus getStatut() {
         return statut;
     }
@@ -84,6 +115,10 @@ public class Course {
 
     public Paiement getPaiement() {
         return paiement;
+    }
+
+    public List<PropositionChauffeur> getPropositions() {
+        return propositions;
     }
 
     public void setId(Long id) {
@@ -110,6 +145,14 @@ public class Course {
         this.prix = prix;
     }
 
+    public void setPrixInitial(Double prixInitial) {
+        this.prixInitial = prixInitial;
+    }
+
+    public void setPrixFinal(Double prixFinal) {
+        this.prixFinal = prixFinal;
+    }
+
     public void setStatut(CourseStatus statut) {
         this.statut = statut;
     }
@@ -120,5 +163,9 @@ public class Course {
 
     public void setPaiement(Paiement paiement) {
         this.paiement = paiement;
+    }
+
+    public void setPropositions(List<PropositionChauffeur> propositions) {
+        this.propositions = propositions;
     }
 }

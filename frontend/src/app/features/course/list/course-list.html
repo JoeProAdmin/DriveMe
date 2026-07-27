@@ -3,28 +3,20 @@
   [attr.dir]="currentLang === 'AR' ? 'rtl' : 'ltr'"
 >
   <header class="page-header">
-    <div class="header-content">
+    <div>
       <h1>{{ texts[currentLang].title }}</h1>
       <p>{{ pageSubtitle }}</p>
     </div>
 
     <div class="header-actions">
-      <select
-        class="language-select"
-        [(ngModel)]="currentLang"
-        aria-label="Langue"
-      >
+      <select class="language-select" [(ngModel)]="currentLang" aria-label="Langue">
         <option value="FR">FR</option>
         <option value="EN">EN</option>
         <option value="AR">AR</option>
         <option value="ES">ES</option>
       </select>
 
-      <button
-        type="button"
-        class="dashboard-btn"
-        (click)="goToDashboard()"
-      >
+      <button type="button" class="dashboard-btn" (click)="goToDashboard()">
         {{ texts[currentLang].dash }}
       </button>
 
@@ -41,99 +33,54 @@
 
   <section class="stats-grid">
     <article class="stat-card">
-      <h3>{{ texts[currentLang].total }}</h3>
-      <p>{{ totalCourses }}</p>
+      <span>{{ texts[currentLang].total }}</span>
+      <strong>{{ totalCourses }}</strong>
     </article>
-
     <article class="stat-card">
-      <h3>{{ texts[currentLang].waiting }}</h3>
-      <p>{{ waitingCoursesCount }}</p>
+      <span>{{ texts[currentLang].waiting }}</span>
+      <strong>{{ waitingCoursesCount }}</strong>
     </article>
-
     <article class="stat-card">
-      <h3>{{ texts[currentLang].accepted }}</h3>
-      <p>{{ acceptedCoursesCount }}</p>
+      <span>{{ texts[currentLang].accepted }}</span>
+      <strong>{{ acceptedCoursesCount }}</strong>
     </article>
-
     <article class="stat-card">
-      <h3>{{ texts[currentLang].finished }}</h3>
-      <p>{{ finishedCoursesCount }}</p>
+      <span>{{ texts[currentLang].finished }}</span>
+      <strong>{{ finishedCoursesCount }}</strong>
     </article>
   </section>
 
-  <div *ngIf="loading" class="loading">
+  <div *ngIf="loading" class="message message-loading">
     {{ texts[currentLang].loading }}
   </div>
 
-  <div *ngIf="errorMessage" class="error">
+  <div *ngIf="errorMessage" class="message message-error">
     {{ errorMessage }}
   </div>
 
-  <!-- =====================================================
-       ADMIN
-  ====================================================== -->
+  <div *ngIf="successMessage" class="message message-success">
+    {{ successMessage }}
+  </div>
 
-  <section *ngIf="userRole === 'ADMIN' && !loading">
+  <!-- ADMIN -->
+  <section *ngIf="userRole === 'ADMIN' && !loading" class="course-section">
     <div class="section-heading">
       <div>
         <h2>{{ texts[currentLang].title }}</h2>
         <p>{{ texts[currentLang].subtitleAdmin }}</p>
       </div>
-
-      <span class="section-count">
-        {{ courses.length }}
-      </span>
+      <span class="section-count">{{ courses.length }}</span>
     </div>
 
     <div class="courses-grid" *ngIf="courses.length > 0">
       <article
         class="course-card"
-        *ngFor="let course of courses"
+        *ngFor="let course of courses; trackBy: trackByCourseId"
       >
-        <div class="card-header">
-          <span class="course-id">#{{ course.id }}</span>
-
-          <span
-            class="status"
-            [ngClass]="statusClass(course.statut)"
-          >
-            {{ course.statut }}
-          </span>
-        </div>
-
-        <div class="course-body">
-          <div class="course-information">
-            <p>
-              <strong>{{ texts[currentLang].dep }}</strong>
-              <span>{{ course.adresseDepart }}</span>
-            </p>
-
-            <p>
-              <strong>{{ texts[currentLang].dest }}</strong>
-              <span>{{ course.adresseArrivee }}</span>
-            </p>
-
-            <p>
-              <strong>{{ texts[currentLang].pass }}</strong>
-              <span>{{ course.passagerNom }}</span>
-            </p>
-
-            <p>
-              <strong>{{ texts[currentLang].drv }}</strong>
-              <span>
-                {{
-                  course.chauffeurNom ||
-                  texts[currentLang].waitingDriver
-                }}
-              </span>
-            </p>
-          </div>
-
-          <div class="price-box">
-            <span>{{ texts[currentLang].price }}</span>
-            <strong>{{ course.prix }} MAD</strong>
-          </div>
-        </div>
+        <ng-container
+          [ngTemplateOutlet]="courseSummary"
+          [ngTemplateOutletContext]="{ course: course, showPassenger: true, showDriver: true }"
+        ></ng-container>
       </article>
     </div>
 
@@ -142,89 +89,120 @@
     </div>
   </section>
 
-  <!-- =====================================================
-       PASSAGER
-  ====================================================== -->
-
-  <section *ngIf="userRole === 'PASSAGER' && !loading">
+  <!-- PASSAGER -->
+  <section *ngIf="userRole === 'PASSAGER' && !loading" class="course-section">
     <div class="section-heading">
       <div>
         <h2>{{ texts[currentLang].myTrips }}</h2>
         <p>{{ texts[currentLang].subtitlePassenger }}</p>
       </div>
-
-      <span class="section-count">
-        {{ courses.length }}
-      </span>
+      <span class="section-count">{{ courses.length }}</span>
     </div>
 
-    <div class="courses-grid" *ngIf="courses.length > 0">
+    <div class="courses-grid passenger-grid" *ngIf="courses.length > 0">
       <article
         class="course-card"
-        *ngFor="let course of courses"
+        *ngFor="let course of courses; trackBy: trackByCourseId"
       >
-        <div class="card-header">
-          <span class="course-id">#{{ course.id }}</span>
+        <ng-container
+          [ngTemplateOutlet]="courseSummary"
+          [ngTemplateOutletContext]="{ course: course, showPassenger: false, showDriver: true }"
+        ></ng-container>
 
-          <span
-            class="status"
-            [ngClass]="statusClass(course.statut)"
+        <div
+          class="course-actions"
+          *ngIf="normalizeStatus(course.statut) === 'EN_ATTENTE'"
+        >
+          <button
+            type="button"
+            class="secondary-btn"
+            [disabled]="loadingProposalsCourseId === course.id"
+            (click)="toggleCourseProposals(course.id)"
           >
-            {{ course.statut }}
-          </span>
+            {{
+              loadingProposalsCourseId === course.id
+                ? texts[currentLang].loadingOffers
+                : areProposalsVisible(course.id)
+                  ? texts[currentLang].hideOffers
+                  : texts[currentLang].viewOffers
+            }}
+          </button>
         </div>
 
-        <div class="course-body">
-          <div class="course-information">
-            <p>
-              <strong>{{ texts[currentLang].dep }}</strong>
-              <span>{{ course.adresseDepart }}</span>
-            </p>
+        <section
+          class="offers-panel"
+          *ngIf="areProposalsVisible(course.id)"
+        >
+          <h3>{{ texts[currentLang].offers }}</h3>
 
-            <p>
-              <strong>{{ texts[currentLang].dest }}</strong>
-              <span>{{ course.adresseArrivee }}</span>
-            </p>
-
-            <p>
-              <strong>{{ texts[currentLang].drv }}</strong>
-              <span>
-                {{
-                  course.chauffeurNom ||
-                  texts[currentLang].waitingDriver
-                }}
-              </span>
-            </p>
-          </div>
-
-          <div class="price-box">
-            <span>{{ texts[currentLang].price }}</span>
-            <strong>{{ course.prix }} MAD</strong>
-          </div>
-
-          <div class="course-tracking">
-            <div class="tracking-step completed">
-              {{ texts[currentLang].t1 }}
-            </div>
-
-            <div
-              class="tracking-step"
-              [class.completed]="
-                course.statut === 'ACCEPTEE' ||
-                course.statut === 'TERMINEE'
+          <div
+            class="offer-list"
+            *ngIf="getCourseProposals(course.id).length > 0"
+          >
+            <article
+              class="offer-card"
+              *ngFor="
+                let proposal of getCourseProposals(course.id);
+                trackBy: trackByProposalId
               "
+              [class.offer-selected]="isSelectedProposal(proposal)"
             >
-              {{ texts[currentLang].t2 }}
-            </div>
+              <div class="offer-top">
+                <div>
+                  <strong>{{ proposal.chauffeurNom }}</strong>
+                  <span>
+                    {{ texts[currentLang].driverNote }}:
+                    {{ proposal.noteMoyenne || '—' }}
+                  </span>
+                </div>
 
-            <div
-              class="tracking-step"
-              [class.completed]="course.statut === 'TERMINEE'"
-            >
-              {{ texts[currentLang].t3 }}
-            </div>
+                <strong class="offer-price">
+                  {{ proposal.prixPropose }} {{ texts[currentLang].mad }}
+                </strong>
+              </div>
+
+              <div class="offer-meta">
+                <span *ngIf="proposal.distanceChauffeurDepart">
+                  {{ texts[currentLang].distanceShort }}:
+                  {{ proposal.distanceChauffeurDepart }} km
+                </span>
+                <span *ngIf="proposal.tempsEstimeMinutes">
+                  {{ texts[currentLang].etaShort }}:
+                  {{ proposal.tempsEstimeMinutes }} min
+                </span>
+              </div>
+
+              <p *ngIf="proposal.message" class="offer-message">
+                {{ proposal.message }}
+              </p>
+
+              <button
+                type="button"
+                class="choose-btn"
+                [disabled]="
+                  selectingProposalId !== null ||
+                  isSelectedProposal(proposal)
+                "
+                (click)="chooseProposal(course.id, proposal.id)"
+              >
+                {{
+                  isSelectedProposal(proposal)
+                    ? texts[currentLang].chosen
+                    : selectingProposalId === proposal.id
+                      ? texts[currentLang].choosing
+                      : texts[currentLang].choose
+                }}
+              </button>
+            </article>
           </div>
-        </div>
+
+          <div
+            class="empty-state compact"
+            *ngIf="getCourseProposals(course.id).length === 0"
+          >
+            {{ texts[currentLang].noOffers }}
+          </div>
+        </section>
       </article>
     </div>
 
@@ -233,166 +211,218 @@
     </div>
   </section>
 
-  <!-- =====================================================
-       CHAUFFEUR : COURSES DISPONIBLES
-  ====================================================== -->
-
+  <!-- CHAUFFEUR -->
   <ng-container *ngIf="userRole === 'CHAUFFEUR' && !loading">
-    <section class="driver-section">
+    <section class="course-section">
       <div class="section-heading">
         <div>
           <h2>{{ texts[currentLang].availableTrips }}</h2>
           <p>{{ texts[currentLang].subtitleDriver }}</p>
         </div>
-
-        <span class="section-count section-count-available">
+        <span class="section-count available-count">
           {{ coursesDisponibles.length }}
         </span>
       </div>
 
-      <div
-        class="courses-grid"
-        *ngIf="coursesDisponibles.length > 0"
-      >
+      <div class="courses-grid" *ngIf="coursesDisponibles.length > 0">
         <article
           class="course-card available-course"
-          *ngFor="let course of coursesDisponibles"
+          *ngFor="
+            let course of coursesDisponibles;
+            trackBy: trackByCourseId
+          "
         >
-          <div class="card-header">
-            <span class="course-id">#{{ course.id }}</span>
+          <ng-container
+            [ngTemplateOutlet]="courseSummary"
+            [ngTemplateOutletContext]="{ course: course, showPassenger: true, showDriver: false }"
+          ></ng-container>
 
-            <span
-              class="status"
-              [ngClass]="statusClass(course.statut)"
+          <div class="course-actions">
+            <button
+              *ngIf="!hasSentProposal(course.id)"
+              type="button"
+              class="proposal-btn"
+              (click)="openProposal(course)"
             >
-              {{ course.statut }}
-            </span>
+              {{ texts[currentLang].propose }}
+            </button>
+
+            <button
+              *ngIf="hasSentProposal(course.id)"
+              type="button"
+              class="proposal-sent-btn"
+              disabled
+            >
+              {{ texts[currentLang].proposalSent }}
+            </button>
           </div>
 
-          <div class="course-body">
-            <div class="course-information">
-              <p>
-                <strong>{{ texts[currentLang].dep }}</strong>
-                <span>{{ course.adresseDepart }}</span>
-              </p>
+          <form
+            *ngIf="isProposalFormOpen(course.id)"
+            class="proposal-form"
+            #proposalNgForm="ngForm"
+            (ngSubmit)="submitProposal(course)"
+          >
+            <div class="form-grid">
+              <label>
+                <span>{{ texts[currentLang].proposedPrice }}</span>
+                <input
+                  type="number"
+                  min="1"
+                  step="1"
+                  required
+                  name="prixPropose-{{ course.id }}"
+                  [(ngModel)]="proposalForm.prixPropose"
+                />
+              </label>
 
-              <p>
-                <strong>{{ texts[currentLang].dest }}</strong>
-                <span>{{ course.adresseArrivee }}</span>
-              </p>
+              <label>
+                <span>{{ texts[currentLang].distance }}</span>
+                <input
+                  type="number"
+                  min="0.1"
+                  step="0.1"
+                  name="distance-{{ course.id }}"
+                  [(ngModel)]="proposalForm.distanceChauffeurDepart"
+                />
+              </label>
 
-              <p>
-                <strong>{{ texts[currentLang].pass }}</strong>
-                <span>{{ course.passagerNom }}</span>
-              </p>
+              <label>
+                <span>{{ texts[currentLang].eta }}</span>
+                <input
+                  type="number"
+                  min="1"
+                  step="1"
+                  name="eta-{{ course.id }}"
+                  [(ngModel)]="proposalForm.tempsEstimeMinutes"
+                />
+              </label>
+
+              <label class="full-width">
+                <span>{{ texts[currentLang].message }}</span>
+                <textarea
+                  rows="3"
+                  maxlength="250"
+                  name="message-{{ course.id }}"
+                  [placeholder]="texts[currentLang].messagePlaceholder"
+                  [(ngModel)]="proposalForm.message"
+                ></textarea>
+              </label>
             </div>
 
-            <div class="price-box">
-              <span>{{ texts[currentLang].price }}</span>
-              <strong>{{ course.prix }} MAD</strong>
-            </div>
-
-            <div class="course-actions">
+            <div class="form-actions">
               <button
                 type="button"
-                class="proposal-btn"
-                (click)="openProposal(course)"
+                class="cancel-btn"
+                [disabled]="submittingProposalCourseId === course.id"
+                (click)="closeProposal()"
               >
-                {{ texts[currentLang].propose }}
+                {{ texts[currentLang].cancel }}
+              </button>
+
+              <button
+                type="submit"
+                class="send-btn"
+                [disabled]="
+                  proposalNgForm.invalid ||
+                  submittingProposalCourseId === course.id
+                "
+              >
+                {{
+                  submittingProposalCourseId === course.id
+                    ? texts[currentLang].sending
+                    : texts[currentLang].send
+                }}
               </button>
             </div>
-          </div>
+          </form>
         </article>
       </div>
 
-      <div
-        class="empty-state"
-        *ngIf="coursesDisponibles.length === 0"
-      >
+      <div class="empty-state" *ngIf="coursesDisponibles.length === 0">
         {{ texts[currentLang].emptyAvailable }}
       </div>
     </section>
 
-    <!-- ===================================================
-         CHAUFFEUR : MES COURSES
-    ==================================================== -->
-
-    <section class="driver-section my-courses-section">
+    <section class="course-section">
       <div class="section-heading">
         <div>
           <h2>{{ texts[currentLang].myTrips }}</h2>
           <p>{{ texts[currentLang].subtitleDriver }}</p>
         </div>
-
-        <span class="section-count">
-          {{ mesCourses.length }}
-        </span>
+        <span class="section-count">{{ mesCourses.length }}</span>
       </div>
 
-      <div
-        class="courses-grid"
-        *ngIf="mesCourses.length > 0"
-      >
+      <div class="courses-grid" *ngIf="mesCourses.length > 0">
         <article
           class="course-card"
-          *ngFor="let course of mesCourses"
+          *ngFor="let course of mesCourses; trackBy: trackByCourseId"
         >
-          <div class="card-header">
-            <span class="course-id">#{{ course.id }}</span>
+          <ng-container
+            [ngTemplateOutlet]="courseSummary"
+            [ngTemplateOutletContext]="{ course: course, showPassenger: true, showDriver: false }"
+          ></ng-container>
 
-            <span
-              class="status"
-              [ngClass]="statusClass(course.statut)"
+          <div
+            class="course-actions"
+            *ngIf="normalizeStatus(course.statut) === 'ACCEPTEE'"
+          >
+            <button
+              type="button"
+              class="finish-btn"
+              (click)="finishCourse(course.id)"
             >
-              {{ course.statut }}
-            </span>
-          </div>
-
-          <div class="course-body">
-            <div class="course-information">
-              <p>
-                <strong>{{ texts[currentLang].dep }}</strong>
-                <span>{{ course.adresseDepart }}</span>
-              </p>
-
-              <p>
-                <strong>{{ texts[currentLang].dest }}</strong>
-                <span>{{ course.adresseArrivee }}</span>
-              </p>
-
-              <p>
-                <strong>{{ texts[currentLang].pass }}</strong>
-                <span>{{ course.passagerNom }}</span>
-              </p>
-            </div>
-
-            <div class="price-box">
-              <span>{{ texts[currentLang].price }}</span>
-              <strong>{{ course.prix }} MAD</strong>
-            </div>
-
-            <div
-              class="course-actions"
-              *ngIf="course.statut === 'ACCEPTEE'"
-            >
-              <button
-                type="button"
-                class="finish-btn"
-                (click)="finishCourse(course.id)"
-              >
-                {{ texts[currentLang].end }}
-              </button>
-            </div>
+              {{ texts[currentLang].end }}
+            </button>
           </div>
         </article>
       </div>
 
-      <div
-        class="empty-state"
-        *ngIf="mesCourses.length === 0"
-      >
+      <div class="empty-state" *ngIf="mesCourses.length === 0">
         {{ texts[currentLang].emptyDriverTrips }}
       </div>
     </section>
   </ng-container>
 </div>
+
+<ng-template
+  #courseSummary
+  let-course="course"
+  let-showPassenger="showPassenger"
+  let-showDriver="showDriver"
+>
+  <div class="card-header">
+    <span class="course-id">#{{ course.id }}</span>
+    <span class="status" [ngClass]="statusClass(course.statut)">
+      {{ course.statut }}
+    </span>
+  </div>
+
+  <div class="course-body">
+    <div class="course-information">
+      <p>
+        <strong>{{ texts[currentLang].dep }}</strong>
+        <span>{{ course.adresseDepart }}</span>
+      </p>
+      <p>
+        <strong>{{ texts[currentLang].dest }}</strong>
+        <span>{{ course.adresseArrivee }}</span>
+      </p>
+      <p *ngIf="showPassenger">
+        <strong>{{ texts[currentLang].pass }}</strong>
+        <span>{{ course.passagerNom || '—' }}</span>
+      </p>
+      <p *ngIf="showDriver">
+        <strong>{{ texts[currentLang].drv }}</strong>
+        <span>
+          {{ course.chauffeurNom || texts[currentLang].waitingDriver }}
+        </span>
+      </p>
+    </div>
+
+    <div class="price-box">
+      <span>{{ texts[currentLang].price }}</span>
+      <strong>{{ course.prix }} {{ texts[currentLang].mad }}</strong>
+    </div>
+  </div>
+</ng-template>

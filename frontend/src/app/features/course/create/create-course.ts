@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ApiService } from '../../../core/api.service';
+import { ApiService, PassagerResponseDTO } from '../../../core/api.service';
 
 @Component({
   selector: 'app-create-course',
@@ -35,10 +35,7 @@ export class CreateCourse implements OnInit, OnDestroy {
   }
 
   private initMap(): void {
-
-    if (typeof window === 'undefined') {
-      return;
-    }
+    if (typeof window === 'undefined') return;
 
     this.L = (window as any).L;
 
@@ -47,8 +44,7 @@ export class CreateCourse implements OnInit, OnDestroy {
       return;
     }
 
-    const mapElement =
-      document.getElementById('driveme-live-map');
+    const mapElement = document.getElementById('driveme-live-map');
 
     if (!mapElement) {
       console.error('Carte introuvable.');
@@ -61,9 +57,7 @@ export class CreateCourse implements OnInit, OnDestroy {
 
     this.L.tileLayer(
       'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      {
-        attribution: 'OpenStreetMap'
-      }
+      { attribution: 'OpenStreetMap' }
     ).addTo(this.map);
 
     this.L.circleMarker([31.6295, -7.9811], {
@@ -77,45 +71,31 @@ export class CreateCourse implements OnInit, OnDestroy {
   }
 
   public useMyLocation(): void {
-
     this.locating = true;
     this.errorMessage = '';
 
     if (!navigator.geolocation) {
-
-      this.errorMessage =
-        'La géolocalisation n’est pas disponible sur ce navigateur.';
-
+      this.errorMessage = 'La géolocalisation n’est pas disponible sur ce navigateur.';
       this.locating = false;
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
-
       (position: GeolocationPosition) => {
-
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
 
-        this.formModel.adresseDepart =
-          'Ma position actuelle';
+        this.formModel.adresseDepart = 'Ma position actuelle';
 
         if (this.map && this.L) {
+          this.map.setView([latitude, longitude], 14);
 
-          this.map.setView(
-            [latitude, longitude],
-            14
-          );
-
-          this.L.circleMarker(
-            [latitude, longitude],
-            {
-              radius: 10,
-              color: '#0f172a',
-              fillColor: '#0288D1',
-              fillOpacity: 1
-            }
-          )
+          this.L.circleMarker([latitude, longitude], {
+            radius: 10,
+            color: '#0f172a',
+            fillColor: '#0288D1',
+            fillOpacity: 1
+          })
             .addTo(this.map)
             .bindPopup('Votre position actuelle')
             .openPopup();
@@ -123,124 +103,59 @@ export class CreateCourse implements OnInit, OnDestroy {
 
         this.locating = false;
       },
-
       () => {
-
-        this.errorMessage =
-          'Autorisation de localisation refusée.';
-
+        this.errorMessage = 'Autorisation de localisation refusée.';
         this.locating = false;
       }
     );
   }
 
   public onFindDriver(): void {
-
     this.errorMessage = '';
     this.successMessage = '';
 
-    if (
-      !this.formModel.adresseDepart ||
-      !this.formModel.adresseArrivee ||
-      !this.formModel.prix
-    ) {
-
-      this.errorMessage =
-        'Veuillez compléter le départ, la destination et le prix proposé.';
-
+    if (!this.formModel.adresseDepart || !this.formModel.adresseArrivee || !this.formModel.prix) {
+      this.errorMessage = 'Veuillez compléter le départ, la destination et le prix proposé.';
       return;
     }
 
-    const email =
-      localStorage.getItem('userEmail');
+    const email = localStorage.getItem('userEmail');
 
     if (!email) {
-
-      this.errorMessage =
-        'Session utilisateur introuvable.';
-
+      this.errorMessage = 'Session utilisateur introuvable.';
       return;
     }
 
     this.loading = true;
 
-    this.api.getAllPassagers().subscribe({
-
-      next: (passagers: any[]) => {
-
-        const passager = passagers.find(
-          (p: any) => p.email === email
-        );
-
-        if (!passager) {
-
-          this.loading = false;
-
-          this.errorMessage =
-            'Profil passager introuvable.';
-
-          return;
-        }
-
+    this.api.getPassagerByEmail(email).subscribe({
+      next: (passager: PassagerResponseDTO) => {
         const payload = {
-
           passagerId: passager.id,
-
-          adresseDepart:
-            this.formModel.adresseDepart.trim(),
-
-          adresseArrivee:
-            this.formModel.adresseArrivee.trim(),
-
-          prix:
-          this.formModel.prix
+          adresseDepart: this.formModel.adresseDepart.trim(),
+          adresseArrivee: this.formModel.adresseArrivee.trim(),
+          prix: Number(this.formModel.prix)
         };
 
-        console.log(
-          'PAYLOAD ENVOYE :',
-          payload
-        );
+        console.log('PAYLOAD COURSE ENVOYE :', payload);
 
         this.api.requestCourse(payload).subscribe({
-
           next: () => {
-
             this.loading = false;
-
-            this.successMessage =
-              'Course créée avec succès.';
-
-            this.router.navigate(
-              ['/courses']
-            );
+            this.successMessage = 'Course créée avec succès.';
+            this.router.navigate(['/courses']);
           },
-
           error: (error: any) => {
-
-            console.error(
-              'Erreur création course :',
-              error
-            );
-
+            console.error('Erreur création course :', error);
             this.loading = false;
-
-            this.errorMessage =
-              'Erreur lors de la création de la course.';
+            this.errorMessage = 'Erreur lors de la création de la course.';
           }
         });
       },
-
       error: (error: any) => {
-
-        console.error(
-          'Erreur récupération passagers :',
-          error
-        );
-
+        console.error('Erreur récupération passager connecté :', error);
         this.loading = false;
-
-        this.errorMessage =
-          'Impossible de récupérer le profil passager.';
+        this.errorMessage = 'Impossible de récupérer le profil passager.';
       }
     });
   }
@@ -250,7 +165,6 @@ export class CreateCourse implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-
     if (this.map) {
       this.map.remove();
     }

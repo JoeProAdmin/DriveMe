@@ -102,6 +102,15 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public List<CourseResponseDTO> getCoursesEnAttente() {
+
+        return courseRepository.findByStatut(CourseStatus.EN_ATTENTE)
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public CourseResponseDTO updateStatus(Long id, String status) {
 
         Course course = courseRepository.findById(id)

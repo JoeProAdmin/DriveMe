@@ -43,6 +43,12 @@ public class CourseController {
     }
 
     @PreAuthorize("hasAnyRole('CHAUFFEUR','ADMIN')")
+    @GetMapping("/en-attente")
+    public List<CourseResponseDTO> getCoursesEnAttente() {
+        return courseService.getCoursesEnAttente();
+    }
+
+    @PreAuthorize("hasAnyRole('CHAUFFEUR','ADMIN')")
     @PutMapping("/{id}/status")
     public CourseResponseDTO updateStatus(
             @PathVariable Long id,

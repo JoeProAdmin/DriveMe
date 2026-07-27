@@ -164,6 +164,10 @@ export class ApiService {
     return this.http.get<any[]>(`${this.baseUrl}/courses/chauffeur/${chauffeurId}`);
   }
 
+  public getCoursesEnAttente(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/courses/en-attente`);
+  }
+  
   public requestCourse(courseData: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/courses`, courseData);
   }

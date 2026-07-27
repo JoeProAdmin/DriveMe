@@ -12,6 +12,7 @@ import { ApiService, ChauffeurResponseDTO } from '../../../core/api.service';
 export class DriverViewComponent implements OnInit {
 
   public chauffeur?: ChauffeurResponseDTO;
+  public coursesDisponibles: any[] = [];
 
   public stats = {
     coursesTotal: 0,
@@ -92,7 +93,11 @@ export class DriverViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.loadDriverData();
+
+    this.loadCoursesDisponibles();
+
   }
 
   private loadDriverData(): void {
@@ -187,6 +192,35 @@ export class DriverViewComponent implements OnInit {
       }
 
     });
+  }
+  private loadCoursesDisponibles(): void {
+
+    this.apiService.getCoursesEnAttente().subscribe({
+
+      next: (courses: any[]) => {
+
+        this.coursesDisponibles = Array.isArray(courses)
+          ? courses
+          : [];
+
+        console.log(
+          'COURSES DISPONIBLES =',
+          this.coursesDisponibles
+        );
+
+      },
+
+      error: (err: any) => {
+
+        console.error(
+          'Erreur chargement courses disponibles',
+          err
+        );
+
+      }
+
+    });
+
   }
 
   private applyCourseStats(courses: any[]): void {

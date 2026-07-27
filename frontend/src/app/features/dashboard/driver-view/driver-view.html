@@ -1,20 +1,31 @@
-<div class="driveme-container">
+<div
+  class="driveme-container"
+  [attr.dir]="apiService.isRtlMode() ? 'rtl' : 'ltr'"
+>
   <!-- Header / Profil Chauffeur -->
   <header class="driver-header">
     <div class="header-main">
       <div class="profile-section">
         <div class="avatar-badge">
-          {{ chauffeur?.prenom ? chauffeur?.prenom?.charAt(0) : 'D' }}{{ chauffeur?.nom ? chauffeur?.nom?.charAt(0) : 'M' }}
+          {{ chauffeur?.prenom ? chauffeur?.prenom?.charAt(0) : 'D' }}{{
+            chauffeur?.nom ? chauffeur?.nom?.charAt(0) : 'M'
+          }}
         </div>
+
         <div class="profile-info">
           <h1 class="driver-name">
-            {{ (chauffeur?.prenom || chauffeur?.nom) ? (chauffeur?.prenom + ' ' + chauffeur?.nom) : 'Chauffeur DriveMe' }}
+            {{
+              (chauffeur?.prenom || chauffeur?.nom)
+                ? ((chauffeur?.prenom || '') + ' ' + (chauffeur?.nom || ''))
+                : 'Chauffeur DriveMe'
+            }}
           </h1>
         </div>
       </div>
 
       <div class="status-pill online">
         <span class="status-indicator"></span>
+
         <span class="status-label">
           {{ labels[currentLang].available }}
         </span>
@@ -25,7 +36,10 @@
   <!-- Grille des statistiques -->
   <section class="stats-grid">
     <div class="stat-card primary-card">
-      <span class="stat-title">{{ labels[currentLang].estimatedIncome }}</span>
+      <span class="stat-title">
+        {{ labels[currentLang].estimatedIncome }}
+      </span>
+
       <div class="stat-value-container">
         <span class="stat-number">{{ stats.revenus ?? 0 }}</span>
         <span class="currency-tag">MAD</span>
@@ -33,7 +47,10 @@
     </div>
 
     <div class="stat-card">
-      <span class="stat-title">{{ labels[currentLang].credits }}</span>
+      <span class="stat-title">
+        {{ labels[currentLang].credits }}
+      </span>
+
       <div class="stat-value-container">
         <span class="stat-number">{{ stats.soldeCredit ?? 0 }}</span>
         <span class="currency-tag">MAD</span>
@@ -41,29 +58,41 @@
     </div>
 
     <div class="stat-card">
-      <span class="stat-title">{{ labels[currentLang].rating }}</span>
+      <span class="stat-title">
+        {{ labels[currentLang].rating }}
+      </span>
+
       <div class="stat-value-container">
-        <span class="stat-number">{{ stats.note ?? '5.0' }}</span>
+        <span class="stat-number">{{ stats.note ?? 0 }}</span>
         <span class="rating-max">/ 5</span>
       </div>
     </div>
 
     <div class="stat-card">
-      <span class="stat-title">{{ labels[currentLang].totalCourses }}</span>
+      <span class="stat-title">
+        {{ labels[currentLang].totalCourses }}
+      </span>
+
       <div class="stat-value-container">
         <span class="stat-number">{{ stats.coursesTotal ?? 0 }}</span>
       </div>
     </div>
 
     <div class="stat-card">
-      <span class="stat-title">{{ labels[currentLang].activeCourses }}</span>
+      <span class="stat-title">
+        {{ labels[currentLang].activeCourses }}
+      </span>
+
       <div class="stat-value-container">
         <span class="stat-number">{{ stats.coursesEnCours ?? 0 }}</span>
       </div>
     </div>
 
     <div class="stat-card">
-      <span class="stat-title">{{ labels[currentLang].finishedCourses }}</span>
+      <span class="stat-title">
+        {{ labels[currentLang].finishedCourses }}
+      </span>
+
       <div class="stat-value-container">
         <span class="stat-number">{{ stats.coursesTerminees ?? 0 }}</span>
       </div>
@@ -73,21 +102,36 @@
   <!-- Section des courses -->
   <main class="trips-section">
     <div class="section-header">
-      <h2 class="section-title">{{ labels[currentLang].availableTrips }}</h2>
-      <span class="trips-count" *ngIf="coursesDisponibles">
+      <h2 class="section-title">
+        {{ labels[currentLang].availableTrips }}
+      </h2>
+
+      <span class="trips-count">
         {{ coursesDisponibles.length }}
       </span>
     </div>
 
     <!-- Feed des courses -->
-    <div class="trips-feed" *ngIf="coursesDisponibles && coursesDisponibles.length > 0">
-      <article class="trip-card" *ngFor="let course of coursesDisponibles">
+    <div
+      class="trips-feed"
+      *ngIf="coursesDisponibles.length > 0"
+    >
+      <article
+        class="trip-card"
+        *ngFor="let course of coursesDisponibles"
+      >
         <div class="trip-card-header">
           <div class="passenger-details">
-            <span class="passenger-name">{{ course.passagerNom }}</span>
+            <span class="passenger-name">
+              {{ course.passagerNom }}
+            </span>
           </div>
+
           <div class="fare-tag">
-            <span class="fare-amount">{{ course.prix }}</span>
+            <span class="fare-amount">
+              {{ course.prix }}
+            </span>
+
             <span class="fare-currency">MAD</span>
           </div>
         </div>
@@ -98,39 +142,170 @@
             <span class="line"></span>
             <span class="pin end"></span>
           </div>
+
           <div class="route-addresses">
             <div class="address-step">
-              <span class="step-label">Départ</span>
-              <p class="address-text">{{ course.adresseDepart }}</p>
+              <span class="step-label">
+                {{ labels[currentLang].departure }}
+              </span>
+
+              <p class="address-text">
+                {{ course.adresseDepart }}
+              </p>
             </div>
+
             <div class="address-step">
-              <span class="step-label">Arrivée</span>
-              <p class="address-text">{{ course.adresseArrivee }}</p>
+              <span class="step-label">
+                {{ labels[currentLang].arrival }}
+              </span>
+
+              <p class="address-text">
+                {{ course.adresseArrivee }}
+              </p>
             </div>
           </div>
         </div>
 
         <div class="trip-meta" *ngIf="course.statut">
           <div class="meta-block">
-            <span class="meta-label">Statut :</span>
-            <span class="meta-value">{{ course.statut }}</span>
+            <span class="meta-label">
+              {{ labels[currentLang].status }} :
+            </span>
+
+            <span class="meta-value">
+              {{ course.statut }}
+            </span>
           </div>
         </div>
 
-        <div class="trip-actions">
-          <button type="button" class="btn-accept">
-            Accepter
+        <div
+          class="trip-actions"
+          *ngIf="coursePropositionOuverteId !== course.id"
+        >
+          <button
+            type="button"
+            class="btn-accept"
+            (click)="ouvrirProposition(course)"
+          >
+            {{ labels[currentLang].propose }}
           </button>
+        </div>
+
+        <!-- Formulaire de proposition -->
+        <div
+          class="proposal-form"
+          *ngIf="
+            coursePropositionOuverteId === course.id &&
+            propositionForms[course.id]
+          "
+        >
+          <div class="proposal-field">
+            <label [for]="'prixPropose-' + course.id">
+              {{ labels[currentLang].proposedPrice }}
+            </label>
+
+            <div class="proposal-input-wrapper">
+              <input
+                [id]="'prixPropose-' + course.id"
+                [name]="'prixPropose-' + course.id"
+                type="number"
+                min="1"
+                step="1"
+                required
+                [(ngModel)]="propositionForms[course.id].prixPropose"
+              />
+
+              <span>MAD</span>
+            </div>
+          </div>
+
+          <div class="proposal-field">
+            <label [for]="'tempsEstime-' + course.id">
+              {{ labels[currentLang].estimatedTime }}
+            </label>
+
+            <div class="proposal-input-wrapper">
+              <input
+                [id]="'tempsEstime-' + course.id"
+                [name]="'tempsEstime-' + course.id"
+                type="number"
+                min="1"
+                step="1"
+                [(ngModel)]="
+                  propositionForms[course.id].tempsEstimeMinutes
+                "
+              />
+
+              <span>
+                {{ labels[currentLang].minutes }}
+              </span>
+            </div>
+          </div>
+
+          <div class="proposal-field">
+            <label [for]="'message-' + course.id">
+              {{ labels[currentLang].message }}
+              <small>
+                ({{ labels[currentLang].optional }})
+              </small>
+            </label>
+
+            <textarea
+              [id]="'message-' + course.id"
+              [name]="'message-' + course.id"
+              rows="3"
+              maxlength="500"
+              [(ngModel)]="propositionForms[course.id].message"
+            ></textarea>
+          </div>
+
+          <p
+            class="proposal-error"
+            *ngIf="propositionErreurs[course.id]"
+          >
+            {{ propositionErreurs[course.id] }}
+          </p>
+
+          <div class="trip-actions proposal-actions">
+            <button
+              type="button"
+              class="btn-accept"
+              [disabled]="propositionEnCours[course.id]"
+              (click)="envoyerProposition(course)"
+            >
+              {{
+                propositionEnCours[course.id]
+                  ? labels[currentLang].sending
+                  : labels[currentLang].sendProposal
+              }}
+            </button>
+
+            <button
+              type="button"
+              class="btn-cancel"
+              [disabled]="propositionEnCours[course.id]"
+              (click)="annulerProposition(course.id)"
+            >
+              {{ labels[currentLang].cancel }}
+            </button>
+          </div>
         </div>
       </article>
     </div>
 
-    <!-- Etat vide -->
-    <div class="empty-state" *ngIf="!coursesDisponibles || coursesDisponibles.length === 0">
+    <!-- État vide -->
+    <div
+      class="empty-state"
+      *ngIf="coursesDisponibles.length === 0"
+    >
       <div class="radar-pulse"></div>
-      <h3 class="empty-title">Recherche de courses en cours</h3>
+
+      <h3 class="empty-title">
+        {{ labels[currentLang].searching }}
+      </h3>
+
       <p class="empty-subtitle">
-        Restez connecté, les nouvelles demandes s'afficheront ici automatiquement.
+        {{ labels[currentLang].searchingSubtitle }}
       </p>
     </div>
   </main>

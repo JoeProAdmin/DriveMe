@@ -59,6 +59,8 @@ select {
 .secondary-btn,
 .choose-btn,
 .finish-btn,
+.payment-btn,
+.pay-confirm-btn,
 .cancel-btn,
 .send-btn {
   min-height: 42px;
@@ -83,7 +85,9 @@ select {
 .proposal-btn,
 .send-btn,
 .choose-btn,
-.finish-btn {
+.finish-btn,
+.payment-btn,
+.pay-confirm-btn {
   background: #03ad4d;
   color: #fff;
 }
@@ -222,6 +226,11 @@ button:disabled {
 .status-accepted {
   background: #dceeff;
   color: #1269a9;
+}
+
+.status-progress {
+  background: #e6f0ff;
+  color: #1456a0;
 }
 
 .status-finished {
@@ -441,4 +450,102 @@ button:disabled {
   .section-count {
     align-self: flex-end;
   }
+}
+
+
+.payment-form {
+  margin: 0 18px 18px;
+  border: 1px solid #cfe0f5;
+  border-radius: 14px;
+  padding: 18px;
+  background: #f8fbff;
+}
+
+.payment-summary {
+  border-radius: 12px;
+  padding: 14px;
+  background: #10213d;
+  color: #fff;
+}
+
+.payment-summary > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+}
+
+.payment-summary strong { color: #50db86; font-size: 20px; }
+.payment-summary small { display: block; margin-top: 8px; color: #d6dfec; }
+.payment-form h3 { margin: 18px 0 10px; }
+
+.payment-methods {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.payment-methods button {
+  min-height: 44px;
+  border: 1px solid #d3ddea;
+  border-radius: 9px;
+  background: #fff;
+  color: #263754;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.payment-methods button.active {
+  border-color: #03ad4d;
+  background: #eaf9f0;
+  color: #087c39;
+}
+
+.card-fields {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.card-fields input {
+  min-width: 0;
+  border: 1px solid #cfd9e7;
+  border-radius: 8px;
+  padding: 11px 12px;
+  background: #fff;
+}
+
+.payment-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.payment-security {
+  margin: 12px 0 0;
+  color: #6b7890;
+  font-size: 12px;
+}
+
+.payment-validated {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 18px 18px;
+  border-radius: 10px;
+  padding: 13px 14px;
+  background: #e6f8ed;
+  color: #08783a;
+}
+
+@media (max-width: 900px) {
+  .payment-methods { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .card-fields { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 560px) {
+  .payment-methods, .card-fields { grid-template-columns: 1fr; }
+  .payment-actions { flex-direction: column; }
+  .payment-actions button { width: 100%; }
 }

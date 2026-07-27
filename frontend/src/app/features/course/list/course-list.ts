@@ -14,10 +14,20 @@ import {
   ChauffeurResponseDTO,
   PassagerResponseDTO,
   PropositionCreateDTO,
-  PropositionResponseDTO
+  PropositionResponseDTO,
+  PaiementCanal,
+  PaiementResponseDTO
 } from '../../../core/api.service';
 
 type Language = 'FR' | 'EN' | 'AR' | 'ES';
+
+interface PaymentForm {
+  canal: PaiementCanal;
+  cardName: string;
+  cardNumber: string;
+  expiry: string;
+  cvc: string;
+}
 
 interface ProposalForm {
   prixPropose: number | null;
@@ -52,6 +62,10 @@ export class CourseList implements OnInit {
   public submittingProposalCourseId: number | null = null;
   public selectingProposalId: number | null = null;
   public loadingProposalsCourseId: number | null = null;
+  public activePaymentCourseId: number | null = null;
+  public processingPaymentCourseId: number | null = null;
+  public lastPayment: PaiementResponseDTO | null = null;
+  public paymentForm: PaymentForm = this.createEmptyPaymentForm();
 
   public proposalForm: ProposalForm = this.createEmptyProposalForm();
 
@@ -112,7 +126,11 @@ export class CourseList implements OnInit {
       emptyAvailable: 'Aucune nouvelle demande de course.',
       emptyDriverTrips: 'Aucune course ne vous est actuellement affectée.',
       waitingDriver: 'En attente d’un chauffeur',
-      mad: 'MAD'
+      mad: 'MAD',
+      pay: 'Pagar el viaje', paymentTitle: 'Pago seguro del viaje', paymentMethod: 'Método de pago', card: 'Tarjeta bancaria', cash: 'Efectivo', cih: 'CIH Pay', wafacash: 'Wafacash', cardName: 'Titular de la tarjeta', cardNumber: 'Número de tarjeta', expiry: 'MM/AA', cvc: 'CVC', paymentCancel: 'Cancelar', paymentConfirm: 'Pagar ahora', paymentProcessing: 'Procesamiento seguro...', paymentSuccess: 'Pago aprobado. El viaje está ahora en curso.', paymentError: 'No se pudo aprobar el pago.', invalidCard: 'Complete correctamente los datos de la tarjeta.', paid: 'Pago aprobado', transactionRef: 'Referencia', inProgress: 'En curso',
+      pay: 'دفع ثمن الرحلة', paymentTitle: 'دفع آمن للرحلة', paymentMethod: 'وسيلة الدفع', card: 'بطاقة بنكية', cash: 'نقداً', cih: 'CIH Pay', wafacash: 'Wafacash', cardName: 'اسم حامل البطاقة', cardNumber: 'رقم البطاقة', expiry: 'شهر/سنة', cvc: 'CVC', paymentCancel: 'إلغاء', paymentConfirm: 'الدفع الآن', paymentProcessing: 'جاري المعالجة الآمنة...', paymentSuccess: 'تم تأكيد الدفع وأصبحت الرحلة قيد التنفيذ.', paymentError: 'تعذر تأكيد الدفع.', invalidCard: 'يرجى إكمال بيانات البطاقة بشكل صحيح.', paid: 'تم الدفع', transactionRef: 'المرجع', inProgress: 'قيد التنفيذ',
+      pay: 'Pay for ride', paymentTitle: 'Secure ride payment', paymentMethod: 'Payment method', card: 'Bank card', cash: 'Cash', cih: 'CIH Pay', wafacash: 'Wafacash', cardName: 'Cardholder name', cardNumber: 'Card number', expiry: 'MM/YY', cvc: 'CVC', paymentCancel: 'Cancel', paymentConfirm: 'Pay now', paymentProcessing: 'Secure processing...', paymentSuccess: 'Payment approved. The ride is now in progress.', paymentError: 'Unable to approve payment.', invalidCard: 'Please complete the card details correctly.', paid: 'Payment approved', transactionRef: 'Reference', inProgress: 'In progress',
+      pay: 'Payer la course', paymentTitle: 'Paiement sécurisé de la course', paymentMethod: 'Moyen de paiement', card: 'Carte bancaire', cash: 'Espèces', cih: 'CIH Pay', wafacash: 'Wafacash', cardName: 'Nom du titulaire', cardNumber: 'Numéro de carte', expiry: 'MM/AA', cvc: 'CVC', paymentCancel: 'Annuler', paymentConfirm: 'Payer maintenant', paymentProcessing: 'Traitement sécurisé...', paymentSuccess: 'Paiement validé. La course est maintenant en cours.', paymentError: 'Impossible de valider le paiement.', invalidCard: 'Veuillez compléter correctement les données de carte.', paid: 'Paiement validé', transactionRef: 'Référence', inProgress: 'En cours'
     },
     EN: {
       title: 'Ride Management',
@@ -525,6 +543,82 @@ export class CourseList implements OnInit {
     return status === 'ACCEPTEE' || status === 'CHOISIE';
   }
 
+  public openPayment(course: any): void {
+    if (!course?.id || this.normalizeStatus(course.statut) !== 'ACCEPTEE') {
+      return;
+    }
+    this.activePaymentCourseId = Number(course.id);
+    this.lastPayment = null;
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.paymentForm = this.createEmptyPaymentForm();
+    this.changeDetectorRef.markForCheck();
+  }
+
+  public closePayment(): void {
+    this.activePaymentCourseId = null;
+    this.paymentForm = this.createEmptyPaymentForm();
+    this.changeDetectorRef.markForCheck();
+  }
+
+  public selectPaymentCanal(canal: PaiementCanal): void {
+    this.paymentForm.canal = canal;
+    this.changeDetectorRef.markForCheck();
+  }
+
+  public submitPayment(course: any): void {
+    const courseId = Number(course?.id);
+    if (!courseId || this.processingPaymentCourseId !== null) {
+      return;
+    }
+
+    if (this.paymentForm.canal === 'CARTE' && !this.isCardFormValid()) {
+      this.errorMessage = this.texts[this.currentLang].invalidCard;
+      this.changeDetectorRef.markForCheck();
+      return;
+    }
+
+    this.processingPaymentCourseId = courseId;
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.changeDetectorRef.markForCheck();
+
+    this.apiService.validerPaiement({
+      courseId,
+      canal: this.paymentForm.canal
+    }).pipe(
+      finalize(() => {
+        this.processingPaymentCourseId = null;
+        this.changeDetectorRef.markForCheck();
+      })
+    ).subscribe({
+      next: payment => {
+        this.lastPayment = payment;
+        this.activePaymentCourseId = null;
+        this.paymentForm = this.createEmptyPaymentForm();
+        this.successMessage = this.texts[this.currentLang].paymentSuccess;
+        this.loadCourses(false);
+      },
+      error: err => {
+        console.error('Erreur paiement course', err);
+        this.errorMessage = err?.error?.message || this.texts[this.currentLang].paymentError;
+        this.changeDetectorRef.markForCheck();
+      }
+    });
+  }
+
+  public isPaymentOpen(courseId: number): boolean {
+    return this.activePaymentCourseId === Number(courseId);
+  }
+
+  private isCardFormValid(): boolean {
+    const digits = this.paymentForm.cardNumber.replace(/\D/g, '');
+    return this.paymentForm.cardName.trim().length >= 2 &&
+      digits.length >= 12 && digits.length <= 19 &&
+      /^\d{2}\/\d{2}$/.test(this.paymentForm.expiry.trim()) &&
+      /^\d{3,4}$/.test(this.paymentForm.cvc.trim());
+  }
+
   public finishCourse(courseId: number): void {
     if (!courseId || this.userRole !== 'CHAUFFEUR') {
       return;
@@ -563,6 +657,8 @@ export class CourseList implements OnInit {
         return 'status-waiting';
       case 'ACCEPTEE':
         return 'status-accepted';
+      case 'EN_COURS':
+        return 'status-progress';
       case 'TERMINEE':
         return 'status-finished';
       default:
@@ -700,6 +796,10 @@ export class CourseList implements OnInit {
     return this.displayedCourses.filter(
       course => this.normalizeStatus(course?.statut) === status
     ).length;
+  }
+
+  private createEmptyPaymentForm(): PaymentForm {
+    return { canal: 'CARTE', cardName: '', cardNumber: '', expiry: '', cvc: '' };
   }
 
   private createEmptyProposalForm(): ProposalForm {

@@ -404,12 +404,45 @@ export class CourseList implements OnInit {
     return this.activePaymentCourseId === Number(courseId);
   }
 
+  public onCardNumberChange(value: string): void {
+    const digits = String(value || '').replace(/\D/g, '').slice(0, 19);
+    this.paymentForm.cardNumber = digits.replace(/(.{4})/g, '$1 ').trim();
+  }
+
+  public onExpiryChange(value: string): void {
+    const digits = String(value || '').replace(/\D/g, '').slice(0, 4);
+    this.paymentForm.expiry = digits.length > 2
+      ? `${digits.slice(0, 2)}/${digits.slice(2)}`
+      : digits;
+  }
+
+  public onCvcChange(value: string): void {
+    this.paymentForm.cvc = String(value || '').replace(/\D/g, '').slice(0, 4);
+  }
+
   private isCardFormValid(): boolean {
-    const digits = this.paymentForm.cardNumber.replace(/\D/g, '');
-    return this.paymentForm.cardName.trim().length >= 2 &&
-      digits.length >= 12 && digits.length <= 19 &&
-      /^\d{2}\/\d{2}$/.test(this.paymentForm.expiry.trim()) &&
-      /^\d{3,4}$/.test(this.paymentForm.cvc.trim());
+    const cardName = this.paymentForm.cardName.trim();
+    const cardDigits = this.paymentForm.cardNumber.replace(/\D/g, '');
+    const expiryDigits = this.paymentForm.expiry.replace(/\D/g, '');
+    const cvcDigits = this.paymentForm.cvc.replace(/\D/g, '');
+
+    if (cardName.length < 2 || cardDigits.length < 12 || cardDigits.length > 19) {
+      return false;
+    }
+
+    if (expiryDigits.length !== 4 || !/^\d{3,4}$/.test(cvcDigits)) {
+      return false;
+    }
+
+    const month = Number(expiryDigits.slice(0, 2));
+    const year = Number(`20${expiryDigits.slice(2)}`);
+    if (month < 1 || month > 12) {
+      return false;
+    }
+
+    const now = new Date();
+    const expiryDate = new Date(year, month, 0, 23, 59, 59, 999);
+    return expiryDate >= now;
   }
 
   public finishCourse(courseId: number): void {

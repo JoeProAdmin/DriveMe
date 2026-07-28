@@ -260,9 +260,9 @@
 
           <div *ngIf="paymentForm.methode === 'CARTE'" class="card-fields">
             <input type="text" name="cardName-{{ course.id }}" [(ngModel)]="paymentForm.cardName" [placeholder]="texts[currentLang].cardName" autocomplete="cc-name" />
-            <input type="text" name="cardNumber-{{ course.id }}" [(ngModel)]="paymentForm.cardNumber" [placeholder]="texts[currentLang].cardNumber" inputmode="numeric" autocomplete="cc-number" />
-            <input type="text" name="expiry-{{ course.id }}" [(ngModel)]="paymentForm.expiry" [placeholder]="texts[currentLang].expiry" autocomplete="cc-exp" />
-            <input type="password" name="cvc-{{ course.id }}" [(ngModel)]="paymentForm.cvc" [placeholder]="texts[currentLang].cvc" inputmode="numeric" autocomplete="cc-csc" />
+            <input type="text" name="cardNumber-{{ course.id }}" [(ngModel)]="paymentForm.cardNumber" (ngModelChange)="onCardNumberChange($event)" [placeholder]="texts[currentLang].cardNumber" inputmode="numeric" autocomplete="cc-number" maxlength="23" />
+            <input type="text" name="expiry-{{ course.id }}" [(ngModel)]="paymentForm.expiry" (ngModelChange)="onExpiryChange($event)" [placeholder]="texts[currentLang].expiry" inputmode="numeric" autocomplete="cc-exp" maxlength="5" />
+            <input type="password" name="cvc-{{ course.id }}" [(ngModel)]="paymentForm.cvc" (ngModelChange)="onCvcChange($event)" [placeholder]="texts[currentLang].cvc" inputmode="numeric" autocomplete="cc-csc" maxlength="4" />
           </div>
 
           <div class="payment-actions">

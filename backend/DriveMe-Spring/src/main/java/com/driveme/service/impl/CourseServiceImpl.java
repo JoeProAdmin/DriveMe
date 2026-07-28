@@ -113,13 +113,38 @@ public class CourseServiceImpl implements CourseService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Course introuvable"));
 
-        CourseStatus newStatus =
-                CourseStatus.valueOf(status.toUpperCase());
+        final CourseStatus newStatus;
+
+        try {
+            newStatus = CourseStatus.valueOf(status.trim().toUpperCase());
+        } catch (IllegalArgumentException | NullPointerException exception) {
+            throw new IllegalArgumentException("Statut de course invalide.");
+        }
+
+        if (newStatus == CourseStatus.ACCEPTEE && course.getChauffeur() == null) {
+            throw new IllegalStateException(
+                    "Une course ne peut pas être acceptée sans chauffeur. " +
+                    "Le passager doit sélectionner une proposition de chauffeur."
+            );
+        }
+
+        if (newStatus == CourseStatus.TERMINEE) {
+            if (course.getChauffeur() == null) {
+                throw new IllegalStateException(
+                        "Une course sans chauffeur ne peut pas être terminée."
+                );
+            }
+
+            if (course.getStatut() != CourseStatus.ACCEPTEE) {
+                throw new IllegalStateException(
+                        "Seule une course acceptée peut être terminée."
+                );
+            }
+        }
 
         course.setStatut(newStatus);
 
         Course updated = courseRepository.save(course);
-
 
         return mapToDTO(updated);
     }

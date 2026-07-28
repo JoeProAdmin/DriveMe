@@ -204,32 +204,61 @@
           </div>
         </section>
 
-        <div class="course-actions" *ngIf="normalizeStatus(course.statut) === 'ACCEPTEE'">
+        <div
+          class="course-actions"
+          *ngIf="normalizeStatus(course.statut) === 'ACCEPTEE' && !hasPaidCourse(course.id)"
+        >
           <button type="button" class="payment-btn" (click)="openPayment(course)">
             {{ texts[currentLang].pay }} · {{ course.prix }} {{ texts[currentLang].mad }}
           </button>
         </div>
 
-        <div class="payment-validated" *ngIf="normalizeStatus(course.statut) === 'EN_COURS' || normalizeStatus(course.statut) === 'TERMINEE'">
+        <div class="payment-validated" *ngIf="hasPaidCourse(course.id)">
           <strong>{{ texts[currentLang].paid }}</strong>
-          <span>{{ texts[currentLang].inProgress }}</span>
+          <span>{{ course.prix }} {{ texts[currentLang].mad }}</span>
         </div>
 
-        <form *ngIf="isPaymentOpen(course.id)" class="payment-form" (ngSubmit)="submitPayment(course)">
+        <form
+          *ngIf="isPaymentOpen(course.id)"
+          class="payment-form"
+          (ngSubmit)="submitPayment(course)"
+        >
           <div class="payment-summary">
-            <div><span>{{ texts[currentLang].paymentTitle }}</span><strong>{{ course.prix }} {{ texts[currentLang].mad }}</strong></div>
+            <div>
+              <span>{{ texts[currentLang].paymentTitle }}</span>
+              <strong>{{ course.prix }} {{ texts[currentLang].mad }}</strong>
+            </div>
             <small>{{ course.adresseDepart }} → {{ course.adresseArrivee }}</small>
           </div>
 
+          <p class="payment-info">{{ texts[currentLang].paymentInfo }}</p>
+
           <h3>{{ texts[currentLang].paymentMethod }}</h3>
           <div class="payment-methods">
-            <button type="button" [class.active]="paymentForm.canal === 'CARTE'" (click)="selectPaymentCanal('CARTE')">{{ texts[currentLang].card }}</button>
-            <button type="button" [class.active]="paymentForm.canal === 'CASH'" (click)="selectPaymentCanal('CASH')">{{ texts[currentLang].cash }}</button>
-            <button type="button" [class.active]="paymentForm.canal === 'CIH_PAY'" (click)="selectPaymentCanal('CIH_PAY')">{{ texts[currentLang].cih }}</button>
-            <button type="button" [class.active]="paymentForm.canal === 'WAFACASH'" (click)="selectPaymentCanal('WAFACASH')">{{ texts[currentLang].wafacash }}</button>
+            <button
+              type="button"
+              [class.active]="paymentForm.methode === 'CARTE'"
+              (click)="selectPaymentMethod('CARTE')"
+            >
+              {{ texts[currentLang].card }}
+            </button>
+            <button
+              type="button"
+              [class.active]="paymentForm.methode === 'CASH'"
+              (click)="selectPaymentMethod('CASH')"
+            >
+              {{ texts[currentLang].cash }}
+            </button>
+            <button
+              type="button"
+              [class.active]="paymentForm.methode === 'ONLINE'"
+              (click)="selectPaymentMethod('ONLINE')"
+            >
+              {{ texts[currentLang].online }}
+            </button>
           </div>
 
-          <div *ngIf="paymentForm.canal === 'CARTE'" class="card-fields">
+          <div *ngIf="paymentForm.methode === 'CARTE'" class="card-fields">
             <input type="text" name="cardName-{{ course.id }}" [(ngModel)]="paymentForm.cardName" [placeholder]="texts[currentLang].cardName" autocomplete="cc-name" />
             <input type="text" name="cardNumber-{{ course.id }}" [(ngModel)]="paymentForm.cardNumber" [placeholder]="texts[currentLang].cardNumber" inputmode="numeric" autocomplete="cc-number" />
             <input type="text" name="expiry-{{ course.id }}" [(ngModel)]="paymentForm.expiry" [placeholder]="texts[currentLang].expiry" autocomplete="cc-exp" />
@@ -237,7 +266,9 @@
           </div>
 
           <div class="payment-actions">
-            <button type="button" class="cancel-btn" [disabled]="processingPaymentCourseId === course.id" (click)="closePayment()">{{ texts[currentLang].paymentCancel }}</button>
+            <button type="button" class="cancel-btn" [disabled]="processingPaymentCourseId === course.id" (click)="closePayment()">
+              {{ texts[currentLang].paymentCancel }}
+            </button>
             <button type="submit" class="pay-confirm-btn" [disabled]="processingPaymentCourseId === course.id">
               {{ processingPaymentCourseId === course.id ? texts[currentLang].paymentProcessing : texts[currentLang].paymentConfirm + ' · ' + course.prix + ' ' + texts[currentLang].mad }}
             </button>

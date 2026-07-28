@@ -10,16 +10,14 @@ export interface PassagerResponseDTO { id: number; nom?: string; prenom?: string
 export interface PropositionCreateDTO { courseId: number; chauffeurId: number; prixPropose: number; distanceChauffeurDepart?: number; tempsEstimeMinutes?: number; message?: string; }
 export interface PropositionResponseDTO { id: number; courseId: number; chauffeurId: number; chauffeurNom: string; noteMoyenne: number; prixPropose: number; distanceChauffeurDepart: number; tempsEstimeMinutes: number; message: string; statut: string; dateCreation: string; }
 
-export type PaiementCanal = 'CARTE' | 'CASH' | 'CIH_PAY' | 'WAFACASH';
-export interface PaiementCreateDTO { courseId: number; canal: PaiementCanal; }
+export type PaiementMethode = 'CARTE' | 'CASH' | 'ONLINE';
+export interface PaiementCreateDTO { courseId: number; methode: PaiementMethode; }
 export interface PaiementResponseDTO {
   id: number;
   courseId: number;
   montant: number;
   methode: string;
-  canal: PaiementCanal;
   statut: string;
-  referenceTransaction: string;
   datePaiement: string;
 }
 

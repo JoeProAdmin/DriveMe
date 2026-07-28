@@ -549,3 +549,14 @@ button:disabled {
   .payment-actions { flex-direction: column; }
   .payment-actions button { width: 100%; }
 }
+
+
+.payment-info {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}

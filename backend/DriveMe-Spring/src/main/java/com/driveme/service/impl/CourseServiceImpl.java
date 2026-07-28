@@ -11,7 +11,6 @@ import com.driveme.repository.ChauffeurRepository;
 import com.driveme.repository.CourseRepository;
 import com.driveme.repository.PassagerRepository;
 import com.driveme.service.CourseService;
-import com.driveme.service.PaiementService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,18 +22,15 @@ public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
     private final PassagerRepository passagerRepository;
     private final ChauffeurRepository chauffeurRepository;
-    private final PaiementService paiementService;
 
     public CourseServiceImpl(
             CourseRepository courseRepository,
             PassagerRepository passagerRepository,
-            ChauffeurRepository chauffeurRepository,
-            PaiementService paiementService
+            ChauffeurRepository chauffeurRepository
     ) {
         this.courseRepository = courseRepository;
         this.passagerRepository = passagerRepository;
         this.chauffeurRepository = chauffeurRepository;
-        this.paiementService = paiementService;
     }
 
     @Override
@@ -124,9 +120,6 @@ public class CourseServiceImpl implements CourseService {
 
         Course updated = courseRepository.save(course);
 
-        if (newStatus == CourseStatus.TERMINEE) {
-            paiementService.creerPaiementAutomatique(updated.getId());
-        }
 
         return mapToDTO(updated);
     }

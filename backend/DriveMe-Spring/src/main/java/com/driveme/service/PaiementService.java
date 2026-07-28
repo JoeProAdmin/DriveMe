@@ -1,8 +1,19 @@
 package com.driveme.service;
-import com.driveme.entity.Paiement;
+
+import com.driveme.dto.PaiementCreateDTO;
+import com.driveme.dto.PaiementResponseDTO;
+
+import java.util.List;
 
 public interface PaiementService {
-    Paiement creerPaiement(Long courseId, Double montant, String methode);
-    Paiement creerPaiementAutomatique(Long courseId);
+
+    PaiementResponseDTO validerPaiement(PaiementCreateDTO dto);
+
+    PaiementResponseDTO getPaiementByCourse(Long courseId);
+
+    List<PaiementResponseDTO> getAllPaiements();
+
+    PaiementResponseDTO refuserPaiement(Long paiementId);
+
     long count();
 }

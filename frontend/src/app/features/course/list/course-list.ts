@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  OnDestroy,
   OnInit
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -44,7 +45,7 @@ interface ProposalForm {
   styleUrls: ['./course-list.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CourseList implements OnInit {
+export class CourseList implements OnInit, OnDestroy {
   public courses: any[] = [];
   public coursesDisponibles: any[] = [];
   public mesCourses: any[] = [];
@@ -68,6 +69,8 @@ export class CourseList implements OnInit {
   public paymentForm: PaymentForm = this.createEmptyPaymentForm();
 
   public proposalForm: ProposalForm = this.createEmptyProposalForm();
+
+  private refreshTimerId: ReturnType<typeof setInterval> | null = null;
 
   private readonly sentProposalCourseIds = new Set<number>();
   private readonly paidCourseIds = new Set<number>();
@@ -95,6 +98,20 @@ export class CourseList implements OnInit {
 
   public ngOnInit(): void {
     this.loadCourses(true);
+
+    // Met à jour automatiquement les propositions et les changements de statut.
+    this.refreshTimerId = setInterval(() => {
+      if (!document.hidden && !this.loading && this.selectingProposalId === null && this.processingPaymentCourseId === null) {
+        this.loadCourses(false);
+      }
+    }, 5000);
+  }
+
+  public ngOnDestroy(): void {
+    if (this.refreshTimerId !== null) {
+      clearInterval(this.refreshTimerId);
+      this.refreshTimerId = null;
+    }
   }
 
   public get pageSubtitle(): string {

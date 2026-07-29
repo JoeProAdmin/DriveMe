@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -20,7 +20,7 @@ interface PropositionFormState {
   templateUrl: './driver-view.html',
   styleUrls: ['./driver-view.css']
 })
-export class DriverViewComponent implements OnInit {
+export class DriverViewComponent implements OnInit, OnDestroy {
 
   public chauffeur?: ChauffeurResponseDTO;
   public coursesDisponibles: any[] = [];
@@ -31,6 +31,8 @@ export class DriverViewComponent implements OnInit {
   public propositionEnCours: Record<number, boolean> = {};
   public propositionMessages: Record<number, string> = {};
   public propositionErreurs: Record<number, string> = {};
+
+  private refreshTimerId: ReturnType<typeof setInterval> | null = null;
 
   public stats = {
     coursesTotal: 0,
@@ -183,8 +185,21 @@ export class DriverViewComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.loadDriverData();
-    this.loadCoursesDisponibles();
+    this.refreshDriverWorkspace();
+
+    // Synchronisation légère : les nouvelles demandes apparaissent sans action manuelle.
+    this.refreshTimerId = setInterval(() => {
+      if (!document.hidden) {
+        this.refreshDriverWorkspace();
+      }
+    }, 5000);
+  }
+
+  public ngOnDestroy(): void {
+    if (this.refreshTimerId !== null) {
+      clearInterval(this.refreshTimerId);
+      this.refreshTimerId = null;
+    }
   }
 
   public ouvrirProposition(course: any): void {
@@ -266,6 +281,9 @@ export class DriverViewComponent implements OnInit {
         );
 
         delete this.propositionForms[courseId];
+
+        // Recharge les données du chauffeur après l'envoi pour garder les compteurs cohérents.
+        this.loadCoursesForCurrentDriver();
       },
 
       error: (err: any) => {
@@ -278,6 +296,12 @@ export class DriverViewComponent implements OnInit {
           this.labels[this.currentLang].proposalError;
       }
     });
+  }
+
+
+  private refreshDriverWorkspace(): void {
+    this.loadDriverData();
+    this.loadCoursesDisponibles();
   }
 
   private loadDriverData(): void {
@@ -339,13 +363,6 @@ export class DriverViewComponent implements OnInit {
       next: (courses: any[]) => {
         this.applyCourseStats(courses);
 
-        if (this.stats.soldeCredit === 0) {
-          this.stats.soldeCredit = 250;
-        }
-
-        if (this.stats.note === 0) {
-          this.stats.note = 4.8;
-        }
       },
 
       error: (err: any) => {

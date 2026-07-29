@@ -1,8 +1,10 @@
-import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../../core/api.service';
+
+type Flow = 'PASSAGER' | 'CHAUFFEUR';
 
 @Component({
   selector: 'app-register',
@@ -16,154 +18,146 @@ export class RegisterComponent {
   private readonly api = inject(ApiService);
 
   public currentLang: 'FR' | 'EN' | 'AR' | 'ES' = 'FR';
-  public currentFlow: 'PASSAGER' | 'CONDUCTEUR' | null = null;
+  public currentFlow: Flow | null = null;
   public currentStep = 1;
   public isSubmitting = false;
+  public errorMessage = '';
+  public successMessage = '';
+  public showPassword = false;
 
-  public texts = {
-    FR: {
-      title: 'Créer un compte DriveMe',
-      subtitle: 'Sélectionnez votre profil.',
-      passager: 'Je suis Passager',
-      passagerDesc: 'Commander une course au prix proposé.',
-      chauffeur: 'Je suis Chauffeur',
-      chauffeurDesc: 'Recevoir des demandes et gérer mon activité.',
-      nom: 'Nom',
-      prenom: 'Prénom',
-      tel: 'Téléphone obligatoire',
-      email: 'Email facultatif',
-      emailReq: 'Email obligatoire',
-      submit: 'Valider mon inscription',
-      submitDriver: 'Valider mon inscription chauffeur',
-      submitting: 'Inscription...',
-      back: 'Retour',
-      regPassager: 'Inscription Passager',
-      regChauffeur: 'Inscription Chauffeur',
-      errInput: 'Veuillez compléter les champs obligatoires.',
-      errApi: 'Erreur lors de l’inscription. Vérifiez vos informations.',
-      successPassager: 'Inscription passager réussie.',
-      successChauffeur: 'Candidature chauffeur enregistrée.'
-    },
-    EN: {
-      title: 'Create a DriveMe account',
-      subtitle: 'Select your profile.',
-      passager: 'I am a Passenger',
-      passagerDesc: 'Order a ride at the offered price.',
-      chauffeur: 'I am a Driver',
-      chauffeurDesc: 'Receive requests and manage my activity.',
-      nom: 'Last Name',
-      prenom: 'First Name',
-      tel: 'Phone (required)',
-      email: 'Email (optional)',
-      emailReq: 'Email (required)',
-      submit: 'Confirm registration',
-      submitDriver: 'Confirm driver registration',
-      submitting: 'Registering...',
-      back: 'Back',
-      regPassager: 'Passenger Registration',
-      regChauffeur: 'Driver Registration',
-      errInput: 'Please fill in the required fields.',
-      errApi: 'Registration error. Please check your information.',
-      successPassager: 'Passenger registration successful.',
-      successChauffeur: 'Driver application submitted.'
-    },
-    AR: {
-      title: 'إنشاء حساب DriveMe',
-      subtitle: 'اختر نوع حسابك.',
-      passager: 'أنا راكب',
-      passagerDesc: 'اطلب رحلة بالسعر المقترح.',
-      chauffeur: 'أنا سائق',
-      chauffeurDesc: 'استقبل الطلبات وأدر نشاطك.',
-      nom: 'اللقب',
-      prenom: 'الاسم',
-      tel: 'رقم الهاتف (إجباري)',
-      email: 'البريد الإلكتروني (اختياري)',
-      emailReq: 'البريد الإلكتروني (إجباري)',
-      submit: 'تأكيد التسجيل',
-      submitDriver: 'تأكيد تسجيل السائق',
-      submitting: 'جاري التسجيل...',
-      back: 'رجوع',
-      regPassager: 'تسجيل راكب',
-      regChauffeur: 'تسجيل سائق',
-      errInput: 'يرجى ملء الحقول المطلوبة.',
-      errApi: 'خطأ في التسجيل. يرجى التحقق من بياناتك.',
-      successPassager: 'تم تسجيل الراكب بنجاح.',
-      successChauffeur: 'تم تسجيل طلب السائق.'
-    },
-    ES: {
-      title: 'Crear una cuenta DriveMe',
-      subtitle: 'Selecciona tu perfil.',
-      passager: 'Soy Pasajero',
-      passagerDesc: 'Solicita un viaje al precio propuesto.',
-      chauffeur: 'Soy Conductor',
-      chauffeurDesc: 'Recibe solicitudes y gestiona tu actividad.',
-      nom: 'Apellido',
-      prenom: 'Nombre',
-      tel: 'Teléfono (obligatorio)',
-      email: 'Email (opcional)',
-      emailReq: 'Email (obligatorio)',
-      submit: 'Confirmar registro',
-      submitDriver: 'Confirmar registro conductor',
-      submitting: 'Registrando...',
-      back: 'Volver',
-      regPassager: 'Registro Pasajero',
-      regChauffeur: 'Registro Conductor',
-      errInput: 'Por favor, completa los campos obligatorios.',
-      errApi: 'Error en el registro. Verifica tus datos.',
-      successPassager: 'Registro de pasajero exitoso.',
-      successChauffeur: 'Solicitud de conductor enviada.'
-    }
+  public accountForm = {
+    nom: '', prenom: '', telephone: '', email: '', motDePasse: '', confirmation: ''
   };
-
-  public passengerForm = { nom: '', prenom: '', telephone: '', email: '', selfieBase64: '' };
   public driverForm = {
-    nom: '', prenom: '', dateNaissance: '', email: '', telephone: '', adresseResidence: '',
-    vehicule: { marque: '', modele: '', annee: null as number | null, immatriculation: '' },
-    documents: { cinBase64: '', permisBase64: '', carteGriseBase64: '', assuranceBase64: '', selfieControleBase64: '' },
-    photosVehicule: { faceAvantBase64: '', faceArriereBase64: '', plaqueBase64: '' }
+    marque: '', modele: '', annee: null as number | null, immatriculation: ''
   };
-  public previews: { [key: string]: string } = {};
+  public documents = {
+    cin: null as File | null,
+    permis: null as File | null,
+    carteGrise: null as File | null,
+    assurance: null as File | null,
+    photoAvant: null as File | null,
+    photoArriere: null as File | null,
+    selfie: null as File | null
+  };
 
-  public selectFlow(flow: 'PASSAGER' | 'CONDUCTEUR'): void { this.currentFlow = flow; this.currentStep = 1; }
+  public readonly texts: Record<string, any> = {
+    FR: { title:'Créer un compte DriveMe', subtitle:'Choisissez votre profil pour commencer.', passenger:'Je suis passager', passengerDesc:'Commander, négocier et payer mes courses.', driver:'Je suis chauffeur', driverDesc:'Proposer mes prix et gérer mon activité.', account:'Informations du compte', docs:'Documents obligatoires', vehicle:'Informations du véhicule', biometric:'Contrôle biométrique', next:'Continuer', previous:'Retour', submit:'Créer mon compte', submitting:'Création...', login:'Déjà inscrit ? Se connecter', pending:'Le compte chauffeur sera créé avec le statut « en attente de validation ».' },
+    EN: { title:'Create a DriveMe account', subtitle:'Choose your profile to get started.', passenger:'I am a passenger', passengerDesc:'Book, negotiate and pay for rides.', driver:'I am a driver', driverDesc:'Offer prices and manage my activity.', account:'Account information', docs:'Required documents', vehicle:'Vehicle information', biometric:'Biometric verification', next:'Continue', previous:'Back', submit:'Create my account', submitting:'Creating...', login:'Already registered? Sign in', pending:'The driver account will be created with “pending validation” status.' },
+    AR: { title:'إنشاء حساب DriveMe', subtitle:'اختر نوع حسابك للبدء.', passenger:'أنا راكب', passengerDesc:'طلب الرحلات والتفاوض والدفع.', driver:'أنا سائق', driverDesc:'اقتراح الأسعار وإدارة النشاط.', account:'معلومات الحساب', docs:'الوثائق المطلوبة', vehicle:'معلومات المركبة', biometric:'التحقق البيومتري', next:'متابعة', previous:'رجوع', submit:'إنشاء الحساب', submitting:'جاري الإنشاء...', login:'لديك حساب؟ تسجيل الدخول', pending:'سيتم إنشاء حساب السائق بحالة «في انتظار الموافقة».' },
+    ES: { title:'Crear una cuenta DriveMe', subtitle:'Elige tu perfil para comenzar.', passenger:'Soy pasajero', passengerDesc:'Reservar, negociar y pagar viajes.', driver:'Soy conductor', driverDesc:'Proponer precios y gestionar mi actividad.', account:'Información de la cuenta', docs:'Documentos obligatorios', vehicle:'Información del vehículo', biometric:'Control biométrico', next:'Continuar', previous:'Volver', submit:'Crear mi cuenta', submitting:'Creando...', login:'¿Ya está registrado? Iniciar sesión', pending:'La cuenta del conductor se creará con estado «pendiente de validación».' }
+  };
+
+  public selectFlow(flow: Flow): void {
+    this.currentFlow = flow;
+    this.currentStep = 1;
+    this.errorMessage = '';
+  }
+
+  public resetFlow(): void {
+    this.currentFlow = null;
+    this.currentStep = 1;
+    this.errorMessage = '';
+  }
+
   public nextStep(): void {
-    if (this.currentStep < 4) {
-      this.currentStep++;
-    }
+    this.errorMessage = '';
+    if (!this.validateAccount()) return;
+    if (this.currentFlow === 'CHAUFFEUR' && this.currentStep < 4) this.currentStep++;
   }
 
   public previousStep(): void {
-    if (this.currentStep > 1) {
-      this.currentStep--;
-    }
+    this.errorMessage = '';
+    if (this.currentStep > 1) this.currentStep--; else this.resetFlow();
   }
-  public resetFlow(): void { this.currentFlow = null; this.currentStep = 1; }
 
-  public onFileSelected(event: Event, targetKey: string): void { /* Logique existante inchangée */ }
+  public onFileSelected(event: Event, key: keyof RegisterComponent['documents']): void {
+    const input = event.target as HTMLInputElement;
+    this.documents[key] = input.files?.[0] || null;
+  }
 
-  public submitPassenger(): void {
-    if (!this.passengerForm.nom || !this.passengerForm.prenom || !this.passengerForm.telephone) {
-      alert(this.texts[this.currentLang].errInput);
-      return;
-    }
-    const emailFinal = this.passengerForm.email?.trim() || `${this.passengerForm.telephone.trim()}@driveme.local`;
-    const payload = { nom: this.passengerForm.nom.trim(), prenom: this.passengerForm.prenom.trim(), telephone: this.passengerForm.telephone.trim(), email: emailFinal, motDePasse: '123456', role: 'PASSAGER' };
+  public submit(): void {
+    this.errorMessage = '';
+    this.successMessage = '';
+    if (!this.validateAccount()) return;
+    if (this.currentFlow === 'CHAUFFEUR' && !this.validateDriverSteps()) return;
+
+    const payload = {
+      nom: this.accountForm.nom.trim(),
+      prenom: this.accountForm.prenom.trim(),
+      telephone: this.normalizePhone(this.accountForm.telephone),
+      email: this.accountForm.email.trim().toLowerCase(),
+      motDePasse: this.accountForm.motDePasse,
+      role: this.currentFlow
+    };
+
     this.isSubmitting = true;
     this.api.registerUser(payload).subscribe({
-      next: () => { this.isSubmitting = false; alert(this.texts[this.currentLang].successPassager); this.router.navigate(['/login']); },
-      error: () => { this.isSubmitting = false; alert(this.texts[this.currentLang].errApi); }
+      next: (response: any) => {
+        this.isSubmitting = false;
+        this.storeSession(response.token);
+        this.successMessage = 'Compte créé avec succès.';
+        setTimeout(() => this.router.navigate(['/dashboard']), 500);
+      },
+      error: (err: any) => {
+        this.isSubmitting = false;
+        this.errorMessage = err?.error?.message || 'Impossible de créer le compte.';
+      }
     });
   }
 
-  public submitDriver(): void {
-    if (!this.driverForm.nom || !this.driverForm.prenom || !this.driverForm.telephone || !this.driverForm.email) {
-      alert(this.texts[this.currentLang].errInput);
-      return;
+  private validateAccount(): boolean {
+    const f = this.accountForm;
+    if (!f.nom.trim() || !f.prenom.trim() || !f.telephone.trim() || !f.email.trim() || !f.motDePasse) {
+      this.errorMessage = 'Tous les champs du compte sont obligatoires.';
+      return false;
     }
-    const payload = { nom: this.driverForm.nom.trim(), prenom: this.driverForm.prenom.trim(), telephone: this.driverForm.telephone.trim(), email: this.driverForm.email.trim(), motDePasse: '123456', role: 'CHAUFFEUR' };
-    this.isSubmitting = true;
-    this.api.registerUser(payload).subscribe({
-      next: () => { this.isSubmitting = false; alert(this.texts[this.currentLang].successChauffeur); this.router.navigate(['/login']); },
-      error: () => { this.isSubmitting = false; alert(this.texts[this.currentLang].errApi); }
-    });
+    if (!/^\S+@\S+\.\S+$/.test(f.email.trim())) {
+      this.errorMessage = 'Veuillez saisir une adresse email valide.';
+      return false;
+    }
+    if (!/^\+212[5-7]\d{8}$/.test(this.normalizePhone(f.telephone))) {
+      this.errorMessage = 'Téléphone marocain invalide. Exemple : +212612345678.';
+      return false;
+    }
+    if (f.motDePasse.length < 8 || !/[A-Za-z]/.test(f.motDePasse) || !/\d/.test(f.motDePasse)) {
+      this.errorMessage = 'Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre.';
+      return false;
+    }
+    if (f.motDePasse !== f.confirmation) {
+      this.errorMessage = 'Les mots de passe ne correspondent pas.';
+      return false;
+    }
+    return true;
+  }
+
+  private validateDriverSteps(): boolean {
+    if (!this.driverForm.marque.trim() || !this.driverForm.modele.trim() || !this.driverForm.annee || !this.driverForm.immatriculation.trim()) {
+      this.errorMessage = 'Complétez les informations du véhicule.';
+      this.currentStep = 3;
+      return false;
+    }
+    const missingDocument = !this.documents.cin || !this.documents.permis || !this.documents.carteGrise || !this.documents.assurance || !this.documents.selfie;
+    if (missingDocument) {
+      this.errorMessage = 'Ajoutez les quatre documents obligatoires et le selfie de contrôle.';
+      this.currentStep = !this.documents.cin || !this.documents.permis || !this.documents.carteGrise || !this.documents.assurance ? 2 : 4;
+      return false;
+    }
+    return true;
+  }
+
+  private normalizePhone(value: string): string {
+    let phone = value.replace(/[\s().-]/g, '');
+    if (phone.startsWith('00212')) phone = '+212' + phone.substring(5);
+    if (/^0\d{9}$/.test(phone)) phone = '+212' + phone.substring(1);
+    if (phone.startsWith('212')) phone = '+' + phone;
+    return phone;
+  }
+
+  private storeSession(token: string): void {
+    const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+    localStorage.setItem('token', token);
+    localStorage.setItem('userRole', payload.role);
+    localStorage.setItem('userEmail', payload.sub);
   }
 }

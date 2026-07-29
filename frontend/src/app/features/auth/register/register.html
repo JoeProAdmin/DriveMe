@@ -1,229 +1,67 @@
-<div style="min-height:100vh; background:#f8fafc; font-family:'Poppins','Segoe UI',sans-serif;" [style.direction]="currentLang === 'AR' ? 'rtl' : 'ltr'">
-  <header style="height:64px; background:#0f172a; color:white; display:flex; align-items:center; justify-content:space-between; padding:0 40px; border-bottom:2px solid #00C853;">
-    <div style="font-size:24px; font-weight:700; cursor:pointer;" (click)="resetFlow()">Drive<span style="color:#00C853;">Me</span></div>
-    <div style="display:flex; gap:10px; align-items:center;">
-      <select [(ngModel)]="currentLang" style="padding:5px; border-radius:4px;">
-        <option value="FR">FR</option><option value="EN">EN</option><option value="AR">AR</option><option value="ES">ES</option>
-      </select>
-      <button *ngIf="currentFlow" type="button" (click)="resetFlow()" style="background:transparent; border:1px solid #334155; color:white; padding:8px 18px; border-radius:6px; cursor:pointer;">{{ texts[currentLang].back }}</button>
+<div class="register-page" [class.rtl]="currentLang === 'AR'">
+  <header class="register-header">
+    <a routerLink="/" class="brand">Drive<span>Me</span></a>
+    <div class="header-actions">
+      <select [(ngModel)]="currentLang"><option>FR</option><option>EN</option><option>AR</option><option>ES</option></select>
+      <a routerLink="/login">{{ texts[currentLang].login }}</a>
     </div>
   </header>
 
-  <main style="min-height:calc(100vh - 64px); display:flex; align-items:center; justify-content:center; padding:40px 20px;">
-
-    <section *ngIf="!currentFlow" style="width:100%; max-width:520px; background:white; padding:32px; border-radius:16px; border:1px solid #e2e8f0;">
-      <h1 style="margin:0 0 12px 0; color:#0f172a;">{{ texts[currentLang].title }}</h1>
-      <p style="color:#64748b; margin-bottom:28px;">{{ texts[currentLang].subtitle }}</p>
-
-      <button type="button" (click)="selectFlow('PASSAGER')" style="width:100%; text-align:inherit; padding:20px; margin-bottom:14px; background:white; border:2px solid #e2e8f0; border-radius:12px; cursor:pointer;">
-        <strong>{{ texts[currentLang].passager }}</strong><br>
-        <span>{{ texts[currentLang].passagerDesc }}</span>
-      </button>
-
-      <button type="button" (click)="selectFlow('CONDUCTEUR')" style="width:100%; text-align:inherit; padding:20px; background:white; border:2px solid #e2e8f0; border-radius:12px; cursor:pointer;">
-        <strong>{{ texts[currentLang].chauffeur }}</strong><br>
-        <span>{{ texts[currentLang].chauffeurDesc }}</span>
-      </button>
+  <main>
+    <section *ngIf="!currentFlow" class="profile-card">
+      <h1>{{ texts[currentLang].title }}</h1>
+      <p>{{ texts[currentLang].subtitle }}</p>
+      <button type="button" class="profile-option" (click)="selectFlow('PASSAGER')"><strong>{{ texts[currentLang].passenger }}</strong><span>{{ texts[currentLang].passengerDesc }}</span></button>
+      <button type="button" class="profile-option" (click)="selectFlow('CHAUFFEUR')"><strong>{{ texts[currentLang].driver }}</strong><span>{{ texts[currentLang].driverDesc }}</span></button>
     </section>
 
-    <section *ngIf="currentFlow === 'PASSAGER'" style="width:100%; max-width:440px; background:white; padding:32px; border-radius:16px; border:1px solid #e2e8f0;">
-      <h2 style="margin-top:0; color:#0f172a;">{{ texts[currentLang].regPassager }}</h2>
-      <label>{{ texts[currentLang].nom }}</label>
-      <input [(ngModel)]="passengerForm.nom" type="text" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
-      <label>{{ texts[currentLang].prenom }}</label>
-      <input [(ngModel)]="passengerForm.prenom" type="text" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
-      <label>{{ texts[currentLang].tel }}</label>
-      <input [(ngModel)]="passengerForm.telephone" type="tel" style="width:100%; padding:12px; margin:6px 0 14px; border:1px solid #cbd5e1; border-radius:8px;">
-      <label>{{ texts[currentLang].email }}</label>
-      <input [(ngModel)]="passengerForm.email" type="email" style="width:100%; padding:12px; margin:6px 0 20px; border:1px solid #cbd5e1; border-radius:8px;">
-      <button (click)="submitPassenger()" [disabled]="isSubmitting" style="width:100%; padding:14px; background:#0f172a; color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
-        {{ isSubmitting ? texts[currentLang].submitting : texts[currentLang].submit }}
-      </button>
-    </section>
-
-    <section *ngIf="currentFlow === 'CONDUCTEUR'" style="width:100%; max-width:700px; background:white; padding:32px; border-radius:16px; border:1px solid #e2e8f0;">
-
-      <h2 style="margin-top:0; color:#0f172a;">
-        {{ texts[currentLang].regChauffeur }}
-      </h2>
-
-      <div style="margin-bottom:25px;">
-        <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-          <strong>Dossier Conducteur DriveMe</strong>
-          <span style="color:#00C853;font-weight:700;">
-        Étape {{ currentStep }}/4
-      </span>
-        </div>
-
-        <div style="height:8px;background:#e2e8f0;border-radius:8px;">
-          <div
-            [style.width.%]="currentStep * 25"
-            style="height:8px;background:#00C853;border-radius:8px;">
-          </div>
-        </div>
+    <section *ngIf="currentFlow" class="form-card">
+      <div class="form-heading">
+        <div><span class="role-tag">{{ currentFlow }}</span><h1>{{ texts[currentLang].account }}</h1></div>
+        <button type="button" class="ghost" (click)="resetFlow()">×</button>
       </div>
 
-      <!-- ETAPE 1 -->
-      <div *ngIf="currentStep === 1">
+      <div *ngIf="currentFlow === 'CHAUFFEUR'" class="progress"><div [style.width.%]="currentStep * 25"></div><span>Étape {{ currentStep }}/4</span></div>
+      <div *ngIf="errorMessage" class="message error">{{ errorMessage }}</div>
+      <div *ngIf="successMessage" class="message success">{{ successMessage }}</div>
 
-        <h3>Informations personnelles</h3>
-
-        <input
-          [(ngModel)]="driverForm.nom"
-          placeholder="Nom"
-          type="text"
-          style="width:100%;padding:12px;margin-bottom:12px;border:1px solid #cbd5e1;border-radius:8px;">
-
-        <input
-          [(ngModel)]="driverForm.prenom"
-          placeholder="Prénom"
-          type="text"
-          style="width:100%;padding:12px;margin-bottom:12px;border:1px solid #cbd5e1;border-radius:8px;">
-
-        <input
-          [(ngModel)]="driverForm.telephone"
-          placeholder="Téléphone"
-          type="tel"
-          style="width:100%;padding:12px;margin-bottom:12px;border:1px solid #cbd5e1;border-radius:8px;">
-
-        <input
-          [(ngModel)]="driverForm.email"
-          placeholder="Email"
-          type="email"
-          style="width:100%;padding:12px;margin-bottom:20px;border:1px solid #cbd5e1;border-radius:8px;">
-
-        <button
-          type="button"
-          (click)="nextStep()"
-          style="width:100%;padding:14px;background:#00C853;color:white;border:none;border-radius:8px;">
-          Continuer
-        </button>
-
+      <div *ngIf="currentStep === 1" class="fields">
+        <div class="two-columns"><label>Nom<input [(ngModel)]="accountForm.nom" autocomplete="family-name"></label><label>Prénom<input [(ngModel)]="accountForm.prenom" autocomplete="given-name"></label></div>
+        <label>Téléphone marocain<input [(ngModel)]="accountForm.telephone" placeholder="+212612345678" autocomplete="tel"></label>
+        <label>Email<input [(ngModel)]="accountForm.email" type="email" placeholder="nom@exemple.ma" autocomplete="email"></label>
+        <label>Mot de passe<div class="password-field"><input [(ngModel)]="accountForm.motDePasse" [type]="showPassword ? 'text' : 'password'" autocomplete="new-password"><button type="button" (click)="showPassword = !showPassword">{{ showPassword ? 'Masquer' : 'Afficher' }}</button></div></label>
+        <label>Confirmer le mot de passe<input [(ngModel)]="accountForm.confirmation" type="password" autocomplete="new-password"></label>
+        <small>Minimum 8 caractères, avec au moins une lettre et un chiffre.</small>
       </div>
 
-      <!-- ETAPE 2 -->
-      <div *ngIf="currentStep === 2">
-
-        <h3>Documents obligatoires</h3>
-
-        <label>CIN</label>
-        <input type="file" style="width:100%;margin-bottom:12px;">
-
-        <label>Permis de conduire</label>
-        <input type="file" style="width:100%;margin-bottom:12px;">
-
-        <label>Carte grise</label>
-        <input type="file" style="width:100%;margin-bottom:12px;">
-
-        <label>Assurance</label>
-        <input type="file" style="width:100%;margin-bottom:20px;">
-
-        <div style="display:flex;gap:10px;">
-
-          <button
-            type="button"
-            (click)="previousStep()"
-            style="flex:1;padding:14px;">
-            Retour
-          </button>
-
-          <button
-            type="button"
-            (click)="nextStep()"
-            style="flex:1;padding:14px;background:#00C853;color:white;border:none;">
-            Continuer
-          </button>
-
-        </div>
-
+      <div *ngIf="currentFlow === 'CHAUFFEUR' && currentStep === 2" class="fields">
+        <h2>{{ texts[currentLang].docs }}</h2>
+        <label>CIN<input type="file" accept="image/*,.pdf" (change)="onFileSelected($event, 'cin')"></label>
+        <label>Permis de conduire<input type="file" accept="image/*,.pdf" (change)="onFileSelected($event, 'permis')"></label>
+        <label>Carte grise<input type="file" accept="image/*,.pdf" (change)="onFileSelected($event, 'carteGrise')"></label>
+        <label>Assurance<input type="file" accept="image/*,.pdf" (change)="onFileSelected($event, 'assurance')"></label>
+        <p class="notice">Les fichiers sont contrôlés côté formulaire. Leur stockage documentaire permanent sera relié au module Administration.</p>
       </div>
 
-      <!-- ETAPE 3 -->
-      <div *ngIf="currentStep === 3">
-
-        <h3>Informations du véhicule</h3>
-
-        <input
-          [(ngModel)]="driverForm.vehicule.marque"
-          placeholder="Marque"
-          type="text"
-          style="width:100%;padding:12px;margin-bottom:12px;border:1px solid #cbd5e1;border-radius:8px;">
-
-        <input
-          [(ngModel)]="driverForm.vehicule.modele"
-          placeholder="Modèle"
-          type="text"
-          style="width:100%;padding:12px;margin-bottom:12px;border:1px solid #cbd5e1;border-radius:8px;">
-
-        <input
-          [(ngModel)]="driverForm.vehicule.annee"
-          placeholder="Année"
-          type="number"
-          style="width:100%;padding:12px;margin-bottom:12px;border:1px solid #cbd5e1;border-radius:8px;">
-
-        <input
-          [(ngModel)]="driverForm.vehicule.immatriculation"
-          placeholder="Immatriculation"
-          type="text"
-          style="width:100%;padding:12px;margin-bottom:12px;border:1px solid #cbd5e1;border-radius:8px;">
-
-        <label>Photo avant</label>
-        <input type="file" style="width:100%;margin-bottom:12px;">
-
-        <label>Photo arrière</label>
-        <input type="file" style="width:100%;margin-bottom:20px;">
-
-        <div style="display:flex;gap:10px;">
-
-          <button
-            type="button"
-            (click)="previousStep()"
-            style="flex:1;padding:14px;">
-            Retour
-          </button>
-
-          <button
-            type="button"
-            (click)="nextStep()"
-            style="flex:1;padding:14px;background:#00C853;color:white;border:none;">
-            Continuer
-          </button>
-
-        </div>
-
+      <div *ngIf="currentFlow === 'CHAUFFEUR' && currentStep === 3" class="fields">
+        <h2>{{ texts[currentLang].vehicle }}</h2>
+        <div class="two-columns"><label>Marque<input [(ngModel)]="driverForm.marque"></label><label>Modèle<input [(ngModel)]="driverForm.modele"></label></div>
+        <div class="two-columns"><label>Année<input [(ngModel)]="driverForm.annee" type="number" min="1990" max="2030"></label><label>Immatriculation<input [(ngModel)]="driverForm.immatriculation"></label></div>
+        <label>Photo avant<input type="file" accept="image/*" (change)="onFileSelected($event, 'photoAvant')"></label>
+        <label>Photo arrière<input type="file" accept="image/*" (change)="onFileSelected($event, 'photoArriere')"></label>
       </div>
 
-      <!-- ETAPE 4 -->
-      <div *ngIf="currentStep === 4">
-
-        <h3>Contrôle biométrique</h3>
-
-        <label>Selfie avec CIN</label>
-        <input type="file" style="width:100%;margin-bottom:20px;">
-
-        <div style="display:flex;gap:10px;">
-
-          <button
-            type="button"
-            (click)="previousStep()"
-            style="flex:1;padding:14px;">
-            Retour
-          </button>
-
-          <button
-            type="button"
-            (click)="submitDriver()"
-            [disabled]="isSubmitting"
-            style="flex:1;padding:14px;background:#00C853;color:white;border:none;border-radius:8px;">
-
-            {{ isSubmitting ? texts[currentLang].submitting : texts[currentLang].submitDriver }}
-
-          </button>
-
-        </div>
-
+      <div *ngIf="currentFlow === 'CHAUFFEUR' && currentStep === 4" class="fields">
+        <h2>{{ texts[currentLang].biometric }}</h2>
+        <label>Selfie avec la CIN<input type="file" accept="image/*" capture="user" (change)="onFileSelected($event, 'selfie')"></label>
+        <p class="notice">{{ texts[currentLang].pending }}</p>
       </div>
 
+      <div class="form-actions">
+        <button type="button" class="secondary" (click)="previousStep()">{{ texts[currentLang].previous }}</button>
+        <button *ngIf="currentFlow === 'CHAUFFEUR' && currentStep < 4" type="button" class="primary" (click)="nextStep()">{{ texts[currentLang].next }}</button>
+        <button *ngIf="currentFlow === 'PASSAGER' || (currentFlow === 'CHAUFFEUR' && currentStep === 4)" type="button" class="primary" [disabled]="isSubmitting" (click)="submit()">{{ isSubmitting ? texts[currentLang].submitting : texts[currentLang].submit }}</button>
+      </div>
     </section>
   </main>
 </div>

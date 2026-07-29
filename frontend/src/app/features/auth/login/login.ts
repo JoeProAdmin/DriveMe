@@ -1,124 +1,65 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { ApiService } from '../../../core/api.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [
-    FormsModule,
-    RouterModule,
-    CommonModule
-  ],
-  templateUrl: './login.html'
+  imports: [CommonModule, FormsModule, RouterModule],
+  templateUrl: './login.html',
+  styleUrls: ['./login.css']
 })
 export class LoginComponent {
-
   private readonly api = inject(ApiService);
   private readonly router = inject(Router);
 
-  public loginData = {
-    email: '',
-    motDePasse: ''
-  };
-
+  public loginData = { identifiant: '', motDePasse: '' };
   public currentLang: 'FR' | 'AR' | 'EN' | 'ES' = 'FR';
-
   public dropdownOpen = false;
   public showQrModal = false;
+  public isSubmitting = false;
+  public errorMessage = '';
+  public showPassword = false;
 
-  public dictionary: any = {
-    FR: {
-      title: 'Indiquez votre numéro ou email',
-      placeholderEmail: 'Email',
-      placeholderPass: 'Mot de passe',
-      btnContinue: 'Continuer',
-      legal: 'Vous acceptez de recevoir un code de vérification par SMS ou sur WhatsApp. Des frais de messagerie SMS et de transfert de données peuvent s\'appliquer.'
-    },
-    EN: {
-      title: 'Enter your number or email',
-      placeholderEmail: 'Email',
-      placeholderPass: 'Password',
-      btnContinue: 'Continue',
-      legal: 'You agree to receive a verification code by SMS or WhatsApp. SMS and data rates may apply.'
-    },
-    AR: {
-      title: 'أدخل رقمك أو بريدك الإلكتروني',
-      placeholderEmail: 'البريد الإلكتروني',
-      placeholderPass: 'كلمة السر',
-      btnContinue: 'متابعة',
-      legal: 'أنت توافق على تلقي رمز التحقق عبر الرسائل القصيرة أو واتساب. قد يتم تطبيق رسوم الرسائل القصيرة ونقل البيانات.'
-    },
-    ES: {
-      title: 'Ingrese su número o correo',
-      placeholderEmail: 'Correo',
-      placeholderPass: 'Contraseña',
-      btnContinue: 'Continuar',
-      legal: 'Usted acepta recibir un código de verificación por SMS o WhatsApp. Se pueden aplicar tarifas de SMS y transferencia de datos.'
-    }
+  public readonly dictionary: Record<string, any> = {
+    FR: { title: 'Connexion à DriveMe', identifier: 'Téléphone ou email', password: 'Mot de passe', submit: 'Se connecter', loading: 'Connexion...', register: 'Créer un compte', forgot: 'Mot de passe oublié ?', or: 'ou', google: 'Continuer avec Google', apple: 'Continuer avec Apple', qr: 'Connexion par QR', legal: 'La connexion SMS, WhatsApp, Google, Apple et QR est présentée comme parcours futur. La connexion email/téléphone et mot de passe est pleinement fonctionnelle.' },
+    EN: { title: 'Sign in to DriveMe', identifier: 'Phone or email', password: 'Password', submit: 'Sign in', loading: 'Signing in...', register: 'Create account', forgot: 'Forgot password?', or: 'or', google: 'Continue with Google', apple: 'Continue with Apple', qr: 'Sign in with QR', legal: 'SMS, WhatsApp, Google, Apple and QR are presented as future flows. Email/phone and password sign-in is fully functional.' },
+    AR: { title: 'تسجيل الدخول إلى DriveMe', identifier: 'الهاتف أو البريد الإلكتروني', password: 'كلمة المرور', submit: 'تسجيل الدخول', loading: 'جاري الدخول...', register: 'إنشاء حساب', forgot: 'نسيت كلمة المرور؟', or: 'أو', google: 'المتابعة مع Google', apple: 'المتابعة مع Apple', qr: 'الدخول عبر QR', legal: 'تسجيل الدخول عبر الرسائل وواتساب وGoogle وApple وQR مسارات مستقبلية. تسجيل الدخول بالبريد/الهاتف وكلمة المرور يعمل بالكامل.' },
+    ES: { title: 'Iniciar sesión en DriveMe', identifier: 'Teléfono o email', password: 'Contraseña', submit: 'Iniciar sesión', loading: 'Conectando...', register: 'Crear una cuenta', forgot: '¿Olvidó su contraseña?', or: 'o', google: 'Continuar con Google', apple: 'Continuar con Apple', qr: 'Conexión por QR', legal: 'SMS, WhatsApp, Google, Apple y QR se presentan como flujos futuros. El acceso por email/teléfono y contraseña funciona completamente.' }
   };
 
   public onSubmit(): void {
-
-    console.log('Tentative de connexion...');
-
-    this.api.login(this.loginData).subscribe({
-
+    this.errorMessage = '';
+    if (!this.loginData.identifiant.trim() || !this.loginData.motDePasse) {
+      this.errorMessage = 'Veuillez saisir votre identifiant et votre mot de passe.';
+      return;
+    }
+    this.isSubmitting = true;
+    this.api.login({ identifiant: this.loginData.identifiant.trim(), motDePasse: this.loginData.motDePasse }).subscribe({
       next: (res: any) => {
-
-        console.log('TOKEN RECU :', res.token);
-
-        localStorage.setItem('token', res.token);
-
-        const payload = JSON.parse(
-          atob(res.token.split('.')[1])
-        );
-
-        console.log('PAYLOAD JWT :', payload);
-
-        localStorage.setItem('userRole', payload.role);
-        localStorage.setItem('userEmail', payload.sub);
-
+        this.isSubmitting = false;
+        this.storeSession(res.token);
         this.router.navigate(['/dashboard']);
-
       },
-
       error: (err: any) => {
-
-        console.error('Erreur authentification :', err);
-
-        alert(
-          err?.error?.message ||
-          'Erreur de connexion'
-        );
-
+        this.isSubmitting = false;
+        this.errorMessage = err?.error?.message || 'Connexion impossible. Vérifiez vos identifiants.';
       }
-
     });
-
   }
 
-  public changeLangViaDropdown(
-    lang: 'FR' | 'AR' | 'EN' | 'ES'
-  ): void {
+  private storeSession(token: string): void {
+    const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+    localStorage.setItem('token', token);
+    localStorage.setItem('userRole', payload.role);
+    localStorage.setItem('userEmail', payload.sub);
+  }
 
+  public changeLangViaDropdown(lang: 'FR' | 'AR' | 'EN' | 'ES'): void {
     this.currentLang = lang;
-
-    this.api.setLanguage(
-      lang.toLowerCase() as any
-    );
-
+    this.api.setLanguage(lang.toLowerCase() as 'fr' | 'ar' | 'en' | 'es');
     this.dropdownOpen = false;
   }
-
-  public toggleQrModal(
-    status: boolean
-  ): void {
-
-    this.showQrModal = status;
-
-  }
-
 }

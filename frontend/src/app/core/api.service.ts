@@ -29,7 +29,7 @@ export class ApiService {
   public readonly isRtlMode: WritableSignal<boolean> = signal(false);
 
   public setLanguage(lang: 'fr' | 'en' | 'ar' | 'es'): void { this.currentLanguage.set(lang); this.isRtlMode.set(lang === 'ar'); }
-  public login(credentials: { email: string; motDePasse: string }): Observable<any> { return this.http.post(`${this.baseUrl}/auth/login`, credentials); }
+  public login(credentials: { identifiant: string; motDePasse: string }): Observable<any> { return this.http.post(`${this.baseUrl}/auth/login`, credentials); }
   public registerUser(data: any): Observable<any> { return this.http.post(`${this.baseUrl}/auth/register`, data); }
   public getAdminStats(): Observable<AdminStats> { return this.http.get<AdminStats>(`${this.baseUrl}/admin/stats`); }
   public getAllChauffeurs(): Observable<ChauffeurResponseDTO[]> { return this.http.get<ChauffeurResponseDTO[]>(`${this.baseUrl}/chauffeurs`); }

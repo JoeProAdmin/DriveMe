@@ -103,7 +103,30 @@ public class ChauffeurServiceImpl implements ChauffeurService {
     }
 
     @Override
+    public ChauffeurResponseDTO updateStatutValidation(Long id, Integer statut) {
+
+        if (statut == null || statut < 0 || statut > 2) {
+            throw new IllegalArgumentException(
+                    "Statut de validation invalide. Valeurs autorisées : 0, 1 ou 2."
+            );
+        }
+
+        Chauffeur chauffeur = chauffeurRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Chauffeur introuvable : " + id));
+
+        chauffeur.setStatutValidation(statut.byteValue());
+
+        return mapToDTO(chauffeurRepository.save(chauffeur));
+    }
+
+    @Override
     public void deleteChauffeur(Long id) {
+
+        if (!chauffeurRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Chauffeur introuvable : " + id);
+        }
+
         chauffeurRepository.deleteById(id);
     }
 

@@ -17,6 +17,8 @@ public interface ChauffeurService {
 
     ChauffeurResponseDTO updateChauffeur(Long id, ChauffeurCreateDTO dto);
 
+    ChauffeurResponseDTO updateStatutValidation(Long id, Integer statut);
+
     void deleteChauffeur(Long id);
 
     long count();

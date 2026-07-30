@@ -72,6 +72,17 @@ public class ChauffeurController {
         );
     }
 
+    @PutMapping("/{id}/validation")
+    public ResponseEntity<ChauffeurResponseDTO> updateStatutValidation(
+            @PathVariable Long id,
+            @RequestParam Integer statut
+    ) {
+
+        return ResponseEntity.ok(
+                chauffeurService.updateStatutValidation(id, statut)
+        );
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteChauffeur(
             @PathVariable Long id

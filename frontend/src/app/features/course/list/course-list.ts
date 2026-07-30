@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { finalize, forkJoin } from 'rxjs';
 import { UnifiedSidebarComponent } from '../../../shared/layout/sidebar/sidebar';
 import { HeaderComponent } from '../../../shared/layout/header/header';
+import { DmButtonComponent } from '../../../shared/components/dm-button/dm-button';
 
 import {
   ApiService,
@@ -42,7 +43,7 @@ interface ProposalForm {
 @Component({
   selector: 'app-course-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, UnifiedSidebarComponent, HeaderComponent],
+  imports: [CommonModule, FormsModule, UnifiedSidebarComponent, HeaderComponent, DmButtonComponent],
   templateUrl: './course-list.html',
   styleUrls: ['./course-list.css'],
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -21,18 +21,21 @@
         <option value="ES">ES</option>
       </select>
 
-      <button type="button" class="dashboard-btn" (click)="goToDashboard()">
+      <dm-button
+        variant="outline"
+        (pressed)="goToDashboard()"
+      >
         {{ texts[currentLang].dash }}
-      </button>
+      </dm-button>
 
-      <button
-        type="button"
-        class="refresh-btn"
+      <dm-button
+        variant="success"
         [disabled]="loading"
-        (click)="loadCourses()"
+        [loading]="loading"
+        (pressed)="loadCourses()"
       >
         {{ texts[currentLang].refresh }}
-      </button>
+      </dm-button>
     </div>
   </header>
 

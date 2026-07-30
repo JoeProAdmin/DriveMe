@@ -1,45 +1,186 @@
-<div class="landing" [class.rtl]="currentLang === 'AR'">
-  <header class="topbar">
-    <div class="logo">Drive<span>Me</span></div>
-    <nav class="nav">
-      <select [(ngModel)]="currentLang" (ngModelChange)="changeLang($event)">
-        <option value="FR">FR</option><option value="EN">EN</option><option value="AR">AR</option><option value="ES">ES</option>
-      </select>
-      <a routerLink="/login">{{ texts[currentLang].login }}</a>
-      <a routerLink="/register" class="reg">{{ texts[currentLang].register }}</a>
+<div class="landing-page" [class.rtl]="currentLang === 'AR'" [attr.dir]="currentLang === 'AR' ? 'rtl' : 'ltr'">
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" routerLink="/" aria-label="DriveMe accueil">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 36 36"><path d="M8 24.5h20l-2.2-8.1a4 4 0 0 0-3.8-2.9h-8a4 4 0 0 0-3.8 2.9L8 24.5Z"/><path d="M11 24.5v3M25 24.5v3M10.5 20h15"/><circle cx="12.5" cy="24.5" r="2"/><circle cx="23.5" cy="24.5" r="2"/></svg>
+        </span>
+        <span>Drive<span>Me</span></span>
+      </a>
+
+      <nav class="desktop-nav" aria-label="Navigation principale">
+        <a href="#services">{{ t.navServices }}</a>
+        <a href="#safety">{{ t.navSafety }}</a>
+        <a href="#drivers">{{ t.navDriver }}</a>
+        <a href="#footer">{{ t.navHelp }}</a>
+      </nav>
+
+      <div class="header-actions">
+        <label class="language-select" aria-label="Langue">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+          <select [ngModel]="currentLang" (ngModelChange)="changeLanguage($event)">
+            <option *ngFor="let language of languages" [value]="language.code">{{ language.code }}</option>
+          </select>
+        </label>
+        <a class="login-link" routerLink="/login">{{ t.login }}</a>
+        <a class="primary-link" routerLink="/register">{{ t.register }}</a>
+        <button class="menu-button" type="button" (click)="toggleMobileMenu()" [attr.aria-expanded]="mobileMenuOpen" aria-label="Menu">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <nav class="mobile-nav" [class.open]="mobileMenuOpen" aria-label="Navigation mobile">
+      <a href="#services" (click)="mobileMenuOpen = false">{{ t.navServices }}</a>
+      <a href="#safety" (click)="mobileMenuOpen = false">{{ t.navSafety }}</a>
+      <a href="#drivers" (click)="mobileMenuOpen = false">{{ t.navDriver }}</a>
+      <a routerLink="/login">{{ t.login }}</a>
+      <a routerLink="/register">{{ t.register }}</a>
     </nav>
   </header>
 
-  <main class="hero">
-    <section class="hero-content">
-      <span class="badge">{{ texts[currentLang].badge }}</span>
-      <h1>{{ texts[currentLang].title }}</h1>
-      <p class="desc">{{ texts[currentLang].description }}</p>
+  <main>
+    <section class="hero-section">
+      <div class="hero-grid shell">
+        <div class="hero-copy">
+          <div class="eyebrow"><span></span>{{ t.eyebrow }}</div>
+          <h1>{{ t.titleLead }}<br><span>{{ t.titleAccent }}</span></h1>
+          <p class="hero-description">{{ t.description }}</p>
 
-      <div class="search-card">
-        <div class="form-grid">
-          <div class="field"><input [(ngModel)]="searchForm.depart" [placeholder]="texts[currentLang].phDepart"></div>
-          <div class="field"><input [(ngModel)]="searchForm.destination" [placeholder]="texts[currentLang].phDest"></div>
-          <div class="field"><input type="date" [(ngModel)]="searchForm.date"></div>
+          <form class="booking-card" (ngSubmit)="$event.preventDefault()">
+            <div class="booking-grid">
+              <label class="booking-field field-wide">
+                <span>{{ t.departure }}</span>
+                <div class="input-shell">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+                  <input name="departure" [(ngModel)]="searchForm.departure" [placeholder]="t.departurePlaceholder" autocomplete="street-address">
+                </div>
+              </label>
+
+              <label class="booking-field field-wide">
+                <span>{{ t.destination }}</span>
+                <div class="input-shell">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                  <input name="destination" [(ngModel)]="searchForm.destination" [placeholder]="t.destinationPlaceholder" autocomplete="off">
+                </div>
+              </label>
+
+              <label class="booking-field">
+                <span>{{ t.date }}</span>
+                <div class="input-shell">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
+                  <input type="date" name="date" [(ngModel)]="searchForm.date" [min]="minDate">
+                </div>
+              </label>
+
+              <label class="booking-field">
+                <span>{{ t.time }}</span>
+                <div class="input-shell">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                  <input type="time" name="time" [(ngModel)]="searchForm.time">
+                </div>
+              </label>
+
+              <label class="booking-field">
+                <span>{{ t.passengers }}</span>
+                <div class="input-shell">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3"/><path d="M6 21v-2a6 6 0 0 1 12 0v2"/></svg>
+                  <select name="passengers" [(ngModel)]="searchForm.passengers">
+                    <option [ngValue]="1">1</option><option [ngValue]="2">2</option><option [ngValue]="3">3</option><option [ngValue]="4">4</option><option [ngValue]="5">5</option><option [ngValue]="6">6</option>
+                  </select>
+                </div>
+              </label>
+            </div>
+
+            <div class="booking-footer">
+              <button class="location-button" type="button" (click)="useLocation()" [disabled]="isLocating">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+                {{ isLocating ? t.locating : t.locate }}
+              </button>
+              <a class="search-button" routerLink="/login">
+                {{ t.search }}
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+              </a>
+            </div>
+            <p class="location-message" *ngIf="locationMessage">{{ locationMessage }}</p>
+          </form>
+
+          <div class="popular-routes">
+            <span>{{ t.popular }}</span>
+            <button type="button" (click)="selectPopularRoute('Casablanca', 'Rabat')">{{ t.routeCasablanca }}</button>
+            <button type="button" (click)="selectPopularRoute('Rabat', 'Kénitra')">{{ t.routeRabat }}</button>
+            <button type="button" (click)="selectPopularRoute('Marrakech', 'Essaouira')">{{ t.routeMarrakech }}</button>
+          </div>
         </div>
-        <button (click)="useLocation()">{{ isLocating ? texts[currentLang].locating : texts[currentLang].locate }}</button>
-        <div class="actions">
-          <a routerLink="/login" class="btn-main">{{ texts[currentLang].search }}</a>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="sun-disc"></div>
+          <div class="arch arch-one"></div><div class="arch arch-two"></div><div class="arch arch-three"></div>
+          <div class="city-lines"></div>
+          <svg class="car-illustration" viewBox="0 0 760 330" role="img">
+            <defs><linearGradient id="carBody" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#172337"/><stop offset=".55" stop-color="#0f172a"/><stop offset="1" stop-color="#050a12"/></linearGradient><linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b9e5e0"/><stop offset="1" stop-color="#36536a"/></linearGradient></defs>
+            <ellipse cx="382" cy="279" rx="292" ry="26" fill="#0f172a" opacity=".2"/>
+            <path d="M116 215c15-38 55-61 107-69l80-13 65-78h126c42 0 83 19 113 52l39 43c50 8 82 26 94 55l7 31c3 17-10 33-28 33H126c-21 0-36-20-30-40l20-14Z" fill="url(#carBody)"/>
+            <path d="m291 135 62-68h128c36 0 68 15 94 43l34 38-318-13Z" fill="url(#glass)"/>
+            <path d="m365 72-13 65M488 70l42 74" stroke="#d9f4f0" stroke-width="5" opacity=".5"/>
+            <path d="M123 211h548" stroke="#314158" stroke-width="4"/><path d="M125 224h42M666 220h52" stroke="#10b981" stroke-width="9" stroke-linecap="round"/>
+            <path d="M651 169h58c11 0 20 9 20 20v7h-78Z" fill="#f7fafc" opacity=".92"/><path d="M107 177h63v28h-75l12-28Z" fill="#f6d365" opacity=".92"/>
+            <circle cx="219" cy="252" r="51" fill="#0a0f19"/><circle cx="219" cy="252" r="29" fill="#657188"/><circle cx="219" cy="252" r="13" fill="#d8dee8"/><circle cx="597" cy="252" r="51" fill="#0a0f19"/><circle cx="597" cy="252" r="29" fill="#657188"/><circle cx="597" cy="252" r="13" fill="#d8dee8"/>
+            <path d="M313 157h67M445 157h73" stroke="#6b7890" stroke-width="4" stroke-linecap="round"/><path d="M397 151v85" stroke="#354257" stroke-width="3"/>
+          </svg>
+
+          <div class="ride-status-card">
+            <div class="status-top"><span class="status-dot"></span>{{ t.visualStatus }}</div>
+            <strong>{{ t.visualTitle }}</strong>
+            <span>{{ t.visualRoute }}</span>
+            <div class="driver-row"><div class="driver-avatar">Y</div><div><b>{{ t.visualDriver }}</b><small>Mercedes Classe C</small></div><div class="agreed-price"><small>{{ t.visualPriceLabel }}</small><b>180 MAD</b></div></div>
+          </div>
+
+          <div class="trust-panel">
+            <div><strong>1 200+</strong><span>{{ t.trustVerified }}</span></div>
+            <div><strong>18k+</strong><span>{{ t.trustRides }}</span></div>
+            <div><strong>4,9/5</strong><span>{{ t.trustRating }}</span></div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="map-panel">
-      <div class="fake-map"></div>
+    <section class="benefits-section" id="services">
+      <div class="shell">
+        <div class="section-heading centered"><span>{{ t.benefitsEyebrow }}</span><h2>{{ t.benefitsTitle }}</h2><p>{{ t.benefitsDescription }}</p></div>
+        <div class="benefit-grid">
+          <article class="benefit-card"><div class="icon-box"><svg viewBox="0 0 24 24"><path d="m12 3 8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z"/><path d="m9 12 2 2 4-4"/></svg></div><h3>{{ t.verifiedTitle }}</h3><p>{{ t.verifiedText }}</p><span class="card-index">01</span></article>
+          <article class="benefit-card"><div class="icon-box"><svg viewBox="0 0 24 24"><path d="M4 7h16v10H4z"/><path d="M8 7V5h8v2M8 12h8"/></svg></div><h3>{{ t.pricingTitle }}</h3><p>{{ t.pricingText }}</p><span class="card-index">02</span></article>
+          <article class="benefit-card"><div class="icon-box"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h3"/></svg></div><h3>{{ t.paymentTitle }}</h3><p>{{ t.paymentText }}</p><span class="card-index">03</span></article>
+          <article class="benefit-card" id="safety"><div class="icon-box"><svg viewBox="0 0 24 24"><path d="M4 13a8 8 0 0 1 16 0v5a2 2 0 0 1-2 2h-2v-7h4M4 13h4v7H6a2 2 0 0 1-2-2v-5Z"/><path d="M16 20c0 1-1 2-4 2"/></svg></div><h3>{{ t.supportTitle }}</h3><p>{{ t.supportText }}</p><span class="card-index">04</span></article>
+        </div>
+      </div>
     </section>
+
+    <section class="steps-section">
+      <div class="shell steps-layout">
+        <div class="section-heading"><span>{{ t.stepsEyebrow }}</span><h2>{{ t.stepsTitle }}</h2></div>
+        <div class="steps-list">
+          <article><div class="step-number">01</div><div><h3>{{ t.stepOneTitle }}</h3><p>{{ t.stepOneText }}</p></div></article>
+          <article><div class="step-number">02</div><div><h3>{{ t.stepTwoTitle }}</h3><p>{{ t.stepTwoText }}</p></div></article>
+          <article><div class="step-number">03</div><div><h3>{{ t.stepThreeTitle }}</h3><p>{{ t.stepThreeText }}</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="app-section">
+      <div class="shell app-layout">
+        <div class="phone-stage" aria-hidden="true">
+          <div class="phone"><div class="phone-speaker"></div><div class="phone-screen"><div class="phone-header"><span class="mini-brand">Drive<span>Me</span></span><span class="mini-avatar">Y</span></div><p>Bonjour Youssef</p><h4>Où allons-nous ?</h4><div class="mini-search"><span></span>Votre destination</div><div class="mini-map"><div class="map-route"></div><div class="map-pin pin-a"></div><div class="map-pin pin-b"></div></div><div class="mini-driver"><div class="mini-driver-avatar">Y</div><div><b>Yassine</b><small>4,9 · Mercedes</small></div><strong>8 min</strong></div></div></div>
+          <div class="floating-chip chip-one"><svg viewBox="0 0 24 24"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>Course sécurisée</div>
+          <div class="floating-chip chip-two"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>180 MAD</div>
+        </div>
+        <div class="app-copy"><div class="section-heading"><span>{{ t.appEyebrow }}</span><h2>{{ t.appTitle }}</h2><p>{{ t.appText }}</p></div><ul><li><svg viewBox="0 0 24 24"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>{{ t.appFeatureOne }}</li><li><svg viewBox="0 0 24 24"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>{{ t.appFeatureTwo }}</li><li><svg viewBox="0 0 24 24"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>{{ t.appFeatureThree }}</li></ul><div class="store-buttons"><a href="#" aria-label="App Store"><svg viewBox="0 0 24 24"><path d="M16.7 13.1c0-2.4 2-3.6 2.1-3.7-1.1-1.6-2.9-1.8-3.5-1.8-1.5-.2-2.9.9-3.6.9-.8 0-1.9-.9-3.1-.9-1.6 0-3.1.9-3.9 2.4-1.7 2.9-.4 7.2 1.2 9.5.8 1.1 1.7 2.4 3 2.3 1.2 0 1.7-.8 3.2-.8s2 .8 3.2.8c1.3 0 2.1-1.1 2.9-2.3.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.8-1.1-2.8-3.7ZM14.3 6c.7-.9 1.2-2.1 1-3.3-1 .1-2.2.7-3 1.6-.7.8-1.2 2-1.1 3.2 1.1.1 2.3-.6 3.1-1.5Z"/></svg><span><small>{{ t.downloadOn }}</small><b>App Store</b></span></a><a href="#" aria-label="Google Play"><svg viewBox="0 0 24 24"><path d="M3.6 2.5 14 12 3.6 21.5a2 2 0 0 1-.6-1.4V3.9c0-.5.2-1 .6-1.4ZM16 10.2l2.8-2.5L6.2.6 16 10.2Zm0 3.6-9.8 9.6 12.6-7.1-2.8-2.5Zm1.9-1.8 3.1-1.8c.9-.5.9-1.4 0-1.9l-2.2-1.2-2.8 2.5 1.9 2.4Z"/></svg><span><small>{{ t.availableOn }}</small><b>Google Play</b></span></a></div></div>
+      </div>
+    </section>
+
+    <section class="driver-cta" id="drivers"><div class="shell"><div class="driver-cta-card"><div><span class="cta-kicker">DriveMe Partner</span><h2>{{ t.driverCtaTitle }}</h2><p>{{ t.driverCtaText }}</p></div><a routerLink="/register" [queryParams]="{ role: 'CHAUFFEUR' }">{{ t.driverCtaButton }}<svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></a></div></div></section>
   </main>
 
-  <section class="features">
-    <div class="grid">
-      <div class="card"><strong>{{ texts[currentLang].s1Title }}</strong><p>{{ texts[currentLang].s1Text }}</p></div>
-      <div class="card"><strong>{{ texts[currentLang].s2Title }}</strong><p>{{ texts[currentLang].s2Text }}</p></div>
-      <div class="card"><strong>{{ texts[currentLang].s3Title }}</strong><p>{{ texts[currentLang].s3Text }}</p></div>
-      <div class="card"><strong>{{ texts[currentLang].s4Title }}</strong><p>{{ texts[currentLang].s4Text }}</p></div>
-    </div>
-  </section>
+  <footer id="footer"><div class="shell footer-grid"><div class="footer-brand"><a class="brand brand-light" routerLink="/"><span class="brand-mark"><svg viewBox="0 0 36 36"><path d="M8 24.5h20l-2.2-8.1a4 4 0 0 0-3.8-2.9h-8a4 4 0 0 0-3.8 2.9L8 24.5Z"/><path d="M11 24.5v3M25 24.5v3M10.5 20h15"/><circle cx="12.5" cy="24.5" r="2"/><circle cx="23.5" cy="24.5" r="2"/></svg></span><span>Drive<span>Me</span></span></a><p>{{ t.footerDescription }}</p></div><div><h3>{{ t.footerProduct }}</h3><a href="#">{{ t.footerRide }}</a><a routerLink="/register">{{ t.footerDriver }}</a><a href="#safety">{{ t.footerSafety }}</a></div><div><h3>{{ t.footerCompany }}</h3><a href="#">{{ t.footerAbout }}</a><a href="mailto:contact@driveme.cloud">{{ t.footerContact }}</a></div><div><h3>{{ t.footerLegal }}</h3><a href="#">{{ t.footerPrivacy }}</a><a href="#">{{ t.footerTerms }}</a></div></div><div class="shell footer-bottom"><span>{{ t.footerCopyright }}</span><span>Maroc · FR / EN / AR / ES</span></div></footer>
 </div>

@@ -1,0 +1,6 @@
+<div class="dm-field" [class.dm-field--error]="error">
+  @if (label) { <label class="dm-field__label" [for]="id">{{ label }} @if (required) { <span aria-hidden="true">*</span> }</label> }
+  <input class="dm-field__control" [id]="id" [type]="type" [value]="value" [placeholder]="placeholder" [required]="required" [disabled]="disabled" [autocomplete]="autocomplete" [attr.aria-invalid]="!!error" [attr.aria-describedby]="error ? id + '-error' : (hint ? id + '-hint' : null)" (input)="onInput($event)" (blur)="blurred.emit($event)" />
+  @if (error) { <p class="dm-field__message dm-field__message--error" [id]="id + '-error'">{{ error }}</p> }
+  @else if (hint) { <p class="dm-field__message" [id]="id + '-hint'">{{ hint }}</p> }
+</div>

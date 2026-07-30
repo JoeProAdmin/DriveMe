@@ -1,0 +1,117 @@
+<main class="dm-page preview">
+
+  <header class="dm-page-header">
+    <div>
+      <h1 class="dm-page-title">DriveMe Design System</h1>
+      <p class="dm-page-subtitle">
+        Bibliothèque RC2.1 de composants standalone.
+      </p>
+    </div>
+
+    <dm-button variant="success">
+      Action principale
+    </dm-button>
+  </header>
+
+  <section class="dm-grid dm-grid--stats">
+    <dm-stat-card label="Chauffeurs" value="152" trend="+12% ce mois" tone="success"/>
+    <dm-stat-card label="Passagers" value="1 248" trend="+18% ce mois" tone="success"/>
+    <dm-stat-card label="Courses" value="2 856"/>
+    <dm-stat-card label="Paiements" value="285 620 MAD"/>
+  </section>
+
+  <dm-card [elevated]="true">
+
+    <div class="preview__row">
+
+      <dm-button>Principal</dm-button>
+
+      <dm-button variant="success">
+        Succès
+      </dm-button>
+
+      <dm-button variant="outline">
+        Secondaire
+      </dm-button>
+
+      <dm-button variant="danger">
+        Danger
+      </dm-button>
+
+      <dm-badge variant="success" [dot]="true">
+        Approuvé
+      </dm-badge>
+
+      <dm-badge variant="warning">
+        En attente
+      </dm-badge>
+
+      <dm-badge variant="danger">
+        Refusé
+      </dm-badge>
+
+    </div>
+
+  </dm-card>
+
+  <dm-card>
+
+    <div class="preview__form">
+
+      <dm-search
+        placeholder="Rechercher un chauffeur"
+        [(value)]="search">
+      </dm-search>
+
+      <dm-input
+        label="Email"
+        type="email"
+        placeholder="nom@exemple.ma"
+        hint="Adresse utilisée pour la connexion">
+      </dm-input>
+
+    </div>
+
+  </dm-card>
+
+  <dm-table ariaLabel="Exemple de tableau">
+
+    <table>
+
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Utilisateur</th>
+        <th>Statut</th>
+      </tr>
+      </thead>
+
+      <tbody>
+
+      <tr>
+        <td>#152</td>
+        <td>Ahmed Ben</td>
+        <td>
+          <dm-badge variant="success">
+            Approuvé
+          </dm-badge>
+        </td>
+      </tr>
+
+      <tr>
+        <td>#151</td>
+        <td>Karim Dia</td>
+        <td>
+          <dm-badge variant="warning">
+            En attente
+          </dm-badge>
+        </td>
+      </tr>
+
+      </tbody>
+
+    </table>
+
+  </dm-table>
+
+</main>

@@ -1,0 +1,5 @@
+.dm-dialog-backdrop { align-items: center; background: rgba(15,23,42,.58); display: flex; inset: 0; justify-content: center; padding: 1rem; position: fixed; z-index: 1000; }
+.dm-dialog { background: var(--dm-white); border-radius: var(--dm-radius-lg); box-shadow: var(--dm-shadow-xl); max-width: 28rem; padding: 1.5rem; width: 100%; }
+h2 { color: var(--dm-text); font-size: 1.125rem; margin: 0 0 .625rem; } p { color: var(--dm-text-muted); line-height: 1.6; margin: 0; }
+.dm-dialog__actions { display: flex; gap: .75rem; justify-content: flex-end; margin-top: 1.5rem; }
+@media (max-width: 480px) { .dm-dialog__actions { flex-direction: column-reverse; } .dm-dialog__actions dm-button { display: flex; } }

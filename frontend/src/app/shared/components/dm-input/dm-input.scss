@@ -1,0 +1,10 @@
+.dm-field { display: grid; gap: .5rem; }
+.dm-field__label { color: var(--dm-text); font-size: .8125rem; font-weight: 700; }
+.dm-field__label span { color: var(--dm-danger); }
+.dm-field__control { background: var(--dm-white); border: 1px solid var(--dm-border-strong); border-radius: var(--dm-radius-md); box-sizing: border-box; color: var(--dm-text); font: inherit; min-height: 2.875rem; outline: none; padding: .75rem .875rem; transition: border-color var(--dm-transition-fast), box-shadow var(--dm-transition-fast); width: 100%; }
+.dm-field__control::placeholder { color: var(--dm-text-subtle); }
+.dm-field__control:focus { border-color: var(--dm-success); box-shadow: 0 0 0 4px var(--dm-focus-ring); }
+.dm-field__control:disabled { background: var(--dm-surface-subtle); cursor: not-allowed; }
+.dm-field--error .dm-field__control { border-color: var(--dm-danger); }
+.dm-field__message { color: var(--dm-text-muted); font-size: .75rem; margin: 0; }
+.dm-field__message--error { color: var(--dm-danger-strong); }

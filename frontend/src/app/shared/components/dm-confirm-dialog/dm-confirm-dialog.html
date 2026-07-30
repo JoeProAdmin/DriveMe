@@ -1,0 +1,8 @@
+@if (open) {
+  <div class="dm-dialog-backdrop" role="presentation" (click)="cancelled.emit()">
+    <section class="dm-dialog" role="alertdialog" aria-modal="true" [attr.aria-label]="title" (click)="$event.stopPropagation()">
+      <h2>{{ title }}</h2><p>{{ message }}</p>
+      <div class="dm-dialog__actions"><dm-button variant="outline" (pressed)="cancelled.emit()">{{ cancelLabel }}</dm-button><dm-button [variant]="destructive ? 'danger' : 'primary'" (pressed)="confirmed.emit()">{{ confirmLabel }}</dm-button></div>
+    </section>
+  </div>
+}

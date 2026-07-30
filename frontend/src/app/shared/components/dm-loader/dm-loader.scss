@@ -1,0 +1,6 @@
+.dm-loader { align-items: center; color: var(--dm-text-muted); display: flex; flex-direction: column; gap: .75rem; justify-content: center; min-height: 8rem; }
+.dm-loader--overlay { background: rgba(255,255,255,.84); inset: 0; min-height: 100%; position: absolute; z-index: 20; }
+.dm-loader__spinner { animation: dm-loader-spin .75s linear infinite; border: 3px solid var(--dm-border); border-radius: 50%; border-top-color: var(--dm-success); }
+.dm-loader__spinner--sm { height: 1.25rem; width: 1.25rem; } .dm-loader__spinner--md { height: 2rem; width: 2rem; } .dm-loader__spinner--lg { height: 3rem; width: 3rem; }
+.dm-loader__label { font-size: .875rem; font-weight: 600; }
+@keyframes dm-loader-spin { to { transform: rotate(360deg); } }

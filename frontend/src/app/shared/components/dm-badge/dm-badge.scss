@@ -1,0 +1,7 @@
+.dm-badge { align-items: center; border-radius: 999px; display: inline-flex; font-size: .75rem; font-weight: 700; gap: .4rem; line-height: 1; min-height: 1.625rem; padding: .3rem .625rem; white-space: nowrap; }
+.dm-badge__dot { background: currentColor; border-radius: 50%; height: .375rem; width: .375rem; }
+.dm-badge--neutral { background: var(--dm-neutral-soft); color: var(--dm-neutral-strong); }
+.dm-badge--success { background: var(--dm-success-soft); color: var(--dm-success-strong); }
+.dm-badge--warning { background: var(--dm-warning-soft); color: var(--dm-warning-strong); }
+.dm-badge--danger { background: var(--dm-danger-soft); color: var(--dm-danger-strong); }
+.dm-badge--info { background: var(--dm-info-soft); color: var(--dm-info-strong); }

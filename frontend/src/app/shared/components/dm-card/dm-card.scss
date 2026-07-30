@@ -1,0 +1,6 @@
+:host { display: block; }
+.dm-card { background: var(--dm-surface); border: 1px solid var(--dm-border); border-radius: var(--dm-radius-lg); }
+.dm-card--none { padding: 0; } .dm-card--sm { padding: 1rem; } .dm-card--md { padding: 1.5rem; } .dm-card--lg { padding: 2rem; }
+.dm-card--elevated { box-shadow: var(--dm-shadow-card); }
+.dm-card--interactive { transition: box-shadow var(--dm-transition-base), transform var(--dm-transition-base); }
+.dm-card--interactive:hover { box-shadow: var(--dm-shadow-lg); transform: translateY(-2px); }

@@ -1,0 +1,6 @@
+*, *::before, *::after { box-sizing: border-box; }
+html { color-scheme: light; }
+body { background: var(--dm-background); color: var(--dm-text); font-family: Inter, Poppins, "Segoe UI", Arial, sans-serif; margin: 0; min-height: 100%; text-rendering: optimizeLegibility; }
+button, input, select, textarea { font: inherit; }
+a { color: inherit; }
+img, svg { max-width: 100%; }

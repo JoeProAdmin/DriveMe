@@ -1,0 +1,5 @@
+.dm-empty { align-items: center; display: flex; flex-direction: column; padding: 3rem 1.5rem; text-align: center; }
+.dm-empty__visual { align-items: center; background: var(--dm-success-soft); border-radius: 50%; display: flex; height: 3.5rem; justify-content: center; margin-bottom: 1rem; width: 3.5rem; }
+.dm-empty__visual svg { fill: none; height: 1.75rem; stroke: var(--dm-success-strong); stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.7; width: 1.75rem; }
+h3 { color: var(--dm-text); font-size: 1rem; margin: 0 0 .5rem; } p { color: var(--dm-text-muted); font-size: .875rem; margin: 0; max-width: 28rem; }
+.dm-empty__action { margin-top: 1.25rem; }

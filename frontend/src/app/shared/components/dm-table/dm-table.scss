@@ -1,0 +1,9 @@
+:host { display: block; }
+.dm-table-shell { background: var(--dm-white); border: 1px solid var(--dm-border); border-radius: var(--dm-radius-lg); overflow: auto; }
+.dm-table-shell:focus-visible { box-shadow: 0 0 0 4px var(--dm-focus-ring); outline: none; }
+:host ::ng-deep table { border-collapse: collapse; min-width: 45rem; width: 100%; }
+:host ::ng-deep th { background: var(--dm-surface-subtle); color: var(--dm-text-muted); font-size: .6875rem; font-weight: 800; letter-spacing: .045em; padding: .875rem 1rem; text-align: left; text-transform: uppercase; }
+:host ::ng-deep td { border-top: 1px solid var(--dm-border); color: var(--dm-text); font-size: .8125rem; padding: 1rem; }
+:host ::ng-deep tbody tr { transition: background-color var(--dm-transition-fast); }
+:host ::ng-deep tbody tr:hover { background: var(--dm-surface-hover); }
+.dm-table-shell--compact :host ::ng-deep td { padding-block: .7rem; }

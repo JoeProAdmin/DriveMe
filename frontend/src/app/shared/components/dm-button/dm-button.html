@@ -1,0 +1,14 @@
+<button
+  class="dm-button"
+  [class]="'dm-button dm-button--' + variant + ' dm-button--' + size"
+  [class.dm-button--full]="fullWidth"
+  [disabled]="disabled || loading"
+  [attr.aria-label]="ariaLabel"
+  [attr.aria-busy]="loading"
+  [type]="type"
+  (click)="handleClick($event)">
+  @if (loading) {
+    <span class="dm-button__spinner" aria-hidden="true"></span>
+  }
+  <span class="dm-button__content"><ng-content /></span>
+</button>

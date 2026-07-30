@@ -1,0 +1,7 @@
+.dm-stat { background: var(--dm-white); border: 1px solid var(--dm-border); border-radius: var(--dm-radius-lg); padding: 1.25rem; }
+.dm-stat__top { align-items: center; display: flex; justify-content: space-between; }
+.dm-stat__label { color: var(--dm-text-muted); font-size: .75rem; font-weight: 700; }
+.dm-stat__icon { align-items: center; background: var(--dm-success-soft); border-radius: var(--dm-radius-md); color: var(--dm-success); display: flex; height: 2.25rem; justify-content: center; width: 2.25rem; }
+.dm-stat__value { color: var(--dm-text); display: block; font-size: 1.75rem; letter-spacing: -.03em; margin-top: .75rem; }
+.dm-stat__trend { display: inline-block; font-size: .75rem; font-weight: 700; margin-top: .5rem; }
+.dm-stat__trend--neutral { color: var(--dm-text-muted); } .dm-stat__trend--success { color: var(--dm-success-strong); } .dm-stat__trend--warning { color: var(--dm-warning-strong); } .dm-stat__trend--danger { color: var(--dm-danger-strong); }

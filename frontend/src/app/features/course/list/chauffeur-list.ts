@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { finalize } from 'rxjs';
 
 import {
   ApiService,
@@ -36,7 +37,10 @@ export class ChauffeurList implements OnInit {
   public chauffeurSelectionne: ChauffeurResponseDTO | null = null;
   public detailOuvert = false;
 
-  constructor(public readonly apiService: ApiService) {}
+  constructor(
+    public readonly apiService: ApiService,
+    private readonly cdr: ChangeDetectorRef
+  ) {}
 
   public ngOnInit(): void {
     this.loadChauffeurs();
@@ -47,19 +51,26 @@ export class ChauffeurList implements OnInit {
     this.messageErreur = '';
     this.messageSucces = '';
 
-    this.apiService.getAllChauffeurs().subscribe({
-      next: (data: ChauffeurResponseDTO[]) => {
-        this.chauffeurs = Array.isArray(data) ? [...data] : [];
-        this.chargement = false;
-      },
-      error: (erreur: unknown) => {
-        console.error('Erreur lors du chargement des chauffeurs :', erreur);
-        this.chauffeurs = [];
-        this.chargement = false;
-        this.messageErreur =
-          'Impossible de charger les chauffeurs. Vérifiez que le backend est démarré.';
-      }
-    });
+    this.apiService.getAllChauffeurs(true)
+      .pipe(
+        finalize(() => {
+          this.chargement = false;
+          this.cdr.markForCheck();
+        })
+      )
+      .subscribe({
+        next: (data: ChauffeurResponseDTO[]) => {
+          this.chauffeurs = Array.isArray(data) ? [...data] : [];
+          this.cdr.markForCheck();
+        },
+        error: (erreur: unknown) => {
+          console.error('Erreur lors du chargement des chauffeurs :', erreur);
+          this.chauffeurs = [];
+          this.messageErreur =
+            'Impossible de charger les chauffeurs. Vérifiez que le backend est démarré.';
+          this.cdr.markForCheck();
+        }
+      });
   }
 
   public get chauffeursFiltres(): ChauffeurResponseDTO[] {

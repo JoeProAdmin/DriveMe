@@ -1,6 +1,6 @@
 import { Injectable, signal, WritableSignal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, shareReplay } from 'rxjs';
+import { Observable, shareReplay, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface AdminStats { totalChauffeurs: number; totalPassagers: number; totalCourses: number; totalPaiements: number; }
@@ -42,7 +42,7 @@ export class ApiService {
       this.chauffeurs$ = this.http
         .get<ChauffeurResponseDTO[]>(`${this.baseUrl}/chauffeurs`)
         .pipe(
-          shareReplay(1)
+          shareReplay({ bufferSize: 1, refCount: false })
         );
 
     }
@@ -57,7 +57,7 @@ export class ApiService {
       this.passagers$ = this.http
         .get<PassagerResponseDTO[]>(`${this.baseUrl}/passagers`)
         .pipe(
-          shareReplay(1)
+          shareReplay({ bufferSize: 1, refCount: false })
         );
 
     }
@@ -65,9 +65,21 @@ export class ApiService {
     return this.passagers$;
   }
   public getPassagerByEmail(email: string): Observable<PassagerResponseDTO> { return this.http.get<PassagerResponseDTO>(`${this.baseUrl}/passagers/email/${encodeURIComponent(email)}`); }
-  public updatePassager(id: number, data: PassagerResponseDTO): Observable<PassagerResponseDTO> { return this.http.put<PassagerResponseDTO>(`${this.baseUrl}/passagers/${id}`, data); }
-  public deletePassager(id: number): Observable<void> { return this.http.delete<void>(`${this.baseUrl}/passagers/${id}`); }
-  public validerChauffeur(id: number, statut: number): Observable<void> { return this.http.put<void>(`${this.baseUrl}/chauffeurs/${id}/validation?statut=${statut}`, {}); }
+  public updatePassager(id: number, data: PassagerResponseDTO): Observable<PassagerResponseDTO> {
+    return this.http.put<PassagerResponseDTO>(`${this.baseUrl}/passagers/${id}`, data).pipe(
+      tap(() => { this.passagers$ = undefined; })
+    );
+  }
+  public deletePassager(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/passagers/${id}`).pipe(
+      tap(() => { this.passagers$ = undefined; })
+    );
+  }
+  public validerChauffeur(id: number, statut: number): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/chauffeurs/${id}/validation?statut=${statut}`, {}).pipe(
+      tap(() => { this.chauffeurs$ = undefined; })
+    );
+  }
   public rejeter(id: number): Observable<void> { return this.validerChauffeur(id, 2); }
   public getCourses(): Observable<any[]> { return this.http.get<any[]>(`${this.baseUrl}/courses`); }
   public getCoursesByPassager(passagerId: number): Observable<any[]> { return this.http.get<any[]>(`${this.baseUrl}/courses/passager/${passagerId}`); }
@@ -89,7 +101,7 @@ export class ApiService {
       this.paiements$ = this.http
         .get<PaiementResponseDTO[]>(`${this.baseUrl}/paiements`)
         .pipe(
-          shareReplay(1)
+          shareReplay({ bufferSize: 1, refCount: false })
         );
 
     }

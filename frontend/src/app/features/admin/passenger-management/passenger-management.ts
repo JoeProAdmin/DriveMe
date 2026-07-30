@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { finalize } from 'rxjs';
 import { ApiService, PassagerResponseDTO } from '../../../core/api.service';
 
 @Component({
@@ -19,7 +20,10 @@ export class PassengerManagementComponent implements OnInit {
   public editedPassager: PassagerResponseDTO | null = null;
   public isSaving = false;
 
-  constructor(public apiService: ApiService) {}
+  constructor(
+    public apiService: ApiService,
+    private readonly cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadPassagers();
@@ -29,17 +33,25 @@ export class PassengerManagementComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.apiService.getAllPassagers().subscribe({
-      next: (data) => {
-        this.passagers = [...data];
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Erreur chargement passagers', error);
-        this.errorMessage = 'Impossible de charger la liste des passagers.';
-        this.isLoading = false;
-      }
-    });
+    this.apiService.getAllPassagers(true)
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          this.passagers = Array.isArray(data) ? [...data] : [];
+          this.cdr.markForCheck();
+        },
+        error: (error) => {
+          console.error('Erreur chargement passagers', error);
+          this.passagers = [];
+          this.errorMessage = 'Impossible de charger la liste des passagers.';
+          this.cdr.markForCheck();
+        }
+      });
   }
 
   public get filteredPassagers(): PassagerResponseDTO[] {
@@ -67,6 +79,7 @@ export class PassengerManagementComponent implements OnInit {
   public closePanel(): void {
     this.selectedPassager = null;
     this.editedPassager = null;
+    this.cdr.markForCheck();
   }
 
   public savePassager(): void {
@@ -87,6 +100,7 @@ export class PassengerManagementComponent implements OnInit {
         console.error('Erreur modification passager', error);
         this.errorMessage = 'La modification du passager a échoué.';
         this.isSaving = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -102,6 +116,7 @@ export class PassengerManagementComponent implements OnInit {
       error: (error) => {
         console.error('Erreur suppression passager', error);
         this.errorMessage = 'Suppression impossible. Ce passager possède peut-être des courses liées.';
+        this.cdr.markForCheck();
       }
     });
   }

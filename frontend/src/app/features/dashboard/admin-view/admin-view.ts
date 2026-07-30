@@ -1,11 +1,12 @@
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { ApiService, AdminStats } from '../../../core/api.service';
 
 @Component({
   selector: 'app-admin-view',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   template: `
 
 <div class="admin-dashboard">
@@ -45,25 +46,25 @@ import { ApiService, AdminStats } from '../../../core/api.service';
 
   <div class="quick-actions">
 
-    <div class="action-card">
+    <a class="action-card" routerLink="/chauffeurs">
       <h3>{{ texts[currentLang].driverManagement }}</h3>
       <p>{{ texts[currentLang].driverDescription }}</p>
-    </div>
+    </a>
 
-    <div class="action-card">
+    <a class="action-card" routerLink="/passagers">
       <h3>{{ texts[currentLang].passengerManagement }}</h3>
       <p>{{ texts[currentLang].passengerDescription }}</p>
-    </div>
+    </a>
 
-    <div class="action-card">
+    <a class="action-card" routerLink="/courses">
       <h3>{{ texts[currentLang].tripManagement }}</h3>
       <p>{{ texts[currentLang].tripDescription }}</p>
-    </div>
+    </a>
 
-    <div class="action-card">
+    <a class="action-card" routerLink="/paiements">
       <h3>{{ texts[currentLang].paymentManagement }}</h3>
       <p>{{ texts[currentLang].paymentDescription }}</p>
-    </div>
+    </a>
 
   </div>
 
@@ -127,10 +128,21 @@ import { ApiService, AdminStats } from '../../../core/api.service';
     }
 
     .action-card{
+      display:block;
+      text-decoration:none;
+      color:inherit;
+      cursor:pointer;
+      transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
       background:white;
       border-radius:14px;
       padding:20px;
       border:1px solid #e5e7eb;
+    }
+
+    .action-card:hover{
+      transform:translateY(-2px);
+      border-color:#cbd5e1;
+      box-shadow:0 8px 20px rgba(15,23,42,.08);
     }
 
   `]

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { finalize } from 'rxjs';
 import { ApiService, PaiementResponseDTO } from '../../../core/api.service';
 
 @Component({
@@ -17,7 +18,10 @@ export class PaymentManagementComponent implements OnInit {
   public isLoading = false;
   public errorMessage = '';
 
-  constructor(public apiService: ApiService) {}
+  constructor(
+    public apiService: ApiService,
+    private readonly cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadPaiements();
@@ -27,19 +31,27 @@ export class PaymentManagementComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.apiService.getAllPaiements().subscribe({
-      next: (data) => {
-        this.paiements = [...data].sort((a, b) =>
-          new Date(b.datePaiement || 0).getTime() - new Date(a.datePaiement || 0).getTime()
-        );
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Erreur chargement paiements', error);
-        this.errorMessage = 'Impossible de charger l’historique des paiements.';
-        this.isLoading = false;
-      }
-    });
+    this.apiService.getAllPaiements(true)
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          this.paiements = (Array.isArray(data) ? [...data] : []).sort((a, b) =>
+            new Date(b.datePaiement || 0).getTime() - new Date(a.datePaiement || 0).getTime()
+          );
+          this.cdr.markForCheck();
+        },
+        error: (error) => {
+          console.error('Erreur chargement paiements', error);
+          this.paiements = [];
+          this.errorMessage = 'Impossible de charger l’historique des paiements.';
+          this.cdr.markForCheck();
+        }
+      });
   }
 
   public get filteredPaiements(): PaiementResponseDTO[] {

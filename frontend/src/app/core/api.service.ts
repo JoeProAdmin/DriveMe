@@ -36,6 +36,8 @@ export class ApiService {
   public getChauffeurByEmail(email: string): Observable<ChauffeurResponseDTO> { return this.http.get<ChauffeurResponseDTO>(`${this.baseUrl}/chauffeurs/email/${encodeURIComponent(email)}`); }
   public getAllPassagers(): Observable<PassagerResponseDTO[]> { return this.http.get<PassagerResponseDTO[]>(`${this.baseUrl}/passagers`); }
   public getPassagerByEmail(email: string): Observable<PassagerResponseDTO> { return this.http.get<PassagerResponseDTO>(`${this.baseUrl}/passagers/email/${encodeURIComponent(email)}`); }
+  public updatePassager(id: number, data: PassagerResponseDTO): Observable<PassagerResponseDTO> { return this.http.put<PassagerResponseDTO>(`${this.baseUrl}/passagers/${id}`, data); }
+  public deletePassager(id: number): Observable<void> { return this.http.delete<void>(`${this.baseUrl}/passagers/${id}`); }
   public validerChauffeur(id: number, statut: number): Observable<void> { return this.http.put<void>(`${this.baseUrl}/chauffeurs/${id}/validation?statut=${statut}`, {}); }
   public rejeter(id: number): Observable<void> { return this.validerChauffeur(id, 2); }
   public getCourses(): Observable<any[]> { return this.http.get<any[]>(`${this.baseUrl}/courses`); }

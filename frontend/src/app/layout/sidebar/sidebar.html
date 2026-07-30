@@ -63,9 +63,19 @@
     </a>
 
     <a
-      *ngIf="userRole === 'ADMIN' || userRole === 'CHAUFFEUR'"
+      *ngIf="userRole === 'ADMIN'"
       class="nav-link-item"
       routerLink="/paiements"
+      routerLinkActive="active">
+
+      <span>{{ labels[currentLang].payments }}</span>
+
+    </a>
+
+    <a
+      *ngIf="userRole === 'CHAUFFEUR'"
+      class="nav-link-item"
+      routerLink="/recharge"
       routerLinkActive="active">
 
       <span>{{ labels[currentLang].payments }}</span>

@@ -1,0 +1,72 @@
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ApiService, PaiementResponseDTO } from '../../../core/api.service';
+
+@Component({
+  selector: 'app-payment-management',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './payment-management.html',
+  styleUrls: ['./payment-management.css']
+})
+export class PaymentManagementComponent implements OnInit {
+  public paiements: PaiementResponseDTO[] = [];
+  public searchTerm = '';
+  public statusFilter = 'TOUS';
+  public isLoading = false;
+  public errorMessage = '';
+
+  constructor(public apiService: ApiService) {}
+
+  ngOnInit(): void {
+    this.loadPaiements();
+  }
+
+  public loadPaiements(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.apiService.getAllPaiements().subscribe({
+      next: (data) => {
+        this.paiements = [...data].sort((a, b) =>
+          new Date(b.datePaiement || 0).getTime() - new Date(a.datePaiement || 0).getTime()
+        );
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Erreur chargement paiements', error);
+        this.errorMessage = 'Impossible de charger l’historique des paiements.';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  public get filteredPaiements(): PaiementResponseDTO[] {
+    const term = this.searchTerm.trim().toLowerCase();
+    return this.paiements.filter((paiement) => {
+      const matchesStatus = this.statusFilter === 'TOUS' || paiement.statut === this.statusFilter;
+      const matchesSearch = !term || [paiement.id, paiement.courseId, paiement.montant, paiement.methode, paiement.statut]
+        .some((value) => String(value ?? '').toLowerCase().includes(term));
+      return matchesStatus && matchesSearch;
+    });
+  }
+
+  public get totalEncaisse(): number {
+    return this.paiements
+      .filter((p) => ['PAYE', 'VALIDE', 'ACCEPTE'].includes((p.statut || '').toUpperCase()))
+      .reduce((sum, p) => sum + Number(p.montant || 0), 0);
+  }
+
+  public get paiementsValides(): number {
+    return this.paiements.filter((p) => ['PAYE', 'VALIDE', 'ACCEPTE'].includes((p.statut || '').toUpperCase())).length;
+  }
+
+  public get paiementsRefuses(): number {
+    return this.paiements.filter((p) => (p.statut || '').toUpperCase() === 'REFUSE').length;
+  }
+
+  public formatStatus(statut: string): string {
+    return (statut || 'INCONNU').replaceAll('_', ' ');
+  }
+}

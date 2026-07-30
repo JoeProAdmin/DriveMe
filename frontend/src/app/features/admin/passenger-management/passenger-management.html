@@ -1,0 +1,106 @@
+<div class="admin-page" [attr.dir]="apiService.isRtlMode() ? 'rtl' : 'ltr'">
+  <header class="page-header">
+    <div>
+      <h1>Gestion des passagers</h1>
+      <p>Consultation, recherche et administration des comptes passagers.</p>
+    </div>
+    <button class="btn secondary" type="button" (click)="loadPassagers()" [disabled]="isLoading">
+      {{ isLoading ? 'Chargement...' : 'Rafraîchir' }}
+    </button>
+  </header>
+
+  <section class="metrics">
+    <article class="metric-card">
+      <span>Total passagers</span>
+      <strong>{{ passagers.length }}</strong>
+    </article>
+    <article class="metric-card">
+      <span>Résultats affichés</span>
+      <strong>{{ filteredPassagers.length }}</strong>
+    </article>
+  </section>
+
+  <div class="alert error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <section class="toolbar">
+    <label for="passenger-search">Recherche</label>
+    <input
+      id="passenger-search"
+      type="search"
+      [(ngModel)]="searchTerm"
+      placeholder="Nom, prénom, email, téléphone ou ID"
+    />
+  </section>
+
+  <section class="table-card">
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Passager</th>
+            <th>Email</th>
+            <th>Téléphone</th>
+            <th>Création</th>
+            <th class="actions-column">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let passager of filteredPassagers">
+            <td>#{{ passager.id }}</td>
+            <td>
+              <div class="identity">
+                <span class="avatar">{{ (passager.prenom || passager.nom || 'P').charAt(0).toUpperCase() }}</span>
+                <strong>{{ passager.prenom || '-' }} {{ passager.nom || '' }}</strong>
+              </div>
+            </td>
+            <td>{{ passager.email || '-' }}</td>
+            <td>{{ passager.telephone || '-' }}</td>
+            <td>{{ passager.dateCreation ? (passager.dateCreation | date:'dd/MM/yyyy HH:mm') : '-' }}</td>
+            <td class="actions-column">
+              <div class="actions">
+                <button class="btn small secondary" type="button" (click)="openDetails(passager)">Voir</button>
+                <button class="btn small primary" type="button" (click)="openEdit(passager)">Modifier</button>
+                <button class="btn small danger" type="button" (click)="deletePassager(passager)">Supprimer</button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="!isLoading && filteredPassagers.length === 0">
+            <td colspan="6" class="empty">Aucun passager trouvé.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="modal-backdrop" *ngIf="selectedPassager || editedPassager" (click)="closePanel()">
+    <section class="modal" (click)="$event.stopPropagation()">
+      <header class="modal-header">
+        <h2>{{ editedPassager ? 'Modifier le passager' : 'Détail du passager' }}</h2>
+        <button type="button" class="close-button" (click)="closePanel()">×</button>
+      </header>
+
+      <div *ngIf="selectedPassager" class="details-grid">
+        <div><span>ID</span><strong>#{{ selectedPassager.id }}</strong></div>
+        <div><span>Nom</span><strong>{{ selectedPassager.nom || '-' }}</strong></div>
+        <div><span>Prénom</span><strong>{{ selectedPassager.prenom || '-' }}</strong></div>
+        <div><span>Email</span><strong>{{ selectedPassager.email || '-' }}</strong></div>
+        <div><span>Téléphone</span><strong>{{ selectedPassager.telephone || '-' }}</strong></div>
+        <div><span>Date de création</span><strong>{{ selectedPassager.dateCreation ? (selectedPassager.dateCreation | date:'dd/MM/yyyy HH:mm') : '-' }}</strong></div>
+      </div>
+
+      <form *ngIf="editedPassager" (ngSubmit)="savePassager()" class="edit-form">
+        <label>Prénom<input name="prenom" [(ngModel)]="editedPassager.prenom" /></label>
+        <label>Nom<input name="nom" [(ngModel)]="editedPassager.nom" /></label>
+        <label>Email<input name="email" type="email" [(ngModel)]="editedPassager.email" /></label>
+        <label>Téléphone<input name="telephone" [(ngModel)]="editedPassager.telephone" /></label>
+        <div class="modal-actions">
+          <button class="btn secondary" type="button" (click)="closePanel()">Annuler</button>
+          <button class="btn primary" type="submit" [disabled]="isSaving">
+            {{ isSaving ? 'Enregistrement...' : 'Enregistrer' }}
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+</div>

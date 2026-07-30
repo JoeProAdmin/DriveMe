@@ -14,11 +14,13 @@ import { ProfileComponent } from './features/profile/profile';
 import { SosComponent } from './features/sos/sos';
 import { authGuard } from './core/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
+import { LEGAL_ROUTES } from './features/legal/legal.routes';
 
 export const routes: Routes = [
   { path: '', component: Landing },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  ...LEGAL_ROUTES,
   { path: 'dashboard', component: Dashboard, canActivate: [authGuard] },
   { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
   { path: 'sos', component: SosComponent, canActivate: [authGuard] },

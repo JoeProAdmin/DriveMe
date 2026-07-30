@@ -1,6 +1,6 @@
 import { Injectable, signal, WritableSignal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, shareReplay } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface AdminStats { totalChauffeurs: number; totalPassagers: number; totalCourses: number; totalPaiements: number; }
@@ -25,6 +25,9 @@ export interface PaiementResponseDTO {
 export class ApiService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.apiUrl;
+  private chauffeurs$?: Observable<ChauffeurResponseDTO[]>;
+  private passagers$?: Observable<PassagerResponseDTO[]>;
+  private paiements$?: Observable<PaiementResponseDTO[]>;
   public readonly currentLanguage: WritableSignal<'fr' | 'en' | 'ar' | 'es'> = signal('fr');
   public readonly isRtlMode: WritableSignal<boolean> = signal(false);
 
@@ -32,9 +35,35 @@ export class ApiService {
   public login(credentials: { identifiant: string; motDePasse: string }): Observable<any> { return this.http.post(`${this.baseUrl}/auth/login`, credentials); }
   public registerUser(data: any): Observable<any> { return this.http.post(`${this.baseUrl}/auth/register`, data); }
   public getAdminStats(): Observable<AdminStats> { return this.http.get<AdminStats>(`${this.baseUrl}/admin/stats`); }
-  public getAllChauffeurs(): Observable<ChauffeurResponseDTO[]> { return this.http.get<ChauffeurResponseDTO[]>(`${this.baseUrl}/chauffeurs`); }
+  public getAllChauffeurs(forceRefresh = false): Observable<ChauffeurResponseDTO[]> {
+
+    if (!this.chauffeurs$ || forceRefresh) {
+
+      this.chauffeurs$ = this.http
+        .get<ChauffeurResponseDTO[]>(`${this.baseUrl}/chauffeurs`)
+        .pipe(
+          shareReplay(1)
+        );
+
+    }
+
+    return this.chauffeurs$;
+  }
   public getChauffeurByEmail(email: string): Observable<ChauffeurResponseDTO> { return this.http.get<ChauffeurResponseDTO>(`${this.baseUrl}/chauffeurs/email/${encodeURIComponent(email)}`); }
-  public getAllPassagers(): Observable<PassagerResponseDTO[]> { return this.http.get<PassagerResponseDTO[]>(`${this.baseUrl}/passagers`); }
+  public getAllPassagers(forceRefresh = false): Observable<PassagerResponseDTO[]> {
+
+    if (!this.passagers$ || forceRefresh) {
+
+      this.passagers$ = this.http
+        .get<PassagerResponseDTO[]>(`${this.baseUrl}/passagers`)
+        .pipe(
+          shareReplay(1)
+        );
+
+    }
+
+    return this.passagers$;
+  }
   public getPassagerByEmail(email: string): Observable<PassagerResponseDTO> { return this.http.get<PassagerResponseDTO>(`${this.baseUrl}/passagers/email/${encodeURIComponent(email)}`); }
   public updatePassager(id: number, data: PassagerResponseDTO): Observable<PassagerResponseDTO> { return this.http.put<PassagerResponseDTO>(`${this.baseUrl}/passagers/${id}`, data); }
   public deletePassager(id: number): Observable<void> { return this.http.delete<void>(`${this.baseUrl}/passagers/${id}`); }
@@ -53,6 +82,19 @@ export class ApiService {
   public choisirProposition(courseId: number, propositionId: number): Observable<PropositionResponseDTO> { return this.http.put<PropositionResponseDTO>(`${this.baseUrl}/propositions/${courseId}/choisir/${propositionId}`, {}); }
   public validerPaiement(payload: PaiementCreateDTO): Observable<PaiementResponseDTO> { return this.http.post<PaiementResponseDTO>(`${this.baseUrl}/paiements/valider`, payload); }
   public getPaiementByCourse(courseId: number): Observable<PaiementResponseDTO> { return this.http.get<PaiementResponseDTO>(`${this.baseUrl}/paiements/course/${courseId}`); }
-  public getAllPaiements(): Observable<PaiementResponseDTO[]> { return this.http.get<PaiementResponseDTO[]>(`${this.baseUrl}/paiements`); }
+  public getAllPaiements(forceRefresh = false): Observable<PaiementResponseDTO[]> {
+
+    if (!this.paiements$ || forceRefresh) {
+
+      this.paiements$ = this.http
+        .get<PaiementResponseDTO[]>(`${this.baseUrl}/paiements`)
+        .pipe(
+          shareReplay(1)
+        );
+
+    }
+
+    return this.paiements$;
+  }
   public uploadSelfieVerification(id: number, file: File): Observable<any> { const formData = new FormData(); formData.append('file', file); return this.http.post(`${this.baseUrl}/chauffeurs/${id}/selfie`, formData); }
 }

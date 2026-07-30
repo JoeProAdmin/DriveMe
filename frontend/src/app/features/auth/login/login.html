@@ -1,13 +1,5 @@
 <div class="auth-page" [class.rtl]="currentLang === 'AR'">
-  <header class="auth-header">
-    <a routerLink="/" class="brand">Drive<span>Me</span></a>
-    <div class="lang-wrap">
-      <button type="button" class="lang-button" (click)="dropdownOpen = !dropdownOpen">{{ currentLang }} ▾</button>
-      <div *ngIf="dropdownOpen" class="lang-menu">
-        <button *ngFor="let lang of ['FR','EN','AR','ES']" type="button" (click)="changeLangViaDropdown($any(lang))">{{ lang }}</button>
-      </div>
-    </div>
-  </header>
+  <app-header mode="auth" [currentLang]="currentLang" (languageChange)="changeLangViaDropdown($any($event))" />
 
   <main class="auth-main">
     <section class="auth-card">

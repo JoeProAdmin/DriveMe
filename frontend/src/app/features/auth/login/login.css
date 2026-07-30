@@ -1,10 +1,10 @@
 :host { display:block; }
 * { box-sizing:border-box; }
-.auth-page { min-height:100vh; background:#f5f7fb; color:#0f172a; font-family:'Poppins','Segoe UI',sans-serif; }
+.auth-page { min-height:100vh; background:#f5f7fb; color:#0f172a; font-family:Inter,Arial,sans-serif; }
 .auth-page.rtl { direction:rtl; }
-.auth-header { height:68px; padding:0 4vw; display:flex; align-items:center; justify-content:space-between; background:#0f172a; border-bottom:2px solid #00c853; }
+.auth-header { height:68px; padding:0 4vw; display:flex; align-items:center; justify-content:space-between; background:#0f172a; border-bottom:2px solid #10b981; }
 .brand { color:#fff; text-decoration:none; font-size:24px; font-weight:800; }
-.brand span { color:#00c853; }
+.brand span { color:#10b981; }
 .lang-wrap { position:relative; }
 .lang-button { border:1px solid #334155; background:#1e293b; color:#fff; border-radius:8px; padding:8px 12px; cursor:pointer; }
 .lang-menu { position:absolute; right:0; top:42px; min-width:90px; padding:6px; border-radius:10px; background:#fff; box-shadow:0 12px 30px rgba(15,23,42,.18); z-index:10; }
@@ -16,7 +16,7 @@ h1 { margin:0 0 8px; font-size:28px; }
 form { display:grid; gap:10px; }
 label { font-size:13px; font-weight:700; }
 input { width:100%; border:1px solid #cbd5e1; border-radius:9px; padding:13px 14px; font-size:15px; outline:none; }
-input:focus { border-color:#00a844; box-shadow:0 0 0 3px rgba(0,200,83,.12); }
+input:focus { border-color:#059669; box-shadow:0 0 0 3px rgba(0,200,83,.12); }
 .label-row { display:flex; justify-content:space-between; align-items:center; margin-top:6px; }
 .link-button { border:0; background:transparent; color:#64748b; font-size:12px; }
 .password-field { display:flex; border:1px solid #cbd5e1; border-radius:9px; overflow:hidden; }
@@ -30,6 +30,6 @@ input:focus { border-color:#00a844; box-shadow:0 0 0 3px rgba(0,200,83,.12); }
 .separator::before,.separator::after { content:''; height:1px; background:#e2e8f0; flex:1; }
 .external-grid { display:grid; gap:9px; }
 .external-grid button { padding:11px; border:1px solid #e2e8f0; border-radius:9px; background:#f8fafc; color:#64748b; }
-.register-link { display:block; margin-top:18px; text-align:center; color:#008f3c; font-weight:800; text-decoration:none; }
+.register-link { display:block; margin-top:18px; text-align:center; color:#047857; font-weight:800; text-decoration:none; }
 .legal { margin:18px 0 0; color:#64748b; font-size:11px; line-height:1.5; }
 @media (max-width:520px) { .auth-card { padding:24px 18px; border-radius:12px; } .auth-header { padding:0 18px; } }

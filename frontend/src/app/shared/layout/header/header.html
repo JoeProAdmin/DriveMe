@@ -1,0 +1,22 @@
+<header class="dm-header">
+  <div class="dm-header__inner">
+    <app-logo />
+    <nav *ngIf="mode === 'public'" class="dm-header__nav" aria-label="Navigation principale">
+      <a routerLink="/" fragment="services">Services</a><a routerLink="/" fragment="safety">Sécurité</a><a routerLink="/register">Chauffeurs</a><a routerLink="/terms">Aide</a>
+    </nav>
+    <div class="dm-header__actions">
+      <select class="dm-header__language" [value]="currentLang" (change)="languageChange.emit($any($event.target).value)" aria-label="Langue">
+        <option value="FR">FR</option><option value="EN">EN</option><option value="AR">AR</option><option value="ES">ES</option>
+      </select>
+      <ng-container *ngIf="mode === 'public'">
+        <a class="dm-header__link" routerLink="/login">Connexion</a><a class="dm-header__primary" routerLink="/register">Créer un compte</a>
+      </ng-container>
+      <ng-container *ngIf="mode === 'auth'">
+        <a class="dm-header__link" routerLink="/">Retour à l'accueil</a>
+      </ng-container>
+      <ng-container *ngIf="mode === 'app'">
+        <span class="dm-header__user" *ngIf="userLabel">{{ userLabel }}</span><button type="button" class="dm-header__logout" (click)="logout.emit()">Déconnexion</button>
+      </ng-container>
+    </div>
+  </div>
+</header>

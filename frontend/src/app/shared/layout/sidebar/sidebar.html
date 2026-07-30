@@ -1,0 +1,16 @@
+<aside class="dm-sidebar">
+  <div class="dm-sidebar__brand"><app-logo [inverse]="true" /></div>
+  <div class="dm-sidebar__context"><span>Espace connecté</span><strong>{{ role }}</strong></div>
+  <nav class="dm-sidebar__nav" aria-label="Navigation de l'espace connecté">
+    <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Vue d'ensemble</a>
+    <a *ngIf="role === 'ADMIN'" routerLink="/chauffeurs" routerLinkActive="active">Chauffeurs</a>
+    <a *ngIf="role === 'ADMIN'" routerLink="/passagers" routerLinkActive="active">Passagers</a>
+    <a routerLink="/courses" routerLinkActive="active">Courses</a>
+    <a *ngIf="role === 'PASSAGER'" routerLink="/create-course" routerLinkActive="active">Nouvelle course</a>
+    <a *ngIf="role === 'ADMIN'" routerLink="/paiements" routerLinkActive="active">Paiements</a>
+    <a *ngIf="role === 'CHAUFFEUR'" routerLink="/recharge" routerLinkActive="active">Crédit chauffeur</a>
+    <a routerLink="/profile" routerLinkActive="active">Mon profil</a>
+    <a routerLink="/sos" routerLinkActive="active">Assistance SOS</a>
+  </nav>
+  <div class="dm-sidebar__footer"><div class="dm-sidebar__avatar">{{ role.charAt(0) }}</div><div><strong>{{ role }}</strong><span>{{ email }}</span></div><button type="button" (click)="logout.emit()">Déconnexion</button></div>
+</aside>

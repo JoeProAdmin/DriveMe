@@ -3,13 +3,14 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../../core/api.service';
+import { HeaderComponent } from '../../../shared/layout/header/header';
 
 type Flow = 'PASSAGER' | 'CHAUFFEUR';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, HeaderComponent],
   templateUrl: './register.html',
   styleUrls: ['./register.css']
 })

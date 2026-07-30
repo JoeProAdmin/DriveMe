@@ -1,11 +1,5 @@
 <div class="register-page" [class.rtl]="currentLang === 'AR'">
-  <header class="register-header">
-    <a routerLink="/" class="brand">Drive<span>Me</span></a>
-    <div class="header-actions">
-      <select [(ngModel)]="currentLang"><option>FR</option><option>EN</option><option>AR</option><option>ES</option></select>
-      <a routerLink="/login">{{ texts[currentLang].login }}</a>
-    </div>
-  </header>
+  <app-header mode="auth" [currentLang]="currentLang" (languageChange)="currentLang = $any($event)" />
 
   <main>
     <section *ngIf="!currentFlow" class="profile-card">

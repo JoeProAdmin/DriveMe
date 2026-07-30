@@ -9,6 +9,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { finalize, forkJoin } from 'rxjs';
+import { UnifiedSidebarComponent } from '../../../shared/layout/sidebar/sidebar';
+import { HeaderComponent } from '../../../shared/layout/header/header';
 
 import {
   ApiService,
@@ -40,7 +42,7 @@ interface ProposalForm {
 @Component({
   selector: 'app-course-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, UnifiedSidebarComponent, HeaderComponent],
   templateUrl: './course-list.html',
   styleUrls: ['./course-list.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -683,4 +685,12 @@ export class CourseList implements OnInit, OnDestroy {
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '');
   }
+  public logout(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userEmail');
+    this.router.navigate(['/login']);
+  }
+
 }

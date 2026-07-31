@@ -17,7 +17,7 @@
             {{
               (chauffeur?.prenom || chauffeur?.nom)
                 ? ((chauffeur?.prenom || '') + ' ' + (chauffeur?.nom || ''))
-                : 'Chauffeur DriveMe'
+                : apiService.t('driver.fallbackName')
             }}
           </h1>
         </div>

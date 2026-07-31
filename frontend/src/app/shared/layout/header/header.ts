@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { LogoComponent } from '../logo/logo';
+import { ApiService } from '../../../core/api.service';
 
 @Component({
   selector: 'app-header',
@@ -11,6 +12,7 @@ import { LogoComponent } from '../logo/logo';
   styleUrl: './header.scss'
 })
 export class HeaderComponent {
+  constructor(public readonly apiService: ApiService) {}
   @Input() mode: 'public' | 'auth' | 'app' = 'public';
   @Input() currentLang = 'FR';
   @Input() userLabel = '';

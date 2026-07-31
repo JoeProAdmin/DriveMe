@@ -276,7 +276,7 @@
               {{ processingPaymentCourseId === course.id ? texts[currentLang].paymentProcessing : texts[currentLang].paymentConfirm + ' · ' + course.prix + ' ' + texts[currentLang].mad }}
             </button>
           </div>
-          <p class="payment-security">Simulation TFE : les données de carte restent dans le navigateur et ne sont jamais envoyées au backend.</p>
+          <p class="payment-security">{{ apiService.t('payment.securityDemo') }}</p>
         </form>
       </article>
     </div>
@@ -501,4 +501,3 @@
     </div>
   </div>
 </ng-template>
-

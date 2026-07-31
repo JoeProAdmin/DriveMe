@@ -58,7 +58,6 @@ export class CourseList implements OnInit, OnDestroy {
   public errorMessage = '';
   public successMessage = '';
   public userRole = '';
-  public currentLang: Language = 'FR';
 
   public activeProposalCourseId: number | null = null;
   public submittingProposalCourseId: number | null = null;
@@ -92,10 +91,14 @@ export class CourseList implements OnInit, OnDestroy {
     }
   };
   constructor(
-    private readonly apiService: ApiService,
+    public readonly apiService: ApiService,
     private readonly router: Router,
     private readonly changeDetectorRef: ChangeDetectorRef
   ) {}
+
+  public get currentLang(): Language {
+    return this.apiService.currentLanguage().toUpperCase() as Language;
+  }
 
   public ngOnInit(): void {
     this.loadCourses(true);

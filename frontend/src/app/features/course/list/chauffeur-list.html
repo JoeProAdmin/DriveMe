@@ -4,11 +4,10 @@
 
   <header class="view-action-bar">
     <div class="action-bar-left">
-      <p class="page-eyebrow">Administration DriveMe</p>
-      <h1>Gestion des chauffeurs</h1>
+      <p class="page-eyebrow">{{ t.area }}</p>
+      <h1>{{ t.title }}</h1>
       <p class="view-caption">
-        Consultez les profils, contrôlez leur validation et supervisez
-        l’état général de la flotte.
+        {{ t.subtitle }}
       </p>
     </div>
 
@@ -18,8 +17,8 @@
         class="btn-action-refresh"
         [disabled]="chargement"
         (click)="loadChauffeurs()">
-        <span *ngIf="!chargement">Rafraîchir</span>
-        <span *ngIf="chargement">Chargement...</span>
+        <span *ngIf="!chargement">{{ apiService.t('common.refresh') }}</span>
+        <span *ngIf="chargement">{{ apiService.t('common.loading') }}</span>
       </button>
     </div>
   </header>
@@ -27,58 +26,58 @@
   <div *ngIf="messageSucces" class="feedback-message feedback-success" role="status">
     <span>{{ messageSucces }}</span>
     <button type="button" class="feedback-close" (click)="messageSucces = ''">
-      Fermer
+      {{ t.close }}
     </button>
   </div>
 
   <div *ngIf="messageErreur" class="feedback-message feedback-error" role="alert">
     <span>{{ messageErreur }}</span>
     <button type="button" class="feedback-close" (click)="messageErreur = ''">
-      Fermer
+      {{ t.close }}
     </button>
   </div>
 
   <section class="metrics-cards-row" aria-label="Indicateurs des chauffeurs">
     <article class="mini-metric-card">
-      <span class="metric-label">Total chauffeurs</span>
+      <span class="metric-label">{{ t.total }}</span>
       <h3>{{ chauffeurs.length }}</h3>
-      <p class="metric-caption">Profils enregistrés</p>
+      <p class="metric-caption">{{ t.registered }}</p>
     </article>
 
     <article class="mini-metric-card">
-      <span class="metric-label">Profils approuvés</span>
+      <span class="metric-label">{{ t.approved }}</span>
       <h3>{{ chauffeursValides }}</h3>
-      <p class="metric-caption">Autorisés sur la plateforme</p>
+      <p class="metric-caption">{{ t.authorized }}</p>
     </article>
 
     <article class="mini-metric-card">
-      <span class="metric-label">En attente</span>
+      <span class="metric-label">{{ t.pending }}</span>
       <h3>{{ chauffeursEnAttente }}</h3>
-      <p class="metric-caption">À contrôler par l’administration</p>
+      <p class="metric-caption">{{ t.review }}</p>
     </article>
 
     <article class="mini-metric-card">
-      <span class="metric-label">Profils rejetés</span>
+      <span class="metric-label">{{ t.rejected }}</span>
       <h3>{{ chauffeursRejetes }}</h3>
-      <p class="metric-caption">Non autorisés actuellement</p>
+      <p class="metric-caption">{{ t.unauthorized }}</p>
     </article>
 
     <article class="mini-metric-card">
-      <span class="metric-label">Note moyenne</span>
+      <span class="metric-label">{{ t.rating }}</span>
       <h3>{{ noteMoyenneFlotte | number:'1.1-1' }}</h3>
-      <p class="metric-caption">Évaluation globale de la flotte</p>
+      <p class="metric-caption">{{ t.fleetRating }}</p>
     </article>
 
     <article class="mini-metric-card">
-      <span class="metric-label">Solde total</span>
+      <span class="metric-label">{{ t.balance }}</span>
       <h3>{{ formaterSolde(soldeTotal) }}</h3>
-      <p class="metric-caption">MAD disponibles sur les comptes</p>
+      <p class="metric-caption">{{ t.balances }}</p>
     </article>
   </section>
 
   <section class="management-toolbar">
     <div class="search-field-group">
-      <label for="driver-search">Rechercher un chauffeur</label>
+      <label for="driver-search">{{ t.search }}</label>
       <div class="search-input-wrapper">
         <input
           id="driver-search"
@@ -86,33 +85,33 @@
           name="driverSearch"
           [(ngModel)]="recherche"
           autocomplete="off"
-          placeholder="Nom, prénom, email, téléphone ou identifiant">
+          [placeholder]="t.placeholder">
         <button
           *ngIf="recherche"
           type="button"
           class="btn-clear-search"
           (click)="recherche = ''">
-          Effacer
+          {{ apiService.t('common.delete') }}
         </button>
       </div>
     </div>
 
     <div class="filter-field-group">
-      <label for="driver-status-filter">Statut administratif</label>
+      <label for="driver-status-filter">{{ t.status }}</label>
       <select
         id="driver-status-filter"
         name="driverStatusFilter"
         [(ngModel)]="filtreStatut">
-        <option value="TOUS">Tous les statuts</option>
-        <option value="EN_ATTENTE">En attente</option>
-        <option value="APPROUVE">Approuvé</option>
-        <option value="REJETE">Rejeté</option>
+        <option value="TOUS">{{ t.allStatuses }}</option>
+        <option value="EN_ATTENTE">{{ t.pending }}</option>
+        <option value="APPROUVE">{{ t.approvedOne }}</option>
+        <option value="REJETE">{{ t.rejectedOne }}</option>
       </select>
     </div>
 
     <div class="toolbar-result">
       <span class="result-count">{{ chauffeursFiltres.length }}</span>
-      <span>résultat{{ chauffeursFiltres.length > 1 ? 's' : '' }}</span>
+      <span>{{ t.result }}</span>
     </div>
 
     <button
@@ -120,13 +119,13 @@
       class="btn-reset-filters"
       [disabled]="!recherche && filtreStatut === 'TOUS'"
       (click)="effacerRecherche()">
-      Réinitialiser
+      {{ t.reset }}
     </button>
   </section>
 
   <section *ngIf="chargement" class="loading-panel" aria-live="polite">
     <div class="loading-indicator"></div>
-    <p>Chargement des chauffeurs...</p>
+    <p>{{ t.loadingDrivers }}</p>
   </section>
 
   <div *ngIf="!chargement" class="saas-table-wrapper">
@@ -135,12 +134,12 @@
         <thead>
           <tr>
             <th>ID</th>
-            <th>Chauffeur</th>
-            <th>Contact</th>
-            <th>Note</th>
-            <th>Solde</th>
-            <th>Validation</th>
-            <th class="align-table-right">Actions</th>
+            <th>{{ t.driver }}</th>
+            <th>{{ t.contact }}</th>
+            <th>{{ t.ratingShort }}</th>
+            <th>{{ t.balanceShort }}</th>
+            <th>{{ t.validation }}</th>
+            <th class="align-table-right">{{ t.actions }}</th>
           </tr>
         </thead>
 
@@ -194,7 +193,7 @@
                   class="btn-action-inline neutral"
                   [disabled]="estActionEnCours(chauffeur.id)"
                   (click)="ouvrirDetail(chauffeur)">
-                  Voir
+                  {{ t.view }}
                 </button>
 
                 <button
@@ -203,7 +202,7 @@
                   class="btn-action-inline green"
                   [disabled]="estActionEnCours(chauffeur.id)"
                   (click)="approuver(chauffeur.id)">
-                  {{ estActionEnCours(chauffeur.id) ? 'Traitement...' : 'Approuver' }}
+                  {{ estActionEnCours(chauffeur.id) ? t.processing : t.approve }}
                 </button>
 
                 <button
@@ -212,7 +211,7 @@
                   class="btn-action-inline amber"
                   [disabled]="estActionEnCours(chauffeur.id)"
                   (click)="remettreEnAttente(chauffeur.id)">
-                  {{ estActionEnCours(chauffeur.id) ? 'Traitement...' : 'Suspendre' }}
+                  {{ estActionEnCours(chauffeur.id) ? t.processing : t.suspend }}
                 </button>
 
                 <button
@@ -221,7 +220,7 @@
                   class="btn-action-inline red"
                   [disabled]="estActionEnCours(chauffeur.id)"
                   (click)="rejeter(chauffeur.id)">
-                  {{ estActionEnCours(chauffeur.id) ? 'Traitement...' : 'Rejeter' }}
+                  {{ estActionEnCours(chauffeur.id) ? t.processing : t.reject }}
                 </button>
 
                 <button
@@ -230,7 +229,7 @@
                   class="btn-action-inline amber"
                   [disabled]="estActionEnCours(chauffeur.id)"
                   (click)="remettreEnAttente(chauffeur.id)">
-                  {{ estActionEnCours(chauffeur.id) ? 'Traitement...' : 'Réexaminer' }}
+                  {{ estActionEnCours(chauffeur.id) ? t.processing : t.reconsider }}
                 </button>
               </div>
             </td>
@@ -239,7 +238,7 @@
           <tr *ngIf="chauffeursFiltres.length === 0">
             <td colspan="7" class="table-empty-placeholder">
               <div class="empty-state-content">
-                <h2>Aucun chauffeur trouvé</h2>
+                <h2>{{ t.notFound }}</h2>
                 <p *ngIf="chauffeurs.length === 0">
                   Aucun chauffeur n’est actuellement enregistré.
                 </p>
@@ -281,7 +280,7 @@
           </div>
 
           <div>
-            <p class="modal-eyebrow">Fiche chauffeur</p>
+            <p class="modal-eyebrow">{{ t.file }}</p>
             <h2 id="driver-detail-title">
               {{ nomComplet(chauffeurSelectionne) }}
             </h2>
@@ -297,38 +296,38 @@
           type="button"
           class="modal-close-button"
           (click)="fermerDetail()">
-          Fermer
+          {{ t.close }}
         </button>
       </header>
 
       <div class="driver-detail-body">
         <dl class="driver-detail-grid">
           <div class="detail-field">
-            <dt>Identifiant</dt>
+            <dt>{{ t.id }}</dt>
             <dd>#{{ chauffeurSelectionne.id }}</dd>
           </div>
           <div class="detail-field">
-            <dt>Nom complet</dt>
+            <dt>{{ t.fullName }}</dt>
             <dd>{{ nomComplet(chauffeurSelectionne) }}</dd>
           </div>
           <div class="detail-field">
-            <dt>Email</dt>
+            <dt>{{ apiService.t('common.email') }}</dt>
             <dd>{{ chauffeurSelectionne.email || 'Non renseigné' }}</dd>
           </div>
           <div class="detail-field">
-            <dt>Téléphone</dt>
+            <dt>{{ apiService.t('common.phone') }}</dt>
             <dd>{{ chauffeurSelectionne.telephone || 'Non renseigné' }}</dd>
           </div>
           <div class="detail-field">
-            <dt>Note moyenne</dt>
+            <dt>{{ t.rating }}</dt>
             <dd>{{ formaterNote(chauffeurSelectionne.noteMoyenne) }} / 5</dd>
           </div>
           <div class="detail-field">
-            <dt>Solde crédit</dt>
+            <dt>{{ t.credit }}</dt>
             <dd>{{ formaterSolde(chauffeurSelectionne.soldeCredit) }} MAD</dd>
           </div>
           <div class="detail-field">
-            <dt>Statut administratif</dt>
+            <dt>{{ t.status }}</dt>
             <dd>{{ libelleStatut(chauffeurSelectionne.statutValidation) }}</dd>
           </div>
         </dl>
@@ -336,7 +335,7 @@
 
       <footer class="driver-detail-footer">
         <button type="button" class="btn-modal-secondary" (click)="fermerDetail()">
-          Fermer
+          {{ t.close }}
         </button>
 
         <button
@@ -345,7 +344,7 @@
           class="btn-modal-primary"
           [disabled]="estActionEnCours(chauffeurSelectionne.id)"
           (click)="approuver(chauffeurSelectionne.id)">
-          Approuver le chauffeur
+          {{ t.approve }}
         </button>
 
         <button
@@ -354,7 +353,7 @@
           class="btn-modal-warning"
           [disabled]="estActionEnCours(chauffeurSelectionne.id)"
           (click)="remettreEnAttente(chauffeurSelectionne.id)">
-          Suspendre le chauffeur
+          {{ t.suspend }}
         </button>
 
         <button
@@ -363,7 +362,7 @@
           class="btn-modal-danger"
           [disabled]="estActionEnCours(chauffeurSelectionne.id)"
           (click)="rejeter(chauffeurSelectionne.id)">
-          Rejeter le chauffeur
+          {{ t.reject }}
         </button>
       </footer>
     </section>

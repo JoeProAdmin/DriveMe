@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AdminViewComponent } from './admin-view/admin-view';
 import { DriverViewComponent } from './driver-view/driver-view';
 import { PassengerViewComponent } from './passenger-view/passenger-view';
+import { ApiService } from '../../core/api.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,6 +15,7 @@ import { PassengerViewComponent } from './passenger-view/passenger-view';
 })
 export class Dashboard implements OnInit {
   private readonly router = inject(Router);
+  public readonly apiService = inject(ApiService);
   public userRole = '';
   public userEmail = '';
 

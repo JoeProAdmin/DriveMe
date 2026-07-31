@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ApiService } from '../../core/api.service';
 
 type EmergencyType =
   | 'Accident'
@@ -55,7 +56,7 @@ export class SosComponent {
     'Autre'
   ];
 
-  constructor() {
+  constructor(public readonly apiService: ApiService) {
     this.loadIncidentHistory();
   }
 
@@ -64,7 +65,7 @@ export class SosComponent {
     this.locating = true;
 
     if (!navigator.geolocation) {
-      this.errorMessage = 'La géolocalisation n’est pas disponible sur ce navigateur.';
+      this.errorMessage = this.apiService.t('sos.notDetected');
       this.locating = false;
       return;
     }

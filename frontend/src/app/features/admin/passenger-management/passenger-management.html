@@ -1,21 +1,21 @@
 <div class="admin-page" [attr.dir]="apiService.isRtlMode() ? 'rtl' : 'ltr'">
   <header class="page-header">
     <div>
-      <h1>Gestion des passagers</h1>
-      <p>Consultation, recherche et administration des comptes passagers.</p>
+      <h1>{{ apiService.t('admin.passengers.title') }}</h1>
+      <p>{{ apiService.t('admin.passengers.subtitle') }}</p>
     </div>
     <button class="btn secondary" type="button" (click)="loadPassagers()" [disabled]="isLoading">
-      {{ isLoading ? 'Chargement...' : 'Rafraîchir' }}
+      {{ isLoading ? apiService.t('common.loading') : apiService.t('common.refresh') }}
     </button>
   </header>
 
   <section class="metrics">
     <article class="metric-card">
-      <span>Total passagers</span>
+      <span>{{ apiService.t('admin.passengers.total') }}</span>
       <strong>{{ passagers.length }}</strong>
     </article>
     <article class="metric-card">
-      <span>Résultats affichés</span>
+      <span>{{ apiService.t('admin.passengers.shown') }}</span>
       <strong>{{ filteredPassagers.length }}</strong>
     </article>
   </section>
@@ -23,12 +23,12 @@
   <div class="alert error" *ngIf="errorMessage">{{ errorMessage }}</div>
 
   <section class="toolbar">
-    <label for="passenger-search">Recherche</label>
+    <label for="passenger-search">{{ apiService.t('common.search') }}</label>
     <input
       id="passenger-search"
       type="search"
       [(ngModel)]="searchTerm"
-      placeholder="Nom, prénom, email, téléphone ou ID"
+      [placeholder]="apiService.t('admin.passengers.placeholder')"
     />
   </section>
 
@@ -38,11 +38,11 @@
         <thead>
           <tr>
             <th>ID</th>
-            <th>Passager</th>
-            <th>Email</th>
-            <th>Téléphone</th>
-            <th>Création</th>
-            <th class="actions-column">Actions</th>
+            <th>{{ apiService.t('admin.passengers.passenger') }}</th>
+            <th>{{ apiService.t('common.email') }}</th>
+            <th>{{ apiService.t('common.phone') }}</th>
+            <th>{{ apiService.t('admin.passengers.created') }}</th>
+            <th class="actions-column">{{ apiService.t('common.actions') }}</th>
           </tr>
         </thead>
         <tbody>
@@ -59,14 +59,14 @@
             <td>{{ passager.dateCreation ? (passager.dateCreation | date:'dd/MM/yyyy HH:mm') : '-' }}</td>
             <td class="actions-column">
               <div class="actions">
-                <button class="btn small secondary" type="button" (click)="openDetails(passager)">Voir</button>
-                <button class="btn small primary" type="button" (click)="openEdit(passager)">Modifier</button>
-                <button class="btn small danger" type="button" (click)="deletePassager(passager)">Supprimer</button>
+                <button class="btn small secondary" type="button" (click)="openDetails(passager)">{{ apiService.t('common.view') }}</button>
+                <button class="btn small primary" type="button" (click)="openEdit(passager)">{{ apiService.t('common.edit') }}</button>
+                <button class="btn small danger" type="button" (click)="deletePassager(passager)">{{ apiService.t('common.delete') }}</button>
               </div>
             </td>
           </tr>
           <tr *ngIf="!isLoading && filteredPassagers.length === 0">
-            <td colspan="6" class="empty">Aucun passager trouvé.</td>
+            <td colspan="6" class="empty">{{ apiService.t('admin.passengers.empty') }}</td>
           </tr>
         </tbody>
       </table>
@@ -76,28 +76,28 @@
   <div class="modal-backdrop" *ngIf="selectedPassager || editedPassager" (click)="closePanel()">
     <section class="modal" (click)="$event.stopPropagation()">
       <header class="modal-header">
-        <h2>{{ editedPassager ? 'Modifier le passager' : 'Détail du passager' }}</h2>
+        <h2>{{ editedPassager ? apiService.t('admin.passengers.editTitle') : apiService.t('admin.passengers.detailsTitle') }}</h2>
         <button type="button" class="close-button" (click)="closePanel()">×</button>
       </header>
 
       <div *ngIf="selectedPassager" class="details-grid">
         <div><span>ID</span><strong>#{{ selectedPassager.id }}</strong></div>
-        <div><span>Nom</span><strong>{{ selectedPassager.nom || '-' }}</strong></div>
-        <div><span>Prénom</span><strong>{{ selectedPassager.prenom || '-' }}</strong></div>
-        <div><span>Email</span><strong>{{ selectedPassager.email || '-' }}</strong></div>
-        <div><span>Téléphone</span><strong>{{ selectedPassager.telephone || '-' }}</strong></div>
-        <div><span>Date de création</span><strong>{{ selectedPassager.dateCreation ? (selectedPassager.dateCreation | date:'dd/MM/yyyy HH:mm') : '-' }}</strong></div>
+        <div><span>{{ apiService.t('common.name') }}</span><strong>{{ selectedPassager.nom || '-' }}</strong></div>
+        <div><span>{{ apiService.t('common.firstName') }}</span><strong>{{ selectedPassager.prenom || '-' }}</strong></div>
+        <div><span>{{ apiService.t('common.email') }}</span><strong>{{ selectedPassager.email || '-' }}</strong></div>
+        <div><span>{{ apiService.t('common.phone') }}</span><strong>{{ selectedPassager.telephone || '-' }}</strong></div>
+        <div><span>{{ apiService.t('admin.passengers.createdAt') }}</span><strong>{{ selectedPassager.dateCreation ? (selectedPassager.dateCreation | date:'dd/MM/yyyy HH:mm') : '-' }}</strong></div>
       </div>
 
       <form *ngIf="editedPassager" (ngSubmit)="savePassager()" class="edit-form">
-        <label>Prénom<input name="prenom" [(ngModel)]="editedPassager.prenom" /></label>
-        <label>Nom<input name="nom" [(ngModel)]="editedPassager.nom" /></label>
-        <label>Email<input name="email" type="email" [(ngModel)]="editedPassager.email" /></label>
-        <label>Téléphone<input name="telephone" [(ngModel)]="editedPassager.telephone" /></label>
+        <label>{{ apiService.t('common.firstName') }}<input name="prenom" [(ngModel)]="editedPassager.prenom" /></label>
+        <label>{{ apiService.t('common.name') }}<input name="nom" [(ngModel)]="editedPassager.nom" /></label>
+        <label>{{ apiService.t('common.email') }}<input name="email" type="email" [(ngModel)]="editedPassager.email" /></label>
+        <label>{{ apiService.t('common.phone') }}<input name="telephone" [(ngModel)]="editedPassager.telephone" /></label>
         <div class="modal-actions">
-          <button class="btn secondary" type="button" (click)="closePanel()">Annuler</button>
+          <button class="btn secondary" type="button" (click)="closePanel()">{{ apiService.t('common.cancel') }}</button>
           <button class="btn primary" type="submit" [disabled]="isSaving">
-            {{ isSaving ? 'Enregistrement...' : 'Enregistrer' }}
+            {{ isSaving ? apiService.t('common.saving') : apiService.t('common.save') }}
           </button>
         </div>
       </form>

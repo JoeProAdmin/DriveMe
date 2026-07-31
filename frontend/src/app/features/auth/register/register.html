@@ -1,5 +1,5 @@
 <div class="register-page" [class.rtl]="currentLang === 'AR'">
-  <app-header mode="auth" [currentLang]="currentLang" (languageChange)="currentLang = $any($event)" />
+  <app-header mode="auth" [currentLang]="currentLang" (languageChange)="changeLanguage($event)" />
 
   <main>
     <section *ngIf="!currentFlow" class="profile-card">
@@ -15,39 +15,39 @@
         <button type="button" class="ghost" (click)="resetFlow()">×</button>
       </div>
 
-      <div *ngIf="currentFlow === 'CHAUFFEUR'" class="progress"><div [style.width.%]="currentStep * 25"></div><span>Étape {{ currentStep }}/4</span></div>
+      <div *ngIf="currentFlow === 'CHAUFFEUR'" class="progress"><div [style.width.%]="currentStep * 25"></div><span>{{ api.t('register.step') }} {{ currentStep }}/4</span></div>
       <div *ngIf="errorMessage" class="message error">{{ errorMessage }}</div>
       <div *ngIf="successMessage" class="message success">{{ successMessage }}</div>
 
       <div *ngIf="currentStep === 1" class="fields">
-        <div class="two-columns"><label>Nom<input [(ngModel)]="accountForm.nom" autocomplete="family-name"></label><label>Prénom<input [(ngModel)]="accountForm.prenom" autocomplete="given-name"></label></div>
-        <label>Téléphone marocain<input [(ngModel)]="accountForm.telephone" placeholder="+212612345678" autocomplete="tel"></label>
-        <label>Email<input [(ngModel)]="accountForm.email" type="email" placeholder="nom@exemple.ma" autocomplete="email"></label>
-        <label>Mot de passe<div class="password-field"><input [(ngModel)]="accountForm.motDePasse" [type]="showPassword ? 'text' : 'password'" autocomplete="new-password"><button type="button" (click)="showPassword = !showPassword">{{ showPassword ? 'Masquer' : 'Afficher' }}</button></div></label>
-        <label>Confirmer le mot de passe<input [(ngModel)]="accountForm.confirmation" type="password" autocomplete="new-password"></label>
-        <small>Minimum 8 caractères, avec au moins une lettre et un chiffre.</small>
+        <div class="two-columns"><label>{{ api.t('common.name') }}<input [(ngModel)]="accountForm.nom" autocomplete="family-name"></label><label>{{ api.t('common.firstName') }}<input [(ngModel)]="accountForm.prenom" autocomplete="given-name"></label></div>
+        <label>{{ api.t('register.internationalPhone') }}<input [(ngModel)]="accountForm.telephone" placeholder="+212612345678, +33612345678…" autocomplete="tel"></label>
+        <label>{{ api.t('common.email') }}<input [(ngModel)]="accountForm.email" type="email" placeholder="nom@exemple.ma" autocomplete="email"></label>
+        <label>{{ api.t('register.password') }}<div class="password-field"><input [(ngModel)]="accountForm.motDePasse" [type]="showPassword ? 'text' : 'password'" autocomplete="new-password"><button type="button" (click)="showPassword = !showPassword">{{ showPassword ? api.t('login.hide') : api.t('login.show') }}</button></div></label>
+        <label>{{ api.t('register.confirmPassword') }}<input [(ngModel)]="accountForm.confirmation" type="password" autocomplete="new-password"></label>
+        <small>{{ api.t('register.passwordHelp') }}</small>
       </div>
 
       <div *ngIf="currentFlow === 'CHAUFFEUR' && currentStep === 2" class="fields">
         <h2>{{ texts[currentLang].docs }}</h2>
         <label>CIN<input type="file" accept="image/*,.pdf" (change)="onFileSelected($event, 'cin')"></label>
-        <label>Permis de conduire<input type="file" accept="image/*,.pdf" (change)="onFileSelected($event, 'permis')"></label>
-        <label>Carte grise<input type="file" accept="image/*,.pdf" (change)="onFileSelected($event, 'carteGrise')"></label>
-        <label>Assurance<input type="file" accept="image/*,.pdf" (change)="onFileSelected($event, 'assurance')"></label>
-        <p class="notice">Les fichiers sont contrôlés côté formulaire. Leur stockage documentaire permanent sera relié au module Administration.</p>
+        <label>{{ api.t('register.license') }}<input type="file" accept="image/*,.pdf" (change)="onFileSelected($event, 'permis')"></label>
+        <label>{{ api.t('register.registration') }}<input type="file" accept="image/*,.pdf" (change)="onFileSelected($event, 'carteGrise')"></label>
+        <label>{{ api.t('register.insurance') }}<input type="file" accept="image/*,.pdf" (change)="onFileSelected($event, 'assurance')"></label>
+        <p class="notice">{{ api.t('register.documentsNotice') }}</p>
       </div>
 
       <div *ngIf="currentFlow === 'CHAUFFEUR' && currentStep === 3" class="fields">
         <h2>{{ texts[currentLang].vehicle }}</h2>
-        <div class="two-columns"><label>Marque<input [(ngModel)]="driverForm.marque"></label><label>Modèle<input [(ngModel)]="driverForm.modele"></label></div>
-        <div class="two-columns"><label>Année<input [(ngModel)]="driverForm.annee" type="number" min="1990" max="2030"></label><label>Immatriculation<input [(ngModel)]="driverForm.immatriculation"></label></div>
-        <label>Photo avant<input type="file" accept="image/*" (change)="onFileSelected($event, 'photoAvant')"></label>
-        <label>Photo arrière<input type="file" accept="image/*" (change)="onFileSelected($event, 'photoArriere')"></label>
+        <div class="two-columns"><label>{{ api.t('register.brand') }}<input [(ngModel)]="driverForm.marque"></label><label>{{ api.t('register.model') }}<input [(ngModel)]="driverForm.modele"></label></div>
+        <div class="two-columns"><label>{{ api.t('register.year') }}<input [(ngModel)]="driverForm.annee" type="number" min="1990" max="2030"></label><label>{{ api.t('register.plate') }}<input [(ngModel)]="driverForm.immatriculation"></label></div>
+        <label>{{ api.t('register.frontPhoto') }}<input type="file" accept="image/*" (change)="onFileSelected($event, 'photoAvant')"></label>
+        <label>{{ api.t('register.rearPhoto') }}<input type="file" accept="image/*" (change)="onFileSelected($event, 'photoArriere')"></label>
       </div>
 
       <div *ngIf="currentFlow === 'CHAUFFEUR' && currentStep === 4" class="fields">
         <h2>{{ texts[currentLang].biometric }}</h2>
-        <label>Selfie avec la CIN<input type="file" accept="image/*" capture="user" (change)="onFileSelected($event, 'selfie')"></label>
+        <label>{{ api.t('register.selfie') }}<input type="file" accept="image/*" capture="user" (change)="onFileSelected($event, 'selfie')"></label>
         <p class="notice">{{ texts[currentLang].pending }}</p>
       </div>
 

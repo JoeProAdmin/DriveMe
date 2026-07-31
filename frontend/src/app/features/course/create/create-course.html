@@ -1,90 +1,87 @@
 <div class="course-page">
-
-  <div id="driveme-live-map" class="real-map"></div>
-
-  <div class="fake-map-layer">
-    <div class="route-line"></div>
-    <div class="pin pin-a">A</div>
-    <div class="pin pin-b">B</div>
-    <div class="driver-dot driver-1"></div>
-    <div class="driver-dot driver-2"></div>
-    <div class="driver-dot driver-3"></div>
-  </div>
+  <div id="driveme-live-map" class="real-map" aria-label="Carte de création de course"></div>
 
   <section class="request-panel">
+    <button type="button" class="back-btn" (click)="goBack()">Retour au dashboard</button>
 
-    <button type="button" class="back-btn" (click)="goBack()">
-      Retour dashboard
-    </button>
+    <div class="panel-heading">
+      <div>
+        <span class="eyebrow">RC3.1A · Trajet cartographique</span>
+        <h1>Commander une course</h1>
+      </div>
+      <span class="map-status">Carte active</span>
+    </div>
 
-    <h1>Commander une course</h1>
     <p class="subtitle">
-      Indiquez votre trajet, proposez votre prix et trouvez un chauffeur DriveMe.
+      Recherchez vos adresses ou cliquez directement sur la carte. Le premier clic définit le départ, le second la destination.
     </p>
 
-    <form (ngSubmit)="onFindDriver()" class="request-form">
+    <div class="point-selector" role="group" aria-label="Point à positionner sur la carte">
+      <button type="button" [class.active]="activePointKind === 'departure'" (click)="setActivePoint('departure')">Départ</button>
+      <button type="button" [class.active]="activePointKind === 'arrival'" (click)="setActivePoint('arrival')">Destination</button>
+    </div>
 
-      <div class="field">
-        <label>Lieu de prise en charge</label>
-        <input
-          type="text"
-          name="adresseDepart"
-          [(ngModel)]="formModel.adresseDepart"
-          placeholder="Ex : Gare de Marrakech"
-          required>
+    <form (ngSubmit)="onFindDriver()" class="request-form">
+      <div class="field address-field">
+        <label for="departure-address">Lieu de prise en charge</label>
+        <div class="search-row">
+          <input id="departure-address" type="text" name="adresseDepart" [(ngModel)]="formModel.adresseDepart" (focus)="setActivePoint('departure')" placeholder="Ex. Gare de Marrakech" autocomplete="street-address" required>
+          <button type="button" class="search-btn" [disabled]="searchingDeparture" (click)="searchAddress('departure')">
+            {{ searchingDeparture ? 'Recherche…' : 'Rechercher' }}
+          </button>
+        </div>
+        <div class="results-list" *ngIf="departureResults.length > 0">
+          <button type="button" *ngFor="let result of departureResults" (click)="chooseAddress('departure', result)">{{ result.label }}</button>
+        </div>
       </div>
 
-      <button type="button" class="location-btn" (click)="useMyLocation()">
-        {{ locating ? 'Localisation...' : 'Utiliser ma position actuelle' }}
+      <button type="button" class="location-btn" [disabled]="locating" (click)="useMyLocation()">
+        {{ locating ? 'Localisation en cours…' : 'Utiliser ma position actuelle' }}
       </button>
 
-      <div class="field">
-        <label>Destination</label>
-        <input
-          type="text"
-          name="adresseArrivee"
-          [(ngModel)]="formModel.adresseArrivee"
-          placeholder="Ex : Jemaa El Fna, Gueliz, Casablanca..."
-          required>
+      <div class="field address-field">
+        <label for="arrival-address">Destination</label>
+        <div class="search-row">
+          <input id="arrival-address" type="text" name="adresseArrivee" [(ngModel)]="formModel.adresseArrivee" (focus)="setActivePoint('arrival')" placeholder="Ex. Aéroport Marrakech-Ménara" autocomplete="street-address" required>
+          <button type="button" class="search-btn" [disabled]="searchingArrival" (click)="searchAddress('arrival')">
+            {{ searchingArrival ? 'Recherche…' : 'Rechercher' }}
+          </button>
+        </div>
+        <div class="results-list" *ngIf="arrivalResults.length > 0">
+          <button type="button" *ngFor="let result of arrivalResults" (click)="chooseAddress('arrival', result)">{{ result.label }}</button>
+        </div>
       </div>
 
+      <div class="route-summary" *ngIf="distanceKm !== null; else routeHelp">
+        <div><span>Distance</span><strong>{{ distanceKm }} km</strong></div>
+        <div><span>Durée estimée</span><strong>{{ durationMinutes }} min</strong></div>
+        <div><span>Prix conseillé</span><strong>{{ estimatedPrice }} MAD</strong></div>
+        <small *ngIf="routeSource === 'ESTIMATION'">Estimation de secours basée sur la distance géographique.</small>
+      </div>
+      <ng-template #routeHelp>
+        <div class="route-help">{{ calculatingRoute ? 'Calcul de l’itinéraire…' : 'Sélectionnez les deux points pour calculer le trajet.' }}</div>
+      </ng-template>
+
       <div class="field">
-        <label>Prix proposé en MAD</label>
-        <input
-          type="number"
-          name="prix"
-          [(ngModel)]="formModel.prix"
-          placeholder="Ex : 35"
-          min="5"
-          required>
+        <label for="proposed-price">Votre prix proposé en MAD</label>
+        <div class="price-row">
+          <input id="proposed-price" type="number" name="prix" [(ngModel)]="formModel.prix" placeholder="Ex. 35" min="15" step="1" required>
+          <button type="button" class="estimate-btn" [disabled]="estimatedPrice === null" (click)="useEstimatedPrice()">Utiliser l’estimation</button>
+        </div>
       </div>
 
       <div class="summary-box">
-        <p><strong>Départ :</strong> {{ formModel.adresseDepart || 'Non renseigné' }}</p>
-        <p><strong>Destination :</strong> {{ formModel.adresseArrivee || 'Non renseignée' }}</p>
-        <p><strong>Prix proposé :</strong> <span>{{ formModel.prix || 0 }} MAD</span></p>
-        <p><strong>Paiement :</strong> Cash ou wallet chauffeur</p>
+        <p><strong>Départ</strong><span>{{ formModel.adresseDepart || 'Non renseigné' }}</span></p>
+        <p><strong>Destination</strong><span>{{ formModel.adresseArrivee || 'Non renseignée' }}</span></p>
+        <p><strong>Prix proposé</strong><span>{{ formModel.prix || 0 }} MAD</span></p>
       </div>
 
-      <div *ngIf="errorMessage" class="error-message">
-        {{ errorMessage }}
-      </div>
+      <div *ngIf="errorMessage" class="message error-message">{{ errorMessage }}</div>
+      <div *ngIf="successMessage" class="message success-message">{{ successMessage }}</div>
 
-      <div *ngIf="successMessage" class="success-message">
-        {{ successMessage }}
-      </div>
-
-      <button
-        type="submit"
-        class="submit-btn"
-        [disabled]="loading || !formModel.adresseDepart || !formModel.adresseArrivee || !formModel.prix">
-
-        {{ loading ? 'Création de la course...' : 'Trouver un chauffeur' }}
-
+      <button type="submit" class="submit-btn" [disabled]="loading || calculatingRoute || !departurePoint || !arrivalPoint || !formModel.prix">
+        {{ loading ? 'Création de la course…' : 'Créer la course et chercher un chauffeur' }}
       </button>
-
     </form>
-
   </section>
-
 </div>

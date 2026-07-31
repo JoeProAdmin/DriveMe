@@ -10,7 +10,7 @@
 
       <form (ngSubmit)="onSubmit()" novalidate>
         <label for="identifiant">{{ dictionary[currentLang].identifier }}</label>
-        <input id="identifiant" name="identifiant" [(ngModel)]="loginData.identifiant" autocomplete="username" placeholder="email@exemple.ma ou +212612345678">
+        <input id="identifiant" name="identifiant" [(ngModel)]="loginData.identifiant" autocomplete="username" placeholder="email@exemple.com ou numéro international">
 
         <div class="label-row">
           <label for="motDePasse">{{ dictionary[currentLang].password }}</label>

@@ -7,6 +7,27 @@ export interface AdminStats { totalChauffeurs: number; totalPassagers: number; t
 export interface AvisDTO { id?: number; courseId: number; note: number; commentaire: string; }
 export interface ChauffeurResponseDTO { id: number; nom?: string; prenom?: string; email?: string; telephone?: string; statutValidation: number; noteMoyenne?: number; soldeCredit?: number; }
 export interface PassagerResponseDTO { id: number; nom?: string; prenom?: string; telephone?: string; email?: string; photoUrl?: string; dateCreation?: string; }
+export interface CourseCreateDTO {
+  passagerId: number;
+  chauffeurId?: number | null;
+  adresseDepart: string;
+  adresseArrivee: string;
+  prix: number;
+  latitudeDepart: number;
+  longitudeDepart: number;
+  latitudeArrivee: number;
+  longitudeArrivee: number;
+  distanceKm?: number | null;
+  dureeEstimeeMinutes?: number | null;
+  prixEstime?: number | null;
+}
+export interface CourseResponseDTO extends CourseCreateDTO {
+  id: number;
+  passagerNom: string;
+  chauffeurNom?: string | null;
+  statut: string;
+  dateCreation: string;
+}
 export interface PropositionCreateDTO { courseId: number; chauffeurId: number; prixPropose: number; distanceChauffeurDepart?: number; tempsEstimeMinutes?: number; message?: string; }
 export interface PropositionResponseDTO { id: number; courseId: number; chauffeurId: number; chauffeurNom: string; noteMoyenne: number; prixPropose: number; distanceChauffeurDepart: number; tempsEstimeMinutes: number; message: string; statut: string; dateCreation: string; }
 
@@ -85,7 +106,7 @@ export class ApiService {
   public getCoursesByPassager(passagerId: number): Observable<any[]> { return this.http.get<any[]>(`${this.baseUrl}/courses/passager/${passagerId}`); }
   public getCoursesByChauffeur(chauffeurId: number): Observable<any[]> { return this.http.get<any[]>(`${this.baseUrl}/courses/chauffeur/${chauffeurId}`); }
   public getCoursesEnAttente(): Observable<any[]> { return this.http.get<any[]>(`${this.baseUrl}/courses/en-attente`); }
-  public requestCourse(courseData: any): Observable<any> { return this.http.post(`${this.baseUrl}/courses`, courseData); }
+  public requestCourse(courseData: CourseCreateDTO): Observable<CourseResponseDTO> { return this.http.post<CourseResponseDTO>(`${this.baseUrl}/courses`, courseData); }
   public updateCourseStatus(courseId: number, status: string): Observable<any> { return this.http.put(`${this.baseUrl}/courses/${courseId}/status?status=${status}`, {}); }
   public soumettreAvis(avis: AvisDTO): Observable<void> { return this.http.post<void>(`${this.baseUrl}/avis`, avis); }
   public creerProposition(proposition: PropositionCreateDTO): Observable<PropositionResponseDTO> { return this.http.post<PropositionResponseDTO>(`${this.baseUrl}/propositions`, proposition); }

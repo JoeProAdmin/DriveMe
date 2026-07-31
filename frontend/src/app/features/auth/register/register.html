@@ -21,7 +21,7 @@
 
       <div *ngIf="currentStep === 1" class="fields">
         <div class="two-columns"><label>Nom<input [(ngModel)]="accountForm.nom" autocomplete="family-name"></label><label>Prénom<input [(ngModel)]="accountForm.prenom" autocomplete="given-name"></label></div>
-        <label>Téléphone marocain<input [(ngModel)]="accountForm.telephone" placeholder="+212612345678" autocomplete="tel"></label>
+        <label>Téléphone international<input [(ngModel)]="accountForm.telephone" placeholder="+212612345678, +33612345678…" autocomplete="tel"></label>
         <label>Email<input [(ngModel)]="accountForm.email" type="email" placeholder="nom@exemple.ma" autocomplete="email"></label>
         <label>Mot de passe<div class="password-field"><input [(ngModel)]="accountForm.motDePasse" [type]="showPassword ? 'text' : 'password'" autocomplete="new-password"><button type="button" (click)="showPassword = !showPassword">{{ showPassword ? 'Masquer' : 'Afficher' }}</button></div></label>
         <label>Confirmer le mot de passe<input [(ngModel)]="accountForm.confirmation" type="password" autocomplete="new-password"></label>

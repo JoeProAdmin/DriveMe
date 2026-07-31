@@ -117,8 +117,8 @@ export class RegisterComponent {
       this.errorMessage = 'Veuillez saisir une adresse email valide.';
       return false;
     }
-    if (!/^\+212[5-7]\d{8}$/.test(this.normalizePhone(f.telephone))) {
-      this.errorMessage = 'Téléphone marocain invalide. Exemple : +212612345678.';
+    if (!/^\+[1-9]\d{7,14}$/.test(this.normalizePhone(f.telephone))) {
+      this.errorMessage = 'Numéro international invalide. Utilisez le format E.164, par exemple +212612345678 ou +33612345678.';
       return false;
     }
     if (f.motDePasse.length < 8 || !/[A-Za-z]/.test(f.motDePasse) || !/\d/.test(f.motDePasse)) {
@@ -148,10 +148,9 @@ export class RegisterComponent {
   }
 
   private normalizePhone(value: string): string {
-    let phone = value.replace(/[\s().-]/g, '');
-    if (phone.startsWith('00212')) phone = '+212' + phone.substring(5);
+    let phone = value.trim().replace(/[\s().-]/g, '');
+    if (phone.startsWith('00')) phone = '+' + phone.substring(2);
     if (/^0\d{9}$/.test(phone)) phone = '+212' + phone.substring(1);
-    if (phone.startsWith('212')) phone = '+' + phone;
     return phone;
   }
 

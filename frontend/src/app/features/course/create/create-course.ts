@@ -3,11 +3,10 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, NgZone, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { catchError, forkJoin, map, of, switchMap } from 'rxjs';
+import { catchError, forkJoin, map, of } from 'rxjs';
 import {
   ApiService,
-  CourseCreateDTO,
-  PassagerResponseDTO
+  CourseCreateDTO
 } from '../../../core/api.service';
 
 type PointKind = 'departure' | 'arrival';
@@ -40,7 +39,7 @@ interface RouteSummary {
 })
 export class CreateCourse implements OnInit, OnDestroy {
   private readonly router = inject(Router);
-  private readonly api = inject(ApiService);
+  public readonly api = inject(ApiService);
   private readonly http = inject(HttpClient);
   private readonly zone = inject(NgZone);
 
@@ -217,18 +216,9 @@ export class CreateCourse implements OnInit, OnDestroy {
       return;
     }
 
-    const email = localStorage.getItem('userEmail');
-    if (!email) {
-      this.errorMessage = 'Session utilisateur introuvable.';
-      return;
-    }
-
     this.loading = true;
 
-    this.api.getPassagerByEmail(email).pipe(
-      switchMap((passager: PassagerResponseDTO) => {
-        const payload: CourseCreateDTO = {
-          passagerId: passager.id,
+    const payload: CourseCreateDTO = {
           adresseDepart: this.formModel.adresseDepart.trim(),
           adresseArrivee: this.formModel.adresseArrivee.trim(),
           prix: Number(this.formModel.prix),
@@ -239,10 +229,9 @@ export class CreateCourse implements OnInit, OnDestroy {
           distanceKm: this.distanceKm,
           dureeEstimeeMinutes: this.durationMinutes,
           prixEstime: this.estimatedPrice
-        };
-        return this.api.requestCourse(payload);
-      })
-    ).subscribe({
+    };
+
+    this.api.requestCourse(payload).subscribe({
       next: () => {
         this.loading = false;
         this.successMessage = 'Course créée avec succès.';

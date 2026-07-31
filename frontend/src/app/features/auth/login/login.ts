@@ -13,11 +13,10 @@ import { HeaderComponent } from '../../../shared/layout/header/header';
   styleUrls: ['./login.css']
 })
 export class LoginComponent {
-  private readonly api = inject(ApiService);
+  public readonly api = inject(ApiService);
   private readonly router = inject(Router);
 
   public loginData = { identifiant: '', motDePasse: '' };
-  public currentLang: 'FR' | 'AR' | 'EN' | 'ES' = 'FR';
   public dropdownOpen = false;
   public showQrModal = false;
   public isSubmitting = false;
@@ -30,6 +29,10 @@ export class LoginComponent {
     AR: { title: 'تسجيل الدخول إلى DriveMe', identifier: 'الهاتف أو البريد الإلكتروني', password: 'كلمة المرور', submit: 'تسجيل الدخول', loading: 'جاري الدخول...', register: 'إنشاء حساب', forgot: 'نسيت كلمة المرور؟', or: 'أو', google: 'المتابعة مع Google', apple: 'المتابعة مع Apple', qr: 'الدخول عبر QR', legal: 'تسجيل الدخول عبر الرسائل وواتساب وGoogle وApple وQR مسارات مستقبلية. تسجيل الدخول بالبريد/الهاتف وكلمة المرور يعمل بالكامل.' },
     ES: { title: 'Iniciar sesión en DriveMe', identifier: 'Teléfono o email', password: 'Contraseña', submit: 'Iniciar sesión', loading: 'Conectando...', register: 'Crear una cuenta', forgot: '¿Olvidó su contraseña?', or: 'o', google: 'Continuar con Google', apple: 'Continuar con Apple', qr: 'Conexión por QR', legal: 'SMS, WhatsApp, Google, Apple y QR se presentan como flujos futuros. El acceso por email/teléfono y contraseña funciona completamente.' }
   };
+
+  public get currentLang(): 'FR' | 'AR' | 'EN' | 'ES' {
+    return this.api.currentLanguage().toUpperCase() as 'FR' | 'AR' | 'EN' | 'ES';
+  }
 
   public onSubmit(): void {
     this.errorMessage = '';
@@ -59,7 +62,6 @@ export class LoginComponent {
   }
 
   public changeLangViaDropdown(lang: 'FR' | 'AR' | 'EN' | 'ES'): void {
-    this.currentLang = lang;
     this.api.setLanguage(lang.toLowerCase() as 'fr' | 'ar' | 'en' | 'es');
     this.dropdownOpen = false;
   }

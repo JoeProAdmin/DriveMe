@@ -16,9 +16,8 @@ type Flow = 'PASSAGER' | 'CHAUFFEUR';
 })
 export class RegisterComponent {
   private readonly router = inject(Router);
-  private readonly api = inject(ApiService);
+  public readonly api = inject(ApiService);
 
-  public currentLang: 'FR' | 'EN' | 'AR' | 'ES' = 'FR';
   public currentFlow: Flow | null = null;
   public currentStep = 1;
   public isSubmitting = false;
@@ -48,6 +47,14 @@ export class RegisterComponent {
     AR: { title:'إنشاء حساب DriveMe', subtitle:'اختر نوع حسابك للبدء.', passenger:'أنا راكب', passengerDesc:'طلب الرحلات والتفاوض والدفع.', driver:'أنا سائق', driverDesc:'اقتراح الأسعار وإدارة النشاط.', account:'معلومات الحساب', docs:'الوثائق المطلوبة', vehicle:'معلومات المركبة', biometric:'التحقق البيومتري', next:'متابعة', previous:'رجوع', submit:'إنشاء الحساب', submitting:'جاري الإنشاء...', login:'لديك حساب؟ تسجيل الدخول', pending:'سيتم إنشاء حساب السائق بحالة «في انتظار الموافقة».' },
     ES: { title:'Crear una cuenta DriveMe', subtitle:'Elige tu perfil para comenzar.', passenger:'Soy pasajero', passengerDesc:'Reservar, negociar y pagar viajes.', driver:'Soy conductor', driverDesc:'Proponer precios y gestionar mi actividad.', account:'Información de la cuenta', docs:'Documentos obligatorios', vehicle:'Información del vehículo', biometric:'Control biométrico', next:'Continuar', previous:'Volver', submit:'Crear mi cuenta', submitting:'Creando...', login:'¿Ya está registrado? Iniciar sesión', pending:'La cuenta del conductor se creará con estado «pendiente de validación».' }
   };
+
+  public get currentLang(): 'FR' | 'EN' | 'AR' | 'ES' {
+    return this.api.currentLanguage().toUpperCase() as 'FR' | 'EN' | 'AR' | 'ES';
+  }
+
+  public changeLanguage(language: string): void {
+    this.api.setLanguage(language.toLowerCase() as 'fr' | 'en' | 'ar' | 'es');
+  }
 
   public selectFlow(flow: Flow): void {
     this.currentFlow = flow;

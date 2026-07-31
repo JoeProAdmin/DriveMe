@@ -1,6 +1,6 @@
 <main class="dm-dashboard-content">
       <header class="dm-page-heading">
-        <div><span>ESPACE {{ userRole }}</span><h1>Tableau de bord</h1><p>Bienvenue dans votre espace DriveMe.</p></div>
+        <div><span>{{ apiService.t('dashboard.area') }} {{ userRole }}</span><h1>{{ apiService.t('dashboard.title') }}</h1><p>{{ apiService.t('dashboard.welcome') }}</p></div>
       </header>
       <app-admin-view *ngIf="userRole === 'ADMIN'" />
       <app-driver-view *ngIf="userRole === 'CHAUFFEUR'" />

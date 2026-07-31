@@ -1,13 +1,13 @@
-<section style="width:100%; min-height:100vh; background-color:#f1f5f9; font-family:'Poppins', sans-serif; padding:32px; box-sizing:border-box;">
+<section [attr.dir]="apiService.isRtlMode() ? 'rtl' : 'ltr'" style="width:100%; min-height:100vh; background-color:#f1f5f9; font-family:'Poppins', sans-serif; padding:32px; box-sizing:border-box;">
 
   <div style="width:100%; max-width:none; margin:0;">
 
     <header style="margin-bottom:28px;">
       <h1 style="font-size:32px; color:#0f172a; margin:0; font-weight:800;">
-        Paiements et recharges DriveMe
+        {{ t.title }}
       </h1>
       <p style="color:#64748b; margin-top:8px; font-size:15px;">
-        Gestion des recharges chauffeurs, paiements clients et moyens de paiement locaux.
+        {{ t.subtitle }}
       </p>
     </header>
 
@@ -18,10 +18,10 @@
         <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:20px; margin-bottom:24px;">
           <div>
             <h2 style="margin:0; color:#0f172a; font-size:22px;">
-              Recharge chauffeur
+              {{ t.recharge }}
             </h2>
             <p style="margin:6px 0 0 0; color:#64748b; line-height:1.6;">
-              Les chauffeurs achètent des crédits DriveMe pour recevoir et gérer des courses.
+              {{ t.rechargeDesc }}
             </p>
           </div>
 
@@ -37,8 +37,8 @@
                   [style.border-color]="selectedPack.price === 100 ? '#00C853' : '#e2e8f0'"
                   [style.background-color]="selectedPack.price === 100 ? '#f0fdf4' : '#ffffff'"
                   style="border:2px solid; border-radius:14px; padding:18px; text-align:left; cursor:pointer; min-height:130px;">
-            <strong style="display:block; color:#0f172a; font-size:16px;">Pack Initial</strong>
-            <span style="display:block; color:#64748b; margin-top:6px;">100 crédits</span>
+            <strong style="display:block; color:#0f172a; font-size:16px;">{{ t.initial }}</strong>
+            <span style="display:block; color:#64748b; margin-top:6px;">100 {{ t.credits }}</span>
             <span style="display:block; color:#00C853; font-weight:800; font-size:22px; margin-top:18px;">100 MAD</span>
           </button>
 
@@ -47,8 +47,8 @@
                   [style.border-color]="selectedPack.price === 250 ? '#00C853' : '#e2e8f0'"
                   [style.background-color]="selectedPack.price === 250 ? '#f0fdf4' : '#ffffff'"
                   style="border:2px solid; border-radius:14px; padding:18px; text-align:left; cursor:pointer; min-height:130px;">
-            <strong style="display:block; color:#0f172a; font-size:16px;">Pack Éco</strong>
-            <span style="display:block; color:#64748b; margin-top:6px;">275 crédits inclus</span>
+            <strong style="display:block; color:#0f172a; font-size:16px;">{{ t.eco }}</strong>
+            <span style="display:block; color:#64748b; margin-top:6px;">275 {{ t.included }}</span>
             <span style="display:block; color:#00C853; font-weight:800; font-size:22px; margin-top:18px;">250 MAD</span>
           </button>
 
@@ -57,15 +57,15 @@
                   [style.border-color]="selectedPack.price === 500 ? '#00C853' : '#e2e8f0'"
                   [style.background-color]="selectedPack.price === 500 ? '#f0fdf4' : '#ffffff'"
                   style="border:2px solid; border-radius:14px; padding:18px; text-align:left; cursor:pointer; min-height:130px;">
-            <strong style="display:block; color:#0f172a; font-size:16px;">Pack Pro</strong>
-            <span style="display:block; color:#64748b; margin-top:6px;">600 crédits inclus</span>
+            <strong style="display:block; color:#0f172a; font-size:16px;">{{ t.pro }}</strong>
+            <span style="display:block; color:#64748b; margin-top:6px;">600 {{ t.included }}</span>
             <span style="display:block; color:#00C853; font-weight:800; font-size:22px; margin-top:18px;">500 MAD</span>
           </button>
 
         </div>
 
         <h3 style="font-size:16px; color:#0f172a; margin:0 0 14px 0;">
-          Moyen de paiement
+          {{ t.method }}
         </h3>
 
         <div style="display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:12px; margin-bottom:24px;">
@@ -83,7 +83,7 @@
                   [style.border-color]="selectedMethod === 'CASH' ? '#00C853' : '#e2e8f0'"
                   [style.background-color]="selectedMethod === 'CASH' ? '#f0fdf4' : '#ffffff'"
                   style="border:2px solid; border-radius:12px; padding:16px; cursor:pointer; font-weight:800; color:#0f172a;">
-            Cash client
+            {{ t.cash }}
           </button>
 
           <button type="button"
@@ -107,7 +107,7 @@
               <span style="background:#f8fafc; border:1px solid #e2e8f0; padding:8px 12px; border-radius:8px;">CIH Pay</span>
             </div>
 
-            <input type="text" [(ngModel)]="cardName" name="cardName" placeholder="Nom du titulaire"
+            <input type="text" [(ngModel)]="cardName" name="cardName" [placeholder]="t.cardName"
                    style="padding:14px; border:1px solid #cbd5e1; border-radius:10px; width:100%; box-sizing:border-box;">
 
             <input type="text" [(ngModel)]="cardNumber" name="cardNumber" placeholder="4000 1234 5678 9010"
@@ -123,17 +123,17 @@
           </div>
 
           <div *ngIf="selectedMethod === 'CASH'" style="background:#fffbeb; border:1px solid #facc15; padding:16px; border-radius:12px; color:#92400e; line-height:1.6;">
-            Le passager peut payer le chauffeur en espèces. DriveMe ne prélève pas directement le cash client : le revenu principal de la plateforme provient des recharges prépayées des chauffeurs.
+            {{ t.cashInfo }}
           </div>
 
           <div *ngIf="selectedMethod === 'LOCAL_WALLET'" style="background:#eff6ff; border:1px solid #93c5fd; padding:16px; border-radius:12px; color:#1e40af; line-height:1.6;">
-            Simulation de paiement local : CIH Pay, Wafacash, agence partenaire, recharge télécom ou portefeuille mobile.
+            {{ t.walletInfo }}
           </div>
 
           <button type="submit"
                   [disabled]="isProcessing"
                   style="background:#0f172a; color:white; border:none; padding:16px; border-radius:12px; font-weight:800; cursor:pointer; margin-top:8px; width:100%;">
-            {{ isProcessing ? 'Traitement en cours...' : 'Valider la recharge ' + selectedPack.price + ' MAD' }}
+            {{ isProcessing ? t.processing : t.validate + ' ' + selectedPack.price + ' MAD' }}
           </button>
 
         </form>
@@ -143,40 +143,40 @@
       <aside style="background:#0f172a; color:white; border-radius:18px; padding:28px; box-shadow:0 10px 25px rgba(15,23,42,0.12); width:100%; box-sizing:border-box;">
 
         <h2 style="margin:0 0 18px 0;">
-          Modèle économique DriveMe
+          {{ t.business }}
         </h2>
 
         <div style="display:grid; grid-template-columns:1fr; gap:14px;">
 
           <div style="background:#111827; border-radius:14px; padding:18px;">
-            <span style="color:#94a3b8;">Pack sélectionné</span>
-            <strong style="display:block; font-size:24px; margin-top:8px;">{{ selectedPack.label }}</strong>
+            <span style="color:#94a3b8;">{{ t.selected }}</span>
+            <strong style="display:block; font-size:24px; margin-top:8px;">{{ selectedPackLabel }}</strong>
           </div>
 
           <div style="background:#111827; border-radius:14px; padding:18px;">
-            <span style="color:#94a3b8;">Montant payé</span>
+            <span style="color:#94a3b8;">{{ t.paid }}</span>
             <strong style="display:block; font-size:30px; color:#00C853; margin-top:8px;">{{ selectedPack.price }} MAD</strong>
           </div>
 
           <div style="background:#111827; border-radius:14px; padding:18px;">
-            <span style="color:#94a3b8;">Crédits chauffeur</span>
+            <span style="color:#94a3b8;">{{ t.driverCredits }}</span>
             <strong style="display:block; font-size:30px; color:#00C853; margin-top:8px;">{{ selectedPack.credits }}</strong>
           </div>
 
         </div>
 
         <p style="color:#cbd5e1; line-height:1.7; margin-top:22px;">
-          Le chauffeur recharge son compte DriveMe. À chaque course, une partie du crédit peut être consommée selon la politique commerciale de la plateforme.
+          {{ t.businessDesc }}
         </p>
 
         <div style="border-top:1px solid #334155; margin-top:20px; padding-top:20px;">
-          <strong>Sources de revenus prévues</strong>
+          <strong>{{ t.revenue }}</strong>
           <ul style="color:#cbd5e1; line-height:1.9; padding-left:18px;">
-            <li>Recharges chauffeurs prépayées</li>
-            <li>Commissions par course</li>
-            <li>Options premium chauffeurs</li>
-            <li>Partenariats locaux</li>
-            <li>Recharges locales : CIH, Wafacash, télécoms</li>
+            <li>{{ t.prepaid }}</li>
+            <li>{{ t.commission }}</li>
+            <li>{{ t.premium }}</li>
+            <li>{{ t.partners }}</li>
+            <li>{{ t.local }}</li>
           </ul>
         </div>
 

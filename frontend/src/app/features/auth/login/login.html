@@ -4,13 +4,13 @@
   <main class="auth-main">
     <section class="auth-card">
       <h1>{{ dictionary[currentLang].title }}</h1>
-      <p class="subtitle">Accédez à votre espace passager, chauffeur ou administrateur.</p>
+      <p class="subtitle">{{ api.t('login.subtitle') }}</p>
 
       <div *ngIf="errorMessage" class="message error">{{ errorMessage }}</div>
 
       <form (ngSubmit)="onSubmit()" novalidate>
         <label for="identifiant">{{ dictionary[currentLang].identifier }}</label>
-        <input id="identifiant" name="identifiant" [(ngModel)]="loginData.identifiant" autocomplete="username" placeholder="email@exemple.com ou numéro international">
+        <input id="identifiant" name="identifiant" [(ngModel)]="loginData.identifiant" autocomplete="username" [placeholder]="api.t('login.identifierPlaceholder')">
 
         <div class="label-row">
           <label for="motDePasse">{{ dictionary[currentLang].password }}</label>
@@ -18,7 +18,7 @@
         </div>
         <div class="password-field">
           <input id="motDePasse" name="motDePasse" [(ngModel)]="loginData.motDePasse" [type]="showPassword ? 'text' : 'password'" autocomplete="current-password">
-          <button type="button" (click)="showPassword = !showPassword">{{ showPassword ? 'Masquer' : 'Afficher' }}</button>
+          <button type="button" (click)="showPassword = !showPassword">{{ showPassword ? api.t('login.hide') : api.t('login.show') }}</button>
         </div>
 
         <button class="primary" type="submit" [disabled]="isSubmitting">{{ isSubmitting ? dictionary[currentLang].loading : dictionary[currentLang].submit }}</button>

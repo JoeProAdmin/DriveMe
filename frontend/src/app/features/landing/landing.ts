@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { ApiService } from '../../core/api.service';
 
 type Language = 'FR' | 'EN' | 'AR' | 'ES';
 
@@ -93,7 +94,7 @@ interface LandingCopy {
   styleUrls: ['./landing.css']
 })
 export class Landing {
-  public currentLang: Language = 'FR';
+  private readonly api = inject(ApiService);
   public mobileMenuOpen = false;
   public isLocating = false;
   public locationMessage = '';
@@ -159,8 +160,12 @@ export class Landing {
     return this.copy[this.currentLang];
   }
 
+  public get currentLang(): Language {
+    return this.api.currentLanguage().toUpperCase() as Language;
+  }
+
   public changeLanguage(language: Language): void {
-    this.currentLang = language;
+    this.api.setLanguage(language.toLowerCase() as 'fr' | 'en' | 'ar' | 'es');
     this.mobileMenuOpen = false;
     this.locationMessage = '';
   }

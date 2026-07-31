@@ -1,33 +1,33 @@
 <div class="course-page">
-  <div id="driveme-live-map" class="real-map" aria-label="Carte de création de course"></div>
+  <div id="driveme-live-map" class="real-map" [attr.aria-label]="api.t('course.createTitle')"></div>
 
   <section class="request-panel">
-    <button type="button" class="back-btn" (click)="goBack()">Retour au dashboard</button>
+    <button type="button" class="back-btn" (click)="goBack()">{{ api.t('course.back') }}</button>
 
     <div class="panel-heading">
       <div>
-        <span class="eyebrow">RC3.1A · Trajet cartographique</span>
-        <h1>Commander une course</h1>
+        <span class="eyebrow">{{ api.t('course.eyebrow') }}</span>
+        <h1>{{ api.t('course.createTitle') }}</h1>
       </div>
-      <span class="map-status">Carte active</span>
+      <span class="map-status">{{ api.t('course.mapActive') }}</span>
     </div>
 
     <p class="subtitle">
-      Recherchez vos adresses ou cliquez directement sur la carte. Le premier clic définit le départ, le second la destination.
+      {{ api.t('course.instructions') }}
     </p>
 
     <div class="point-selector" role="group" aria-label="Point à positionner sur la carte">
-      <button type="button" [class.active]="activePointKind === 'departure'" (click)="setActivePoint('departure')">Départ</button>
-      <button type="button" [class.active]="activePointKind === 'arrival'" (click)="setActivePoint('arrival')">Destination</button>
+      <button type="button" [class.active]="activePointKind === 'departure'" (click)="setActivePoint('departure')">{{ api.t('course.departure') }}</button>
+      <button type="button" [class.active]="activePointKind === 'arrival'" (click)="setActivePoint('arrival')">{{ api.t('course.destination') }}</button>
     </div>
 
     <form (ngSubmit)="onFindDriver()" class="request-form">
       <div class="field address-field">
-        <label for="departure-address">Lieu de prise en charge</label>
+        <label for="departure-address">{{ api.t('course.pickup') }}</label>
         <div class="search-row">
-          <input id="departure-address" type="text" name="adresseDepart" [(ngModel)]="formModel.adresseDepart" (focus)="setActivePoint('departure')" placeholder="Ex. Gare de Marrakech" autocomplete="street-address" required>
+          <input id="departure-address" type="text" name="adresseDepart" [(ngModel)]="formModel.adresseDepart" (focus)="setActivePoint('departure')" [placeholder]="api.t('course.departurePlaceholder')" autocomplete="street-address" required>
           <button type="button" class="search-btn" [disabled]="searchingDeparture" (click)="searchAddress('departure')">
-            {{ searchingDeparture ? 'Recherche…' : 'Rechercher' }}
+            {{ searchingDeparture ? api.t('course.searching') : api.t('course.search') }}
           </button>
         </div>
         <div class="results-list" *ngIf="departureResults.length > 0">
@@ -36,15 +36,15 @@
       </div>
 
       <button type="button" class="location-btn" [disabled]="locating" (click)="useMyLocation()">
-        {{ locating ? 'Localisation en cours…' : 'Utiliser ma position actuelle' }}
+        {{ locating ? api.t('course.locating') : api.t('course.useLocation') }}
       </button>
 
       <div class="field address-field">
-        <label for="arrival-address">Destination</label>
+        <label for="arrival-address">{{ api.t('course.destination') }}</label>
         <div class="search-row">
-          <input id="arrival-address" type="text" name="adresseArrivee" [(ngModel)]="formModel.adresseArrivee" (focus)="setActivePoint('arrival')" placeholder="Ex. Aéroport Marrakech-Ménara" autocomplete="street-address" required>
+          <input id="arrival-address" type="text" name="adresseArrivee" [(ngModel)]="formModel.adresseArrivee" (focus)="setActivePoint('arrival')" [placeholder]="api.t('course.arrivalPlaceholder')" autocomplete="street-address" required>
           <button type="button" class="search-btn" [disabled]="searchingArrival" (click)="searchAddress('arrival')">
-            {{ searchingArrival ? 'Recherche…' : 'Rechercher' }}
+            {{ searchingArrival ? api.t('course.searching') : api.t('course.search') }}
           </button>
         </div>
         <div class="results-list" *ngIf="arrivalResults.length > 0">
@@ -53,34 +53,34 @@
       </div>
 
       <div class="route-summary" *ngIf="distanceKm !== null; else routeHelp">
-        <div><span>Distance</span><strong>{{ distanceKm }} km</strong></div>
-        <div><span>Durée estimée</span><strong>{{ durationMinutes }} min</strong></div>
-        <div><span>Prix conseillé</span><strong>{{ estimatedPrice }} MAD</strong></div>
-        <small *ngIf="routeSource === 'ESTIMATION'">Estimation de secours basée sur la distance géographique.</small>
+        <div><span>{{ api.t('course.distance') }}</span><strong>{{ distanceKm }} km</strong></div>
+        <div><span>{{ api.t('course.duration') }}</span><strong>{{ durationMinutes }} min</strong></div>
+        <div><span>{{ api.t('course.recommendedPrice') }}</span><strong>{{ estimatedPrice }} MAD</strong></div>
+        <small *ngIf="routeSource === 'ESTIMATION'">{{ api.t('course.fallback') }}</small>
       </div>
       <ng-template #routeHelp>
-        <div class="route-help">{{ calculatingRoute ? 'Calcul de l’itinéraire…' : 'Sélectionnez les deux points pour calculer le trajet.' }}</div>
+        <div class="route-help">{{ calculatingRoute ? api.t('course.calculating') : api.t('course.selectPoints') }}</div>
       </ng-template>
 
       <div class="field">
-        <label for="proposed-price">Votre prix proposé en MAD</label>
+        <label for="proposed-price">{{ api.t('course.yourPrice') }}</label>
         <div class="price-row">
           <input id="proposed-price" type="number" name="prix" [(ngModel)]="formModel.prix" placeholder="Ex. 35" min="15" step="1" required>
-          <button type="button" class="estimate-btn" [disabled]="estimatedPrice === null" (click)="useEstimatedPrice()">Utiliser l’estimation</button>
+          <button type="button" class="estimate-btn" [disabled]="estimatedPrice === null" (click)="useEstimatedPrice()">{{ api.t('course.useEstimate') }}</button>
         </div>
       </div>
 
       <div class="summary-box">
-        <p><strong>Départ</strong><span>{{ formModel.adresseDepart || 'Non renseigné' }}</span></p>
-        <p><strong>Destination</strong><span>{{ formModel.adresseArrivee || 'Non renseignée' }}</span></p>
-        <p><strong>Prix proposé</strong><span>{{ formModel.prix || 0 }} MAD</span></p>
+        <p><strong>{{ api.t('course.departure') }}</strong><span>{{ formModel.adresseDepart || api.t('course.notSetM') }}</span></p>
+        <p><strong>{{ api.t('course.destination') }}</strong><span>{{ formModel.adresseArrivee || api.t('course.notSetF') }}</span></p>
+        <p><strong>{{ api.t('course.proposedPrice') }}</strong><span>{{ formModel.prix || 0 }} MAD</span></p>
       </div>
 
       <div *ngIf="errorMessage" class="message error-message">{{ errorMessage }}</div>
       <div *ngIf="successMessage" class="message success-message">{{ successMessage }}</div>
 
       <button type="submit" class="submit-btn" [disabled]="loading || calculatingRoute || !departurePoint || !arrivalPoint || !formModel.prix">
-        {{ loading ? 'Création de la course…' : 'Créer la course et chercher un chauffeur' }}
+        {{ loading ? api.t('course.creating') : api.t('course.submit') }}
       </button>
     </form>
   </section>

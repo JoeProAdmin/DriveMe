@@ -17,8 +17,6 @@ export class ProfileComponent implements OnInit {
   today = new Date();
   chauffeur?: ChauffeurResponseDTO;
 
-  public currentLang: 'FR' | 'EN' | 'AR' | 'ES' = 'FR';
-
   noteMoyenne = Number(localStorage.getItem('chauffeurNoteMoyenne') || 0);
   soldeCredit = Number(localStorage.getItem('chauffeurSoldeCredit') || 0);
 
@@ -29,7 +27,15 @@ export class ProfileComponent implements OnInit {
     ES: { title: 'Mi Perfil', subtitle: 'Información personal de DriveMe', account: 'Cuenta de usuario', email: 'Email', role: 'Rol', status: 'Estado', statusVal: 'Validado', platform: 'Plataforma', driverSpace: 'Espacio de Conductor', rating: 'Nota media', credits: 'Créditos DriveMe', security: 'Seguridad', auth: 'Autenticación', conn: 'Conexión', connVal: 'Segura', lastAct: 'Última actividad' }
   };
 
-  constructor(private apiService: ApiService) {}
+  constructor(public readonly apiService: ApiService) {}
+
+  public get currentLang(): 'FR' | 'EN' | 'AR' | 'ES' {
+    return this.apiService.currentLanguage().toUpperCase() as 'FR' | 'EN' | 'AR' | 'ES';
+  }
+
+  public set currentLang(language: 'FR' | 'EN' | 'AR' | 'ES') {
+    this.apiService.setLanguage(language.toLowerCase() as 'fr' | 'en' | 'ar' | 'es');
+  }
 
   ngOnInit(): void {
     this.userRole = localStorage.getItem('userRole') || '';

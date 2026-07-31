@@ -8,8 +8,9 @@
   <div class="dm-app-main">
     <app-header
       mode="app"
-      currentLang="FR"
+      [currentLang]="currentLang"
       [userLabel]="userEmail"
+      (languageChange)="changeLanguage($event)"
       (logout)="logout()"
     />
 

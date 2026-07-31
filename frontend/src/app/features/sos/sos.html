@@ -1,13 +1,12 @@
-<div class="sos-container">
+<div class="sos-container" [attr.dir]="apiService.isRtlMode() ? 'rtl' : 'ltr'">
 
   <div class="sos-header">
     <div class="sos-badge">SOS</div>
 
     <div>
-      <h1>SOS Urgence DriveMe</h1>
+      <h1>{{ apiService.t('sos.title') }}</h1>
       <p>
-        En cas de danger immédiat, contactez les autorités locales compétentes.
-        DriveMe enregistre l’incident et alerte la plateforme.
+        {{ apiService.t('sos.intro') }}
       </p>
     </div>
   </div>
@@ -15,11 +14,10 @@
   <div class="sos-grid">
 
     <div class="sos-card danger-card">
-      <h2>Services d’urgence au Maroc</h2>
+      <h2>{{ apiService.t('sos.services') }}</h2>
 
       <p class="warning-text">
-        DriveMe ne remplace pas la police, la gendarmerie ou les services médicaux.
-        En cas de danger réel, contactez immédiatement les secours.
+        {{ apiService.t('sos.warning') }}
       </p>
 
       <div class="emergency-buttons">
@@ -38,17 +36,17 @@
     </div>
 
     <div class="sos-card">
-      <h2>Déclarer un incident à DriveMe</h2>
+      <h2>{{ apiService.t('sos.report') }}</h2>
 
       <div class="form-group">
-        <label>Utilisateur</label>
+        <label>{{ apiService.t('sos.user') }}</label>
         <div class="readonly-field">
           {{ userEmail }} — {{ userRole }}
         </div>
       </div>
 
       <div class="form-group">
-        <label>Type d’incident</label>
+        <label>{{ apiService.t('sos.type') }}</label>
         <select [(ngModel)]="selectedType">
           <option *ngFor="let type of emergencyTypes" [value]="type">
             {{ type }}
@@ -57,23 +55,23 @@
       </div>
 
       <div class="form-group">
-        <label>Description</label>
+        <label>{{ apiService.t('sos.description') }}</label>
         <textarea
           [(ngModel)]="description"
-          placeholder="Décrivez brièvement la situation..."
+          [placeholder]="apiService.t('sos.descriptionPlaceholder')"
           rows="4">
         </textarea>
       </div>
 
       <div class="location-box">
         <div>
-          <strong>Position GPS</strong>
+          <strong>{{ apiService.t('sos.gps') }}</strong>
           <p *ngIf="latitude && longitude">
             Latitude : {{ latitude }}<br>
             Longitude : {{ longitude }}
           </p>
           <p *ngIf="!latitude || !longitude">
-            Position non encore détectée.
+            {{ apiService.t('sos.notDetected') }}
           </p>
         </div>
 
@@ -81,7 +79,7 @@
           class="secondary-btn"
           (click)="detectLocation()"
           [disabled]="locating">
-          {{ locating ? 'Localisation...' : 'Détecter ma position' }}
+          {{ locating ? apiService.t('sos.detecting') : apiService.t('sos.detect') }}
         </button>
       </div>
 
@@ -90,19 +88,19 @@
       </div>
 
       <button class="main-sos-btn" (click)="sendAlert()">
-        Envoyer l’alerte à DriveMe
+        {{ apiService.t('sos.send') }}
       </button>
 
       <div *ngIf="alertSent" class="success-box">
-        Incident enregistré localement. La future version production transmettra cette alerte au back-office DriveMe.
+        {{ apiService.t('sos.success') }}
       </div>
     </div>
 
     <div class="sos-card">
-      <h2>Historique local des incidents</h2>
+      <h2>{{ apiService.t('sos.history') }}</h2>
 
       <div *ngIf="incidentHistory.length === 0" class="empty-state">
-        Aucun incident enregistré sur cet appareil.
+        {{ apiService.t('sos.empty') }}
       </div>
 
       <div class="incident-item" *ngFor="let incident of incidentHistory">
@@ -115,7 +113,7 @@
 
         <small>
           {{ incident.userEmail }} — {{ incident.userRole }}<br>
-          Statut : {{ incident.status }}
+          {{ apiService.t('common.status') }} : {{ incident.status }}
         </small>
       </div>
     </div>

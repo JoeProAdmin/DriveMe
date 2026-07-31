@@ -15,50 +15,59 @@ import { SosComponent } from './features/sos/sos';
 import { authGuard } from './core/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
 import { LEGAL_ROUTES } from './features/legal/legal.routes';
+import { AppLayoutComponent } from './shared/layout/app-layout/app-layout';
 
 export const routes: Routes = [
   { path: '', component: Landing },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   ...LEGAL_ROUTES,
-  { path: 'dashboard', component: Dashboard, canActivate: [authGuard] },
-  { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
-  { path: 'sos', component: SosComponent, canActivate: [authGuard] },
   {
-    path: 'create-course',
-    component: CreateCourse,
-    canActivate: [authGuard, roleGuard],
-    data: { roles: ['PASSAGER'] }
-  },
-  {
-    path: 'chauffeurs',
-    component: ChauffeurList,
-    canActivate: [authGuard, roleGuard],
-    data: { roles: ['ADMIN'] }
-  },
-  {
-    path: 'passagers',
-    component: PassengerManagementComponent,
-    canActivate: [authGuard, roleGuard],
-    data: { roles: ['ADMIN'] }
-  },
-  {
-    path: 'courses',
-    component: CourseList,
-    canActivate: [authGuard, roleGuard],
-    data: { roles: ['ADMIN', 'CHAUFFEUR', 'PASSAGER'] }
-  },
-  {
-    path: 'paiements',
-    component: PaymentManagementComponent,
-    canActivate: [authGuard, roleGuard],
-    data: { roles: ['ADMIN'] }
-  },
-  {
-    path: 'recharge',
-    component: PaymentComponent,
-    canActivate: [authGuard, roleGuard],
-    data: { roles: ['CHAUFFEUR'] }
+    path: '',
+    component: AppLayoutComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: 'dashboard', component: Dashboard },
+      { path: 'profile', component: ProfileComponent },
+      { path: 'profil', redirectTo: 'profile', pathMatch: 'full' },
+      { path: 'sos', component: SosComponent },
+      {
+        path: 'create-course',
+        component: CreateCourse,
+        canActivate: [roleGuard],
+        data: { roles: ['PASSAGER'] }
+      },
+      {
+        path: 'chauffeurs',
+        component: ChauffeurList,
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      {
+        path: 'passagers',
+        component: PassengerManagementComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      {
+        path: 'courses',
+        component: CourseList,
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN', 'CHAUFFEUR', 'PASSAGER'] }
+      },
+      {
+        path: 'paiements',
+        component: PaymentManagementComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['ADMIN'] }
+      },
+      {
+        path: 'recharge',
+        component: PaymentComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['CHAUFFEUR'] }
+      }
+    ]
   },
   { path: '**', redirectTo: 'login' }
 ];

@@ -1,0 +1,21 @@
+DriveMe RC2.3 — correction du layout global
+
+Corrections appliquées :
+- AppLayoutComponent unique pour toutes les routes privées.
+- Header et UnifiedSidebar rendus une seule fois dans le layout parent.
+- Routes privées configurées comme children dans app.routes.ts.
+- Suppression des enveloppes Header/Sidebar locales de Dashboard et Courses.
+- Suppression du dossier legacy src/app/layout et de tout appel à app-sidebar.
+- AppComponent réduit au router-outlet racine.
+- withInMemoryScrolling conservé avec anchorScrolling et scrollPositionRestoration activés.
+- Scroll du document conservé : aucun conteneur global avec overflow bloquant.
+
+Vérifications réalisées :
+- TypeScript : OK (tsc --noEmit).
+- Compilation Angular des composants et templates : OK (ngc).
+- Recherche globale app-sidebar / DashboardLayoutComponent : aucune occurrence.
+
+Note environnement :
+Le npm run build complet ne peut pas être exécuté dans le conteneur Linux avec le node_modules fourni,
+car le ZIP contient le binaire esbuild Windows (@esbuild/win32-x64). Sur le poste Windows d'origine,
+la commande npm run build utilise le binaire correspondant et doit être exécutée après extraction.

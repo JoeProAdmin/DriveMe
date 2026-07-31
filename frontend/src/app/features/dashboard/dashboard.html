@@ -1,14 +1,8 @@
-<div class="dm-app-shell">
-  <app-unified-sidebar [role]="userRole" [email]="userEmail" (logout)="logout()" />
-  <div class="dm-app-main">
-    <app-header mode="app" currentLang="FR" [userLabel]="userEmail" (logout)="logout()" />
-    <main class="dm-dashboard-content">
+<main class="dm-dashboard-content">
       <header class="dm-page-heading">
         <div><span>ESPACE {{ userRole }}</span><h1>Tableau de bord</h1><p>Bienvenue dans votre espace DriveMe.</p></div>
       </header>
       <app-admin-view *ngIf="userRole === 'ADMIN'" />
       <app-driver-view *ngIf="userRole === 'CHAUFFEUR'" />
       <app-passenger-view *ngIf="userRole === 'PASSAGER'" />
-    </main>
-  </div>
-</div>
+</main>

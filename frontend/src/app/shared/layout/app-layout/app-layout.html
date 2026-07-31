@@ -1,0 +1,20 @@
+<div class="dm-app-shell">
+  <app-unified-sidebar
+    [role]="userRole"
+    [email]="userEmail"
+    (logout)="logout()"
+  />
+
+  <div class="dm-app-main">
+    <app-header
+      mode="app"
+      currentLang="FR"
+      [userLabel]="userEmail"
+      (logout)="logout()"
+    />
+
+    <main class="dm-app-content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

@@ -9,8 +9,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { finalize, forkJoin } from 'rxjs';
-import { UnifiedSidebarComponent } from '../../../shared/layout/sidebar/sidebar';
-import { HeaderComponent } from '../../../shared/layout/header/header';
 import { DmButtonComponent } from '../../../shared/components/dm-button/dm-button';
 
 import {
@@ -43,7 +41,7 @@ interface ProposalForm {
 @Component({
   selector: 'app-course-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, UnifiedSidebarComponent, HeaderComponent, DmButtonComponent],
+  imports: [CommonModule, FormsModule, DmButtonComponent],
   templateUrl: './course-list.html',
   styleUrls: ['./course-list.css'],
   changeDetection: ChangeDetectionStrategy.OnPush

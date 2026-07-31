@@ -1,8 +1,3 @@
-<div class="dm-app-shell">
-  <app-unified-sidebar [role]="userRole" (logout)="logout()" />
-  <div class="dm-app-main">
-    <app-header mode="app" [currentLang]="currentLang" [userLabel]="userRole" (logout)="logout()" />
-    <div class="dm-app-content">
 <div
   class="page-container"
   [attr.dir]="currentLang === 'AR' ? 'rtl' : 'ltr'"
@@ -507,6 +502,3 @@
   </div>
 </ng-template>
 
-    </div>
-  </div>
-</div>

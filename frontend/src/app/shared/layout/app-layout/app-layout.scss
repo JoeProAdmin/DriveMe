@@ -1,0 +1,35 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #f8fafc;
+  font-family: Inter, Arial, sans-serif;
+}
+
+.dm-app-shell {
+  display: flex;
+  min-height: 100vh;
+  align-items: flex-start;
+  background: #f8fafc;
+}
+
+.dm-app-main {
+  min-width: 0;
+  min-height: 100vh;
+  flex: 1;
+}
+
+app-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.dm-app-content {
+  min-height: calc(100vh - 4.5rem);
+}
+
+@media (max-width: 760px) {
+  .dm-app-content {
+    min-height: calc(100vh - 4.5rem);
+  }
+}

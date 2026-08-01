@@ -114,7 +114,7 @@
 
         <div
           class="course-actions"
-          *ngIf="normalizeStatus(course.statut) === 'EN_ATTENTE'"
+          *ngIf="normalizeStatus(course.statut) === 'EN_ATTENTE' || normalizeStatus(course.statut) === 'PROPOSITION_RECUE'"
         >
           <button
             type="button"

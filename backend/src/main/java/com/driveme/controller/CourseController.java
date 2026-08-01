@@ -32,16 +32,28 @@ public class CourseController {
         return courseService.getAllCourses();
     }
 
-    @PreAuthorize("hasAnyRole('CHAUFFEUR','ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/chauffeur/{id}")
     public List<CourseResponseDTO> getByChauffeur(@PathVariable Long id) {
         return courseService.getCoursesByChauffeur(id);
     }
 
-    @PreAuthorize("hasAnyRole('PASSAGER','ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/passager/{id}")
     public List<CourseResponseDTO> getByPassager(@PathVariable Long id) {
         return courseService.getCoursesByPassager(id);
+    }
+
+    @PreAuthorize("hasRole('PASSAGER')")
+    @GetMapping("/passager/me")
+    public List<CourseResponseDTO> getCurrentPassagerCourses(Principal principal) {
+        return courseService.getCurrentPassagerCourses(principal.getName());
+    }
+
+    @PreAuthorize("hasRole('CHAUFFEUR')")
+    @GetMapping("/chauffeur/me")
+    public List<CourseResponseDTO> getCurrentChauffeurCourses(Principal principal) {
+        return courseService.getCurrentChauffeurCourses(principal.getName());
     }
 
     @PreAuthorize("hasAnyRole('CHAUFFEUR','ADMIN')")
@@ -50,7 +62,7 @@ public class CourseController {
         return courseService.getCoursesEnAttente();
     }
 
-    @PreAuthorize("hasAnyRole('CHAUFFEUR','ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}/status")
     public CourseResponseDTO updateStatus(
             @PathVariable Long id,

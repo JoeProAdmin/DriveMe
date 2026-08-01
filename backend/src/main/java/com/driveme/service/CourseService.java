@@ -15,6 +15,10 @@ public interface CourseService {
 
     List<CourseResponseDTO> getCoursesByPassager(Long passagerId);
 
+    List<CourseResponseDTO> getCurrentPassagerCourses(String email);
+
+    List<CourseResponseDTO> getCurrentChauffeurCourses(String email);
+
     /**
      * Retourne toutes les courses en attente
      * disponibles pour les chauffeurs.

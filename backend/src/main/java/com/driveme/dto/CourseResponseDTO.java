@@ -1,6 +1,7 @@
 package com.driveme.dto;
 
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 public class CourseResponseDTO {
     private Long id;
@@ -8,7 +9,7 @@ public class CourseResponseDTO {
     private String chauffeurNom;
     private String adresseDepart;
     private String adresseArrivee;
-    private Double prix;
+    private BigDecimal prix;
     private String statut;
     private LocalDateTime dateCreation;
     private Double latitudeDepart;
@@ -17,16 +18,16 @@ public class CourseResponseDTO {
     private Double longitudeArrivee;
     private Double distanceKm;
     private Integer dureeEstimeeMinutes;
-    private Double prixEstime;
+    private BigDecimal prixEstime;
 
     public CourseResponseDTO() {}
 
     public CourseResponseDTO(Long id, String passagerNom, String chauffeurNom,
-                             String adresseDepart, String adresseArrivee, Double prix,
+                             String adresseDepart, String adresseArrivee, BigDecimal prix,
                              String statut, LocalDateTime dateCreation,
                              Double latitudeDepart, Double longitudeDepart,
                              Double latitudeArrivee, Double longitudeArrivee,
-                             Double distanceKm, Integer dureeEstimeeMinutes, Double prixEstime) {
+                             Double distanceKm, Integer dureeEstimeeMinutes, BigDecimal prixEstime) {
         this.id = id;
         this.passagerNom = passagerNom;
         this.chauffeurNom = chauffeurNom;
@@ -54,8 +55,8 @@ public class CourseResponseDTO {
     public void setAdresseDepart(String adresseDepart) { this.adresseDepart = adresseDepart; }
     public String getAdresseArrivee() { return adresseArrivee; }
     public void setAdresseArrivee(String adresseArrivee) { this.adresseArrivee = adresseArrivee; }
-    public Double getPrix() { return prix; }
-    public void setPrix(Double prix) { this.prix = prix; }
+    public BigDecimal getPrix() { return prix; }
+    public void setPrix(BigDecimal prix) { this.prix = prix; }
     public String getStatut() { return statut; }
     public void setStatut(String statut) { this.statut = statut; }
     public LocalDateTime getDateCreation() { return dateCreation; }
@@ -72,6 +73,6 @@ public class CourseResponseDTO {
     public void setDistanceKm(Double distanceKm) { this.distanceKm = distanceKm; }
     public Integer getDureeEstimeeMinutes() { return dureeEstimeeMinutes; }
     public void setDureeEstimeeMinutes(Integer dureeEstimeeMinutes) { this.dureeEstimeeMinutes = dureeEstimeeMinutes; }
-    public Double getPrixEstime() { return prixEstime; }
-    public void setPrixEstime(Double prixEstime) { this.prixEstime = prixEstime; }
+    public BigDecimal getPrixEstime() { return prixEstime; }
+    public void setPrixEstime(BigDecimal prixEstime) { this.prixEstime = prixEstime; }
 }

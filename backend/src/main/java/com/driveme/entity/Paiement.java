@@ -1,6 +1,7 @@
 package com.driveme.entity;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,8 +12,8 @@ public class Paiement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Double montant;
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal montant;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -38,11 +39,11 @@ public class Paiement {
         return id;
     }
 
-    public Double getMontant() {
+    public BigDecimal getMontant() {
         return montant;
     }
 
-    public void setMontant(Double montant) {
+    public void setMontant(BigDecimal montant) {
         this.montant = montant;
     }
 

@@ -15,6 +15,10 @@ public interface PropositionChauffeurRepository
 
     List<PropositionChauffeur> findByChauffeurId(Long chauffeurId);
 
+    List<PropositionChauffeur> findByChauffeurUtilisateurEmailIgnoreCaseOrderByDateCreationDesc(String email);
+
+    boolean existsByCourseIdAndChauffeurId(Long courseId, Long chauffeurId);
+
     List<PropositionChauffeur> findByCourseIdAndStatutProposition(
             Long courseId,
             PropositionStatus statut

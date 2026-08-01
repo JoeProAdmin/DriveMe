@@ -1,6 +1,7 @@
 package com.driveme.dto;
 
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 public class PropositionResponseDTO {
 
@@ -14,7 +15,7 @@ public class PropositionResponseDTO {
 
     private Double noteMoyenne;
 
-    private Double prixPropose;
+    private BigDecimal prixPropose;
 
     private Double distanceChauffeurDepart;
 
@@ -35,7 +36,7 @@ public class PropositionResponseDTO {
             Long chauffeurId,
             String chauffeurNom,
             Double noteMoyenne,
-            Double prixPropose,
+            BigDecimal prixPropose,
             Double distanceChauffeurDepart,
             Integer tempsEstimeMinutes,
             String message,
@@ -67,7 +68,7 @@ public class PropositionResponseDTO {
 
     public Double getNoteMoyenne() { return noteMoyenne; }
 
-    public Double getPrixPropose() { return prixPropose; }
+    public BigDecimal getPrixPropose() { return prixPropose; }
 
     public Double getDistanceChauffeurDepart() { return distanceChauffeurDepart; }
 
@@ -89,7 +90,7 @@ public class PropositionResponseDTO {
 
     public void setNoteMoyenne(Double noteMoyenne) { this.noteMoyenne = noteMoyenne; }
 
-    public void setPrixPropose(Double prixPropose) { this.prixPropose = prixPropose; }
+    public void setPrixPropose(BigDecimal prixPropose) { this.prixPropose = prixPropose; }
 
     public void setDistanceChauffeurDepart(Double distanceChauffeurDepart) { this.distanceChauffeurDepart = distanceChauffeurDepart; }
 

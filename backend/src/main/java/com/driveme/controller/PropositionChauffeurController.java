@@ -4,89 +4,46 @@ import com.driveme.dto.PropositionCreateDTO;
 import com.driveme.dto.PropositionResponseDTO;
 import com.driveme.service.PropositionChauffeurService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/propositions")
+@RequestMapping("/api")
 public class PropositionChauffeurController {
-
     private final PropositionChauffeurService propositionService;
 
-    public PropositionChauffeurController(
-            PropositionChauffeurService propositionService
-    ) {
+    public PropositionChauffeurController(PropositionChauffeurService propositionService) {
         this.propositionService = propositionService;
     }
 
-    /**
-     * Le chauffeur soumet une offre pour une course.
-     */
-    @PostMapping
-    public ResponseEntity<PropositionResponseDTO> creerProposition(
-            @Valid @RequestBody PropositionCreateDTO dto
-    ) {
-
-        PropositionResponseDTO response =
-                propositionService.creerProposition(dto);
-
-        return ResponseEntity.ok(response);
+    @PreAuthorize("hasRole('CHAUFFEUR')")
+    @PostMapping("/courses/{courseId}/propositions")
+    public ResponseEntity<PropositionResponseDTO> creer(
+            @PathVariable Long courseId, @Valid @RequestBody PropositionCreateDTO dto, Principal principal) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(propositionService.creerProposition(courseId, dto, principal.getName()));
     }
 
-    /**
-     * Le passager récupère toutes les offres reçues pour une course.
-     */
-    @GetMapping("/course/{courseId}")
-    public ResponseEntity<List<PropositionResponseDTO>>
-    getPropositionsByCourse(
-            @PathVariable Long courseId
-    ) {
-
-        return ResponseEntity.ok(
-                propositionService.getPropositionsByCourse(courseId)
-        );
-
+    @PreAuthorize("hasRole('PASSAGER')")
+    @GetMapping("/courses/{courseId}/propositions")
+    public List<PropositionResponseDTO> parCourse(@PathVariable Long courseId, Principal principal) {
+        return propositionService.getPropositionsByCourse(courseId, principal.getName());
     }
 
-    /**
-     * Le chauffeur consulte les offres qu'il a envoyées.
-     */
-    @GetMapping("/chauffeur/{chauffeurId}")
-    public ResponseEntity<List<PropositionResponseDTO>>
-    getPropositionsByChauffeur(
-            @PathVariable Long chauffeurId
-    ) {
-
-        return ResponseEntity.ok(
-                propositionService.getPropositionsByChauffeur(chauffeurId)
-        );
-
+    @PreAuthorize("hasRole('CHAUFFEUR')")
+    @GetMapping("/chauffeurs/me/propositions")
+    public List<PropositionResponseDTO> mesPropositions(Principal principal) {
+        return propositionService.getCurrentChauffeurPropositions(principal.getName());
     }
 
-    /**
-     * Le passager choisit définitivement une offre.
-     */
-    @PutMapping("/{courseId}/choisir/{propositionId}")
-    public ResponseEntity<PropositionResponseDTO>
-    choisirProposition(
-
-            @PathVariable Long courseId,
-
-            @PathVariable Long propositionId
-
-    ) {
-
-        return ResponseEntity.ok(
-
-                propositionService.choisirProposition(
-                        courseId,
-                        propositionId
-                )
-
-        );
-
+    @PreAuthorize("hasRole('PASSAGER')")
+    @PostMapping("/propositions/{propositionId}/accepter")
+    public PropositionResponseDTO accepter(@PathVariable Long propositionId, Principal principal) {
+        return propositionService.choisirProposition(propositionId, principal.getName());
     }
-
 }

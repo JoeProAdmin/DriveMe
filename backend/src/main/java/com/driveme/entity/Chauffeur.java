@@ -3,6 +3,7 @@ package com.driveme.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "chauffeur")
@@ -24,6 +25,21 @@ public class Chauffeur {
 
     @Column(name = "solde_credit", precision = 10, scale = 2)
     private BigDecimal soldeCredit;
+
+    @Column(nullable = false)
+    private boolean disponible;
+
+    @Column(name = "latitude_actuelle")
+    private Double latitudeActuelle;
+
+    @Column(name = "longitude_actuelle")
+    private Double longitudeActuelle;
+
+    @Column(name = "derniere_position_at")
+    private LocalDateTime dernierePositionAt;
+
+    @Version
+    private Long version;
 
     public Chauffeur() {
     }
@@ -48,6 +64,12 @@ public class Chauffeur {
         return soldeCredit;
     }
 
+    public boolean isDisponible() { return disponible; }
+    public Double getLatitudeActuelle() { return latitudeActuelle; }
+    public Double getLongitudeActuelle() { return longitudeActuelle; }
+    public LocalDateTime getDernierePositionAt() { return dernierePositionAt; }
+    public Long getVersion() { return version; }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -67,4 +89,10 @@ public class Chauffeur {
     public void setSoldeCredit(BigDecimal soldeCredit) {
         this.soldeCredit = soldeCredit;
     }
+
+    public void setDisponible(boolean disponible) { this.disponible = disponible; }
+    public void setLatitudeActuelle(Double latitudeActuelle) { this.latitudeActuelle = latitudeActuelle; }
+    public void setLongitudeActuelle(Double longitudeActuelle) { this.longitudeActuelle = longitudeActuelle; }
+    public void setDernierePositionAt(LocalDateTime dernierePositionAt) { this.dernierePositionAt = dernierePositionAt; }
+    public void setVersion(Long version) { this.version = version; }
 }

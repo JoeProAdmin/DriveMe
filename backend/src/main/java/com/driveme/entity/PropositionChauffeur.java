@@ -3,6 +3,7 @@ package com.driveme.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 @Entity
 @Table(
@@ -31,8 +32,8 @@ public class PropositionChauffeur {
     @JoinColumn(name = "chauffeur_id", nullable = false)
     private Chauffeur chauffeur;
 
-    @Column(name = "prix_propose", nullable = false)
-    private Double prixPropose;
+    @Column(name = "prix_propose", nullable = false, precision = 10, scale = 2)
+    private BigDecimal prixPropose;
 
     @Column(name = "distance_chauffeur_depart")
     private Double distanceChauffeurDepart;
@@ -49,6 +50,9 @@ public class PropositionChauffeur {
 
     @Column(name = "date_creation", nullable = false)
     private LocalDateTime dateCreation;
+
+    @Version
+    private Long version;
 
     public PropositionChauffeur() {
     }
@@ -76,7 +80,7 @@ public class PropositionChauffeur {
         return chauffeur;
     }
 
-    public Double getPrixPropose() {
+    public BigDecimal getPrixPropose() {
         return prixPropose;
     }
 
@@ -112,7 +116,7 @@ public class PropositionChauffeur {
         this.chauffeur = chauffeur;
     }
 
-    public void setPrixPropose(Double prixPropose) {
+    public void setPrixPropose(BigDecimal prixPropose) {
         this.prixPropose = prixPropose;
     }
 
@@ -135,5 +139,9 @@ public class PropositionChauffeur {
     public void setDateCreation(LocalDateTime dateCreation) {
         this.dateCreation = dateCreation;
     }
+
+    public Long getVersion() { return version; }
+
+    public void setVersion(Long version) { this.version = version; }
 
 }

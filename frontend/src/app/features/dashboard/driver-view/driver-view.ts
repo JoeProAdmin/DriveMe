@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import {
   ApiService,
   ChauffeurResponseDTO,
+  CourseResponseDTO,
   PropositionCreateDTO
 } from '../../../core/api.service';
 
@@ -23,7 +24,7 @@ interface PropositionFormState {
 export class DriverViewComponent implements OnInit, OnDestroy {
 
   public chauffeur?: ChauffeurResponseDTO;
-  public coursesDisponibles: any[] = [];
+  public coursesDisponibles: CourseResponseDTO[] = [];
 
   public coursePropositionOuverteId: number | null = null;
 
@@ -230,17 +231,10 @@ export class DriverViewComponent implements OnInit, OnDestroy {
 
   public envoyerProposition(course: any): void {
     const courseId = Number(course?.id);
-    const chauffeurId = Number(this.chauffeur?.id);
     const form = this.propositionForms[courseId];
 
     this.propositionMessages[courseId] = '';
     this.propositionErreurs[courseId] = '';
-
-    if (!chauffeurId) {
-      this.propositionErreurs[courseId] =
-        this.labels[this.currentLang].driverUnavailable;
-      return;
-    }
 
     const prixPropose = Number(form?.prixPropose);
 
@@ -253,8 +247,6 @@ export class DriverViewComponent implements OnInit, OnDestroy {
     const tempsEstime = Number(form?.tempsEstimeMinutes);
 
     const proposition: PropositionCreateDTO = {
-      courseId,
-      chauffeurId,
       prixPropose,
       message: form?.message?.trim() || undefined,
       tempsEstimeMinutes:
@@ -263,7 +255,7 @@ export class DriverViewComponent implements OnInit, OnDestroy {
 
     this.propositionEnCours[courseId] = true;
 
-    this.apiService.creerProposition(proposition).subscribe({
+    this.apiService.creerProposition(courseId, proposition).subscribe({
       next: () => {
         this.propositionEnCours[courseId] = false;
         this.propositionMessages[courseId] =
@@ -305,75 +297,43 @@ export class DriverViewComponent implements OnInit, OnDestroy {
   }
 
   private loadDriverData(): void {
-    const email = localStorage.getItem('userEmail');
-
-    if (!email) {
-      this.loadAllCoursesFallback();
-      return;
-    }
-
-    this.apiService.getChauffeurByEmail(email).subscribe({
+    this.apiService.getCurrentChauffeur().subscribe({
       next: (chauffeur: ChauffeurResponseDTO) => {
         console.log('CHAUFFEUR RECU =', chauffeur);
 
         this.chauffeur = chauffeur;
-
         this.stats.note = Number(chauffeur.noteMoyenne ?? 0);
         this.stats.soldeCredit = Number(chauffeur.soldeCredit ?? 0);
 
         this.loadCoursesForCurrentDriver();
       },
 
-      error: (err: any) => {
-        console.error('Erreur chargement chauffeur', err);
-        this.loadAllCoursesFallback();
+      error: (err: unknown) => {
+        console.error('Erreur chargement chauffeur connecté', err);
+        this.chauffeur = undefined;
+        this.applyCourseStats([]);
       }
     });
   }
 
   private loadCoursesForCurrentDriver(): void {
-    if (!this.chauffeur?.id) {
-      this.loadAllCoursesFallback();
-      return;
-    }
-
-    this.apiService.getCoursesByChauffeur(this.chauffeur.id).subscribe({
-      next: (courses: any[]) => {
+    this.apiService.getCurrentDriverCourses().subscribe({
+      next: (courses: CourseResponseDTO[]) => {
         console.log('COURSES RECUES =', courses);
-
-        if (!courses || courses.length === 0) {
-          this.applyCourseStats([]);
-          return;
-        }
-
         this.applyCourseStats(courses);
-
         console.log('STATS APPLIQUEES =', this.stats);
       },
 
-      error: (err: any) => {
-        console.error('Erreur chargement courses chauffeur', err);
-        this.loadAllCoursesFallback();
-      }
-    });
-  }
-
-  private loadAllCoursesFallback(): void {
-    this.apiService.getCourses().subscribe({
-      next: (courses: any[]) => {
-        this.applyCourseStats(courses);
-
-      },
-
-      error: (err: any) => {
-        console.error('Erreur chargement fallback courses', err);
+      error: (err: unknown) => {
+        console.error('Erreur chargement courses chauffeur connecté', err);
+        this.applyCourseStats([]);
       }
     });
   }
 
   private loadCoursesDisponibles(): void {
     this.apiService.getCoursesEnAttente().subscribe({
-      next: (courses: any[]) => {
+      next: (courses: CourseResponseDTO[]) => {
         this.coursesDisponibles = Array.isArray(courses)
           ? courses
           : [];
@@ -395,7 +355,7 @@ export class DriverViewComponent implements OnInit, OnDestroy {
     });
   }
 
-  private applyCourseStats(courses: any[]): void {
+  private applyCourseStats(courses: CourseResponseDTO[]): void {
     const safeCourses = Array.isArray(courses) ? courses : [];
 
     const coursesEnCours = safeCourses.filter(course =>
@@ -419,7 +379,7 @@ export class DriverViewComponent implements OnInit, OnDestroy {
     };
   }
 
-  private normalizeStatus(status: any): string {
+  private normalizeStatus(status: unknown): string {
     return String(status ?? '')
       .trim()
       .toUpperCase()
@@ -427,13 +387,8 @@ export class DriverViewComponent implements OnInit, OnDestroy {
       .replace(/[\u0300-\u036f]/g, '');
   }
 
-  private extractPrice(course: any): number {
-    const value =
-      course?.prix ??
-      course?.prixPropose ??
-      course?.montant ??
-      course?.tarif ??
-      0;
+  private extractPrice(course: CourseResponseDTO): number {
+    const value = course?.prix ?? 0;
 
     return Number(value) || 0;
   }

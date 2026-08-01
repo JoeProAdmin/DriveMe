@@ -161,8 +161,6 @@ export class CourseList implements OnInit, OnDestroy {
     this.errorMessage = '';
     this.successMessage = '';
     this.userRole = localStorage.getItem('userRole') || '';
-    const email = localStorage.getItem('userEmail') || '';
-
     this.changeDetectorRef.markForCheck();
 
     switch (this.userRole) {
@@ -170,10 +168,10 @@ export class CourseList implements OnInit, OnDestroy {
         this.loadAdminCourses();
         return;
       case 'PASSAGER':
-        this.loadPassengerCourses(email);
+        this.loadPassengerCourses();
         return;
       case 'CHAUFFEUR':
-        this.loadDriverCourses(email);
+        this.loadDriverCourses();
         return;
       default:
         this.clearAllCourses();
@@ -207,18 +205,15 @@ export class CourseList implements OnInit, OnDestroy {
 
   public submitProposal(course: any): void {
     const courseId = Number(course?.id);
-    const chauffeurId = Number(this.chauffeur?.id);
     const prixPropose = this.toPositiveNumber(this.proposalForm.prixPropose);
 
-    if (!courseId || !chauffeurId || prixPropose === null) {
+    if (!courseId || !this.chauffeur || prixPropose === null) {
       this.errorMessage = this.texts[this.currentLang].invalidProposal;
       this.changeDetectorRef.markForCheck();
       return;
     }
 
     const payload: PropositionCreateDTO = {
-      courseId,
-      chauffeurId,
       prixPropose,
       distanceChauffeurDepart:
         this.toOptionalPositiveNumber(this.proposalForm.distanceChauffeurDepart),
@@ -232,7 +227,7 @@ export class CourseList implements OnInit, OnDestroy {
     this.successMessage = '';
     this.changeDetectorRef.markForCheck();
 
-    this.apiService.creerProposition(payload)
+    this.apiService.creerProposition(courseId, payload)
       .pipe(
         finalize(() => {
           this.submittingProposalCourseId = null;
@@ -319,7 +314,7 @@ export class CourseList implements OnInit, OnDestroy {
     this.successMessage = '';
     this.changeDetectorRef.markForCheck();
 
-    this.apiService.choisirProposition(courseId, proposalId)
+    this.apiService.accepterProposition(proposalId)
       .pipe(
         finalize(() => {
           this.selectingProposalId = null;
@@ -538,80 +533,47 @@ export class CourseList implements OnInit, OnDestroy {
       });
   }
 
-  private loadPassengerCourses(email: string): void {
-    if (!email) {
-      this.handleMissingIdentity();
-      return;
-    }
-
-    this.apiService.getPassagerByEmail(email).subscribe({
-      next: passager => {
-        this.passager = passager;
-
-        forkJoin({
-          courses: this.apiService.getCoursesByPassager(passager.id),
-          paiements: this.apiService.getAllPaiements()
-        })
-          .pipe(finalize(() => this.finishLoading()))
-          .subscribe({
-            next: ({ courses, paiements }) => {
-              this.courses = this.toSafeArray(courses);
-              this.coursesDisponibles = [];
-              this.mesCourses = [];
-              this.paidCourseIds.clear();
-              for (const paiement of paiements || []) {
-                if (this.normalizeStatus(paiement.statut) === 'PAYE') {
-                  this.paidCourseIds.add(Number(paiement.courseId));
-                }
-              }
-              this.changeDetectorRef.markForCheck();
-            },
-            error: err =>
-              this.handleLoadError('Erreur chargement courses ou paiements passager', err)
-          });
-      },
-      error: err =>
-        this.handleLoadError('Erreur récupération passager connecté', err)
-    });
+  private loadPassengerCourses(): void {
+    this.apiService.getCurrentPassengerCourses()
+      .pipe(finalize(() => this.finishLoading()))
+      .subscribe({
+        next: courses => {
+          this.courses = this.toSafeArray(courses);
+          this.coursesDisponibles = [];
+          this.mesCourses = [];
+          this.changeDetectorRef.markForCheck();
+        },
+        error: err =>
+          this.handleLoadError('Erreur chargement courses du passager connecté', err)
+      });
   }
 
-  private loadDriverCourses(email: string): void {
-    if (!email) {
-      this.handleMissingIdentity();
-      return;
-    }
+  private loadDriverCourses(): void {
+    forkJoin({
+      chauffeur: this.apiService.getCurrentChauffeur(),
+      disponibles: this.apiService.getCoursesEnAttente(),
+      affectees: this.apiService.getCurrentDriverCourses(),
+      propositions: this.apiService.getCurrentDriverPropositions()
+    })
+      .pipe(finalize(() => this.finishLoading()))
+      .subscribe({
+        next: result => {
+          this.chauffeur = result.chauffeur;
+          this.courses = [];
+          this.coursesDisponibles = this.toSafeArray(result.disponibles);
+          this.mesCourses = this.toSafeArray(result.affectees);
 
-    this.apiService.getChauffeurByEmail(email).subscribe({
-      next: chauffeur => {
-        this.chauffeur = chauffeur;
+          this.sentProposalCourseIds.clear();
+          for (const proposal of result.propositions || []) {
+            this.sentProposalCourseIds.add(Number(proposal.courseId));
+            this.addProposalToCache(proposal);
+          }
 
-        forkJoin({
-          disponibles: this.apiService.getCoursesEnAttente(),
-          affectees: this.apiService.getCoursesByChauffeur(chauffeur.id),
-          propositions: this.apiService.getPropositionsByChauffeur(chauffeur.id)
-        })
-          .pipe(finalize(() => this.finishLoading()))
-          .subscribe({
-            next: result => {
-              this.courses = [];
-              this.coursesDisponibles = this.toSafeArray(result.disponibles);
-              this.mesCourses = this.toSafeArray(result.affectees);
-
-              this.sentProposalCourseIds.clear();
-              for (const proposal of result.propositions || []) {
-                this.sentProposalCourseIds.add(Number(proposal.courseId));
-                this.addProposalToCache(proposal);
-              }
-
-              this.changeDetectorRef.markForCheck();
-            },
-            error: err =>
-              this.handleLoadError('Erreur chargement courses chauffeur', err)
-          });
-      },
-      error: err =>
-        this.handleLoadError('Erreur récupération chauffeur connecté', err)
-    });
+          this.changeDetectorRef.markForCheck();
+        },
+        error: err =>
+          this.handleLoadError('Erreur chargement courses du chauffeur connecté', err)
+      });
   }
 
   private addProposalToCache(proposal: PropositionResponseDTO): void {

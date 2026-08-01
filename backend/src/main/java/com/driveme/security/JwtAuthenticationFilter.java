@@ -38,8 +38,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String email = null;
         String token = null;
 
-        // 🔥 IGNORER login/register
-        if (request.getRequestURI().contains("/api/auth")) {
+        String uri = request.getRequestURI();
+        if (uri.equals("/api/auth/login") || uri.equals("/api/auth/register")
+                || uri.startsWith("/v3/api-docs") || uri.startsWith("/swagger-ui")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -73,10 +74,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
         } catch (ExpiredJwtException e) {
-            //  TOKEN EXPIRÉ → ON IGNORE (IMPORTANT)
-            System.out.println("JWT expiré ignoré");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
         } catch (Exception e) {
-            System.out.println("Erreur JWT : " + e.getMessage());
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
         }
 
         filterChain.doFilter(request, response);

@@ -1,48 +1,33 @@
 package com.driveme.dto;
 
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import java.math.BigDecimal;
 
 public class PropositionCreateDTO {
 
-    @NotNull
-    private Long courseId;
-
-    @NotNull
-    private Long chauffeurId;
-
-    @NotNull
-    private Double prixPropose;
+    @NotNull(message = "Le montant proposé est obligatoire")
+    @DecimalMin(value = "1.00", message = "Le montant proposé doit être supérieur ou égal à 1 MAD")
+    @Digits(integer = 8, fraction = 2, message = "Le montant proposé doit contenir au maximum 2 décimales")
+    private BigDecimal prixPropose;
 
     private Double distanceChauffeurDepart;
 
     private Integer tempsEstimeMinutes;
 
+    @Size(max = 300, message = "Le message ne peut pas dépasser 300 caractères")
     private String message;
 
     public PropositionCreateDTO() {
     }
 
-    public Long getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(Long courseId) {
-        this.courseId = courseId;
-    }
-
-    public Long getChauffeurId() {
-        return chauffeurId;
-    }
-
-    public void setChauffeurId(Long chauffeurId) {
-        this.chauffeurId = chauffeurId;
-    }
-
-    public Double getPrixPropose() {
+    public BigDecimal getPrixPropose() {
         return prixPropose;
     }
 
-    public void setPrixPropose(Double prixPropose) {
+    public void setPrixPropose(BigDecimal prixPropose) {
         this.prixPropose = prixPropose;
     }
 

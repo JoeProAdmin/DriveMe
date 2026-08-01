@@ -2,6 +2,7 @@ package com.driveme.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +28,8 @@ public class Course {
     @Column(name = "adresse_arrivee", nullable = false)
     private String adresseArrivee;
 
-    @Column(nullable = false)
-    private Double prix;
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal prix;
 
     @Column(name = "latitude_depart")
     private Double latitudeDepart;
@@ -48,14 +49,17 @@ public class Course {
     @Column(name = "duree_estimee_minutes")
     private Integer dureeEstimeeMinutes;
 
-    @Column(name = "prix_estime")
-    private Double prixEstime;
+    @Column(name = "prix_estime", precision = 10, scale = 2)
+    private BigDecimal prixEstime;
 
-    @Column(name = "prix_initial")
-    private Double prixInitial;
+    @Column(name = "prix_initial", precision = 10, scale = 2)
+    private BigDecimal prixInitial;
 
-    @Column(name = "prix_final")
-    private Double prixFinal;
+    @Column(name = "prix_final", precision = 10, scale = 2)
+    private BigDecimal prixFinal;
+
+    @Version
+    private Long version;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -114,7 +118,7 @@ public class Course {
         return adresseArrivee;
     }
 
-    public Double getPrix() {
+    public BigDecimal getPrix() {
         return prix;
     }
 
@@ -124,13 +128,13 @@ public class Course {
     public Double getLongitudeArrivee() { return longitudeArrivee; }
     public Double getDistanceKm() { return distanceKm; }
     public Integer getDureeEstimeeMinutes() { return dureeEstimeeMinutes; }
-    public Double getPrixEstime() { return prixEstime; }
+    public BigDecimal getPrixEstime() { return prixEstime; }
 
-    public Double getPrixInitial() {
+    public BigDecimal getPrixInitial() {
         return prixInitial;
     }
 
-    public Double getPrixFinal() {
+    public BigDecimal getPrixFinal() {
         return prixFinal;
     }
 
@@ -170,7 +174,7 @@ public class Course {
         this.adresseArrivee = adresseArrivee;
     }
 
-    public void setPrix(Double prix) {
+    public void setPrix(BigDecimal prix) {
         this.prix = prix;
     }
 
@@ -180,13 +184,13 @@ public class Course {
     public void setLongitudeArrivee(Double longitudeArrivee) { this.longitudeArrivee = longitudeArrivee; }
     public void setDistanceKm(Double distanceKm) { this.distanceKm = distanceKm; }
     public void setDureeEstimeeMinutes(Integer dureeEstimeeMinutes) { this.dureeEstimeeMinutes = dureeEstimeeMinutes; }
-    public void setPrixEstime(Double prixEstime) { this.prixEstime = prixEstime; }
+    public void setPrixEstime(BigDecimal prixEstime) { this.prixEstime = prixEstime; }
 
-    public void setPrixInitial(Double prixInitial) {
+    public void setPrixInitial(BigDecimal prixInitial) {
         this.prixInitial = prixInitial;
     }
 
-    public void setPrixFinal(Double prixFinal) {
+    public void setPrixFinal(BigDecimal prixFinal) {
         this.prixFinal = prixFinal;
     }
 
@@ -205,4 +209,8 @@ public class Course {
     public void setPropositions(List<PropositionChauffeur> propositions) {
         this.propositions = propositions;
     }
+
+    public Long getVersion() { return version; }
+
+    public void setVersion(Long version) { this.version = version; }
 }

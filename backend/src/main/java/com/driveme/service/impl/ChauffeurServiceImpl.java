@@ -2,6 +2,8 @@ package com.driveme.service.impl;
 
 import com.driveme.dto.ChauffeurCreateDTO;
 import com.driveme.dto.ChauffeurResponseDTO;
+import com.driveme.dto.ChauffeurPositionRequestDTO;
+import com.driveme.dto.ChauffeurDisponibiliteRequestDTO;
 import com.driveme.entity.Chauffeur;
 import com.driveme.entity.Utilisateur;
 import com.driveme.exception.ResourceNotFoundException;
@@ -11,6 +13,7 @@ import com.driveme.service.ChauffeurService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,6 +62,40 @@ public class ChauffeurServiceImpl implements ChauffeurService {
                         new ResourceNotFoundException("Chauffeur introuvable : " + email));
 
         return mapToDTO(chauffeur);
+    }
+
+    @Override
+    public ChauffeurResponseDTO getCurrentChauffeur(String email) {
+        return getChauffeurByEmail(email);
+    }
+
+    @Override
+    public ChauffeurResponseDTO updateCurrentPosition(String email, ChauffeurPositionRequestDTO dto) {
+        Chauffeur chauffeur = findCurrent(email);
+        chauffeur.setLatitudeActuelle(dto.getLatitude());
+        chauffeur.setLongitudeActuelle(dto.getLongitude());
+        chauffeur.setDernierePositionAt(LocalDateTime.now());
+        return mapToDTO(chauffeurRepository.save(chauffeur));
+    }
+
+    @Override
+    public ChauffeurResponseDTO updateCurrentDisponibilite(String email, ChauffeurDisponibiliteRequestDTO dto) {
+        Chauffeur chauffeur = findCurrent(email);
+        if (Boolean.TRUE.equals(dto.getDisponible())) {
+            if (chauffeur.getStatutValidation() == null || chauffeur.getStatutValidation() != 1) {
+                throw new IllegalStateException("Le chauffeur doit être validé avant de devenir disponible.");
+            }
+            if (chauffeur.getLatitudeActuelle() == null || chauffeur.getLongitudeActuelle() == null) {
+                throw new IllegalStateException("La position doit être enregistrée avant d'activer la disponibilité.");
+            }
+        }
+        chauffeur.setDisponible(Boolean.TRUE.equals(dto.getDisponible()));
+        return mapToDTO(chauffeurRepository.save(chauffeur));
+    }
+
+    private Chauffeur findCurrent(String email) {
+        return chauffeurRepository.findByUtilisateurEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Aucun profil chauffeur n'est associé au compte authentifié"));
     }
 
     @Override
@@ -145,7 +182,11 @@ public class ChauffeurServiceImpl implements ChauffeurService {
                         : 0.0,
                 chauffeur.getSoldeCredit() != null
                         ? chauffeur.getSoldeCredit().doubleValue()
-                        : 0.0
+                        : 0.0,
+                chauffeur.isDisponible(),
+                chauffeur.getLatitudeActuelle(),
+                chauffeur.getLongitudeActuelle(),
+                chauffeur.getDernierePositionAt()
         );
     }
 }

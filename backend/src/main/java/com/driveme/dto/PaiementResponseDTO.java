@@ -1,12 +1,13 @@
 package com.driveme.dto;
 
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 public class PaiementResponseDTO {
 
     private Long id;
     private Long courseId;
-    private Double montant;
+    private BigDecimal montant;
     private String methode;
     private String statut;
     private LocalDateTime datePaiement;
@@ -17,7 +18,7 @@ public class PaiementResponseDTO {
     public PaiementResponseDTO(
             Long id,
             Long courseId,
-            Double montant,
+            BigDecimal montant,
             String methode,
             String statut,
             LocalDateTime datePaiement
@@ -46,11 +47,11 @@ public class PaiementResponseDTO {
         this.courseId = courseId;
     }
 
-    public Double getMontant() {
+    public BigDecimal getMontant() {
         return montant;
     }
 
-    public void setMontant(Double montant) {
+    public void setMontant(BigDecimal montant) {
         this.montant = montant;
     }
 

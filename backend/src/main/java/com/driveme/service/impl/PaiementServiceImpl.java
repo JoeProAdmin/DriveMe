@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
+import java.math.BigDecimal;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,7 +64,7 @@ public class PaiementServiceImpl implements PaiementService {
         }
 
         PaiementMethode methode = convertirMethode(dto.getMethode());
-        Double montant = determinerMontant(course);
+        BigDecimal montant = determinerMontant(course);
 
         Paiement paiement = new Paiement();
         paiement.setCourse(course);
@@ -135,14 +136,14 @@ public class PaiementServiceImpl implements PaiementService {
         }
     }
 
-    private Double determinerMontant(Course course) {
-        Double montant = course.getPrixFinal();
+    private BigDecimal determinerMontant(Course course) {
+        BigDecimal montant = course.getPrixFinal();
 
         if (montant == null) {
             montant = course.getPrix();
         }
 
-        if (montant == null || montant <= 0) {
+        if (montant == null || montant.signum() <= 0) {
             throw new IllegalStateException("Le montant de la course est invalide");
         }
 

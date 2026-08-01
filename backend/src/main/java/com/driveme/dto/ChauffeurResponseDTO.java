@@ -1,5 +1,7 @@
 package com.driveme.dto;
 
+import java.time.LocalDateTime;
+
 public class ChauffeurResponseDTO {
 
     private Long id;
@@ -9,6 +11,10 @@ public class ChauffeurResponseDTO {
     private Integer statutValidation;
     private Double noteMoyenne;
     private Double soldeCredit;
+    private Boolean disponible;
+    private Double latitudeActuelle;
+    private Double longitudeActuelle;
+    private LocalDateTime dernierePositionAt;
 
     public ChauffeurResponseDTO() {
     }
@@ -20,7 +26,11 @@ public class ChauffeurResponseDTO {
             String telephone,
             Integer statutValidation,
             Double noteMoyenne,
-            Double soldeCredit) {
+            Double soldeCredit,
+            Boolean disponible,
+            Double latitudeActuelle,
+            Double longitudeActuelle,
+            LocalDateTime dernierePositionAt) {
 
         this.id = id;
         this.nom = nom;
@@ -29,6 +39,10 @@ public class ChauffeurResponseDTO {
         this.statutValidation = statutValidation;
         this.noteMoyenne = noteMoyenne;
         this.soldeCredit = soldeCredit;
+        this.disponible = disponible;
+        this.latitudeActuelle = latitudeActuelle;
+        this.longitudeActuelle = longitudeActuelle;
+        this.dernierePositionAt = dernierePositionAt;
     }
 
     public Long getId() {
@@ -58,6 +72,10 @@ public class ChauffeurResponseDTO {
     public Double getSoldeCredit() {
         return soldeCredit;
     }
+    public Boolean getDisponible() { return disponible; }
+    public Double getLatitudeActuelle() { return latitudeActuelle; }
+    public Double getLongitudeActuelle() { return longitudeActuelle; }
+    public LocalDateTime getDernierePositionAt() { return dernierePositionAt; }
 
     public void setId(Long id) {
         this.id = id;
@@ -86,4 +104,8 @@ public class ChauffeurResponseDTO {
     public void setSoldeCredit(Double soldeCredit) {
         this.soldeCredit = soldeCredit;
     }
+    public void setDisponible(Boolean disponible) { this.disponible = disponible; }
+    public void setLatitudeActuelle(Double latitudeActuelle) { this.latitudeActuelle = latitudeActuelle; }
+    public void setLongitudeActuelle(Double longitudeActuelle) { this.longitudeActuelle = longitudeActuelle; }
+    public void setDernierePositionAt(LocalDateTime dernierePositionAt) { this.dernierePositionAt = dernierePositionAt; }
 }

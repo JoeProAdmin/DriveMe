@@ -5,6 +5,7 @@ import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import java.math.BigDecimal;
 
 public class CourseCreateDTO {
 
@@ -16,7 +17,7 @@ public class CourseCreateDTO {
 
     @NotNull(message = "Le prix est obligatoire")
     @DecimalMin(value = "15.0", message = "Le prix doit être au minimum de 15 MAD")
-    private Double prix;
+    private BigDecimal prix;
 
     @NotNull(message = "La latitude de départ est obligatoire")
     @DecimalMin(value = "-90.0", message = "La latitude de départ doit être supérieure ou égale à -90")
@@ -40,7 +41,7 @@ public class CourseCreateDTO {
     @Positive(message = "La durée estimée doit être strictement positive")
     private Integer dureeEstimeeMinutes;
     @Positive(message = "Le prix estimé doit être strictement positif")
-    private Double prixEstime;
+    private BigDecimal prixEstime;
 
     public CourseCreateDTO() {}
 
@@ -48,8 +49,8 @@ public class CourseCreateDTO {
     public void setAdresseDepart(String adresseDepart) { this.adresseDepart = adresseDepart; }
     public String getAdresseArrivee() { return adresseArrivee; }
     public void setAdresseArrivee(String adresseArrivee) { this.adresseArrivee = adresseArrivee; }
-    public Double getPrix() { return prix; }
-    public void setPrix(Double prix) { this.prix = prix; }
+    public BigDecimal getPrix() { return prix; }
+    public void setPrix(BigDecimal prix) { this.prix = prix; }
     public Double getLatitudeDepart() { return latitudeDepart; }
     public void setLatitudeDepart(Double latitudeDepart) { this.latitudeDepart = latitudeDepart; }
     public Double getLongitudeDepart() { return longitudeDepart; }
@@ -62,6 +63,6 @@ public class CourseCreateDTO {
     public void setDistanceKm(Double distanceKm) { this.distanceKm = distanceKm; }
     public Integer getDureeEstimeeMinutes() { return dureeEstimeeMinutes; }
     public void setDureeEstimeeMinutes(Integer dureeEstimeeMinutes) { this.dureeEstimeeMinutes = dureeEstimeeMinutes; }
-    public Double getPrixEstime() { return prixEstime; }
-    public void setPrixEstime(Double prixEstime) { this.prixEstime = prixEstime; }
+    public BigDecimal getPrixEstime() { return prixEstime; }
+    public void setPrixEstime(BigDecimal prixEstime) { this.prixEstime = prixEstime; }
 }

@@ -4,11 +4,13 @@ import com.driveme.dto.AdminStats;
 import com.driveme.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/api/admin")
 @CrossOrigin(origins = "http://localhost:4200")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
     private final ChauffeurService chauffeurService;

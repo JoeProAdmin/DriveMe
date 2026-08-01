@@ -91,10 +91,23 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public List<CourseResponseDTO> getCurrentPassagerCourses(String email) {
+        return courseRepository.findByPassagerUtilisateurEmailIgnoreCase(email)
+                .stream().map(this::mapToDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CourseResponseDTO> getCurrentChauffeurCourses(String email) {
+        return courseRepository.findByChauffeurUtilisateurEmailIgnoreCase(email)
+                .stream().map(this::mapToDTO).collect(Collectors.toList());
+    }
+
+    @Override
     public List<CourseResponseDTO> getCoursesEnAttente() {
 
-        return courseRepository.findByStatut(CourseStatus.EN_ATTENTE)
-                .stream()
+        return courseRepository.findAll().stream()
+                .filter(course -> course.getStatut() == CourseStatus.EN_ATTENTE
+                        || course.getStatut() == CourseStatus.PROPOSITION_RECUE)
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }

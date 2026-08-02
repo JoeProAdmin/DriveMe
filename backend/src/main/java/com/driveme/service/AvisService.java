@@ -4,5 +4,5 @@ import com.driveme.dto.AvisDTO;
 
 public interface AvisService {
 
-    void soumettreAvis(AvisDTO avisDTO);
+    void soumettreAvis(AvisDTO avisDTO, String identifiantUtilisateur);
 }

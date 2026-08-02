@@ -9,4 +9,6 @@ import java.util.List;
 public interface AvisRepository extends JpaRepository<Avis, Long> {
 
     List<Avis> findByChauffeur(Chauffeur chauffeur);
+
+    boolean existsByCourseId(Long courseId);
 }

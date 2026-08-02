@@ -1,10 +1,19 @@
 package com.driveme.entity;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "avis")
+@Table(
+        name = "avis",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_avis_course",
+                        columnNames = "course_id"
+                )
+        }
+)
 public class Avis {
 
     @Id
@@ -12,7 +21,7 @@ public class Avis {
     private Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "course_id", nullable = false)
+    @JoinColumn(name = "course_id", nullable = false, unique = true)
     private Course course;
 
     @ManyToOne(optional = false)
@@ -33,7 +42,9 @@ public class Avis {
 
     @PrePersist
     public void prePersist() {
-        this.dateCreation = LocalDateTime.now();
+        if (dateCreation == null) {
+            dateCreation = LocalDateTime.now();
+        }
     }
 
     public Long getId() {

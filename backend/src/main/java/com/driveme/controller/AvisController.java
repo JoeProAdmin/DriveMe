@@ -2,12 +2,15 @@ package com.driveme.controller;
 
 import com.driveme.dto.AvisDTO;
 import com.driveme.service.AvisService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/avis")
-@CrossOrigin(origins = "*")
 public class AvisController {
 
     private final AvisService avisService;
@@ -17,9 +20,15 @@ public class AvisController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> soumettreAvis(@RequestBody AvisDTO avisDTO) {
+    @PreAuthorize("hasRole('PASSAGER')")
+    public ResponseEntity<Void> soumettreAvis(
+            @Valid @RequestBody AvisDTO avisDTO,
+            Principal principal) {
 
-        avisService.soumettreAvis(avisDTO);
+        avisService.soumettreAvis(
+                avisDTO,
+                principal.getName()
+        );
 
         return ResponseEntity.ok().build();
     }

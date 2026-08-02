@@ -3,16 +3,13 @@ package com.driveme.controller;
 import com.driveme.dto.PaiementCreateDTO;
 import com.driveme.dto.PaiementResponseDTO;
 import com.driveme.service.PaiementService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -25,28 +22,45 @@ public class PaiementController {
         this.paiementService = paiementService;
     }
 
+    @PreAuthorize("hasRole('PASSAGER')")
     @PostMapping("/valider")
     public ResponseEntity<PaiementResponseDTO> validerPaiement(
-            @RequestBody PaiementCreateDTO dto
+            Principal principal,
+            @Valid @RequestBody PaiementCreateDTO dto
     ) {
-        PaiementResponseDTO paiement = paiementService.validerPaiement(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(paiement);
+        PaiementResponseDTO paiement = paiementService.validerPaiement(
+                dto,
+                principal.getName()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(paiement);
     }
 
+    @PreAuthorize("hasRole('PASSAGER')")
     @GetMapping("/course/{courseId}")
     public ResponseEntity<PaiementResponseDTO> getPaiementByCourse(
+            Principal principal,
             @PathVariable Long courseId
     ) {
         return ResponseEntity.ok(
-                paiementService.getPaiementByCourse(courseId)
+                paiementService.getPaiementByCourse(
+                        courseId,
+                        principal.getName()
+                )
         );
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<PaiementResponseDTO>> getAllPaiements() {
-        return ResponseEntity.ok(paiementService.getAllPaiements());
+        return ResponseEntity.ok(
+                paiementService.getAllPaiements()
+        );
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{paiementId}/refuser")
     public ResponseEntity<PaiementResponseDTO> refuserPaiement(
             @PathVariable Long paiementId

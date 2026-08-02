@@ -8,7 +8,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { finalize, forkJoin } from 'rxjs';
+import { catchError, finalize, forkJoin, of, throwError } from 'rxjs';
 import { DmButtonComponent } from '../../../shared/components/dm-button/dm-button';
 
 import {
@@ -349,7 +349,7 @@ export class CourseList implements OnInit, OnDestroy {
   }
 
   public openPayment(course: any): void {
-    if (!course?.id || this.normalizeStatus(course.statut) !== 'ACCEPTEE' || this.hasPaidCourse(course.id)) {
+    if (!course?.id || this.normalizeStatus(course.statut) !== 'TERMINEE' || this.hasPaidCourse(course.id)) {
       return;
     }
     this.activePaymentCourseId = Number(course.id);
@@ -588,16 +588,57 @@ export class CourseList implements OnInit, OnDestroy {
 
   private loadPassengerCourses(): void {
     this.apiService.getCurrentPassengerCourses()
-      .pipe(finalize(() => this.finishLoading()))
       .subscribe({
         next: courses => {
-          this.courses = this.toSafeArray(courses);
+          const passengerCourses = this.toSafeArray(courses);
+
+          this.courses = passengerCourses;
           this.coursesDisponibles = [];
           this.mesCourses = [];
-          this.changeDetectorRef.markForCheck();
+          this.paidCourseIds.clear();
+
+          if (passengerCourses.length === 0) {
+            this.finishLoading();
+            return;
+          }
+
+          const paymentRequests = passengerCourses.map(course =>
+            this.apiService.getPaiementByCourse(Number(course.id))
+              .pipe(
+                catchError(err => {
+                  if (err?.status === 404) {
+                    return of(null);
+                  }
+
+                  return throwError(() => err);
+                })
+              )
+          );
+
+          forkJoin(paymentRequests)
+            .pipe(finalize(() => this.finishLoading()))
+            .subscribe({
+              next: payments => {
+                for (const payment of payments) {
+                  if (payment) {
+                    this.paidCourseIds.add(Number(payment.courseId));
+                  }
+                }
+
+                this.changeDetectorRef.markForCheck();
+              },
+              error: err =>
+                this.handleLoadError(
+                  'Erreur restauration des paiements du passager connecté',
+                  err
+                )
+            });
         },
         error: err =>
-          this.handleLoadError('Erreur chargement courses du passager connecté', err)
+          this.handleLoadError(
+            'Erreur chargement courses du passager connecté',
+            err
+          )
       });
   }
 

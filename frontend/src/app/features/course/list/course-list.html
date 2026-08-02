@@ -209,7 +209,7 @@
 
         <div
           class="course-actions"
-          *ngIf="normalizeStatus(course.statut) === 'ACCEPTEE' && !hasPaidCourse(course.id)"
+          *ngIf="normalizeStatus(course.statut) === 'TERMINEE' && !hasPaidCourse(course.id)"
         >
           <button type="button" class="payment-btn" (click)="openPayment(course)">
             {{ texts[currentLang].pay }} · {{ course.prix }} {{ texts[currentLang].mad }}

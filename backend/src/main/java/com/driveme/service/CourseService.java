@@ -25,6 +25,16 @@ public interface CourseService {
      */
     List<CourseResponseDTO> getCoursesEnAttente();
 
+    /**
+     * Fait progresser une course selon le cycle chauffeur autorisé.
+     * L'identité du chauffeur provient du JWT.
+     */
+    CourseResponseDTO updateChauffeurStatus(
+            Long courseId,
+            String status,
+            String authenticatedIdentifier
+    );
+
     CourseResponseDTO updateStatus(Long id, String status);
 
     long count();

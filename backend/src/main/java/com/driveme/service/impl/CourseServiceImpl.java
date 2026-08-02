@@ -2,14 +2,18 @@ package com.driveme.service.impl;
 
 import com.driveme.dto.CourseCreateDTO;
 import com.driveme.dto.CourseResponseDTO;
+import com.driveme.entity.Chauffeur;
 import com.driveme.entity.Course;
 import com.driveme.entity.CourseStatus;
 import com.driveme.entity.Passager;
 import com.driveme.exception.ResourceNotFoundException;
+import com.driveme.repository.ChauffeurRepository;
 import com.driveme.repository.CourseRepository;
 import com.driveme.repository.PassagerRepository;
 import com.driveme.service.CourseService;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,13 +23,16 @@ public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
     private final PassagerRepository passagerRepository;
+    private final ChauffeurRepository chauffeurRepository;
 
     public CourseServiceImpl(
             CourseRepository courseRepository,
-            PassagerRepository passagerRepository
+            PassagerRepository passagerRepository,
+            ChauffeurRepository chauffeurRepository
     ) {
         this.courseRepository = courseRepository;
         this.passagerRepository = passagerRepository;
+        this.chauffeurRepository = chauffeurRepository;
     }
 
     @Override
@@ -34,17 +41,25 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseResponseDTO createCourse(CourseCreateDTO dto, String authenticatedIdentifier) {
+    public CourseResponseDTO createCourse(
+            CourseCreateDTO dto,
+            String authenticatedIdentifier
+    ) {
 
         Passager passager = passagerRepository
-                .findByUtilisateur_EmailOrUtilisateur_Telephone(authenticatedIdentifier, authenticatedIdentifier)
+                .findByUtilisateur_EmailOrUtilisateur_Telephone(
+                        authenticatedIdentifier,
+                        authenticatedIdentifier
+                )
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("Aucun profil passager n'est associé au compte authentifié"));
+                        new ResourceNotFoundException(
+                                "Aucun profil passager n'est associé au compte authentifié"
+                        )
+                );
 
         Course course = new Course();
 
         course.setPassager(passager);
-
         course.setAdresseDepart(dto.getAdresseDepart().trim());
         course.setAdresseArrivee(dto.getAdresseArrivee().trim());
         course.setPrix(dto.getPrix());
@@ -55,7 +70,6 @@ public class CourseServiceImpl implements CourseService {
         course.setDistanceKm(dto.getDistanceKm());
         course.setDureeEstimeeMinutes(dto.getDureeEstimeeMinutes());
         course.setPrixEstime(dto.getPrixEstime());
-
         course.setStatut(CourseStatus.EN_ATTENTE);
 
         Course saved = courseRepository.save(course);
@@ -91,25 +105,146 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<CourseResponseDTO> getCurrentPassagerCourses(String email) {
-        return courseRepository.findByPassagerUtilisateurEmailIgnoreCase(email)
-                .stream().map(this::mapToDTO).collect(Collectors.toList());
+    public List<CourseResponseDTO> getCurrentPassagerCourses(
+            String authenticatedIdentifier
+    ) {
+
+        Passager authenticatedPassager = passagerRepository
+                .findByUtilisateur_EmailOrUtilisateur_Telephone(
+                        authenticatedIdentifier,
+                        authenticatedIdentifier
+                )
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Aucun profil passager n'est associé au compte authentifié"
+                        )
+                );
+
+        return courseRepository.findByPassagerId(authenticatedPassager.getId())
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<CourseResponseDTO> getCurrentChauffeurCourses(String email) {
-        return courseRepository.findByChauffeurUtilisateurEmailIgnoreCase(email)
-                .stream().map(this::mapToDTO).collect(Collectors.toList());
+    public List<CourseResponseDTO> getCurrentChauffeurCourses(
+            String authenticatedIdentifier
+    ) {
+
+        Chauffeur authenticatedChauffeur = chauffeurRepository
+                .findByUtilisateur_EmailOrUtilisateur_Telephone(
+                        authenticatedIdentifier,
+                        authenticatedIdentifier
+                )
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Aucun profil chauffeur n'est associé au compte authentifié"
+                        )
+                );
+
+        return courseRepository.findByChauffeurId(authenticatedChauffeur.getId())
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<CourseResponseDTO> getCoursesEnAttente() {
 
-        return courseRepository.findAll().stream()
-                .filter(course -> course.getStatut() == CourseStatus.EN_ATTENTE
-                        || course.getStatut() == CourseStatus.PROPOSITION_RECUE)
+        return courseRepository.findAll()
+                .stream()
+                .filter(course ->
+                        course.getStatut() == CourseStatus.EN_ATTENTE
+                                || course.getStatut() == CourseStatus.PROPOSITION_RECUE
+                )
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public CourseResponseDTO updateChauffeurStatus(
+            Long courseId,
+            String status,
+            String authenticatedIdentifier
+    ) {
+
+        Chauffeur authenticatedChauffeur = chauffeurRepository
+                .findByUtilisateur_EmailOrUtilisateur_Telephone(
+                        authenticatedIdentifier,
+                        authenticatedIdentifier
+                )
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Aucun profil chauffeur n'est associé au compte authentifié"
+                        )
+                );
+
+        Course course = courseRepository.findByIdForUpdate(courseId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Course introuvable")
+                );
+
+        if (course.getChauffeur() == null) {
+            throw new IllegalStateException(
+                    "Aucun chauffeur n'est attribué à cette course."
+            );
+        }
+
+        if (!course.getChauffeur().getId().equals(authenticatedChauffeur.getId())) {
+            throw new AccessDeniedException(
+                    "Cette course est attribuée à un autre chauffeur."
+            );
+        }
+
+        final CourseStatus requestedStatus;
+
+        try {
+            requestedStatus = CourseStatus.valueOf(
+                    status.trim().toUpperCase()
+            );
+        } catch (IllegalArgumentException | NullPointerException exception) {
+            throw new IllegalArgumentException(
+                    "Statut de course invalide."
+            );
+        }
+
+        CourseStatus expectedStatus = getExpectedChauffeurStatus(
+                course.getStatut()
+        );
+
+        if (requestedStatus != expectedStatus) {
+            throw new IllegalStateException(
+                    "Transition interdite : la course au statut "
+                            + course.getStatut().name()
+                            + " doit passer au statut "
+                            + expectedStatus.name()
+                            + "."
+            );
+        }
+
+        course.setStatut(requestedStatus);
+
+        Course updated = courseRepository.save(course);
+
+        return mapToDTO(updated);
+    }
+
+    private CourseStatus getExpectedChauffeurStatus(
+            CourseStatus currentStatus
+    ) {
+
+        return switch (currentStatus) {
+            case ACCEPTEE -> CourseStatus.CHAUFFEUR_EN_ROUTE;
+            case CHAUFFEUR_EN_ROUTE -> CourseStatus.CHAUFFEUR_ARRIVE;
+            case CHAUFFEUR_ARRIVE -> CourseStatus.EN_COURS;
+            case EN_COURS -> CourseStatus.TERMINEE;
+            default -> throw new IllegalStateException(
+                    "Le chauffeur ne peut pas faire progresser une course au statut "
+                            + currentStatus.name()
+                            + "."
+            );
+        };
     }
 
     @Override
@@ -117,33 +252,39 @@ public class CourseServiceImpl implements CourseService {
 
         Course course = courseRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("Course introuvable"));
+                        new ResourceNotFoundException("Course introuvable")
+                );
 
         final CourseStatus newStatus;
 
         try {
             newStatus = CourseStatus.valueOf(status.trim().toUpperCase());
         } catch (IllegalArgumentException | NullPointerException exception) {
-            throw new IllegalArgumentException("Statut de course invalide.");
+            throw new IllegalArgumentException(
+                    "Statut de course invalide."
+            );
         }
 
-        if (newStatus == CourseStatus.ACCEPTEE && course.getChauffeur() == null) {
+        if (newStatus == CourseStatus.ACCEPTEE
+                && course.getChauffeur() == null) {
+
             throw new IllegalStateException(
-                    "Une course ne peut pas être acceptée sans chauffeur. " +
-                    "Le passager doit sélectionner une proposition de chauffeur."
+                    "Une course ne peut pas être acceptée sans chauffeur. "
+                            + "Le passager doit sélectionner une proposition de chauffeur."
             );
         }
 
         if (newStatus == CourseStatus.TERMINEE) {
+
             if (course.getChauffeur() == null) {
                 throw new IllegalStateException(
                         "Une course sans chauffeur ne peut pas être terminée."
                 );
             }
 
-            if (course.getStatut() != CourseStatus.ACCEPTEE) {
+            if (course.getStatut() != CourseStatus.EN_COURS) {
                 throw new IllegalStateException(
-                        "Seule une course acceptée peut être terminée."
+                        "Seule une course en cours peut être terminée."
                 );
             }
         }
@@ -160,11 +301,9 @@ public class CourseServiceImpl implements CourseService {
         String chauffeurNom = null;
 
         if (course.getChauffeur() != null) {
-
-            chauffeurNom =
-                    course.getChauffeur()
-                            .getUtilisateur()
-                            .getNom();
+            chauffeurNom = course.getChauffeur()
+                    .getUtilisateur()
+                    .getNom();
         }
 
         return new CourseResponseDTO(

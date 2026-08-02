@@ -10,4 +10,9 @@ public interface ChauffeurRepository extends JpaRepository<Chauffeur, Long> {
     boolean existsByUtilisateurId(Long utilisateurId);
 
     Optional<Chauffeur> findByUtilisateurEmail(String email);
+
+    Optional<Chauffeur> findByUtilisateur_EmailOrUtilisateur_Telephone(
+            String email,
+            String telephone
+    );
 }

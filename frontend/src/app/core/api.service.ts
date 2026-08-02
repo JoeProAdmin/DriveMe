@@ -420,6 +420,21 @@ export class ApiService {
       {}
     );
   }
+  /**
+   * Fait progresser la course du chauffeur connecté.
+   *
+   * L'identité du chauffeur est extraite du JWT et le backend
+   * contrôle l'appartenance ainsi que l'ordre des transitions.
+   */
+  public updateCurrentDriverCourseStatus(
+    courseId: number,
+    status: string
+  ): Observable<CourseResponseDTO> {
+    return this.http.put<CourseResponseDTO>(
+      `${this.baseUrl}/courses/chauffeur/me/${courseId}/status?status=${encodeURIComponent(status)}`,
+      {}
+    );
+  }
 
   // ============================================================
   // PROPOSITIONS CHAUFFEUR — RC3.1B

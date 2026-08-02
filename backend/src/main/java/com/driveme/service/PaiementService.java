@@ -7,9 +7,15 @@ import java.util.List;
 
 public interface PaiementService {
 
-    PaiementResponseDTO validerPaiement(PaiementCreateDTO dto);
+    PaiementResponseDTO validerPaiement(
+            PaiementCreateDTO dto,
+            String identifiant
+    );
 
-    PaiementResponseDTO getPaiementByCourse(Long courseId);
+    PaiementResponseDTO getPaiementByCourse(
+            Long courseId,
+            String identifiant
+    );
 
     List<PaiementResponseDTO> getAllPaiements();
 

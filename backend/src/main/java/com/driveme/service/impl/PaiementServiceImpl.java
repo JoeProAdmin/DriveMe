@@ -7,17 +7,20 @@ import com.driveme.entity.CourseStatus;
 import com.driveme.entity.Paiement;
 import com.driveme.entity.PaiementMethode;
 import com.driveme.entity.PaiementStatut;
+import com.driveme.entity.Passager;
 import com.driveme.exception.ResourceNotFoundException;
 import com.driveme.repository.CourseRepository;
 import com.driveme.repository.PaiementRepository;
+import com.driveme.repository.PassagerRepository;
 import com.driveme.service.PaiementService;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
-import java.math.BigDecimal;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,41 +29,61 @@ public class PaiementServiceImpl implements PaiementService {
 
     private final PaiementRepository paiementRepository;
     private final CourseRepository courseRepository;
+    private final PassagerRepository passagerRepository;
 
     public PaiementServiceImpl(
             PaiementRepository paiementRepository,
-            CourseRepository courseRepository
+            CourseRepository courseRepository,
+            PassagerRepository passagerRepository
     ) {
         this.paiementRepository = paiementRepository;
         this.courseRepository = courseRepository;
+        this.passagerRepository = passagerRepository;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public long count() {
         return paiementRepository.count();
     }
 
     @Override
-    public PaiementResponseDTO validerPaiement(PaiementCreateDTO dto) {
+    public PaiementResponseDTO validerPaiement(
+            PaiementCreateDTO dto,
+            String identifiant
+    ) {
         if (dto == null) {
-            throw new IllegalArgumentException("Les données du paiement sont obligatoires");
+            throw new IllegalArgumentException(
+                    "Les données du paiement sont obligatoires"
+            );
         }
 
         if (dto.getCourseId() == null) {
-            throw new IllegalArgumentException("L'identifiant de la course est obligatoire");
+            throw new IllegalArgumentException(
+                    "L'identifiant de la course est obligatoire"
+            );
         }
 
         if (dto.getMethode() == null || dto.getMethode().isBlank()) {
-            throw new IllegalArgumentException("La méthode de paiement est obligatoire");
+            throw new IllegalArgumentException(
+                    "La méthode de paiement est obligatoire"
+            );
         }
 
-        Course course = courseRepository.findById(dto.getCourseId())
-                .orElseThrow(() -> new ResourceNotFoundException("Course introuvable"));
+        Passager passager = rechercherPassagerConnecte(identifiant);
 
+        Course course = courseRepository.findById(dto.getCourseId())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Course introuvable")
+                );
+
+        verifierProprietaire(course, passager);
         verifierCoursePayable(course);
 
         if (paiementRepository.existsByCourseId(course.getId())) {
-            throw new IllegalStateException("Un paiement existe déjà pour cette course");
+            throw new IllegalStateException(
+                    "Un paiement existe déjà pour cette course"
+            );
         }
 
         PaiementMethode methode = convertirMethode(dto.getMethode());
@@ -81,15 +104,31 @@ public class PaiementServiceImpl implements PaiementService {
 
     @Override
     @Transactional(readOnly = true)
-    public PaiementResponseDTO getPaiementByCourse(Long courseId) {
+    public PaiementResponseDTO getPaiementByCourse(
+            Long courseId,
+            String identifiant
+    ) {
         if (courseId == null) {
-            throw new IllegalArgumentException("L'identifiant de la course est obligatoire");
+            throw new IllegalArgumentException(
+                    "L'identifiant de la course est obligatoire"
+            );
         }
 
+        Passager passager = rechercherPassagerConnecte(identifiant);
+
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Course introuvable")
+                );
+
+        verifierProprietaire(course, passager);
+
         Paiement paiement = paiementRepository.findByCourseId(courseId)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Aucun paiement trouvé pour cette course"
-                ));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Aucun paiement trouvé pour cette course"
+                        )
+                );
 
         return mapToDTO(paiement);
     }
@@ -106,20 +145,69 @@ public class PaiementServiceImpl implements PaiementService {
     @Override
     public PaiementResponseDTO refuserPaiement(Long paiementId) {
         if (paiementId == null) {
-            throw new IllegalArgumentException("L'identifiant du paiement est obligatoire");
+            throw new IllegalArgumentException(
+                    "L'identifiant du paiement est obligatoire"
+            );
         }
 
         Paiement paiement = paiementRepository.findById(paiementId)
-                .orElseThrow(() -> new ResourceNotFoundException("Paiement introuvable"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Paiement introuvable")
+                );
 
         if (paiement.getStatut() == PaiementStatut.PAYE) {
-            throw new IllegalStateException("Un paiement déjà payé ne peut pas être refusé");
+            throw new IllegalStateException(
+                    "Un paiement déjà payé ne peut pas être refusé"
+            );
+        }
+
+        if (paiement.getStatut() == PaiementStatut.REFUSE) {
+            throw new IllegalStateException(
+                    "Ce paiement est déjà refusé"
+            );
         }
 
         paiement.setStatut(PaiementStatut.REFUSE);
         paiement.setDatePaiement(LocalDateTime.now());
 
-        return mapToDTO(paiementRepository.save(paiement));
+        return mapToDTO(
+                paiementRepository.save(paiement)
+        );
+    }
+
+    private Passager rechercherPassagerConnecte(String identifiant) {
+        if (identifiant == null || identifiant.isBlank()) {
+            throw new AccessDeniedException(
+                    "Utilisateur authentifié introuvable"
+            );
+        }
+
+        String valeur = identifiant.trim();
+
+        return passagerRepository
+                .findByUtilisateur_EmailOrUtilisateur_Telephone(
+                        valeur,
+                        valeur
+                )
+                .orElseThrow(() ->
+                        new AccessDeniedException(
+                                "Aucun profil passager ne correspond à l'utilisateur connecté"
+                        )
+                );
+    }
+
+    private void verifierProprietaire(
+            Course course,
+            Passager passager
+    ) {
+        if (course.getPassager() == null
+                || course.getPassager().getId() == null
+                || passager.getId() == null
+                || !course.getPassager().getId().equals(passager.getId())) {
+            throw new AccessDeniedException(
+                    "Vous ne pouvez pas accéder au paiement de cette course"
+            );
+        }
     }
 
     private void verifierCoursePayable(Course course) {
@@ -129,9 +217,9 @@ public class PaiementServiceImpl implements PaiementService {
             );
         }
 
-        if (course.getStatut() != CourseStatus.ACCEPTEE) {
+        if (course.getStatut() != CourseStatus.TERMINEE) {
             throw new IllegalStateException(
-                    "Seule une course acceptée peut être payée"
+                    "Seule une course terminée peut être payée"
             );
         }
     }
@@ -144,7 +232,9 @@ public class PaiementServiceImpl implements PaiementService {
         }
 
         if (montant == null || montant.signum() <= 0) {
-            throw new IllegalStateException("Le montant de la course est invalide");
+            throw new IllegalStateException(
+                    "Le montant de la course est invalide"
+            );
         }
 
         return montant;
@@ -157,7 +247,8 @@ public class PaiementServiceImpl implements PaiementService {
             );
         } catch (IllegalArgumentException ex) {
             throw new IllegalArgumentException(
-                    "Méthode de paiement invalide. Valeurs autorisées : CASH, CARTE, ONLINE"
+                    "Méthode de paiement invalide. "
+                            + "Valeurs autorisées : CASH, CARTE, ONLINE"
             );
         }
     }

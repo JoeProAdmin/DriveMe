@@ -440,14 +440,19 @@
 
           <div
             class="course-actions"
-            *ngIf="normalizeStatus(course.statut) === 'ACCEPTEE'"
+            *ngIf="canDriverAdvance(course.statut)"
           >
             <button
               type="button"
               class="finish-btn"
-              (click)="finishCourse(course.id)"
+              [disabled]="updatingStatusCourseId !== null"
+              (click)="updateDriverCourseStatus(course)"
             >
-              {{ texts[currentLang].end }}
+              {{
+                updatingStatusCourseId === course.id
+                  ? texts[currentLang].statusUpdating
+                  : getDriverActionLabel(course.statut)
+              }}
             </button>
           </div>
         </article>

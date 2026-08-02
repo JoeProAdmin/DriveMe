@@ -65,6 +65,7 @@ export class CourseList implements OnInit, OnDestroy {
   public loadingProposalsCourseId: number | null = null;
   public activePaymentCourseId: number | null = null;
   public processingPaymentCourseId: number | null = null;
+  public updatingStatusCourseId: number | null = null;
   public lastPayment: PaiementResponseDTO | null = null;
   public paymentForm: PaymentForm = this.createEmptyPaymentForm();
 
@@ -78,16 +79,16 @@ export class CourseList implements OnInit, OnDestroy {
 
   public readonly texts = {
     FR: {
-      title: 'Gestion des courses', subtitleAdmin: 'Supervision de toutes les courses DriveMe', subtitlePassenger: 'Suivi de vos demandes et choix du chauffeur', subtitleDriver: 'Consultez les demandes disponibles et proposez votre prix', dash: 'Dashboard', refresh: 'Rafraîchir', total: 'Total', waiting: 'En attente', accepted: 'Acceptées', finished: 'Terminées', myTrips: 'Mes courses', availableTrips: 'Courses disponibles', loading: 'Chargement des courses...', errorLoad: 'Erreur lors du chargement des courses.', dep: 'Départ', dest: 'Destination', pass: 'Passager', drv: 'Chauffeur', price: 'Prix demandé', status: 'Statut', propose: 'Faire une proposition', proposalSent: 'Proposition envoyée', editProposal: 'Modifier la saisie', cancel: 'Annuler', send: 'Envoyer la proposition', sending: 'Envoi en cours...', proposedPrice: 'Votre prix proposé', distance: 'Distance jusqu’au départ (km)', eta: 'Temps estimé (minutes)', message: 'Message au passager', messagePlaceholder: 'Ex. Je peux arriver rapidement.', invalidProposal: 'Saisissez un prix supérieur à 0.', proposalSuccess: 'Votre proposition a été envoyée.', proposalError: 'Impossible d’envoyer la proposition.', viewOffers: 'Voir les propositions', hideOffers: 'Masquer les propositions', offers: 'Propositions reçues', noOffers: 'Aucune proposition reçue pour le moment.', loadingOffers: 'Chargement des propositions...', choose: 'Choisir ce chauffeur', choosing: 'Sélection en cours...', chosen: 'Chauffeur choisi', chooseSuccess: 'Le chauffeur a été sélectionné.', chooseError: 'Impossible de sélectionner cette proposition.', driverNote: 'Note', distanceShort: 'Distance', etaShort: 'Arrivée estimée', end: 'Terminer la course', empty: 'Aucune course disponible.', emptyAvailable: 'Aucune nouvelle demande de course.', emptyDriverTrips: 'Aucune course ne vous est actuellement affectée.', waitingDriver: 'En attente d’un chauffeur', mad: 'MAD', pay: 'Payer la course', paymentTitle: 'Paiement de la course', paymentMethod: 'Moyen de paiement', card: 'Carte bancaire', cash: 'Espèces', online: 'Paiement en ligne', cardName: 'Nom du titulaire', cardNumber: 'Numéro de carte', expiry: 'MM/AA', cvc: 'CVC', paymentCancel: 'Annuler', paymentConfirm: 'Valider le paiement', paymentProcessing: 'Traitement en cours...', paymentSuccess: 'Paiement validé avec succès.', paymentError: 'Impossible de valider le paiement.', invalidCard: 'Veuillez compléter correctement les données de carte.', paid: 'Paiement validé', paymentPending: 'Paiement requis', paymentInfo: 'Le montant est déterminé par la course et ne peut pas être modifié.'
+      title: 'Gestion des courses', subtitleAdmin: 'Supervision de toutes les courses DriveMe', subtitlePassenger: 'Suivi de vos demandes et choix du chauffeur', subtitleDriver: 'Consultez les demandes disponibles et proposez votre prix', dash: 'Dashboard', refresh: 'Rafraîchir', total: 'Total', waiting: 'En attente', accepted: 'Acceptées', finished: 'Terminées', myTrips: 'Mes courses', availableTrips: 'Courses disponibles', loading: 'Chargement des courses...', errorLoad: 'Erreur lors du chargement des courses.', dep: 'Départ', dest: 'Destination', pass: 'Passager', drv: 'Chauffeur', price: 'Prix demandé', status: 'Statut', propose: 'Faire une proposition', proposalSent: 'Proposition envoyée', editProposal: 'Modifier la saisie', cancel: 'Annuler', send: 'Envoyer la proposition', sending: 'Envoi en cours...', proposedPrice: 'Votre prix proposé', distance: 'Distance jusqu’au départ (km)', eta: 'Temps estimé (minutes)', message: 'Message au passager', messagePlaceholder: 'Ex. Je peux arriver rapidement.', invalidProposal: 'Saisissez un prix supérieur à 0.', proposalSuccess: 'Votre proposition a été envoyée.', proposalError: 'Impossible d’envoyer la proposition.', viewOffers: 'Voir les propositions', hideOffers: 'Masquer les propositions', offers: 'Propositions reçues', noOffers: 'Aucune proposition reçue pour le moment.', loadingOffers: 'Chargement des propositions...', choose: 'Choisir ce chauffeur', choosing: 'Sélection en cours...', chosen: 'Chauffeur choisi', chooseSuccess: 'Le chauffeur a été sélectionné.', chooseError: 'Impossible de sélectionner cette proposition.', driverNote: 'Note', distanceShort: 'Distance', etaShort: 'Arrivée estimée', startRoute: 'Je pars vers le passager', arrived: 'Je suis arrivé', startRide: 'Démarrer la course', end: 'Terminer la course', statusUpdating: 'Mise à jour...', statusUpdateSuccess: 'Le statut de la course a été mis à jour.', statusUpdateError: 'Impossible de mettre à jour le statut de la course.', empty: 'Aucune course disponible.', emptyAvailable: 'Aucune nouvelle demande de course.', emptyDriverTrips: 'Aucune course ne vous est actuellement affectée.', waitingDriver: 'En attente d’un chauffeur', mad: 'MAD', pay: 'Payer la course', paymentTitle: 'Paiement de la course', paymentMethod: 'Moyen de paiement', card: 'Carte bancaire', cash: 'Espèces', online: 'Paiement en ligne', cardName: 'Nom du titulaire', cardNumber: 'Numéro de carte', expiry: 'MM/AA', cvc: 'CVC', paymentCancel: 'Annuler', paymentConfirm: 'Valider le paiement', paymentProcessing: 'Traitement en cours...', paymentSuccess: 'Paiement validé avec succès.', paymentError: 'Impossible de valider le paiement.', invalidCard: 'Veuillez compléter correctement les données de carte.', paid: 'Paiement validé', paymentPending: 'Paiement requis', paymentInfo: 'Le montant est déterminé par la course et ne peut pas être modifié.'
     },
     EN: {
-      title: 'Ride management', subtitleAdmin: 'Supervision of all DriveMe rides', subtitlePassenger: 'Track your requests and select a driver', subtitleDriver: 'View available requests and submit your price', dash: 'Dashboard', refresh: 'Refresh', total: 'Total', waiting: 'Pending', accepted: 'Accepted', finished: 'Finished', myTrips: 'My rides', availableTrips: 'Available rides', loading: 'Loading rides...', errorLoad: 'Error loading rides.', dep: 'Departure', dest: 'Destination', pass: 'Passenger', drv: 'Driver', price: 'Requested price', status: 'Status', propose: 'Make an offer', proposalSent: 'Offer sent', editProposal: 'Edit input', cancel: 'Cancel', send: 'Send offer', sending: 'Sending...', proposedPrice: 'Your proposed price', distance: 'Distance to pickup (km)', eta: 'Estimated time (minutes)', message: 'Message to passenger', messagePlaceholder: 'E.g. I can arrive quickly.', invalidProposal: 'Enter a price greater than 0.', proposalSuccess: 'Your offer has been sent.', proposalError: 'Unable to send the offer.', viewOffers: 'View offers', hideOffers: 'Hide offers', offers: 'Offers received', noOffers: 'No offers received yet.', loadingOffers: 'Loading offers...', choose: 'Choose this driver', choosing: 'Selecting...', chosen: 'Driver selected', chooseSuccess: 'The driver has been selected.', chooseError: 'Unable to select this offer.', driverNote: 'Rating', distanceShort: 'Distance', etaShort: 'Estimated arrival', end: 'Finish ride', empty: 'No rides available.', emptyAvailable: 'No new ride requests.', emptyDriverTrips: 'No ride is currently assigned to you.', waitingDriver: 'Waiting for a driver', mad: 'MAD', pay: 'Pay for ride', paymentTitle: 'Ride payment', paymentMethod: 'Payment method', card: 'Bank card', cash: 'Cash', online: 'Online payment', cardName: 'Cardholder name', cardNumber: 'Card number', expiry: 'MM/YY', cvc: 'CVC', paymentCancel: 'Cancel', paymentConfirm: 'Confirm payment', paymentProcessing: 'Processing...', paymentSuccess: 'Payment validated successfully.', paymentError: 'Unable to validate payment.', invalidCard: 'Please complete the card details correctly.', paid: 'Payment validated', paymentPending: 'Payment required', paymentInfo: 'The amount is determined by the ride and cannot be changed.'
+      title: 'Ride management', subtitleAdmin: 'Supervision of all DriveMe rides', subtitlePassenger: 'Track your requests and select a driver', subtitleDriver: 'View available requests and submit your price', dash: 'Dashboard', refresh: 'Refresh', total: 'Total', waiting: 'Pending', accepted: 'Accepted', finished: 'Finished', myTrips: 'My rides', availableTrips: 'Available rides', loading: 'Loading rides...', errorLoad: 'Error loading rides.', dep: 'Departure', dest: 'Destination', pass: 'Passenger', drv: 'Driver', price: 'Requested price', status: 'Status', propose: 'Make an offer', proposalSent: 'Offer sent', editProposal: 'Edit input', cancel: 'Cancel', send: 'Send offer', sending: 'Sending...', proposedPrice: 'Your proposed price', distance: 'Distance to pickup (km)', eta: 'Estimated time (minutes)', message: 'Message to passenger', messagePlaceholder: 'E.g. I can arrive quickly.', invalidProposal: 'Enter a price greater than 0.', proposalSuccess: 'Your offer has been sent.', proposalError: 'Unable to send the offer.', viewOffers: 'View offers', hideOffers: 'Hide offers', offers: 'Offers received', noOffers: 'No offers received yet.', loadingOffers: 'Loading offers...', choose: 'Choose this driver', choosing: 'Selecting...', chosen: 'Driver selected', chooseSuccess: 'The driver has been selected.', chooseError: 'Unable to select this offer.', driverNote: 'Rating', distanceShort: 'Distance', etaShort: 'Estimated arrival', startRoute: 'Drive to passenger', arrived: 'I have arrived', startRide: 'Start ride', end: 'Finish ride', statusUpdating: 'Updating...', statusUpdateSuccess: 'The ride status has been updated.', statusUpdateError: 'Unable to update the ride status.', empty: 'No rides available.', emptyAvailable: 'No new ride requests.', emptyDriverTrips: 'No ride is currently assigned to you.', waitingDriver: 'Waiting for a driver', mad: 'MAD', pay: 'Pay for ride', paymentTitle: 'Ride payment', paymentMethod: 'Payment method', card: 'Bank card', cash: 'Cash', online: 'Online payment', cardName: 'Cardholder name', cardNumber: 'Card number', expiry: 'MM/YY', cvc: 'CVC', paymentCancel: 'Cancel', paymentConfirm: 'Confirm payment', paymentProcessing: 'Processing...', paymentSuccess: 'Payment validated successfully.', paymentError: 'Unable to validate payment.', invalidCard: 'Please complete the card details correctly.', paid: 'Payment validated', paymentPending: 'Payment required', paymentInfo: 'The amount is determined by the ride and cannot be changed.'
     },
     AR: {
-      title: 'إدارة الرحلات', subtitleAdmin: 'الإشراف على جميع رحلات DriveMe', subtitlePassenger: 'تتبع طلباتك واختيار السائق', subtitleDriver: 'عرض الطلبات المتاحة واقتراح السعر', dash: 'لوحة التحكم', refresh: 'تحديث', total: 'الإجمالي', waiting: 'قيد الانتظار', accepted: 'مقبولة', finished: 'مكتملة', myTrips: 'رحلاتي', availableTrips: 'الرحلات المتاحة', loading: 'جاري تحميل الرحلات...', errorLoad: 'حدث خطأ أثناء تحميل الرحلات.', dep: 'نقطة الانطلاق', dest: 'الوجهة', pass: 'الراكب', drv: 'السائق', price: 'السعر المطلوب', status: 'الحالة', propose: 'تقديم عرض', proposalSent: 'تم إرسال العرض', editProposal: 'تعديل البيانات', cancel: 'إلغاء', send: 'إرسال العرض', sending: 'جاري الإرسال...', proposedPrice: 'السعر المقترح', distance: 'المسافة إلى نقطة الانطلاق (كم)', eta: 'الوقت المقدر (دقيقة)', message: 'رسالة إلى الراكب', messagePlaceholder: 'مثال: يمكنني الوصول بسرعة.', invalidProposal: 'أدخل سعراً أكبر من صفر.', proposalSuccess: 'تم إرسال عرضك.', proposalError: 'تعذر إرسال العرض.', viewOffers: 'عرض الاقتراحات', hideOffers: 'إخفاء الاقتراحات', offers: 'الاقتراحات المستلمة', noOffers: 'لا توجد اقتراحات حتى الآن.', loadingOffers: 'جاري تحميل الاقتراحات...', choose: 'اختيار هذا السائق', choosing: 'جاري الاختيار...', chosen: 'تم اختيار السائق', chooseSuccess: 'تم اختيار السائق.', chooseError: 'تعذر اختيار هذا العرض.', driverNote: 'التقييم', distanceShort: 'المسافة', etaShort: 'الوصول المتوقع', end: 'إنهاء الرحلة', empty: 'لا توجد رحلات.', emptyAvailable: 'لا توجد طلبات رحلات جديدة.', emptyDriverTrips: 'لا توجد رحلة مسندة إليك حالياً.', waitingDriver: 'في انتظار سائق', mad: 'MAD', pay: 'دفع ثمن الرحلة', paymentTitle: 'دفع الرحلة', paymentMethod: 'وسيلة الدفع', card: 'بطاقة بنكية', cash: 'نقداً', online: 'الدفع عبر الإنترنت', cardName: 'اسم حامل البطاقة', cardNumber: 'رقم البطاقة', expiry: 'شهر/سنة', cvc: 'CVC', paymentCancel: 'إلغاء', paymentConfirm: 'تأكيد الدفع', paymentProcessing: 'جاري المعالجة...', paymentSuccess: 'تم تأكيد الدفع بنجاح.', paymentError: 'تعذر تأكيد الدفع.', invalidCard: 'يرجى إكمال بيانات البطاقة بشكل صحيح.', paid: 'تم الدفع', paymentPending: 'الدفع مطلوب', paymentInfo: 'يتم تحديد المبلغ من خلال الرحلة ولا يمكن تغييره.'
+      title: 'إدارة الرحلات', subtitleAdmin: 'الإشراف على جميع رحلات DriveMe', subtitlePassenger: 'تتبع طلباتك واختيار السائق', subtitleDriver: 'عرض الطلبات المتاحة واقتراح السعر', dash: 'لوحة التحكم', refresh: 'تحديث', total: 'الإجمالي', waiting: 'قيد الانتظار', accepted: 'مقبولة', finished: 'مكتملة', myTrips: 'رحلاتي', availableTrips: 'الرحلات المتاحة', loading: 'جاري تحميل الرحلات...', errorLoad: 'حدث خطأ أثناء تحميل الرحلات.', dep: 'نقطة الانطلاق', dest: 'الوجهة', pass: 'الراكب', drv: 'السائق', price: 'السعر المطلوب', status: 'الحالة', propose: 'تقديم عرض', proposalSent: 'تم إرسال العرض', editProposal: 'تعديل البيانات', cancel: 'إلغاء', send: 'إرسال العرض', sending: 'جاري الإرسال...', proposedPrice: 'السعر المقترح', distance: 'المسافة إلى نقطة الانطلاق (كم)', eta: 'الوقت المقدر (دقيقة)', message: 'رسالة إلى الراكب', messagePlaceholder: 'مثال: يمكنني الوصول بسرعة.', invalidProposal: 'أدخل سعراً أكبر من صفر.', proposalSuccess: 'تم إرسال عرضك.', proposalError: 'تعذر إرسال العرض.', viewOffers: 'عرض الاقتراحات', hideOffers: 'إخفاء الاقتراحات', offers: 'الاقتراحات المستلمة', noOffers: 'لا توجد اقتراحات حتى الآن.', loadingOffers: 'جاري تحميل الاقتراحات...', choose: 'اختيار هذا السائق', choosing: 'جاري الاختيار...', chosen: 'تم اختيار السائق', chooseSuccess: 'تم اختيار السائق.', chooseError: 'تعذر اختيار هذا العرض.', driverNote: 'التقييم', distanceShort: 'المسافة', etaShort: 'الوصول المتوقع', startRoute: 'التوجه إلى الراكب', arrived: 'لقد وصلت', startRide: 'بدء الرحلة', end: 'إنهاء الرحلة', statusUpdating: 'جاري التحديث...', statusUpdateSuccess: 'تم تحديث حالة الرحلة.', statusUpdateError: 'تعذر تحديث حالة الرحلة.', empty: 'لا توجد رحلات.', emptyAvailable: 'لا توجد طلبات رحلات جديدة.', emptyDriverTrips: 'لا توجد رحلة مسندة إليك حالياً.', waitingDriver: 'في انتظار سائق', mad: 'MAD', pay: 'دفع ثمن الرحلة', paymentTitle: 'دفع الرحلة', paymentMethod: 'وسيلة الدفع', card: 'بطاقة بنكية', cash: 'نقداً', online: 'الدفع عبر الإنترنت', cardName: 'اسم حامل البطاقة', cardNumber: 'رقم البطاقة', expiry: 'شهر/سنة', cvc: 'CVC', paymentCancel: 'إلغاء', paymentConfirm: 'تأكيد الدفع', paymentProcessing: 'جاري المعالجة...', paymentSuccess: 'تم تأكيد الدفع بنجاح.', paymentError: 'تعذر تأكيد الدفع.', invalidCard: 'يرجى إكمال بيانات البطاقة بشكل صحيح.', paid: 'تم الدفع', paymentPending: 'الدفع مطلوب', paymentInfo: 'يتم تحديد المبلغ من خلال الرحلة ولا يمكن تغييره.'
     },
     ES: {
-      title: 'Gestión de viajes', subtitleAdmin: 'Supervisión de todos los viajes DriveMe', subtitlePassenger: 'Seguimiento de solicitudes y elección del conductor', subtitleDriver: 'Consulta solicitudes disponibles y propón tu precio', dash: 'Dashboard', refresh: 'Actualizar', total: 'Total', waiting: 'Pendientes', accepted: 'Aceptados', finished: 'Finalizados', myTrips: 'Mis viajes', availableTrips: 'Viajes disponibles', loading: 'Cargando viajes...', errorLoad: 'Error al cargar los viajes.', dep: 'Salida', dest: 'Destino', pass: 'Pasajero', drv: 'Conductor', price: 'Precio solicitado', status: 'Estado', propose: 'Hacer una oferta', proposalSent: 'Oferta enviada', editProposal: 'Editar datos', cancel: 'Cancelar', send: 'Enviar oferta', sending: 'Enviando...', proposedPrice: 'Tu precio propuesto', distance: 'Distancia a la recogida (km)', eta: 'Tiempo estimado (minutos)', message: 'Mensaje al pasajero', messagePlaceholder: 'Ej. Puedo llegar rápidamente.', invalidProposal: 'Introduce un precio superior a 0.', proposalSuccess: 'Tu oferta ha sido enviada.', proposalError: 'No se pudo enviar la oferta.', viewOffers: 'Ver ofertas', hideOffers: 'Ocultar ofertas', offers: 'Ofertas recibidas', noOffers: 'Todavía no hay ofertas.', loadingOffers: 'Cargando ofertas...', choose: 'Elegir este conductor', choosing: 'Seleccionando...', chosen: 'Conductor elegido', chooseSuccess: 'El conductor ha sido seleccionado.', chooseError: 'No se pudo seleccionar esta oferta.', driverNote: 'Valoración', distanceShort: 'Distancia', etaShort: 'Llegada estimada', end: 'Finalizar viaje', empty: 'No hay viajes disponibles.', emptyAvailable: 'No hay nuevas solicitudes.', emptyDriverTrips: 'No tienes ningún viaje asignado actualmente.', waitingDriver: 'Esperando conductor', mad: 'MAD', pay: 'Pagar el viaje', paymentTitle: 'Pago del viaje', paymentMethod: 'Método de pago', card: 'Tarjeta bancaria', cash: 'Efectivo', online: 'Pago en línea', cardName: 'Titular de la tarjeta', cardNumber: 'Número de tarjeta', expiry: 'MM/AA', cvc: 'CVC', paymentCancel: 'Cancelar', paymentConfirm: 'Confirmar pago', paymentProcessing: 'Procesando...', paymentSuccess: 'Pago validado correctamente.', paymentError: 'No se pudo validar el pago.', invalidCard: 'Complete correctamente los datos de la tarjeta.', paid: 'Pago validado', paymentPending: 'Pago requerido', paymentInfo: 'El importe lo determina el viaje y no se puede modificar.'
+      title: 'Gestión de viajes', subtitleAdmin: 'Supervisión de todos los viajes DriveMe', subtitlePassenger: 'Seguimiento de solicitudes y elección del conductor', subtitleDriver: 'Consulta solicitudes disponibles y propón tu precio', dash: 'Dashboard', refresh: 'Actualizar', total: 'Total', waiting: 'Pendientes', accepted: 'Aceptados', finished: 'Finalizados', myTrips: 'Mis viajes', availableTrips: 'Viajes disponibles', loading: 'Cargando viajes...', errorLoad: 'Error al cargar los viajes.', dep: 'Salida', dest: 'Destino', pass: 'Pasajero', drv: 'Conductor', price: 'Precio solicitado', status: 'Estado', propose: 'Hacer una oferta', proposalSent: 'Oferta enviada', editProposal: 'Editar datos', cancel: 'Cancelar', send: 'Enviar oferta', sending: 'Enviando...', proposedPrice: 'Tu precio propuesto', distance: 'Distancia a la recogida (km)', eta: 'Tiempo estimado (minutos)', message: 'Mensaje al pasajero', messagePlaceholder: 'Ej. Puedo llegar rápidamente.', invalidProposal: 'Introduce un precio superior a 0.', proposalSuccess: 'Tu oferta ha sido enviada.', proposalError: 'No se pudo enviar la oferta.', viewOffers: 'Ver ofertas', hideOffers: 'Ocultar ofertas', offers: 'Ofertas recibidas', noOffers: 'Todavía no hay ofertas.', loadingOffers: 'Cargando ofertas...', choose: 'Elegir este conductor', choosing: 'Seleccionando...', chosen: 'Conductor elegido', chooseSuccess: 'El conductor ha sido seleccionado.', chooseError: 'No se pudo seleccionar esta oferta.', driverNote: 'Valoración', distanceShort: 'Distancia', etaShort: 'Llegada estimada', startRoute: 'Ir hacia el pasajero', arrived: 'He llegado', startRide: 'Iniciar viaje', end: 'Finalizar viaje', statusUpdating: 'Actualizando...', statusUpdateSuccess: 'El estado del viaje se ha actualizado.', statusUpdateError: 'No se pudo actualizar el estado del viaje.', empty: 'No hay viajes disponibles.', emptyAvailable: 'No hay nuevas solicitudes.', emptyDriverTrips: 'No tienes ningún viaje asignado actualmente.', waitingDriver: 'Esperando conductor', mad: 'MAD', pay: 'Pagar el viaje', paymentTitle: 'Pago del viaje', paymentMethod: 'Método de pago', card: 'Tarjeta bancaria', cash: 'Efectivo', online: 'Pago en línea', cardName: 'Titular de la tarjeta', cardNumber: 'Número de tarjeta', expiry: 'MM/AA', cvc: 'CVC', paymentCancel: 'Cancelar', paymentConfirm: 'Confirmar pago', paymentProcessing: 'Procesando...', paymentSuccess: 'Pago validado correctamente.', paymentError: 'No se pudo validar el pago.', invalidCard: 'Complete correctamente los datos de la tarjeta.', paid: 'Pago validado', paymentPending: 'Pago requerido', paymentInfo: 'El importe lo determina el viaje y no se puede modificar.'
     }
   };
   constructor(
@@ -105,7 +106,7 @@ export class CourseList implements OnInit, OnDestroy {
 
     // Met à jour automatiquement les propositions et les changements de statut.
     this.refreshTimerId = setInterval(() => {
-      if (!document.hidden && !this.loading && this.selectingProposalId === null && this.processingPaymentCourseId === null) {
+      if (!document.hidden && !this.loading && this.selectingProposalId === null && this.processingPaymentCourseId === null && this.updatingStatusCourseId === null) {
         this.loadCourses(false);
       }
     }, 5000);
@@ -461,32 +462,82 @@ export class CourseList implements OnInit, OnDestroy {
     return expiryDate >= now;
   }
 
-  public finishCourse(courseId: number): void {
-    if (!courseId || this.userRole !== 'CHAUFFEUR') {
+  public canDriverAdvance(status: unknown): boolean {
+    return ['ACCEPTEE', 'CHAUFFEUR_EN_ROUTE', 'CHAUFFEUR_ARRIVE', 'EN_COURS']
+      .includes(this.normalizeStatus(status));
+  }
+
+  public getDriverActionLabel(status: unknown): string {
+    switch (this.normalizeStatus(status)) {
+      case 'ACCEPTEE':
+        return this.texts[this.currentLang].startRoute;
+      case 'CHAUFFEUR_EN_ROUTE':
+        return this.texts[this.currentLang].arrived;
+      case 'CHAUFFEUR_ARRIVE':
+        return this.texts[this.currentLang].startRide;
+      case 'EN_COURS':
+        return this.texts[this.currentLang].end;
+      default:
+        return '';
+    }
+  }
+
+  public updateDriverCourseStatus(course: any): void {
+    const courseId = Number(course?.id);
+    const nextStatus = this.getNextDriverStatus(course?.statut);
+
+    if (!courseId || !nextStatus || this.userRole !== 'CHAUFFEUR' || this.updatingStatusCourseId !== null) {
       return;
     }
 
-    this.loading = true;
+    this.updatingStatusCourseId = courseId;
     this.errorMessage = '';
+    this.successMessage = '';
     this.changeDetectorRef.markForCheck();
 
-    this.apiService.updateCourseStatus(courseId, 'TERMINEE')
+    this.apiService.updateCurrentDriverCourseStatus(courseId, nextStatus)
       .pipe(
         finalize(() => {
-          this.loading = false;
+          this.updatingStatusCourseId = null;
           this.changeDetectorRef.markForCheck();
         })
       )
       .subscribe({
-        next: () => this.loadCourses(false),
+        next: updatedCourse => {
+          const index = this.mesCourses.findIndex(item => Number(item?.id) === courseId);
+          if (index >= 0) {
+            this.mesCourses = [
+              ...this.mesCourses.slice(0, index),
+              updatedCourse,
+              ...this.mesCourses.slice(index + 1)
+            ];
+          }
+          this.successMessage = this.texts[this.currentLang].statusUpdateSuccess;
+          this.changeDetectorRef.markForCheck();
+        },
         error: err => {
-          console.error('Erreur fin de course', err);
+          console.error('Erreur mise à jour du statut chauffeur', err);
           this.errorMessage =
             err?.error?.message ||
-            this.texts[this.currentLang].errorLoad;
+            this.texts[this.currentLang].statusUpdateError;
           this.changeDetectorRef.markForCheck();
         }
       });
+  }
+
+  private getNextDriverStatus(status: unknown): string | null {
+    switch (this.normalizeStatus(status)) {
+      case 'ACCEPTEE':
+        return 'CHAUFFEUR_EN_ROUTE';
+      case 'CHAUFFEUR_EN_ROUTE':
+        return 'CHAUFFEUR_ARRIVE';
+      case 'CHAUFFEUR_ARRIVE':
+        return 'EN_COURS';
+      case 'EN_COURS':
+        return 'TERMINEE';
+      default:
+        return null;
+    }
   }
 
   public goToDashboard(): void {
@@ -499,6 +550,8 @@ export class CourseList implements OnInit, OnDestroy {
         return 'status-waiting';
       case 'ACCEPTEE':
         return 'status-accepted';
+      case 'CHAUFFEUR_EN_ROUTE':
+      case 'CHAUFFEUR_ARRIVE':
       case 'EN_COURS':
         return 'status-progress';
       case 'TERMINEE':

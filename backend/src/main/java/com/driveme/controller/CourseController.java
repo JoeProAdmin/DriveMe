@@ -3,12 +3,12 @@ package com.driveme.controller;
 import com.driveme.dto.CourseCreateDTO;
 import com.driveme.dto.CourseResponseDTO;
 import com.driveme.service.CourseService;
-import org.springframework.security.access.prepost.PreAuthorize;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/courses")
@@ -22,7 +22,10 @@ public class CourseController {
 
     @PreAuthorize("hasRole('PASSAGER')")
     @PostMapping
-    public CourseResponseDTO create(@Valid @RequestBody CourseCreateDTO dto, Principal principal) {
+    public CourseResponseDTO create(
+            @Valid @RequestBody CourseCreateDTO dto,
+            Principal principal
+    ) {
         return courseService.createCourse(dto, principal.getName());
     }
 
@@ -46,14 +49,32 @@ public class CourseController {
 
     @PreAuthorize("hasRole('PASSAGER')")
     @GetMapping("/passager/me")
-    public List<CourseResponseDTO> getCurrentPassagerCourses(Principal principal) {
+    public List<CourseResponseDTO> getCurrentPassagerCourses(
+            Principal principal
+    ) {
         return courseService.getCurrentPassagerCourses(principal.getName());
     }
 
     @PreAuthorize("hasRole('CHAUFFEUR')")
     @GetMapping("/chauffeur/me")
-    public List<CourseResponseDTO> getCurrentChauffeurCourses(Principal principal) {
+    public List<CourseResponseDTO> getCurrentChauffeurCourses(
+            Principal principal
+    ) {
         return courseService.getCurrentChauffeurCourses(principal.getName());
+    }
+
+    @PreAuthorize("hasRole('CHAUFFEUR')")
+    @PutMapping("/chauffeur/me/{id}/status")
+    public CourseResponseDTO updateCurrentChauffeurStatus(
+            @PathVariable Long id,
+            @RequestParam String status,
+            Principal principal
+    ) {
+        return courseService.updateChauffeurStatus(
+                id,
+                status,
+                principal.getName()
+        );
     }
 
     @PreAuthorize("hasAnyRole('CHAUFFEUR','ADMIN')")

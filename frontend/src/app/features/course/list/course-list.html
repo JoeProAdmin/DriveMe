@@ -221,6 +221,12 @@
           <span>{{ course.prix }} {{ texts[currentLang].mad }}</span>
         </div>
 
+        <app-course-review
+          *ngIf="canReviewCourse(course)"
+          [courseId]="course.id"
+          (reviewSubmitted)="onReviewSubmitted($event)"
+        ></app-course-review>
+
         <form
           *ngIf="isPaymentOpen(course.id)"
           class="payment-form"

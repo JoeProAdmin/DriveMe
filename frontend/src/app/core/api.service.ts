@@ -66,6 +66,8 @@ export interface CourseResponseDTO extends CourseCreateDTO {
   chauffeurNom?: string | null;
   statut: string;
   dateCreation: string;
+  paiementStatut: string | null;
+  avisDepose: boolean;
 }
 
 export interface PropositionCreateDTO {

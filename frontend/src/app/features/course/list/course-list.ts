@@ -8,8 +8,9 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { catchError, finalize, forkJoin, of, throwError } from 'rxjs';
+import { finalize, forkJoin } from 'rxjs';
 import { DmButtonComponent } from '../../../shared/components/dm-button/dm-button';
+import { CourseReview } from './course-review';
 
 import {
   ApiService,
@@ -41,7 +42,7 @@ interface ProposalForm {
 @Component({
   selector: 'app-course-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, DmButtonComponent],
+  imports: [CommonModule, FormsModule, DmButtonComponent, CourseReview],
   templateUrl: './course-list.html',
   styleUrls: ['./course-list.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -74,7 +75,6 @@ export class CourseList implements OnInit, OnDestroy {
   private refreshTimerId: ReturnType<typeof setInterval> | null = null;
 
   private readonly sentProposalCourseIds = new Set<number>();
-  private readonly paidCourseIds = new Set<number>();
   private readonly proposalsByCourse = new Map<number, PropositionResponseDTO[]>();
 
   public readonly texts = {
@@ -399,7 +399,11 @@ export class CourseList implements OnInit, OnDestroy {
     ).subscribe({
       next: payment => {
         this.lastPayment = payment;
-        this.paidCourseIds.add(Number(payment.courseId));
+        this.courses = this.courses.map(item =>
+          Number(item?.id) === courseId
+            ? { ...item, paiementStatut: payment.statut }
+            : item
+        );
         this.activePaymentCourseId = null;
         this.paymentForm = this.createEmptyPaymentForm();
         this.successMessage = this.texts[this.currentLang].paymentSuccess;
@@ -414,7 +418,24 @@ export class CourseList implements OnInit, OnDestroy {
   }
 
   public hasPaidCourse(courseId: number): boolean {
-    return this.paidCourseIds.has(Number(courseId));
+    const course = this.courses.find(item => Number(item?.id) === Number(courseId));
+    return this.normalizeStatus(course?.paiementStatut) === 'PAYE';
+  }
+
+  public canReviewCourse(course: any): boolean {
+    return this.userRole === 'PASSAGER'
+      && this.normalizeStatus(course?.statut) === 'TERMINEE'
+      && this.normalizeStatus(course?.paiementStatut) === 'PAYE'
+      && course?.avisDepose !== true;
+  }
+
+  public onReviewSubmitted(courseId: number): void {
+    this.courses = this.courses.map(course =>
+      Number(course?.id) === Number(courseId)
+        ? { ...course, avisDepose: true }
+        : course
+    );
+    this.changeDetectorRef.markForCheck();
   }
 
   public isPaymentOpen(courseId: number): boolean {
@@ -588,51 +609,13 @@ export class CourseList implements OnInit, OnDestroy {
 
   private loadPassengerCourses(): void {
     this.apiService.getCurrentPassengerCourses()
+      .pipe(finalize(() => this.finishLoading()))
       .subscribe({
         next: courses => {
-          const passengerCourses = this.toSafeArray(courses);
-
-          this.courses = passengerCourses;
+          this.courses = this.toSafeArray(courses);
           this.coursesDisponibles = [];
           this.mesCourses = [];
-          this.paidCourseIds.clear();
-
-          if (passengerCourses.length === 0) {
-            this.finishLoading();
-            return;
-          }
-
-          const paymentRequests = passengerCourses.map(course =>
-            this.apiService.getPaiementByCourse(Number(course.id))
-              .pipe(
-                catchError(err => {
-                  if (err?.status === 404) {
-                    return of(null);
-                  }
-
-                  return throwError(() => err);
-                })
-              )
-          );
-
-          forkJoin(paymentRequests)
-            .pipe(finalize(() => this.finishLoading()))
-            .subscribe({
-              next: payments => {
-                for (const payment of payments) {
-                  if (payment) {
-                    this.paidCourseIds.add(Number(payment.courseId));
-                  }
-                }
-
-                this.changeDetectorRef.markForCheck();
-              },
-              error: err =>
-                this.handleLoadError(
-                  'Erreur restauration des paiements du passager connecté',
-                  err
-                )
-            });
+          this.changeDetectorRef.markForCheck();
         },
         error: err =>
           this.handleLoadError(

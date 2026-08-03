@@ -7,6 +7,7 @@ import com.driveme.entity.Course;
 import com.driveme.entity.CourseStatus;
 import com.driveme.entity.Passager;
 import com.driveme.exception.ResourceNotFoundException;
+import com.driveme.repository.AvisRepository;
 import com.driveme.repository.ChauffeurRepository;
 import com.driveme.repository.CourseRepository;
 import com.driveme.repository.PassagerRepository;
@@ -24,15 +25,18 @@ public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
     private final PassagerRepository passagerRepository;
     private final ChauffeurRepository chauffeurRepository;
+    private final AvisRepository avisRepository;
 
     public CourseServiceImpl(
             CourseRepository courseRepository,
             PassagerRepository passagerRepository,
-            ChauffeurRepository chauffeurRepository
+            ChauffeurRepository chauffeurRepository,
+            AvisRepository avisRepository
     ) {
         this.courseRepository = courseRepository;
         this.passagerRepository = passagerRepository;
         this.chauffeurRepository = chauffeurRepository;
+        this.avisRepository = avisRepository;
     }
 
     @Override
@@ -306,6 +310,19 @@ public class CourseServiceImpl implements CourseService {
                     .getNom();
         }
 
+        String paiementStatut = null;
+
+        if (course.getPaiement() != null
+                && course.getPaiement().getStatut() != null) {
+            paiementStatut = course.getPaiement()
+                    .getStatut()
+                    .name();
+        }
+
+        boolean avisDepose = avisRepository.existsByCourseId(
+                course.getId()
+        );
+
         return new CourseResponseDTO(
                 course.getId(),
                 course.getPassager().getUtilisateur().getNom(),
@@ -321,7 +338,9 @@ public class CourseServiceImpl implements CourseService {
                 course.getLongitudeArrivee(),
                 course.getDistanceKm(),
                 course.getDureeEstimeeMinutes(),
-                course.getPrixEstime()
+                course.getPrixEstime(),
+                paiementStatut,
+                avisDepose
         );
     }
 }

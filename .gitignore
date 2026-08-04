@@ -7,3 +7,6 @@
 Thumbs.db
 driveme_avant_rc3.1b.sql
 course_backup_avant_rc32.sql
+
+# Secrets Docker locaux
+.env

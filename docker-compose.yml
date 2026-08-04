@@ -1,0 +1,63 @@
+services:
+  database:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: driveme
+      MYSQL_USER: driveme
+      MYSQL_PASSWORD: ${DRIVEME_DB_PASSWORD:?DRIVEME_DB_PASSWORD obligatoire}
+      MYSQL_ROOT_PASSWORD: ${DRIVEME_DB_ROOT_PASSWORD:?DRIVEME_DB_ROOT_PASSWORD obligatoire}
+    volumes:
+      - driveme_mysql_data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - driveme_private
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - mysqladmin ping -h 127.0.0.1 -u root -p"$${MYSQL_ROOT_PASSWORD}" --silent
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_URL: jdbc:mysql://database:3306/driveme?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      DB_USERNAME: driveme
+      DB_PASSWORD: ${DRIVEME_DB_PASSWORD:?DRIVEME_DB_PASSWORD obligatoire}
+      JWT_SECRET: ${DRIVEME_JWT_SECRET:?DRIVEME_JWT_SECRET obligatoire}
+      CORS_ALLOWED_ORIGINS: ${DRIVEME_CORS_ALLOWED_ORIGINS:?DRIVEME_CORS_ALLOWED_ORIGINS obligatoire}
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8080:8080"
+    networks:
+      - driveme_private
+      - driveme_public
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "127.0.0.1:8081:80"
+    networks:
+      - driveme_public
+
+volumes:
+  driveme_mysql_data:
+
+networks:
+  driveme_private:
+    internal: true
+  driveme_public:

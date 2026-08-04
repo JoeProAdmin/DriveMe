@@ -1,14 +1,18 @@
 package com.driveme.controller;
 
 import com.driveme.dto.AdminStats;
-import com.driveme.service.*;
+import com.driveme.service.ChauffeurService;
+import com.driveme.service.CourseService;
+import com.driveme.service.PaiementService;
+import com.driveme.service.PassagerService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/admin")
-@CrossOrigin(origins = "http://localhost:4200")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminController {

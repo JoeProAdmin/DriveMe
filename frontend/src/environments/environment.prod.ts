@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.driveme.ma/api',
-  appUrl: 'https://driveme.ma',
+  apiUrl: 'https://api.driveme.cloud/api',
+  appUrl: 'https://driveme.cloud',
   supportedLanguages: ['fr', 'en', 'ar', 'es'],
   defaultCurrency: 'MAD'
 };

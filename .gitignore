@@ -10,3 +10,6 @@ course_backup_avant_rc32.sql
 
 # Secrets Docker locaux
 .env
+
+# Sauvegarde locale de la base Docker avant Flyway
+sql/driveme_docker_avant_flyway_20260805.sql

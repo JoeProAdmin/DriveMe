@@ -527,6 +527,12 @@ export class ApiService {
     );
   }
 
+  public getMesPaiements(): Observable<PaiementResponseDTO[]> {
+    return this.http.get<PaiementResponseDTO[]>(
+      `${this.baseUrl}/paiements/me`
+    );
+  }
+
   public getAllPaiements(
     forceRefresh = false
   ): Observable<PaiementResponseDTO[]> {

@@ -10,6 +10,7 @@ import { CourseList } from './features/course/list/course-list';
 import { PaymentComponent } from './features/dashboard/payment';
 import { PassengerManagementComponent } from './features/admin/passenger-management/passenger-management';
 import { PaymentManagementComponent } from './features/admin/payment-management/payment-management';
+import { MyPaymentsComponent } from './features/passenger/my-payments/my-payments';
 import { ProfileComponent } from './features/profile/profile';
 import { SosComponent } from './features/sos/sos';
 import { authGuard } from './core/auth.guard';
@@ -60,6 +61,12 @@ export const routes: Routes = [
         component: PaymentManagementComponent,
         canActivate: [roleGuard],
         data: { roles: ['ADMIN'] }
+      },
+      {
+        path: 'mes-paiements',
+        component: MyPaymentsComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['PASSAGER'] }
       },
       {
         path: 'recharge',

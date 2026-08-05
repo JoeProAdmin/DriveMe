@@ -1,0 +1,97 @@
+<div
+  class="payments-page"
+  [attr.dir]="apiService.isRtlMode() ? 'rtl' : 'ltr'">
+
+  <header class="page-header">
+    <div>
+      <h1>{{ texts[currentLang].title }}</h1>
+      <p>{{ texts[currentLang].subtitle }}</p>
+    </div>
+
+    <button
+      class="btn secondary"
+      type="button"
+      (click)="loadPaiements()"
+      [disabled]="isLoading">
+      {{ isLoading ? texts[currentLang].loading : texts[currentLang].refresh }}
+    </button>
+  </header>
+
+  <section class="metrics">
+    <article class="metric-card">
+      <span>{{ texts[currentLang].total }}</span>
+      <strong>{{ paiements.length }}</strong>
+    </article>
+
+    <article class="metric-card">
+      <span>{{ texts[currentLang].paid }}</span>
+      <strong>{{ totalPayes }}</strong>
+    </article>
+
+    <article class="metric-card">
+      <span>{{ texts[currentLang].amount }}</span>
+      <strong>{{ totalMontant | number:'1.2-2' }} MAD</strong>
+    </article>
+  </section>
+
+  <div class="alert error" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <section class="table-card">
+    <div class="table-scroll">
+      <table>
+        <thead>
+        <tr>
+          <th>{{ texts[currentLang].trip }}</th>
+          <th>{{ texts[currentLang].amount }}</th>
+          <th>{{ texts[currentLang].method }}</th>
+          <th>{{ texts[currentLang].status }}</th>
+          <th>{{ texts[currentLang].date }}</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let paiement of paiements">
+          <td>#{{ paiement.courseId }}</td>
+
+          <td class="amount">
+            {{ paiement.montant | number:'1.2-2' }} MAD
+          </td>
+
+          <td>{{ paiement.methode || '-' }}</td>
+
+          <td>
+              <span
+                class="status"
+                [class.success]="isPaid(paiement.statut)"
+                [class.danger]="paiement.statut === 'REFUSE'">
+                {{ formatStatus(paiement.statut) }}
+              </span>
+          </td>
+
+          <td>
+            {{
+              paiement.datePaiement
+                ? (paiement.datePaiement | date:'dd/MM/yyyy HH:mm')
+                : '-'
+            }}
+          </td>
+        </tr>
+
+        <tr *ngIf="!isLoading && paiements.length === 0">
+          <td colspan="5" class="empty">
+            {{ texts[currentLang].empty }}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="back-row">
+    <a routerLink="/dashboard" class="btn secondary">
+      {{ texts[currentLang].back }}
+    </a>
+  </div>
+</div>

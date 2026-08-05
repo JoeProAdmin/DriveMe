@@ -52,6 +52,18 @@ public class PaiementController {
         );
     }
 
+    @PreAuthorize("hasRole('PASSAGER')")
+    @GetMapping("/me")
+    public ResponseEntity<List<PaiementResponseDTO>> getMesPaiements(
+            Principal principal
+    ) {
+        return ResponseEntity.ok(
+                paiementService.getMesPaiements(
+                        principal.getName()
+                )
+        );
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<PaiementResponseDTO>> getAllPaiements() {

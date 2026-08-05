@@ -17,6 +17,8 @@ public interface PaiementService {
             String identifiant
     );
 
+    List<PaiementResponseDTO> getMesPaiements(String identifiant);
+
     List<PaiementResponseDTO> getAllPaiements();
 
     PaiementResponseDTO refuserPaiement(Long paiementId);

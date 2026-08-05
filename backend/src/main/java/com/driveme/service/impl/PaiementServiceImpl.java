@@ -135,6 +135,20 @@ public class PaiementServiceImpl implements PaiementService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<PaiementResponseDTO> getMesPaiements(String identifiant) {
+        Passager passager = rechercherPassagerConnecte(identifiant);
+
+        return paiementRepository
+                .findAllByCourse_Passager_IdOrderByDatePaiementDesc(
+                        passager.getId()
+                )
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<PaiementResponseDTO> getAllPaiements() {
         return paiementRepository.findAll()
                 .stream()

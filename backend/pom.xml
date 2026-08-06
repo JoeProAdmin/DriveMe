@@ -45,6 +45,17 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- FLYWAY - VERSIONNEMENT DU SCHEMA SQL -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-mysql</artifactId>
+        </dependency>
+
         <!-- VALIDATION -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

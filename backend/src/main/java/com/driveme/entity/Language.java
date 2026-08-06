@@ -4,9 +4,10 @@ public enum Language {
 
     FR("Français"),
     EN("English"),
-    AR("العربية");
+    AR("العربية"),
+    ES("Español");
 
-    private String label;
+    private final String label;
 
     Language(String label) {
         this.label = label;

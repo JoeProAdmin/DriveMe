@@ -112,6 +112,7 @@ export class PassengerViewComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadPassengerData();
+    this.loadCoursesForCurrentPassenger();
   }
 
   private loadPassengerData(): void {
@@ -119,8 +120,6 @@ export class PassengerViewComponent implements OnInit {
 
     if (!email) {
       console.error('Email passager absent du localStorage.');
-      this.resetStats();
-      this.cdr.detectChanges();
       return;
     }
 
@@ -128,19 +127,16 @@ export class PassengerViewComponent implements OnInit {
       next: (passager: PassagerResponseDTO) => {
         this.passenger = passager;
         this.passengerName = `${passager.prenom ?? ''} ${passager.nom ?? ''}`.trim() || 'Passager DriveMe';
-
-        this.loadCoursesForCurrentPassenger(passager.id);
+        this.cdr.detectChanges();
       },
       error: (err: any) => {
         console.error('Erreur chargement passager connecté', err);
-        this.resetStats();
-        this.cdr.detectChanges();
       }
     });
   }
 
-  private loadCoursesForCurrentPassenger(passagerId: number): void {
-    this.apiService.getCoursesByPassager(passagerId).subscribe({
+  private loadCoursesForCurrentPassenger(): void {
+    this.apiService.getCurrentPassengerCourses().subscribe({
       next: (courses: any[]) => {
         this.applyCourseStats(courses);
         this.cdr.detectChanges();
@@ -167,10 +163,7 @@ export class PassengerViewComponent implements OnInit {
     ).length;
 
     this.stats.avisDonnes = safeCourses.filter(course =>
-      course?.avisId ||
-      course?.avis ||
-      course?.note ||
-      course?.commentaireAvis
+      course?.avisDepose === true
     ).length;
   }
 

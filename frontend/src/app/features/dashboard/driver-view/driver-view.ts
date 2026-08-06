@@ -1,6 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { forkJoin } from 'rxjs';
 import {
   ApiService,
   ChauffeurResponseDTO,
@@ -34,6 +35,11 @@ export class DriverViewComponent implements OnInit, OnDestroy {
   public propositionErreurs: Record<number, string> = {};
 
   private refreshTimerId: ReturnType<typeof setInterval> | null = null;
+  private readonly handleVisibilityChange = (): void => {
+    if (!document.hidden) {
+      this.refreshDriverWorkspace();
+    }
+  };
 
   public stats = {
     coursesTotal: 0,
@@ -179,7 +185,10 @@ export class DriverViewComponent implements OnInit, OnDestroy {
     }
   };
 
-  constructor(public apiService: ApiService) {}
+  constructor(
+    public apiService: ApiService,
+    private readonly cdr: ChangeDetectorRef
+  ) {}
 
   get currentLang(): 'fr' | 'en' | 'ar' | 'es' {
     return this.apiService.currentLanguage();
@@ -187,6 +196,8 @@ export class DriverViewComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.refreshDriverWorkspace();
+
+    document.addEventListener('visibilitychange', this.handleVisibilityChange);
 
     // Synchronisation légère : les nouvelles demandes apparaissent sans action manuelle.
     this.refreshTimerId = setInterval(() => {
@@ -197,6 +208,8 @@ export class DriverViewComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
+    document.removeEventListener('visibilitychange', this.handleVisibilityChange);
+
     if (this.refreshTimerId !== null) {
       clearInterval(this.refreshTimerId);
       this.refreshTimerId = null;
@@ -293,6 +306,7 @@ export class DriverViewComponent implements OnInit, OnDestroy {
 
   private refreshDriverWorkspace(): void {
     this.loadDriverData();
+    this.loadCoursesForCurrentDriver();
     this.loadCoursesDisponibles();
   }
 
@@ -304,14 +318,13 @@ export class DriverViewComponent implements OnInit, OnDestroy {
         this.chauffeur = chauffeur;
         this.stats.note = Number(chauffeur.noteMoyenne ?? 0);
         this.stats.soldeCredit = Number(chauffeur.soldeCredit ?? 0);
-
-        this.loadCoursesForCurrentDriver();
+        this.cdr.detectChanges();
       },
 
       error: (err: unknown) => {
         console.error('Erreur chargement chauffeur connecté', err);
         this.chauffeur = undefined;
-        this.applyCourseStats([]);
+        this.cdr.detectChanges();
       }
     });
   }
@@ -332,11 +345,17 @@ export class DriverViewComponent implements OnInit, OnDestroy {
   }
 
   private loadCoursesDisponibles(): void {
-    this.apiService.getCoursesEnAttente().subscribe({
-      next: (courses: CourseResponseDTO[]) => {
-        this.coursesDisponibles = Array.isArray(courses)
-          ? courses
-          : [];
+    forkJoin({
+      courses: this.apiService.getCoursesEnAttente(),
+      propositions: this.apiService.getCurrentDriverPropositions()
+    }).subscribe({
+      next: ({ courses, propositions }) => {
+        const courseIdsDejaProposes = new Set(
+          (propositions ?? []).map(proposition => Number(proposition.courseId))
+        );
+
+        this.coursesDisponibles = (Array.isArray(courses) ? courses : [])
+          .filter(course => !courseIdsDejaProposes.has(Number(course.id)));
 
         console.log(
           'COURSES DISPONIBLES =',
@@ -358,8 +377,15 @@ export class DriverViewComponent implements OnInit, OnDestroy {
   private applyCourseStats(courses: CourseResponseDTO[]): void {
     const safeCourses = Array.isArray(courses) ? courses : [];
 
+    const statutsEnCours = new Set([
+      'ACCEPTEE',
+      'CHAUFFEUR_EN_ROUTE',
+      'CHAUFFEUR_ARRIVE',
+      'EN_COURS'
+    ]);
+
     const coursesEnCours = safeCourses.filter(course =>
-      this.normalizeStatus(course.statut) === 'ACCEPTEE'
+      statutsEnCours.has(this.normalizeStatus(course.statut))
     );
 
     const coursesTerminees = safeCourses.filter(course =>
@@ -377,6 +403,8 @@ export class DriverViewComponent implements OnInit, OnDestroy {
       coursesTerminees: coursesTerminees.length,
       revenus
     };
+
+    this.cdr.detectChanges();
   }
 
   private normalizeStatus(status: unknown): string {

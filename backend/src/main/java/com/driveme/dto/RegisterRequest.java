@@ -8,6 +8,10 @@ public class RegisterRequest {
     private String telephone;
     private String motDePasse;
     private String role;
+    private String marque;
+    private String modele;
+    private Integer annee;
+    private String immatriculation;
 
     public RegisterRequest() {}
 
@@ -58,4 +62,13 @@ public class RegisterRequest {
     public void setRole(String role) {
         this.role = role;
     }
+
+    public String getMarque() { return marque; }
+    public void setMarque(String marque) { this.marque = marque; }
+    public String getModele() { return modele; }
+    public void setModele(String modele) { this.modele = modele; }
+    public Integer getAnnee() { return annee; }
+    public void setAnnee(Integer annee) { this.annee = annee; }
+    public String getImmatriculation() { return immatriculation; }
+    public void setImmatriculation(String immatriculation) { this.immatriculation = immatriculation; }
 }

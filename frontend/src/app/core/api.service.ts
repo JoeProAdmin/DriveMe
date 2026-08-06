@@ -38,6 +38,24 @@ export interface ChauffeurResponseDTO {
   statutValidation: number;
   noteMoyenne?: number;
   soldeCredit?: number;
+  marqueVehicule?: string;
+  modeleVehicule?: string;
+  anneeVehicule?: number;
+  immatriculation?: string;
+  documents?: ChauffeurDocumentDTO[];
+}
+
+export type DocumentValidationStatus = 'EN_ATTENTE' | 'APPROUVE' | 'REJETE';
+
+export interface ChauffeurDocumentDTO {
+  id: number;
+  type: string;
+  nomOriginal: string;
+  typeContenu: string;
+  tailleOctets: number;
+  statutValidation: DocumentValidationStatus;
+  dateDepot?: string;
+  dateValidation?: string;
 }
 
 export interface PassagerResponseDTO {
@@ -191,6 +209,13 @@ export class ApiService {
     );
   }
 
+  public registerChauffeur(data: FormData): Observable<unknown> {
+    return this.http.post(
+      `${this.baseUrl}/auth/register/chauffeur`,
+      data
+    );
+  }
+
   // ============================================================
   // ADMINISTRATION
   // ============================================================
@@ -262,6 +287,29 @@ export class ApiService {
 
   public rejeter(id: number): Observable<void> {
     return this.validerChauffeur(id, 2);
+  }
+
+  public validerDocumentChauffeur(
+    chauffeurId: number,
+    documentId: number,
+    statut: DocumentValidationStatus
+  ): Observable<ChauffeurDocumentDTO> {
+    return this.http
+      .put<ChauffeurDocumentDTO>(
+        `${this.baseUrl}/chauffeurs/${chauffeurId}/documents/${documentId}/validation?statut=${statut}`,
+        {}
+      )
+      .pipe(tap(() => { this.chauffeurs$ = undefined; }));
+  }
+
+  public getDocumentChauffeur(
+    chauffeurId: number,
+    documentId: number
+  ): Observable<Blob> {
+    return this.http.get(
+      `${this.baseUrl}/chauffeurs/${chauffeurId}/documents/${documentId}/content`,
+      { responseType: 'blob' }
+    );
   }
 
   public uploadSelfieVerification(

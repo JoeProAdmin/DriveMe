@@ -26,6 +26,18 @@ public class Chauffeur {
     @Column(name = "solde_credit", precision = 10, scale = 2)
     private BigDecimal soldeCredit;
 
+    @Column(name = "marque_vehicule", length = 80)
+    private String marqueVehicule;
+
+    @Column(name = "modele_vehicule", length = 80)
+    private String modeleVehicule;
+
+    @Column(name = "annee_vehicule")
+    private Integer anneeVehicule;
+
+    @Column(name = "immatriculation", length = 40)
+    private String immatriculation;
+
     @Column(nullable = false)
     private boolean disponible;
 
@@ -64,6 +76,11 @@ public class Chauffeur {
         return soldeCredit;
     }
 
+    public String getMarqueVehicule() { return marqueVehicule; }
+    public String getModeleVehicule() { return modeleVehicule; }
+    public Integer getAnneeVehicule() { return anneeVehicule; }
+    public String getImmatriculation() { return immatriculation; }
+
     public boolean isDisponible() { return disponible; }
     public Double getLatitudeActuelle() { return latitudeActuelle; }
     public Double getLongitudeActuelle() { return longitudeActuelle; }
@@ -89,6 +106,11 @@ public class Chauffeur {
     public void setSoldeCredit(BigDecimal soldeCredit) {
         this.soldeCredit = soldeCredit;
     }
+
+    public void setMarqueVehicule(String marqueVehicule) { this.marqueVehicule = marqueVehicule; }
+    public void setModeleVehicule(String modeleVehicule) { this.modeleVehicule = modeleVehicule; }
+    public void setAnneeVehicule(Integer anneeVehicule) { this.anneeVehicule = anneeVehicule; }
+    public void setImmatriculation(String immatriculation) { this.immatriculation = immatriculation; }
 
     public void setDisponible(boolean disponible) { this.disponible = disponible; }
     public void setLatitudeActuelle(Double latitudeActuelle) { this.latitudeActuelle = latitudeActuelle; }

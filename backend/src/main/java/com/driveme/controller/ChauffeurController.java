@@ -4,14 +4,22 @@ import com.driveme.dto.ChauffeurCreateDTO;
 import com.driveme.dto.ChauffeurResponseDTO;
 import com.driveme.dto.ChauffeurPositionRequestDTO;
 import com.driveme.dto.ChauffeurDisponibiliteRequestDTO;
+import com.driveme.dto.ChauffeurDocumentDTO;
+import com.driveme.entity.DocumentValidationStatus;
+import com.driveme.service.ChauffeurDocumentService;
 import com.driveme.service.ChauffeurService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.security.Principal;
+import java.nio.charset.StandardCharsets;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
@@ -19,11 +27,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public class ChauffeurController {
 
     private final ChauffeurService chauffeurService;
+    private final ChauffeurDocumentService chauffeurDocumentService;
 
     public ChauffeurController(
-            ChauffeurService chauffeurService
+            ChauffeurService chauffeurService,
+            ChauffeurDocumentService chauffeurDocumentService
     ) {
         this.chauffeurService = chauffeurService;
+        this.chauffeurDocumentService = chauffeurDocumentService;
     }
 
     @PreAuthorize("hasRole('CHAUFFEUR')")
@@ -113,6 +124,41 @@ public class ChauffeurController {
         return ResponseEntity.ok(
                 chauffeurService.updateStatutValidation(id, statut)
         );
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}/documents/{documentId}/validation")
+    public ResponseEntity<ChauffeurDocumentDTO> updateDocumentValidation(
+            @PathVariable Long id,
+            @PathVariable Long documentId,
+            @RequestParam DocumentValidationStatus statut
+    ) {
+        return ResponseEntity.ok(
+                chauffeurDocumentService.updateValidation(id, documentId, statut)
+        );
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{id}/documents/{documentId}/content")
+    public ResponseEntity<Resource> getDocumentContent(
+            @PathVariable Long id,
+            @PathVariable Long documentId
+    ) {
+        ChauffeurDocumentService.DocumentContent content =
+                chauffeurDocumentService.loadContent(id, documentId);
+        MediaType mediaType;
+        try {
+            mediaType = MediaType.parseMediaType(content.contentType());
+        } catch (IllegalArgumentException ex) {
+            mediaType = MediaType.APPLICATION_OCTET_STREAM;
+        }
+        ContentDisposition disposition = ContentDisposition.inline()
+                .filename(content.originalFilename(), StandardCharsets.UTF_8)
+                .build();
+        return ResponseEntity.ok()
+                .contentType(mediaType)
+                .header(HttpHeaders.CONTENT_DISPOSITION, disposition.toString())
+                .body(content.resource());
     }
 
     @PreAuthorize("hasRole('ADMIN')")

@@ -13,6 +13,7 @@ FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
 RUN addgroup -S driveme && adduser -S driveme -G driveme
+RUN mkdir -p /data/driver-documents && chown -R driveme:driveme /data/driver-documents
 
 COPY --from=build /build/target/driveme-spring-0.0.1-SNAPSHOT.jar /app/driveme.jar
 

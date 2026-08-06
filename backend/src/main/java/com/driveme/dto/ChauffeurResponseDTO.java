@@ -1,6 +1,8 @@
 package com.driveme.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChauffeurResponseDTO {
 
@@ -16,6 +18,11 @@ public class ChauffeurResponseDTO {
     private Double latitudeActuelle;
     private Double longitudeActuelle;
     private LocalDateTime dernierePositionAt;
+    private String marqueVehicule;
+    private String modeleVehicule;
+    private Integer anneeVehicule;
+    private String immatriculation;
+    private List<ChauffeurDocumentDTO> documents = new ArrayList<>();
 
     public ChauffeurResponseDTO() {
     }
@@ -83,6 +90,11 @@ public class ChauffeurResponseDTO {
     public Double getLatitudeActuelle() { return latitudeActuelle; }
     public Double getLongitudeActuelle() { return longitudeActuelle; }
     public LocalDateTime getDernierePositionAt() { return dernierePositionAt; }
+    public String getMarqueVehicule() { return marqueVehicule; }
+    public String getModeleVehicule() { return modeleVehicule; }
+    public Integer getAnneeVehicule() { return anneeVehicule; }
+    public String getImmatriculation() { return immatriculation; }
+    public List<ChauffeurDocumentDTO> getDocuments() { return documents; }
 
     public void setId(Long id) {
         this.id = id;
@@ -119,4 +131,9 @@ public class ChauffeurResponseDTO {
     public void setLatitudeActuelle(Double latitudeActuelle) { this.latitudeActuelle = latitudeActuelle; }
     public void setLongitudeActuelle(Double longitudeActuelle) { this.longitudeActuelle = longitudeActuelle; }
     public void setDernierePositionAt(LocalDateTime dernierePositionAt) { this.dernierePositionAt = dernierePositionAt; }
+    public void setMarqueVehicule(String marqueVehicule) { this.marqueVehicule = marqueVehicule; }
+    public void setModeleVehicule(String modeleVehicule) { this.modeleVehicule = modeleVehicule; }
+    public void setAnneeVehicule(Integer anneeVehicule) { this.anneeVehicule = anneeVehicule; }
+    public void setImmatriculation(String immatriculation) { this.immatriculation = immatriculation; }
+    public void setDocuments(List<ChauffeurDocumentDTO> documents) { this.documents = documents != null ? documents : new ArrayList<>(); }
 }

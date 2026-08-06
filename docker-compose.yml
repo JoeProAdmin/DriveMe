@@ -33,6 +33,9 @@ services:
       DB_PASSWORD: ${DRIVEME_DB_PASSWORD:?DRIVEME_DB_PASSWORD obligatoire}
       JWT_SECRET: ${DRIVEME_JWT_SECRET:?DRIVEME_JWT_SECRET obligatoire}
       CORS_ALLOWED_ORIGINS: ${DRIVEME_CORS_ALLOWED_ORIGINS:?DRIVEME_CORS_ALLOWED_ORIGINS obligatoire}
+      DRIVEME_DRIVER_DOCUMENTS_DIR: /data/driver-documents
+    volumes:
+      - driveme_driver_documents:/data/driver-documents
     depends_on:
       database:
         condition: service_healthy
@@ -56,6 +59,7 @@ services:
 
 volumes:
   driveme_mysql_data:
+  driveme_driver_documents:
 
 networks:
   driveme_private:

@@ -276,7 +276,8 @@
       <header class="driver-detail-header">
         <div class="driver-detail-identity">
           <div class="driver-detail-avatar">
-            {{ initiales(chauffeurSelectionne) }}
+            <img *ngIf="selfieUrl" [src]="selfieUrl" [alt]="d.identityPhoto">
+            <span *ngIf="!selfieUrl">{{ initiales(chauffeurSelectionne) }}</span>
           </div>
 
           <div>
@@ -331,6 +332,74 @@
             <dd>{{ libelleStatut(chauffeurSelectionne.statutValidation) }}</dd>
           </div>
         </dl>
+
+        <section class="dossier-section">
+          <h3>{{ d.vehicle }}</h3>
+          <dl class="vehicle-grid">
+            <div class="detail-field">
+              <dt>{{ d.brand }}</dt>
+              <dd>{{ chauffeurSelectionne.marqueVehicule || d.noVehicle }}</dd>
+            </div>
+            <div class="detail-field">
+              <dt>{{ d.model }}</dt>
+              <dd>{{ chauffeurSelectionne.modeleVehicule || d.noVehicle }}</dd>
+            </div>
+            <div class="detail-field">
+              <dt>{{ d.year }}</dt>
+              <dd>{{ chauffeurSelectionne.anneeVehicule || d.noVehicle }}</dd>
+            </div>
+            <div class="detail-field">
+              <dt>{{ d.plate }}</dt>
+              <dd>{{ chauffeurSelectionne.immatriculation || d.noVehicle }}</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="dossier-section">
+          <h3>{{ d.documents }}</h3>
+          <div class="documents-grid">
+            <article *ngFor="let type of documentTypes" class="document-card">
+              <div class="document-card-head">
+                <div>
+                  <strong>{{ libelleTypeDocument(type) }}</strong>
+                  <small>{{ documentObligatoire(type) ? d.mandatory : d.optional }}</small>
+                </div>
+                <span
+                  *ngIf="documentParType(type) as document"
+                  class="document-status"
+                  [ngClass]="classeStatutDocument(document.statutValidation)">
+                  {{ libelleStatutDocument(document.statutValidation) }}
+                </span>
+              </div>
+
+              <ng-container *ngIf="documentParType(type) as document; else documentAbsent">
+                <p class="document-filename">{{ document.nomOriginal }}</p>
+                <p class="document-meta">{{ formaterTaille(document.tailleOctets) }}</p>
+                <div class="document-actions">
+                  <button type="button" class="btn-doc-view" (click)="ouvrirDocument(document)">{{ d.open }}</button>
+                  <button
+                    type="button"
+                    class="btn-doc-approve"
+                    [disabled]="documentActionEnCoursId === document.id || document.statutValidation === 'APPROUVE'"
+                    (click)="validerDocument(document, 'APPROUVE')">
+                    {{ d.approveDoc }}
+                  </button>
+                  <button
+                    type="button"
+                    class="btn-doc-reject"
+                    [disabled]="documentActionEnCoursId === document.id || document.statutValidation === 'REJETE'"
+                    (click)="validerDocument(document, 'REJETE')">
+                    {{ d.rejectDoc }}
+                  </button>
+                </div>
+              </ng-container>
+
+              <ng-template #documentAbsent>
+                <p class="document-missing">{{ d.absent }}</p>
+              </ng-template>
+            </article>
+          </div>
+        </section>
       </div>
 
       <footer class="driver-detail-footer">

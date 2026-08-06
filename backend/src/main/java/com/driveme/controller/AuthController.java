@@ -12,9 +12,12 @@ import com.driveme.repository.ChauffeurRepository;
 import com.driveme.repository.PassagerRepository;
 import com.driveme.repository.UtilisateurRepository;
 import com.driveme.security.JwtService;
+import com.driveme.service.ChauffeurDocumentService;
+import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.security.Principal;
@@ -30,19 +33,22 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final PassagerRepository passagerRepository;
     private final ChauffeurRepository chauffeurRepository;
+    private final ChauffeurDocumentService chauffeurDocumentService;
 
     public AuthController(
             UtilisateurRepository utilisateurRepository,
             JwtService jwtService,
             PasswordEncoder passwordEncoder,
             PassagerRepository passagerRepository,
-            ChauffeurRepository chauffeurRepository
+            ChauffeurRepository chauffeurRepository,
+            ChauffeurDocumentService chauffeurDocumentService
     ) {
         this.utilisateurRepository = utilisateurRepository;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.passagerRepository = passagerRepository;
         this.chauffeurRepository = chauffeurRepository;
+        this.chauffeurDocumentService = chauffeurDocumentService;
     }
 
     @PostMapping("/login")
@@ -94,6 +100,9 @@ public class AuthController {
         if (role != Role.PASSAGER && role != Role.CHAUFFEUR) {
             throw new RuntimeException("Seuls les profils passager et chauffeur peuvent s'inscrire");
         }
+        if (role == Role.CHAUFFEUR) {
+            throw new RuntimeException("L'inscription chauffeur nécessite le dossier documentaire complet");
+        }
 
         Utilisateur user = new Utilisateur();
         user.setNom(request.getNom().trim());
@@ -105,18 +114,65 @@ public class AuthController {
         user.setDateCreation(LocalDateTime.now());
         utilisateurRepository.save(user);
 
-        if (role == Role.PASSAGER) {
-            Passager passager = new Passager();
-            passager.setUtilisateur(user);
-            passagerRepository.save(passager);
-        } else {
-            Chauffeur chauffeur = new Chauffeur();
-            chauffeur.setUtilisateur(user);
-            chauffeur.setStatutValidation((byte) 0);
-            chauffeur.setNoteMoyenne(BigDecimal.ZERO);
-            chauffeur.setSoldeCredit(BigDecimal.ZERO);
-            chauffeurRepository.save(chauffeur);
+        Passager passager = new Passager();
+        passager.setUtilisateur(user);
+        passagerRepository.save(passager);
+
+        return new AuthResponse(jwtService.generateToken(user.getEmail(), user.getRole().name()));
+    }
+
+    @PostMapping(value = "/register/chauffeur", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Transactional
+    public AuthResponse registerChauffeur(
+            @RequestPart("data") RegisterRequest request,
+            @RequestPart("cin") MultipartFile cin,
+            @RequestPart("permis") MultipartFile permis,
+            @RequestPart("carteGrise") MultipartFile carteGrise,
+            @RequestPart("assurance") MultipartFile assurance,
+            @RequestPart("selfie") MultipartFile selfie,
+            @RequestPart(value = "photoAvant", required = false) MultipartFile photoAvant,
+            @RequestPart(value = "photoArriere", required = false) MultipartFile photoArriere
+    ) {
+        validateRegisterRequest(request);
+        if (!"CHAUFFEUR".equalsIgnoreCase(request.getRole())) {
+            throw new RuntimeException("Le dossier multipart est réservé à l'inscription chauffeur");
         }
+        validateDriverRequest(request);
+
+        String email = request.getEmail().trim().toLowerCase(Locale.ROOT);
+        String telephone = normalizePhone(request.getTelephone());
+        if (utilisateurRepository.existsByEmailIgnoreCase(email)) {
+            throw new RuntimeException("Cette adresse email est déjà utilisée");
+        }
+        if (utilisateurRepository.existsByTelephone(telephone)) {
+            throw new RuntimeException("Ce numéro de téléphone est déjà utilisé");
+        }
+
+        Utilisateur user = new Utilisateur();
+        user.setNom(request.getNom().trim());
+        user.setPrenom(request.getPrenom().trim());
+        user.setEmail(email);
+        user.setTelephone(telephone);
+        user.setMotDePasse(passwordEncoder.encode(request.getMotDePasse()));
+        user.setRole(Role.CHAUFFEUR);
+        user.setDateCreation(LocalDateTime.now());
+        utilisateurRepository.save(user);
+
+        Chauffeur chauffeur = new Chauffeur();
+        chauffeur.setUtilisateur(user);
+        chauffeur.setStatutValidation((byte) 0);
+        chauffeur.setNoteMoyenne(BigDecimal.ZERO);
+        chauffeur.setSoldeCredit(BigDecimal.ZERO);
+        chauffeur.setDisponible(false);
+        chauffeur.setMarqueVehicule(request.getMarque().trim());
+        chauffeur.setModeleVehicule(request.getModele().trim());
+        chauffeur.setAnneeVehicule(request.getAnnee());
+        chauffeur.setImmatriculation(request.getImmatriculation().trim().toUpperCase(Locale.ROOT));
+        chauffeurRepository.save(chauffeur);
+
+        chauffeurDocumentService.saveInitialDocuments(
+                chauffeur, cin, permis, carteGrise, assurance, selfie, photoAvant, photoArriere
+        );
 
         return new AuthResponse(jwtService.generateToken(user.getEmail(), user.getRole().name()));
     }
@@ -157,6 +213,15 @@ public class AuthController {
         }
         if (isBlank(request.getRole())) {
             throw new RuntimeException("Le profil utilisateur est obligatoire");
+        }
+    }
+
+    private void validateDriverRequest(RegisterRequest request) {
+        if (isBlank(request.getMarque()) || isBlank(request.getModele()) || isBlank(request.getImmatriculation())) {
+            throw new RuntimeException("La marque, le modèle et l'immatriculation du véhicule sont obligatoires");
+        }
+        if (request.getAnnee() == null || request.getAnnee() < 1990 || request.getAnnee() > 2030) {
+            throw new RuntimeException("L'année du véhicule doit être comprise entre 1990 et 2030");
         }
     }
 

@@ -96,11 +96,19 @@ export class RegisterComponent {
       telephone: this.normalizePhone(this.accountForm.telephone),
       email: this.accountForm.email.trim().toLowerCase(),
       motDePasse: this.accountForm.motDePasse,
-      role: this.currentFlow
+      role: this.currentFlow,
+      marque: this.currentFlow === 'CHAUFFEUR' ? this.driverForm.marque.trim() : undefined,
+      modele: this.currentFlow === 'CHAUFFEUR' ? this.driverForm.modele.trim() : undefined,
+      annee: this.currentFlow === 'CHAUFFEUR' ? this.driverForm.annee : undefined,
+      immatriculation: this.currentFlow === 'CHAUFFEUR' ? this.driverForm.immatriculation.trim() : undefined
     };
 
     this.isSubmitting = true;
-    this.api.registerUser(payload).subscribe({
+    const inscription$ = this.currentFlow === 'CHAUFFEUR'
+      ? this.api.registerChauffeur(this.buildDriverFormData(payload))
+      : this.api.registerUser(payload);
+
+    inscription$.subscribe({
       next: (response: any) => {
         this.isSubmitting = false;
         this.storeSession(response.token);
@@ -112,6 +120,33 @@ export class RegisterComponent {
         this.errorMessage = err?.error?.message || 'Impossible de créer le compte.';
       }
     });
+  }
+
+  private buildDriverFormData(payload: Record<string, unknown>): FormData {
+    const formData = new FormData();
+    formData.append(
+      'data',
+      new Blob([JSON.stringify(payload)], { type: 'application/json' })
+    );
+
+    const mandatory: Array<[string, File | null]> = [
+      ['cin', this.documents.cin],
+      ['permis', this.documents.permis],
+      ['carteGrise', this.documents.carteGrise],
+      ['assurance', this.documents.assurance],
+      ['selfie', this.documents.selfie]
+    ];
+    mandatory.forEach(([key, file]) => {
+      if (file) formData.append(key, file, file.name);
+    });
+
+    if (this.documents.photoAvant) {
+      formData.append('photoAvant', this.documents.photoAvant, this.documents.photoAvant.name);
+    }
+    if (this.documents.photoArriere) {
+      formData.append('photoArriere', this.documents.photoArriere, this.documents.photoArriere.name);
+    }
+    return formData;
   }
 
   private validateAccount(): boolean {

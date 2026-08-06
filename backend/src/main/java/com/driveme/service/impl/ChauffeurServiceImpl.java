@@ -10,6 +10,7 @@ import com.driveme.exception.ResourceNotFoundException;
 import com.driveme.repository.ChauffeurRepository;
 import com.driveme.repository.UtilisateurRepository;
 import com.driveme.service.ChauffeurService;
+import com.driveme.service.ChauffeurDocumentService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -22,13 +23,16 @@ public class ChauffeurServiceImpl implements ChauffeurService {
 
     private final ChauffeurRepository chauffeurRepository;
     private final UtilisateurRepository utilisateurRepository;
+    private final ChauffeurDocumentService chauffeurDocumentService;
 
     public ChauffeurServiceImpl(
             ChauffeurRepository chauffeurRepository,
-            UtilisateurRepository utilisateurRepository
+            UtilisateurRepository utilisateurRepository,
+            ChauffeurDocumentService chauffeurDocumentService
     ) {
         this.chauffeurRepository = chauffeurRepository;
         this.utilisateurRepository = utilisateurRepository;
+        this.chauffeurDocumentService = chauffeurDocumentService;
     }
 
     @Override
@@ -158,6 +162,12 @@ public class ChauffeurServiceImpl implements ChauffeurService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Chauffeur introuvable : " + id));
 
+        if (statut == 1 && !dossierValidable(chauffeur)) {
+            throw new IllegalStateException(
+                    "Le chauffeur ne peut pas être approuvé : véhicule incomplet ou documents obligatoires non approuvés."
+            );
+        }
+
         chauffeur.setStatutValidation(statut.byteValue());
 
         return mapToDTO(chauffeurRepository.save(chauffeur));
@@ -177,7 +187,7 @@ public class ChauffeurServiceImpl implements ChauffeurService {
             Chauffeur chauffeur
     ) {
 
-        return new ChauffeurResponseDTO(
+        ChauffeurResponseDTO dto = new ChauffeurResponseDTO(
                 chauffeur.getId(),
                 chauffeur.getUtilisateur().getNom(),
                 chauffeur.getUtilisateur().getPrenom(),
@@ -195,5 +205,19 @@ public class ChauffeurServiceImpl implements ChauffeurService {
                 chauffeur.getLongitudeActuelle(),
                 chauffeur.getDernierePositionAt()
         );
+        dto.setMarqueVehicule(chauffeur.getMarqueVehicule());
+        dto.setModeleVehicule(chauffeur.getModeleVehicule());
+        dto.setAnneeVehicule(chauffeur.getAnneeVehicule());
+        dto.setImmatriculation(chauffeur.getImmatriculation());
+        dto.setDocuments(chauffeurDocumentService.listForChauffeur(chauffeur.getId()));
+        return dto;
+    }
+
+    private boolean dossierValidable(Chauffeur chauffeur) {
+        return chauffeur.getMarqueVehicule() != null && !chauffeur.getMarqueVehicule().isBlank()
+                && chauffeur.getModeleVehicule() != null && !chauffeur.getModeleVehicule().isBlank()
+                && chauffeur.getAnneeVehicule() != null
+                && chauffeur.getImmatriculation() != null && !chauffeur.getImmatriculation().isBlank()
+                && chauffeurDocumentService.requiredDocumentsApproved(chauffeur.getId());
     }
 }

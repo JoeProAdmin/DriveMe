@@ -17,6 +17,9 @@ export interface AdminStats {
   totalPassagers: number;
   totalCourses: number;
   totalPaiements: number;
+  paiementsPayes: number;
+  montantPaiementsPayes: number;
+  soldeCreditsChauffeurs: number;
 }
 
 export interface AvisDTO {

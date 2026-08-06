@@ -2,7 +2,9 @@ package com.driveme.repository;
 
 import com.driveme.entity.Chauffeur;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 public interface ChauffeurRepository extends JpaRepository<Chauffeur, Long> {
@@ -15,4 +17,7 @@ public interface ChauffeurRepository extends JpaRepository<Chauffeur, Long> {
             String email,
             String telephone
     );
+
+    @Query("select coalesce(sum(c.soldeCredit), 0) from Chauffeur c")
+    BigDecimal sumSoldeCredit();
 }

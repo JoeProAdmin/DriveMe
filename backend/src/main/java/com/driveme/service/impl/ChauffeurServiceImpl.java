@@ -12,6 +12,7 @@ import com.driveme.repository.UtilisateurRepository;
 import com.driveme.service.ChauffeurService;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
@@ -33,6 +34,11 @@ public class ChauffeurServiceImpl implements ChauffeurService {
     @Override
     public long count() {
         return chauffeurRepository.count();
+    }
+
+    @Override
+    public BigDecimal sumSoldeCredit() {
+        return chauffeurRepository.sumSoldeCredit();
     }
 
     @Override
@@ -175,6 +181,7 @@ public class ChauffeurServiceImpl implements ChauffeurService {
                 chauffeur.getId(),
                 chauffeur.getUtilisateur().getNom(),
                 chauffeur.getUtilisateur().getPrenom(),
+                chauffeur.getUtilisateur().getEmail(),
                 chauffeur.getUtilisateur().getTelephone(),
                 chauffeur.getStatutValidation().intValue(),
                 chauffeur.getNoteMoyenne() != null

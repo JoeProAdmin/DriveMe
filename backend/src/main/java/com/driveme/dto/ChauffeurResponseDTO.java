@@ -7,6 +7,7 @@ public class ChauffeurResponseDTO {
     private Long id;
     private String nom;
     private String prenom;
+    private String email;
     private String telephone;
     private Integer statutValidation;
     private Double noteMoyenne;
@@ -23,6 +24,7 @@ public class ChauffeurResponseDTO {
             Long id,
             String nom,
             String prenom,
+            String email,
             String telephone,
             Integer statutValidation,
             Double noteMoyenne,
@@ -35,6 +37,7 @@ public class ChauffeurResponseDTO {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
+        this.email = email;
         this.telephone = telephone;
         this.statutValidation = statutValidation;
         this.noteMoyenne = noteMoyenne;
@@ -55,6 +58,10 @@ public class ChauffeurResponseDTO {
 
     public String getPrenom() {
         return prenom;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getTelephone() {
@@ -87,6 +94,10 @@ public class ChauffeurResponseDTO {
 
     public void setPrenom(String prenom) {
         this.prenom = prenom;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void setTelephone(String telephone) {

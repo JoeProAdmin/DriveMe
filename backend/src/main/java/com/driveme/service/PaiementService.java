@@ -2,7 +2,9 @@ package com.driveme.service;
 
 import com.driveme.dto.PaiementCreateDTO;
 import com.driveme.dto.PaiementResponseDTO;
+import com.driveme.entity.PaiementStatut;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface PaiementService {
@@ -24,4 +26,8 @@ public interface PaiementService {
     PaiementResponseDTO refuserPaiement(Long paiementId);
 
     long count();
+
+    long countByStatut(PaiementStatut statut);
+
+    BigDecimal sumMontantByStatut(PaiementStatut statut);
 }

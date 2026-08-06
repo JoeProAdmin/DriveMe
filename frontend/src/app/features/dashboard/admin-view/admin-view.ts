@@ -42,6 +42,18 @@ import { ApiService, AdminStats } from '../../../core/api.service';
       <p>{{ stats.totalPaiements }}</p>
     </div>
 
+    <div class="card money-card">
+      <span class="label">{{ texts[currentLang].paidVolume }}</span>
+      <p>{{ stats.montantPaiementsPayes | number:'1.2-2' }} MAD</p>
+      <small>{{ stats.paiementsPayes }} {{ texts[currentLang].paidPayments }}</small>
+    </div>
+
+    <div class="card money-card">
+      <span class="label">{{ texts[currentLang].driverCredits }}</span>
+      <p>{{ stats.soldeCreditsChauffeurs | number:'1.2-2' }} MAD</p>
+      <small>{{ texts[currentLang].driverCreditsHint }}</small>
+    </div>
+
   </div>
 
   <div class="quick-actions">
@@ -121,6 +133,17 @@ import { ApiService, AdminStats } from '../../../core/api.service';
       color:#00C853;
     }
 
+    .money-card p{
+      font-size:30px;
+    }
+
+    .money-card small{
+      display:block;
+      margin-top:8px;
+      color:#64748b;
+      font-size:12px;
+    }
+
     .quick-actions{
       display:grid;
       grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
@@ -156,7 +179,10 @@ export class AdminViewComponent implements OnInit {
     totalChauffeurs: 0,
     totalPassagers: 0,
     totalCourses: 0,
-    totalPaiements: 0
+    totalPaiements: 0,
+    paiementsPayes: 0,
+    montantPaiementsPayes: 0,
+    soldeCreditsChauffeurs: 0
   };
 
   get currentLang(): 'fr' | 'en' | 'ar' | 'es' {
@@ -172,6 +198,10 @@ export class AdminViewComponent implements OnInit {
       passengers: 'PASSAGERS',
       trips: 'COURSES',
       payments: 'PAIEMENTS',
+      paidVolume: 'VOLUME DES COURSES PAYÉES',
+      paidPayments: 'paiement(s) payé(s)',
+      driverCredits: 'CRÉDITS CHAUFFEURS',
+      driverCreditsHint: 'Solde total disponible sur les comptes chauffeurs',
       driverManagement: 'Gestion Chauffeurs',
       driverDescription: 'Validation et suivi des chauffeurs inscrits.',
       passengerManagement: 'Gestion Passagers',
@@ -189,6 +219,10 @@ export class AdminViewComponent implements OnInit {
       passengers: 'PASSENGERS',
       trips: 'TRIPS',
       payments: 'PAYMENTS',
+      paidVolume: 'PAID TRIP VOLUME',
+      paidPayments: 'paid payment(s)',
+      driverCredits: 'DRIVER CREDITS',
+      driverCreditsHint: 'Total balance available on driver accounts',
       driverManagement: 'Driver Management',
       driverDescription: 'Validation and monitoring of drivers.',
       passengerManagement: 'Passenger Management',
@@ -206,6 +240,10 @@ export class AdminViewComponent implements OnInit {
       passengers: 'الركاب',
       trips: 'الرحلات',
       payments: 'المدفوعات',
+      paidVolume: 'حجم الرحلات المدفوعة',
+      paidPayments: 'دفعة مدفوعة',
+      driverCredits: 'رصيد السائقين',
+      driverCreditsHint: 'إجمالي الرصيد المتاح في حسابات السائقين',
       driverManagement: 'إدارة السائقين',
       driverDescription: 'متابعة واعتماد السائقين.',
       passengerManagement: 'إدارة الركاب',
@@ -223,6 +261,10 @@ export class AdminViewComponent implements OnInit {
       passengers: 'PASAJEROS',
       trips: 'VIAJES',
       payments: 'PAGOS',
+      paidVolume: 'VOLUMEN DE VIAJES PAGADOS',
+      paidPayments: 'pago(s) pagado(s)',
+      driverCredits: 'CRÉDITOS DE CONDUCTORES',
+      driverCreditsHint: 'Saldo total disponible en las cuentas de conductores',
       driverManagement: 'Gestión Conductores',
       driverDescription: 'Validación y seguimiento.',
       passengerManagement: 'Gestión Pasajeros',
@@ -245,6 +287,9 @@ export class AdminViewComponent implements OnInit {
         this.stats.totalPassagers = Number(data?.totalPassagers ?? 0);
         this.stats.totalCourses = Number(data?.totalCourses ?? 0);
         this.stats.totalPaiements = Number(data?.totalPaiements ?? 0);
+        this.stats.paiementsPayes = Number(data?.paiementsPayes ?? 0);
+        this.stats.montantPaiementsPayes = Number(data?.montantPaiementsPayes ?? 0);
+        this.stats.soldeCreditsChauffeurs = Number(data?.soldeCreditsChauffeurs ?? 0);
 
         this.cdr.detectChanges();
       },
@@ -255,6 +300,9 @@ export class AdminViewComponent implements OnInit {
         this.stats.totalPassagers = 0;
         this.stats.totalCourses = 0;
         this.stats.totalPaiements = 0;
+        this.stats.paiementsPayes = 0;
+        this.stats.montantPaiementsPayes = 0;
+        this.stats.soldeCreditsChauffeurs = 0;
 
         this.cdr.detectChanges();
       }

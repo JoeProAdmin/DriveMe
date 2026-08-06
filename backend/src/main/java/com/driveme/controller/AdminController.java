@@ -1,6 +1,7 @@
 package com.driveme.controller;
 
 import com.driveme.dto.AdminStats;
+import com.driveme.entity.PaiementStatut;
 import com.driveme.service.ChauffeurService;
 import com.driveme.service.CourseService;
 import com.driveme.service.PaiementService;
@@ -29,6 +30,9 @@ public class AdminController {
         stats.setTotalPassagers(passagerService.count());
         stats.setTotalCourses(courseService.count());
         stats.setTotalPaiements(paiementService.count());
+        stats.setPaiementsPayes(paiementService.countByStatut(PaiementStatut.PAYE));
+        stats.setMontantPaiementsPayes(paiementService.sumMontantByStatut(PaiementStatut.PAYE));
+        stats.setSoldeCreditsChauffeurs(chauffeurService.sumSoldeCredit());
         return stats;
     }
 }

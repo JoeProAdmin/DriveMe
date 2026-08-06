@@ -5,6 +5,7 @@ import com.driveme.dto.ChauffeurResponseDTO;
 import com.driveme.dto.ChauffeurPositionRequestDTO;
 import com.driveme.dto.ChauffeurDisponibiliteRequestDTO;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ChauffeurService {
@@ -30,4 +31,6 @@ public interface ChauffeurService {
     void deleteChauffeur(Long id);
 
     long count();
+
+    BigDecimal sumSoldeCredit();
 }

@@ -48,6 +48,18 @@ public class PaiementServiceImpl implements PaiementService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public long countByStatut(PaiementStatut statut) {
+        return paiementRepository.countByStatut(statut);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public BigDecimal sumMontantByStatut(PaiementStatut statut) {
+        return paiementRepository.sumMontantByStatut(statut);
+    }
+
+    @Override
     public PaiementResponseDTO validerPaiement(
             PaiementCreateDTO dto,
             String identifiant

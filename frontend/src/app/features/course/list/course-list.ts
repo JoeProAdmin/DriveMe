@@ -694,7 +694,7 @@ export class CourseList implements OnInit, OnDestroy {
   }
 
   private createEmptyPaymentForm(): PaymentForm {
-    return { methode: 'CARTE', cardName: '', cardNumber: '', expiry: '', cvc: '' };
+    return { methode: 'CASH', cardName: '', cardNumber: '', expiry: '', cvc: '' };
   }
 
   private createEmptyProposalForm(): ProposalForm {

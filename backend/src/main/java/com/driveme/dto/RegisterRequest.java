@@ -12,6 +12,8 @@ public class RegisterRequest {
     private String modele;
     private Integer annee;
     private String immatriculation;
+    private Boolean conditionsAcceptees;
+    private String versionConditions;
 
     public RegisterRequest() {}
 
@@ -71,4 +73,8 @@ public class RegisterRequest {
     public void setAnnee(Integer annee) { this.annee = annee; }
     public String getImmatriculation() { return immatriculation; }
     public void setImmatriculation(String immatriculation) { this.immatriculation = immatriculation; }
+    public Boolean getConditionsAcceptees() { return conditionsAcceptees; }
+    public void setConditionsAcceptees(Boolean value) { this.conditionsAcceptees = value; }
+    public String getVersionConditions() { return versionConditions; }
+    public void setVersionConditions(String value) { this.versionConditions = value; }
 }

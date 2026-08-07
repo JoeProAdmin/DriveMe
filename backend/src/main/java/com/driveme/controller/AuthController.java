@@ -112,6 +112,7 @@ public class AuthController {
         user.setMotDePasse(passwordEncoder.encode(request.getMotDePasse()));
         user.setRole(role);
         user.setDateCreation(LocalDateTime.now());
+        recordTermsAcceptance(user, request);
         utilisateurRepository.save(user);
 
         Passager passager = new Passager();
@@ -156,6 +157,7 @@ public class AuthController {
         user.setMotDePasse(passwordEncoder.encode(request.getMotDePasse()));
         user.setRole(Role.CHAUFFEUR);
         user.setDateCreation(LocalDateTime.now());
+        recordTermsAcceptance(user, request);
         utilisateurRepository.save(user);
 
         Chauffeur chauffeur = new Chauffeur();
@@ -214,6 +216,14 @@ public class AuthController {
         if (isBlank(request.getRole())) {
             throw new RuntimeException("Le profil utilisateur est obligatoire");
         }
+        if (!Boolean.TRUE.equals(request.getConditionsAcceptees()) || isBlank(request.getVersionConditions())) {
+            throw new RuntimeException("Vous devez accepter les conditions générales et la politique de confidentialité");
+        }
+    }
+
+    private void recordTermsAcceptance(Utilisateur user, RegisterRequest request) {
+        user.setConditionsAccepteesAt(LocalDateTime.now());
+        user.setVersionConditions(request.getVersionConditions().trim());
     }
 
     private void validateDriverRequest(RegisterRequest request) {

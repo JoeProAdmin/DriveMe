@@ -247,6 +247,10 @@ export class ApiService {
     );
   }
 
+  public sendContactMessage(data: unknown): Observable<{id:number;message:string}> {
+    return this.http.post<{id:number;message:string}>(`${this.baseUrl}/contact`, data);
+  }
+
   // ============================================================
   // ADMINISTRATION
   // ============================================================

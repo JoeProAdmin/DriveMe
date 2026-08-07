@@ -40,6 +40,8 @@ public class Utilisateur {
 
     @Column(name = "date_creation", nullable = false)
     private LocalDateTime dateCreation;
+    @Column(name = "conditions_acceptees_at") private LocalDateTime conditionsAccepteesAt;
+    @Column(name = "version_conditions", length = 30) private String versionConditions;
 
     // ===== CONSTRUCTEUR =====
     public Utilisateur() {
@@ -84,4 +86,8 @@ public class Utilisateur {
     public LocalDateTime getDateCreation() { return dateCreation; }
 
     public void setDateCreation(LocalDateTime dateCreation) { this.dateCreation = dateCreation; }
+    public LocalDateTime getConditionsAccepteesAt() { return conditionsAccepteesAt; }
+    public void setConditionsAccepteesAt(LocalDateTime value) { this.conditionsAccepteesAt = value; }
+    public String getVersionConditions() { return versionConditions; }
+    public void setVersionConditions(String value) { this.versionConditions = value; }
 }

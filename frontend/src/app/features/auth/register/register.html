@@ -27,6 +27,7 @@
         <label>{{ api.t('register.password') }}<div class="password-field"><input [(ngModel)]="accountForm.motDePasse" [type]="showPassword ? 'text' : 'password'" autocomplete="new-password"><button type="button" (click)="showPassword = !showPassword">{{ showPassword ? api.t('login.hide') : api.t('login.show') }}</button></div></label>
         <label>{{ api.t('register.confirmPassword') }}<input [(ngModel)]="accountForm.confirmation" type="password" autocomplete="new-password"></label>
         <small>{{ api.t('register.passwordHelp') }}</small>
+        <label class="legal-consent"><input type="checkbox" [(ngModel)]="legalAccepted"><span>{{ texts[currentLang].legalStart }} <a routerLink="/terms" target="_blank">{{ texts[currentLang].terms }}</a> {{ texts[currentLang].legalAnd }} <a routerLink="/privacy" target="_blank">{{ texts[currentLang].privacy }}</a>.</span></label>
       </div>
 
       <div *ngIf="currentFlow === 'CHAUFFEUR' && currentStep === 2" class="fields">

@@ -48,7 +48,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/auth/login",
                                 "/api/auth/register",
-                                "/api/auth/register/chauffeur"
+                                "/api/auth/register/chauffeur",
+                                "/api/contact"
                         ).permitAll()
                         .requestMatchers(
                                 "/v3/api-docs/**",

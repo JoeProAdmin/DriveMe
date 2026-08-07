@@ -23,14 +23,31 @@
         </div>
       </div>
 
-      <div class="status-pill online">
+      <button
+        type="button"
+        class="status-pill"
+        [class.online]="chauffeur?.disponible"
+        [class.offline]="!chauffeur?.disponible"
+        [disabled]="!chauffeur || disponibiliteEnCours"
+        (click)="toggleDisponibilite()"
+      >
         <span class="status-indicator"></span>
 
         <span class="status-label">
-          {{ labels[currentLang].available }}
+          {{
+            disponibiliteEnCours
+              ? labels[currentLang].availabilityUpdating
+              : chauffeur?.disponible
+                ? labels[currentLang].available
+                : labels[currentLang].unavailable
+          }}
         </span>
-      </div>
+      </button>
     </div>
+
+    <p class="availability-error" *ngIf="disponibiliteErreur">
+      {{ disponibiliteErreur }}
+    </p>
   </header>
 
   <!-- Grille des statistiques -->
@@ -185,6 +202,7 @@
           <button
             type="button"
             class="btn-accept"
+            [disabled]="!chauffeur?.disponible"
             (click)="ouvrirProposition(course)"
           >
             {{ labels[currentLang].propose }}
@@ -270,7 +288,7 @@
             <button
               type="button"
               class="btn-accept"
-              [disabled]="propositionEnCours[course.id]"
+              [disabled]="propositionEnCours[course.id] || !chauffeur?.disponible"
               (click)="envoyerProposition(course)"
             >
               {{

@@ -17,9 +17,9 @@ export interface AdminStats {
   totalPassagers: number;
   totalCourses: number;
   totalPaiements: number;
-  paiementsPayes: number;
-  montantPaiementsPayes: number;
-  soldeCreditsChauffeurs: number;
+  paiementsPayes?: number;
+  montantPaiementsPayes?: number;
+  soldeCreditsChauffeurs?: number;
 }
 
 export interface AvisDTO {
@@ -38,6 +38,10 @@ export interface ChauffeurResponseDTO {
   statutValidation: number;
   noteMoyenne?: number;
   soldeCredit?: number;
+  disponible?: boolean;
+  latitudeActuelle?: number | null;
+  longitudeActuelle?: number | null;
+  dernierePositionAt?: string | null;
   marqueVehicule?: string;
   modeleVehicule?: string;
   anneeVehicule?: number;
@@ -266,6 +270,25 @@ export class ApiService {
   public getCurrentChauffeur(): Observable<ChauffeurResponseDTO> {
     return this.http.get<ChauffeurResponseDTO>(
       `${this.baseUrl}/chauffeurs/me`
+    );
+  }
+
+  public updateCurrentDriverPosition(
+    latitude: number,
+    longitude: number
+  ): Observable<ChauffeurResponseDTO> {
+    return this.http.patch<ChauffeurResponseDTO>(
+      `${this.baseUrl}/chauffeurs/me/position`,
+      { latitude, longitude }
+    );
+  }
+
+  public updateCurrentDriverAvailability(
+    disponible: boolean
+  ): Observable<ChauffeurResponseDTO> {
+    return this.http.patch<ChauffeurResponseDTO>(
+      `${this.baseUrl}/chauffeurs/me/disponibilite`,
+      { disponible }
     );
   }
 

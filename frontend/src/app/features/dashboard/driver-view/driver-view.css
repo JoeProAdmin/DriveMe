@@ -100,6 +100,14 @@
   font-weight: 600;
   border: 1px solid var(--driveme-border);
   background-color: var(--driveme-bg);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+}
+
+.status-pill:disabled {
+  cursor: wait;
+  opacity: .7;
 }
 
 .status-indicator {
@@ -118,6 +126,20 @@
 .status-pill.online .status-indicator {
   background-color: var(--driveme-green-primary);
   box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.2);
+}
+
+.status-pill.offline {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+  color: #475569;
+}
+
+.availability-error {
+  margin: 12px 0 0;
+  color: #b91c1c;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: right;
 }
 
 /* Statistics Grid */

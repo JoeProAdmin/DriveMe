@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { forkJoin } from 'rxjs';
+import { forkJoin, switchMap } from 'rxjs';
 import {
   ApiService,
   ChauffeurResponseDTO,
@@ -26,6 +26,8 @@ export class DriverViewComponent implements OnInit, OnDestroy {
 
   public chauffeur?: ChauffeurResponseDTO;
   public coursesDisponibles: CourseResponseDTO[] = [];
+  public disponibiliteEnCours = false;
+  public disponibiliteErreur = '';
 
   public coursePropositionOuverteId: number | null = null;
 
@@ -55,6 +57,12 @@ export class DriverViewComponent implements OnInit, OnDestroy {
       title: 'Espace Chauffeur',
       subtitle: 'Gérez vos courses, vos revenus, vos crédits DriveMe et votre réputation.',
       available: 'Disponible',
+      unavailable: 'Indisponible',
+      availabilityUpdating: 'Mise à jour...',
+      locationUnavailable: 'La géolocalisation est indisponible sur cet appareil.',
+      locationDenied: 'Autorisez la géolocalisation pour devenir disponible.',
+      availabilityError: 'Impossible de modifier votre disponibilité.',
+      mustBeAvailable: 'Activez votre disponibilité avant de faire une proposition.',
       totalCourses: 'Total Courses',
       activeCourses: 'Courses En Cours',
       finishedCourses: 'Courses Terminées',
@@ -88,6 +96,12 @@ export class DriverViewComponent implements OnInit, OnDestroy {
       title: 'Driver Area',
       subtitle: 'Manage your trips, earnings, DriveMe credits and reputation.',
       available: 'Available',
+      unavailable: 'Unavailable',
+      availabilityUpdating: 'Updating...',
+      locationUnavailable: 'Geolocation is unavailable on this device.',
+      locationDenied: 'Allow geolocation to become available.',
+      availabilityError: 'Unable to update your availability.',
+      mustBeAvailable: 'Go available before making an offer.',
       totalCourses: 'Total Trips',
       activeCourses: 'Active Trips',
       finishedCourses: 'Completed Trips',
@@ -121,6 +135,12 @@ export class DriverViewComponent implements OnInit, OnDestroy {
       title: 'مساحة السائق',
       subtitle: 'إدارة الرحلات والأرباح ورصيد DriveMe والتقييم.',
       available: 'متاح',
+      unavailable: 'غير متاح',
+      availabilityUpdating: 'جارٍ التحديث...',
+      locationUnavailable: 'تحديد الموقع غير متاح على هذا الجهاز.',
+      locationDenied: 'اسمح بتحديد الموقع لتصبح متاحاً.',
+      availabilityError: 'تعذر تحديث حالة التوفر.',
+      mustBeAvailable: 'فعّل حالة التوفر قبل تقديم عرض.',
       totalCourses: 'إجمالي الرحلات',
       activeCourses: 'الرحلات النشطة',
       finishedCourses: 'الرحلات المكتملة',
@@ -154,6 +174,12 @@ export class DriverViewComponent implements OnInit, OnDestroy {
       title: 'Espacio Conductor',
       subtitle: 'Gestiona tus viajes, ingresos, créditos DriveMe y reputación.',
       available: 'Disponible',
+      unavailable: 'No disponible',
+      availabilityUpdating: 'Actualizando...',
+      locationUnavailable: 'La geolocalización no está disponible en este dispositivo.',
+      locationDenied: 'Permite la geolocalización para estar disponible.',
+      availabilityError: 'No se pudo actualizar tu disponibilidad.',
+      mustBeAvailable: 'Activa tu disponibilidad antes de hacer una oferta.',
       totalCourses: 'Total Viajes',
       activeCourses: 'Viajes Activos',
       finishedCourses: 'Viajes Finalizados',
@@ -223,6 +249,12 @@ export class DriverViewComponent implements OnInit, OnDestroy {
       return;
     }
 
+    if (!this.chauffeur?.disponible) {
+      this.propositionErreurs[courseId] =
+        this.labels[this.currentLang].mustBeAvailable;
+      return;
+    }
+
     this.propositionMessages[courseId] = '';
     this.propositionErreurs[courseId] = '';
 
@@ -248,6 +280,12 @@ export class DriverViewComponent implements OnInit, OnDestroy {
 
     this.propositionMessages[courseId] = '';
     this.propositionErreurs[courseId] = '';
+
+    if (!this.chauffeur?.disponible) {
+      this.propositionErreurs[courseId] =
+        this.labels[this.currentLang].mustBeAvailable;
+      return;
+    }
 
     const prixPropose = Number(form?.prixPropose);
 
@@ -308,6 +346,68 @@ export class DriverViewComponent implements OnInit, OnDestroy {
     this.loadDriverData();
     this.loadCoursesForCurrentDriver();
     this.loadCoursesDisponibles();
+  }
+
+  public toggleDisponibilite(): void {
+    if (!this.chauffeur || this.disponibiliteEnCours) {
+      return;
+    }
+
+    this.disponibiliteErreur = '';
+    this.disponibiliteEnCours = true;
+
+    if (this.chauffeur.disponible) {
+      this.apiService.updateCurrentDriverAvailability(false).subscribe({
+        next: chauffeur => this.applyAvailabilityResult(chauffeur),
+        error: err => this.handleAvailabilityError(err)
+      });
+      return;
+    }
+
+    if (!navigator.geolocation) {
+      this.disponibiliteErreur =
+        this.labels[this.currentLang].locationUnavailable;
+      this.disponibiliteEnCours = false;
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        this.apiService.updateCurrentDriverPosition(
+          position.coords.latitude,
+          position.coords.longitude
+        ).pipe(
+          switchMap(() =>
+            this.apiService.updateCurrentDriverAvailability(true)
+          )
+        ).subscribe({
+          next: chauffeur => this.applyAvailabilityResult(chauffeur),
+          error: err => this.handleAvailabilityError(err)
+        });
+      },
+      () => {
+        this.disponibiliteErreur =
+          this.labels[this.currentLang].locationDenied;
+        this.disponibiliteEnCours = false;
+        this.cdr.detectChanges();
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
+    );
+  }
+
+  private applyAvailabilityResult(chauffeur: ChauffeurResponseDTO): void {
+    this.chauffeur = chauffeur;
+    this.disponibiliteEnCours = false;
+    this.disponibiliteErreur = '';
+    this.cdr.detectChanges();
+  }
+
+  private handleAvailabilityError(err: any): void {
+    console.error('Erreur mise à jour disponibilité chauffeur', err);
+    this.disponibiliteErreur =
+      err?.error?.message || this.labels[this.currentLang].availabilityError;
+    this.disponibiliteEnCours = false;
+    this.loadDriverData();
   }
 
   private loadDriverData(): void {

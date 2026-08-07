@@ -1,10 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { ApiService } from '../../core/api.service';
+import { ApiService, TransactionPortefeuilleDTO } from '../../core/api.service';
 
-type PaymentMethod = 'CARD' | 'CASH' | 'LOCAL_WALLET';
+type PaymentMethod = 'CARTE' | 'ONLINE' | 'WAFACASH' | 'WESTERN_UNION' | 'VIREMENT';
 
 @Component({
   selector: 'app-payment',
@@ -12,8 +11,7 @@ type PaymentMethod = 'CARD' | 'CASH' | 'LOCAL_WALLET';
   imports: [CommonModule, FormsModule],
   templateUrl: './payment.html'
 })
-export class PaymentComponent {
-  private router = inject(Router);
+export class PaymentComponent implements OnInit {
   public readonly apiService = inject(ApiService);
 
   public readonly texts: Record<'fr' | 'en' | 'ar' | 'es', any> = {
@@ -34,13 +32,20 @@ export class PaymentComponent {
     label: 'Pack Éco'
   };
 
-  public selectedMethod: PaymentMethod = 'CARD';
+  public selectedMethod: PaymentMethod = 'CARTE';
 
   public cardName = '';
   public cardNumber = '';
   public expiry = '';
   public cvc = '';
   public isProcessing = false;
+  public reference = '';
+  public transactions: TransactionPortefeuilleDTO[] = [];
+  public message = '';
+  public error = '';
+  public solde = 0;
+
+  public ngOnInit(): void { this.loadHistory(); }
 
   public changePack(price: number, credits: number, label: string): void {
     this.selectedPack = { price, credits, label };
@@ -51,31 +56,21 @@ export class PaymentComponent {
   }
 
   public executePayment(): void {
-    if (this.selectedMethod === 'CARD') {
+    if (this.selectedMethod === 'CARTE') {
       if (!this.cardName || !this.cardNumber || !this.expiry || !this.cvc) {
         alert('Veuillez compléter les informations de carte bancaire.');
         return;
       }
     }
 
-    this.isProcessing = true;
+    this.isProcessing = true; this.message = ''; this.error = '';
+    this.apiService.demanderRecharge({montantPaye:this.selectedPack.price, credits:this.selectedPack.credits, methode:this.selectedMethod, reference:this.reference}).subscribe({
+      next: tx => { this.isProcessing=false; this.message = tx.statut === 'VALIDEE' ? 'Recharge validée et crédit ajouté.' : 'Demande enregistrée. Validation administrateur en attente.'; this.cardName='';this.cardNumber='';this.expiry='';this.cvc='';this.reference='';this.loadHistory(); },
+      error: err => { this.isProcessing=false; this.error=err?.error?.message || 'Impossible d’enregistrer la recharge.'; }
+    });
+  }
 
-    setTimeout(() => {
-      this.isProcessing = false;
-
-      localStorage.setItem('last_payment_amount_mad', this.selectedPack.price.toString());
-      localStorage.setItem('last_driver_credits', this.selectedPack.credits.toString());
-      localStorage.setItem('last_payment_method', this.selectedMethod);
-
-      alert(
-        `Recharge DriveMe validée.\n\n` +
-        `Pack : ${this.selectedPack.label}\n` +
-        `Montant : ${this.selectedPack.price} MAD\n` +
-        `Crédits chauffeur ajoutés : ${this.selectedPack.credits}\n\n` +
-        `Modèle économique : DriveMe facture les chauffeurs via des recharges prépayées.`
-      );
-
-      this.router.navigate(['/dashboard']);
-    }, 1500);
+  private loadHistory(): void {
+    this.apiService.getMesTransactionsPortefeuille().subscribe({next: rows => {this.transactions=rows; const last=rows.find(x=>x.soldeApres!=null); this.solde=Number(last?.soldeApres ?? 0);}});
   }
 }

@@ -17,6 +17,14 @@
   </section>
 
   <div class="alert error" *ngIf="errorMessage">{{ errorMessage }}</div>
+  <div class="alert" *ngIf="rechargeMessage">{{ rechargeMessage }}</div>
+
+  <section class="table-card" style="margin-bottom:24px">
+    <div style="padding:20px"><h2 style="margin:0">Recharges chauffeurs à valider</h2><p>Wafacash, Western Union, virement ou agence partenaire.</p></div>
+    <div class="table-scroll"><table><thead><tr><th>Chauffeur</th><th>Crédits</th><th>Méthode</th><th>Référence</th><th>Date</th><th>Décision</th></tr></thead>
+      <tbody><tr *ngFor="let recharge of recharges"><td>{{ recharge.chauffeurNom }}</td><td class="amount">+{{ recharge.montant | number:'1.2-2' }} MAD</td><td>{{ recharge.methode }}</td><td>{{ recharge.reference || '-' }}</td><td>{{ recharge.dateCreation | date:'dd/MM/yyyy HH:mm' }}</td><td><button class="btn" type="button" (click)="traiterRecharge(recharge.id,true)">Valider</button> <button class="btn secondary" type="button" (click)="traiterRecharge(recharge.id,false)">Refuser</button></td></tr>
+      <tr *ngIf="!recharges.length"><td colspan="6" class="empty">Aucune recharge en attente.</td></tr></tbody></table></div>
+  </section>
 
   <section class="toolbar">
     <div>

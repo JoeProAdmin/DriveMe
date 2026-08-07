@@ -12,6 +12,7 @@ import com.driveme.repository.ChauffeurRepository;
 import com.driveme.repository.CourseRepository;
 import com.driveme.repository.PropositionChauffeurRepository;
 import com.driveme.service.PropositionChauffeurService;
+import com.driveme.service.PortefeuilleService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,13 +27,16 @@ public class PropositionChauffeurServiceImpl implements PropositionChauffeurServ
     private final PropositionChauffeurRepository propositionRepository;
     private final CourseRepository courseRepository;
     private final ChauffeurRepository chauffeurRepository;
+    private final PortefeuilleService portefeuilleService;
 
     public PropositionChauffeurServiceImpl(PropositionChauffeurRepository propositionRepository,
                                             CourseRepository courseRepository,
-                                            ChauffeurRepository chauffeurRepository) {
+                                            ChauffeurRepository chauffeurRepository,
+                                            PortefeuilleService portefeuilleService) {
         this.propositionRepository = propositionRepository;
         this.courseRepository = courseRepository;
         this.chauffeurRepository = chauffeurRepository;
+        this.portefeuilleService = portefeuilleService;
     }
 
     @Override
@@ -50,6 +54,9 @@ public class PropositionChauffeurServiceImpl implements PropositionChauffeurServ
         }
         if (!chauffeur.isDisponible()) {
             throw new IllegalStateException("Le chauffeur doit être disponible pour envoyer une proposition.");
+        }
+        if (chauffeur.getSoldeCredit() == null || chauffeur.getSoldeCredit().signum() <= 0) {
+            throw new IllegalStateException("Votre crédit DriveMe est épuisé. Rechargez votre portefeuille.");
         }
         if (propositionRepository.existsByCourseIdAndChauffeurId(courseId, chauffeur.getId())) {
             throw new IllegalStateException("Une proposition existe déjà pour cette course.");
@@ -110,10 +117,16 @@ public class PropositionChauffeurServiceImpl implements PropositionChauffeurServ
             throw new IllegalStateException("Cette proposition n'est plus disponible.");
         }
 
+        portefeuilleService.verifierCreditPourCourse(choisie.getChauffeur().getId(), choisie.getPrixPropose());
+
         course.setChauffeur(choisie.getChauffeur());
         course.setPrix(choisie.getPrixPropose());
         course.setPrixFinal(choisie.getPrixPropose());
         course.setStatut(CourseStatus.ACCEPTEE);
+
+        // Le portefeuille prépayé garantit la commission dès l'engagement
+        // définitif du chauffeur. Le contrôle idempotent empêche tout double débit.
+        portefeuilleService.debiterCommissionCourse(course.getId());
 
         List<PropositionChauffeur> propositions = propositionRepository.findByCourseId(course.getId());
         for (PropositionChauffeur proposition : propositions) {

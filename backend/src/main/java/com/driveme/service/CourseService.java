@@ -23,7 +23,7 @@ public interface CourseService {
      * Retourne toutes les courses en attente
      * disponibles pour les chauffeurs.
      */
-    List<CourseResponseDTO> getCoursesEnAttente();
+    List<CourseResponseDTO> getCoursesEnAttente(String authenticatedIdentifier);
 
     /**
      * Fait progresser une course selon le cycle chauffeur autorisé.

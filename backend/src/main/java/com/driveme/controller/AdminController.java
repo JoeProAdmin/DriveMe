@@ -6,6 +6,9 @@ import com.driveme.service.ChauffeurService;
 import com.driveme.service.CourseService;
 import com.driveme.service.PaiementService;
 import com.driveme.service.PassagerService;
+import com.driveme.repository.TransactionPortefeuilleRepository;
+import com.driveme.entity.PortefeuilleTransactionType;
+import com.driveme.entity.PortefeuilleTransactionStatut;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +25,7 @@ public class AdminController {
     private final PassagerService passagerService;
     private final CourseService courseService;
     private final PaiementService paiementService;
+    private final TransactionPortefeuilleRepository transactionPortefeuilleRepository;
 
     @GetMapping("/stats")
     public AdminStats getStats() {
@@ -33,6 +37,9 @@ public class AdminController {
         stats.setPaiementsPayes(paiementService.countByStatut(PaiementStatut.PAYE));
         stats.setMontantPaiementsPayes(paiementService.sumMontantByStatut(PaiementStatut.PAYE));
         stats.setSoldeCreditsChauffeurs(chauffeurService.sumSoldeCredit());
+        stats.setCommissionsDriveMe(transactionPortefeuilleRepository.sumByTypeAndStatut(PortefeuilleTransactionType.COMMISSION_COURSE, PortefeuilleTransactionStatut.VALIDEE));
+        stats.setRechargesValidees(transactionPortefeuilleRepository.sumByTypeAndStatut(PortefeuilleTransactionType.RECHARGE, PortefeuilleTransactionStatut.VALIDEE));
+        stats.setRechargesEnAttente(transactionPortefeuilleRepository.findByStatutOrderByDateCreationAsc(PortefeuilleTransactionStatut.EN_ATTENTE).size());
         return stats;
     }
 }

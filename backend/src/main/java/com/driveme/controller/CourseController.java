@@ -79,8 +79,8 @@ public class CourseController {
 
     @PreAuthorize("hasAnyRole('CHAUFFEUR','ADMIN')")
     @GetMapping("/en-attente")
-    public List<CourseResponseDTO> getCoursesEnAttente() {
-        return courseService.getCoursesEnAttente();
+    public List<CourseResponseDTO> getCoursesEnAttente(Principal principal) {
+        return courseService.getCoursesEnAttente(principal.getName());
     }
 
     @PreAuthorize("hasRole('ADMIN')")

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
-import { ApiService, PaiementResponseDTO } from '../../../core/api.service';
+import { ApiService, PaiementResponseDTO, TransactionPortefeuilleDTO } from '../../../core/api.service';
 
 @Component({
   selector: 'app-payment-management',
@@ -17,6 +17,8 @@ export class PaymentManagementComponent implements OnInit {
   public statusFilter = 'TOUS';
   public isLoading = false;
   public errorMessage = '';
+  public recharges: TransactionPortefeuilleDTO[] = [];
+  public rechargeMessage = '';
 
   constructor(
     public apiService: ApiService,
@@ -25,6 +27,15 @@ export class PaymentManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadPaiements();
+    this.loadRecharges();
+  }
+
+  public loadRecharges(): void {
+    this.apiService.getRechargesEnAttente().subscribe({next: rows => {this.recharges=rows;this.cdr.markForCheck();}, error: () => this.errorMessage='Impossible de charger les recharges.'});
+  }
+
+  public traiterRecharge(id:number, approuver:boolean): void {
+    this.apiService.traiterRecharge(id, approuver).subscribe({next: () => {this.rechargeMessage=approuver?'Recharge validée.':'Recharge refusée.';this.loadRecharges();}, error: err => this.errorMessage=err?.error?.message || 'Traitement impossible.'});
   }
 
   public loadPaiements(): void {

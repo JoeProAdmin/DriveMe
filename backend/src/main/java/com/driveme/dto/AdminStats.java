@@ -12,4 +12,7 @@ public class AdminStats {
     private long paiementsPayes;
     private BigDecimal montantPaiementsPayes;
     private BigDecimal soldeCreditsChauffeurs;
+    private BigDecimal commissionsDriveMe;
+    private BigDecimal rechargesValidees;
+    private long rechargesEnAttente;
 }

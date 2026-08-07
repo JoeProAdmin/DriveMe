@@ -54,6 +54,18 @@ import { ApiService, AdminStats } from '../../../core/api.service';
       <small>{{ texts[currentLang].driverCreditsHint }}</small>
     </div>
 
+    <div class="card money-card">
+      <span class="label">{{ texts[currentLang].commissions }}</span>
+      <p>{{ stats.commissionsDriveMe | number:'1.2-2' }} MAD</p>
+      <small>10 % des courses terminées</small>
+    </div>
+
+    <div class="card money-card">
+      <span class="label">{{ texts[currentLang].topups }}</span>
+      <p>{{ stats.rechargesValidees | number:'1.2-2' }} MAD</p>
+      <small>{{ stats.rechargesEnAttente }} {{ texts[currentLang].pendingTopups }}</small>
+    </div>
+
   </div>
 
   <div class="quick-actions">
@@ -182,7 +194,10 @@ export class AdminViewComponent implements OnInit {
     totalPaiements: 0,
     paiementsPayes: 0,
     montantPaiementsPayes: 0,
-    soldeCreditsChauffeurs: 0
+    soldeCreditsChauffeurs: 0,
+    commissionsDriveMe: 0,
+    rechargesValidees: 0,
+    rechargesEnAttente: 0
   };
 
   get currentLang(): 'fr' | 'en' | 'ar' | 'es' {
@@ -202,6 +217,7 @@ export class AdminViewComponent implements OnInit {
       paidPayments: 'paiement(s) payé(s)',
       driverCredits: 'CRÉDITS CHAUFFEURS',
       driverCreditsHint: 'Solde total disponible sur les comptes chauffeurs',
+      commissions: 'COMMISSIONS DRIVEME', topups: 'RECHARGES VALIDÉES', pendingTopups: 'recharge(s) en attente',
       driverManagement: 'Gestion Chauffeurs',
       driverDescription: 'Validation et suivi des chauffeurs inscrits.',
       passengerManagement: 'Gestion Passagers',
@@ -223,6 +239,7 @@ export class AdminViewComponent implements OnInit {
       paidPayments: 'paid payment(s)',
       driverCredits: 'DRIVER CREDITS',
       driverCreditsHint: 'Total balance available on driver accounts',
+      commissions: 'DRIVEME COMMISSIONS', topups: 'VALIDATED TOP-UPS', pendingTopups: 'pending top-up(s)',
       driverManagement: 'Driver Management',
       driverDescription: 'Validation and monitoring of drivers.',
       passengerManagement: 'Passenger Management',
@@ -244,6 +261,7 @@ export class AdminViewComponent implements OnInit {
       paidPayments: 'دفعة مدفوعة',
       driverCredits: 'رصيد السائقين',
       driverCreditsHint: 'إجمالي الرصيد المتاح في حسابات السائقين',
+      commissions: 'عمولات DriveMe', topups: 'عمليات الشحن المعتمدة', pendingTopups: 'عملية شحن قيد الانتظار',
       driverManagement: 'إدارة السائقين',
       driverDescription: 'متابعة واعتماد السائقين.',
       passengerManagement: 'إدارة الركاب',
@@ -265,6 +283,7 @@ export class AdminViewComponent implements OnInit {
       paidPayments: 'pago(s) pagado(s)',
       driverCredits: 'CRÉDITOS DE CONDUCTORES',
       driverCreditsHint: 'Saldo total disponible en las cuentas de conductores',
+      commissions: 'COMISIONES DRIVEME', topups: 'RECARGAS VALIDADAS', pendingTopups: 'recarga(s) pendiente(s)',
       driverManagement: 'Gestión Conductores',
       driverDescription: 'Validación y seguimiento.',
       passengerManagement: 'Gestión Pasajeros',
@@ -290,6 +309,9 @@ export class AdminViewComponent implements OnInit {
         this.stats.paiementsPayes = Number(data?.paiementsPayes ?? 0);
         this.stats.montantPaiementsPayes = Number(data?.montantPaiementsPayes ?? 0);
         this.stats.soldeCreditsChauffeurs = Number(data?.soldeCreditsChauffeurs ?? 0);
+        this.stats.commissionsDriveMe = Number(data?.commissionsDriveMe ?? 0);
+        this.stats.rechargesValidees = Number(data?.rechargesValidees ?? 0);
+        this.stats.rechargesEnAttente = Number(data?.rechargesEnAttente ?? 0);
 
         this.cdr.detectChanges();
       },
@@ -303,6 +325,9 @@ export class AdminViewComponent implements OnInit {
         this.stats.paiementsPayes = 0;
         this.stats.montantPaiementsPayes = 0;
         this.stats.soldeCreditsChauffeurs = 0;
+        this.stats.commissionsDriveMe = 0;
+        this.stats.rechargesValidees = 0;
+        this.stats.rechargesEnAttente = 0;
 
         this.cdr.detectChanges();
       }

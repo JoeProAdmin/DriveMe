@@ -98,6 +98,9 @@ public class ChauffeurServiceImpl implements ChauffeurService {
             if (chauffeur.getLatitudeActuelle() == null || chauffeur.getLongitudeActuelle() == null) {
                 throw new IllegalStateException("La position doit être enregistrée avant d'activer la disponibilité.");
             }
+            if (chauffeur.getSoldeCredit() == null || chauffeur.getSoldeCredit().signum() <= 0) {
+                throw new IllegalStateException("Votre crédit DriveMe est épuisé. Rechargez votre portefeuille pour recevoir de nouvelles courses.");
+            }
         }
         chauffeur.setDisponible(Boolean.TRUE.equals(dto.getDisponible()));
         return mapToDTO(chauffeurRepository.save(chauffeur));

@@ -13,6 +13,7 @@ import com.driveme.repository.PassagerRepository;
 import com.driveme.repository.UtilisateurRepository;
 import com.driveme.security.JwtService;
 import com.driveme.service.ChauffeurDocumentService;
+import com.driveme.service.PortefeuilleService;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,7 @@ public class AuthController {
     private final PassagerRepository passagerRepository;
     private final ChauffeurRepository chauffeurRepository;
     private final ChauffeurDocumentService chauffeurDocumentService;
+    private final PortefeuilleService portefeuilleService;
 
     public AuthController(
             UtilisateurRepository utilisateurRepository,
@@ -41,7 +43,8 @@ public class AuthController {
             PasswordEncoder passwordEncoder,
             PassagerRepository passagerRepository,
             ChauffeurRepository chauffeurRepository,
-            ChauffeurDocumentService chauffeurDocumentService
+            ChauffeurDocumentService chauffeurDocumentService,
+            PortefeuilleService portefeuilleService
     ) {
         this.utilisateurRepository = utilisateurRepository;
         this.jwtService = jwtService;
@@ -49,6 +52,7 @@ public class AuthController {
         this.passagerRepository = passagerRepository;
         this.chauffeurRepository = chauffeurRepository;
         this.chauffeurDocumentService = chauffeurDocumentService;
+        this.portefeuilleService = portefeuilleService;
     }
 
     @PostMapping("/login")
@@ -171,6 +175,8 @@ public class AuthController {
         chauffeur.setAnneeVehicule(request.getAnnee());
         chauffeur.setImmatriculation(request.getImmatriculation().trim().toUpperCase(Locale.ROOT));
         chauffeurRepository.save(chauffeur);
+
+        portefeuilleService.attribuerBonusBienvenue(chauffeur.getId());
 
         chauffeurDocumentService.saveInitialDocuments(
                 chauffeur, cin, permis, carteGrise, assurance, selfie, photoAvant, photoArriere

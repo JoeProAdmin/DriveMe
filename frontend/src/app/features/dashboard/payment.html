@@ -71,25 +71,25 @@
         <div style="display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:12px; margin-bottom:24px;">
 
           <button type="button"
-                  (click)="changeMethod('CARD')"
-                  [style.border-color]="selectedMethod === 'CARD' ? '#00C853' : '#e2e8f0'"
-                  [style.background-color]="selectedMethod === 'CARD' ? '#f0fdf4' : '#ffffff'"
+                  (click)="changeMethod('CARTE')"
+                  [style.border-color]="selectedMethod === 'CARTE' ? '#00C853' : '#e2e8f0'"
+                  [style.background-color]="selectedMethod === 'CARTE' ? '#f0fdf4' : '#ffffff'"
                   style="border:2px solid; border-radius:12px; padding:16px; cursor:pointer; font-weight:800; color:#0f172a;">
             Visa / Mastercard
           </button>
 
           <button type="button"
-                  (click)="changeMethod('CASH')"
-                  [style.border-color]="selectedMethod === 'CASH' ? '#00C853' : '#e2e8f0'"
-                  [style.background-color]="selectedMethod === 'CASH' ? '#f0fdf4' : '#ffffff'"
+                  (click)="changeMethod('ONLINE')"
+                  [style.border-color]="selectedMethod === 'ONLINE' ? '#00C853' : '#e2e8f0'"
+                  [style.background-color]="selectedMethod === 'ONLINE' ? '#f0fdf4' : '#ffffff'"
                   style="border:2px solid; border-radius:12px; padding:16px; cursor:pointer; font-weight:800; color:#0f172a;">
-            {{ t.cash }}
+            Paiement en ligne
           </button>
 
           <button type="button"
-                  (click)="changeMethod('LOCAL_WALLET')"
-                  [style.border-color]="selectedMethod === 'LOCAL_WALLET' ? '#00C853' : '#e2e8f0'"
-                  [style.background-color]="selectedMethod === 'LOCAL_WALLET' ? '#f0fdf4' : '#ffffff'"
+                  (click)="changeMethod('WAFACASH')"
+                  [style.border-color]="selectedMethod === 'WAFACASH' ? '#00C853' : '#e2e8f0'"
+                  [style.background-color]="selectedMethod === 'WAFACASH' ? '#f0fdf4' : '#ffffff'"
                   style="border:2px solid; border-radius:12px; padding:16px; cursor:pointer; font-weight:800; color:#0f172a;">
             CIH / Wafacash
           </button>
@@ -98,7 +98,7 @@
 
         <form (ngSubmit)="executePayment()" style="display:flex; flex-direction:column; gap:14px; width:100%;">
 
-          <div *ngIf="selectedMethod === 'CARD'" style="display:flex; flex-direction:column; gap:14px;">
+          <div *ngIf="selectedMethod === 'CARTE'" style="display:flex; flex-direction:column; gap:14px;">
 
             <div style="display:flex; gap:10px; flex-wrap:wrap; font-weight:800; color:#0f172a;">
               <span style="background:#f8fafc; border:1px solid #e2e8f0; padding:8px 12px; border-radius:8px;">VISA</span>
@@ -122,13 +122,20 @@
 
           </div>
 
-          <div *ngIf="selectedMethod === 'CASH'" style="background:#fffbeb; border:1px solid #facc15; padding:16px; border-radius:12px; color:#92400e; line-height:1.6;">
-            {{ t.cashInfo }}
+          <div *ngIf="selectedMethod === 'ONLINE'" style="background:#eff6ff; border:1px solid #93c5fd; padding:16px; border-radius:12px; color:#1e40af; line-height:1.6;">
+            Recharge en ligne validée immédiatement. Aucun argent cash du passager n'est collecté par DriveMe.
           </div>
 
-          <div *ngIf="selectedMethod === 'LOCAL_WALLET'" style="background:#eff6ff; border:1px solid #93c5fd; padding:16px; border-radius:12px; color:#1e40af; line-height:1.6;">
-            {{ t.walletInfo }}
+          <div *ngIf="selectedMethod === 'WAFACASH'" style="background:#fffbeb; border:1px solid #facc15; padding:16px; border-radius:12px; color:#92400e; line-height:1.6;">
+            Wafacash / agence partenaire : saisissez la référence du transfert. La recharge sera contrôlée par l'administrateur.
           </div>
+
+          <input *ngIf="selectedMethod === 'WAFACASH' || selectedMethod === 'VIREMENT' || selectedMethod === 'WESTERN_UNION'"
+                 type="text" [(ngModel)]="reference" name="reference" placeholder="Référence du transfert"
+                 style="padding:14px; border:1px solid #cbd5e1; border-radius:10px; width:100%; box-sizing:border-box;">
+
+          <div *ngIf="message" style="background:#dcfce7;color:#166534;padding:12px;border-radius:10px">{{ message }}</div>
+          <div *ngIf="error" style="background:#fee2e2;color:#991b1b;padding:12px;border-radius:10px">{{ error }}</div>
 
           <button type="submit"
                   [disabled]="isProcessing"
@@ -145,6 +152,11 @@
         <h2 style="margin:0 0 18px 0;">
           {{ t.business }}
         </h2>
+
+        <div style="background:#052e16;border:1px solid #16a34a;border-radius:14px;padding:18px;margin-bottom:14px">
+          <span style="color:#bbf7d0">Solde disponible</span>
+          <strong style="display:block;font-size:32px;color:#4ade80;margin-top:6px">{{ solde | number:'1.2-2' }} MAD</strong>
+        </div>
 
         <div style="display:grid; grid-template-columns:1fr; gap:14px;">
 
@@ -184,6 +196,16 @@
 
     </div>
 
+  </div>
+
+  <div style="background:white;border-radius:18px;padding:28px;margin-top:24px;border:1px solid #e2e8f0">
+    <h2 style="margin-top:0">Historique du portefeuille</h2>
+    <div *ngIf="!transactions.length" style="color:#64748b">Aucune transaction.</div>
+    <div *ngFor="let tx of transactions" style="display:grid;grid-template-columns:1fr auto auto;gap:16px;padding:14px 0;border-bottom:1px solid #e2e8f0;align-items:center">
+      <div><strong>{{ tx.description }}</strong><small style="display:block;color:#64748b">{{ tx.dateCreation | date:'short' }} · {{ tx.methode }}</small></div>
+      <strong [style.color]="tx.type === 'COMMISSION_COURSE' ? '#dc2626' : '#16a34a'">{{ tx.type === 'COMMISSION_COURSE' ? '-' : '+' }}{{ tx.montant | number:'1.2-2' }} MAD</strong>
+      <span style="padding:6px 10px;border-radius:999px;background:#f1f5f9;font-size:12px;font-weight:700">{{ tx.statut }}</span>
+    </div>
   </div>
 
 </section>

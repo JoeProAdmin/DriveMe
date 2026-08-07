@@ -12,6 +12,9 @@ import com.driveme.repository.ChauffeurRepository;
 import com.driveme.repository.CourseRepository;
 import com.driveme.repository.PassagerRepository;
 import com.driveme.service.CourseService;
+import com.driveme.service.PortefeuilleService;
+import com.driveme.repository.UtilisateurRepository;
+import com.driveme.entity.Role;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,17 +29,23 @@ public class CourseServiceImpl implements CourseService {
     private final PassagerRepository passagerRepository;
     private final ChauffeurRepository chauffeurRepository;
     private final AvisRepository avisRepository;
+    private final PortefeuilleService portefeuilleService;
+    private final UtilisateurRepository utilisateurRepository;
 
     public CourseServiceImpl(
             CourseRepository courseRepository,
             PassagerRepository passagerRepository,
             ChauffeurRepository chauffeurRepository,
-            AvisRepository avisRepository
+            AvisRepository avisRepository,
+            PortefeuilleService portefeuilleService,
+            UtilisateurRepository utilisateurRepository
     ) {
         this.courseRepository = courseRepository;
         this.passagerRepository = passagerRepository;
         this.chauffeurRepository = chauffeurRepository;
         this.avisRepository = avisRepository;
+        this.portefeuilleService = portefeuilleService;
+        this.utilisateurRepository = utilisateurRepository;
     }
 
     @Override
@@ -153,7 +162,17 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<CourseResponseDTO> getCoursesEnAttente() {
+    public List<CourseResponseDTO> getCoursesEnAttente(String authenticatedIdentifier) {
+
+        var user = utilisateurRepository.findByEmailIgnoreCase(authenticatedIdentifier)
+                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable"));
+        if (user.getRole() == Role.CHAUFFEUR) {
+            Chauffeur chauffeur = chauffeurRepository.findByUtilisateurEmail(authenticatedIdentifier)
+                    .orElseThrow(() -> new ResourceNotFoundException("Chauffeur introuvable"));
+            if (!chauffeur.isDisponible() || chauffeur.getSoldeCredit() == null || chauffeur.getSoldeCredit().signum() <= 0) {
+                return List.of();
+            }
+        }
 
         return courseRepository.findAll()
                 .stream()
@@ -227,6 +246,9 @@ public class CourseServiceImpl implements CourseService {
             );
         }
 
+        if (requestedStatus == CourseStatus.TERMINEE) {
+            portefeuilleService.debiterCommissionCourse(course.getId());
+        }
         course.setStatut(requestedStatus);
 
         Course updated = courseRepository.save(course);
@@ -293,6 +315,9 @@ public class CourseServiceImpl implements CourseService {
             }
         }
 
+        if (newStatus == CourseStatus.TERMINEE) {
+            portefeuilleService.debiterCommissionCourse(course.getId());
+        }
         course.setStatut(newStatus);
 
         Course updated = courseRepository.save(course);

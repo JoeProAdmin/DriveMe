@@ -20,6 +20,16 @@ export interface AdminStats {
   paiementsPayes?: number;
   montantPaiementsPayes?: number;
   soldeCreditsChauffeurs?: number;
+  commissionsDriveMe?: number;
+  rechargesValidees?: number;
+  rechargesEnAttente?: number;
+}
+
+export interface TransactionPortefeuilleDTO {
+  id: number; chauffeurId: number; chauffeurNom: string; courseId?: number | null;
+  type: string; statut: string; montant: number; soldeAvant?: number | null;
+  soldeApres?: number | null; methode: string; reference?: string | null;
+  description: string; dateCreation: string; dateValidation?: string | null;
 }
 
 export interface AvisDTO {
@@ -259,6 +269,22 @@ export class ApiService {
     return this.http.get<AdminStats>(
       `${this.baseUrl}/admin/stats`
     );
+  }
+
+  public demanderRecharge(payload: {montantPaye:number; credits:number; methode:string; reference?:string}): Observable<TransactionPortefeuilleDTO> {
+    return this.http.post<TransactionPortefeuilleDTO>(`${this.baseUrl}/portefeuille/me/recharges`, payload);
+  }
+
+  public getMesTransactionsPortefeuille(): Observable<TransactionPortefeuilleDTO[]> {
+    return this.http.get<TransactionPortefeuilleDTO[]>(`${this.baseUrl}/portefeuille/me/transactions`);
+  }
+
+  public getRechargesEnAttente(): Observable<TransactionPortefeuilleDTO[]> {
+    return this.http.get<TransactionPortefeuilleDTO[]>(`${this.baseUrl}/portefeuille/admin/recharges/en-attente`);
+  }
+
+  public traiterRecharge(id:number, approuver:boolean): Observable<TransactionPortefeuilleDTO> {
+    return this.http.put<TransactionPortefeuilleDTO>(`${this.baseUrl}/portefeuille/admin/recharges/${id}?approuver=${approuver}`, {});
   }
 
   public createSosIncident(data: SosCreateDTO): Observable<SosIncidentDTO> {

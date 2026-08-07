@@ -152,6 +152,16 @@
   cursor: pointer;
 }
 
+.main-sos-btn:disabled { opacity: .65; cursor: wait; }
+.history-card { margin-top: 22px; }
+.incident-details { display: flex; flex-wrap: wrap; gap: 8px 18px; color: #555; font-size: 14px; margin: 10px 0; }
+.incident-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 10px 0; }
+.incident-actions select { border: 1px solid #d5dbe3; border-radius: 9px; padding: 8px; background: #fff; }
+.status { border-radius: 999px; padding: 6px 10px; background: #ffebee; color: #b71c1c; font-size: 12px; font-weight: 800; }
+.status[data-status="RESOLU"], .status[data-status="CLOTURE"] { background: #e8f5e9; color: #087f3e; }
+.status[data-status="PRIS_EN_CHARGE"] { background: #fff8e1; color: #8a5a00; }
+.map-btn { border: 0; border-radius: 9px; padding: 8px 12px; background: #e3f2fd; color: #075985; font-weight: 700; cursor: pointer; }
+
 .error-box {
   background: #ffebee;
   color: #d32f2f;

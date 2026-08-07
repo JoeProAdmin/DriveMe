@@ -1,123 +1,55 @@
 <div class="sos-container" [attr.dir]="apiService.isRtlMode() ? 'rtl' : 'ltr'">
-
   <div class="sos-header">
     <div class="sos-badge">SOS</div>
-
     <div>
-      <h1>{{ apiService.t('sos.title') }}</h1>
-      <p>
-        {{ apiService.t('sos.intro') }}
-      </p>
+      <h1>{{ isAdmin ? 'Centre de supervision SOS' : apiService.t('sos.title') }}</h1>
+      <p>{{ isAdmin ? 'Alertes centralisées des passagers et chauffeurs, localisation et suivi de prise en charge.' : apiService.t('sos.intro') }}</p>
     </div>
   </div>
 
-  <div class="sos-grid">
-
+  <div class="sos-grid" *ngIf="!isAdmin">
     <div class="sos-card danger-card">
       <h2>{{ apiService.t('sos.services') }}</h2>
-
-      <p class="warning-text">
-        {{ apiService.t('sos.warning') }}
-      </p>
-
+      <p class="warning-text">{{ apiService.t('sos.warning') }}</p>
       <div class="emergency-buttons">
-        <button class="emergency-btn" (click)="callPolice()">
-          Police 19
-        </button>
-
-        <button class="emergency-btn" (click)="callGendarmerie()">
-          Gendarmerie 177
-        </button>
-
-        <button class="emergency-btn" (click)="callAmbulance()">
-          Ambulance 15
-        </button>
+        <button class="emergency-btn" (click)="callPolice()">Police 19</button>
+        <button class="emergency-btn" (click)="callGendarmerie()">Gendarmerie 177</button>
+        <button class="emergency-btn" (click)="callAmbulance()">Ambulance 15</button>
       </div>
     </div>
 
     <div class="sos-card">
       <h2>{{ apiService.t('sos.report') }}</h2>
-
-      <div class="form-group">
-        <label>{{ apiService.t('sos.user') }}</label>
-        <div class="readonly-field">
-          {{ userEmail }} — {{ userRole }}
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>{{ apiService.t('sos.type') }}</label>
-        <select [(ngModel)]="selectedType">
-          <option *ngFor="let type of emergencyTypes" [value]="type">
-            {{ type }}
-          </option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>{{ apiService.t('sos.description') }}</label>
-        <textarea
-          [(ngModel)]="description"
-          [placeholder]="apiService.t('sos.descriptionPlaceholder')"
-          rows="4">
-        </textarea>
-      </div>
-
+      <div class="form-group"><label>{{ apiService.t('sos.user') }}</label><div class="readonly-field">{{ userEmail }} — {{ userRole }}</div></div>
+      <div class="form-group"><label>{{ apiService.t('sos.type') }}</label><select [(ngModel)]="selectedType"><option *ngFor="let type of emergencyTypes" [value]="type">{{ type }}</option></select></div>
+      <div class="form-group"><label>{{ apiService.t('sos.description') }}</label><textarea [(ngModel)]="description" maxlength="1000" [placeholder]="apiService.t('sos.descriptionPlaceholder')" rows="4"></textarea></div>
       <div class="location-box">
-        <div>
-          <strong>{{ apiService.t('sos.gps') }}</strong>
-          <p *ngIf="latitude && longitude">
-            Latitude : {{ latitude }}<br>
-            Longitude : {{ longitude }}
-          </p>
-          <p *ngIf="!latitude || !longitude">
-            {{ apiService.t('sos.notDetected') }}
-          </p>
+        <div><strong>{{ apiService.t('sos.gps') }}</strong>
+          <p *ngIf="latitude !== null && longitude !== null">Latitude : {{ latitude | number:'1.5-7' }}<br>Longitude : {{ longitude | number:'1.5-7' }}<br>Précision : {{ accuracy | number:'1.0-0' }} m</p>
+          <p *ngIf="latitude === null || longitude === null">{{ apiService.t('sos.notDetected') }}</p>
         </div>
-
-        <button
-          class="secondary-btn"
-          (click)="detectLocation()"
-          [disabled]="locating">
-          {{ locating ? apiService.t('sos.detecting') : apiService.t('sos.detect') }}
-        </button>
+        <button class="secondary-btn" (click)="detectLocation()" [disabled]="locating">{{ locating ? apiService.t('sos.detecting') : apiService.t('sos.detect') }}</button>
       </div>
-
-      <div *ngIf="errorMessage" class="error-box">
-        {{ errorMessage }}
-      </div>
-
-      <button class="main-sos-btn" (click)="sendAlert()">
-        {{ apiService.t('sos.send') }}
-      </button>
-
-      <div *ngIf="alertSent" class="success-box">
-        {{ apiService.t('sos.success') }}
-      </div>
+      <div *ngIf="errorMessage" class="error-box">{{ errorMessage }}</div>
+      <button class="main-sos-btn" (click)="sendAlert()" [disabled]="sending">{{ sending ? 'Transmission…' : apiService.t('sos.send') }}</button>
+      <div *ngIf="alertSent" class="success-box">Alerte transmise et enregistrée dans le centre de supervision DriveMe.</div>
     </div>
-
-    <div class="sos-card">
-      <h2>{{ apiService.t('sos.history') }}</h2>
-
-      <div *ngIf="incidentHistory.length === 0" class="empty-state">
-        {{ apiService.t('sos.empty') }}
-      </div>
-
-      <div class="incident-item" *ngFor="let incident of incidentHistory">
-        <div class="incident-top">
-          <strong>{{ incident.type }}</strong>
-          <span>{{ incident.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
-        </div>
-
-        <p>{{ incident.description }}</p>
-
-        <small>
-          {{ incident.userEmail }} — {{ incident.userRole }}<br>
-          {{ apiService.t('common.status') }} : {{ incident.status }}
-        </small>
-      </div>
-    </div>
-
   </div>
 
+  <div class="sos-card history-card">
+    <h2>{{ isAdmin ? 'Incidents centralisés' : 'Mes incidents transmis' }}</h2>
+    <div *ngIf="loading" class="empty-state">Chargement…</div>
+    <div *ngIf="!loading && incidentHistory.length === 0" class="empty-state">Aucun incident enregistré.</div>
+    <div class="incident-item" *ngFor="let incident of incidentHistory">
+      <div class="incident-top"><strong>#{{ incident.id }} — {{ incident.type }}</strong><span>{{ incident.dateCreation | date:'dd/MM/yyyy HH:mm' }}</span></div>
+      <p>{{ incident.description }}</p>
+      <div class="incident-details" *ngIf="isAdmin"><span>{{ incident.utilisateurNom }}</span><span>{{ incident.utilisateurRole }}</span><span>{{ incident.utilisateurEmail }}</span><span>{{ incident.utilisateurTelephone }}</span></div>
+      <div class="incident-actions">
+        <span class="status" [attr.data-status]="incident.statut">{{ incident.statut }}</span>
+        <button *ngIf="incident.latitude !== null && incident.longitude !== null" class="map-btn" (click)="openMap(incident)">Ouvrir la position</button>
+        <select *ngIf="isAdmin" [ngModel]="incident.statut" (ngModelChange)="updateStatus(incident, $event)"><option *ngFor="let status of statuses" [ngValue]="status">{{ status }}</option></select>
+      </div>
+      <small *ngIf="incident.precisionMetres !== null">Précision GPS : {{ incident.precisionMetres | number:'1.0-0' }} m</small>
+    </div>
+  </div>
 </div>

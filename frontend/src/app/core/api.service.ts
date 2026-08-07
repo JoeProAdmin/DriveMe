@@ -132,6 +132,33 @@ export interface PaiementResponseDTO {
   datePaiement: string;
 }
 
+export type SosStatus = 'NOUVEAU' | 'PRIS_EN_CHARGE' | 'RESOLU' | 'CLOTURE';
+
+export interface SosIncidentDTO {
+  id: number;
+  utilisateurId: number;
+  utilisateurNom: string;
+  utilisateurEmail: string;
+  utilisateurTelephone: string;
+  utilisateurRole: string;
+  type: string;
+  description: string;
+  latitude: number | null;
+  longitude: number | null;
+  precisionMetres: number | null;
+  statut: SosStatus;
+  dateCreation: string;
+  dateMiseAJour: string;
+}
+
+export interface SosCreateDTO {
+  type: string;
+  description: string;
+  latitude: number | null;
+  longitude: number | null;
+  precisionMetres: number | null;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -227,6 +254,25 @@ export class ApiService {
   public getAdminStats(): Observable<AdminStats> {
     return this.http.get<AdminStats>(
       `${this.baseUrl}/admin/stats`
+    );
+  }
+
+  public createSosIncident(data: SosCreateDTO): Observable<SosIncidentDTO> {
+    return this.http.post<SosIncidentDTO>(`${this.baseUrl}/sos`, data);
+  }
+
+  public getMySosIncidents(): Observable<SosIncidentDTO[]> {
+    return this.http.get<SosIncidentDTO[]>(`${this.baseUrl}/sos/me`);
+  }
+
+  public getAllSosIncidents(): Observable<SosIncidentDTO[]> {
+    return this.http.get<SosIncidentDTO[]>(`${this.baseUrl}/sos`);
+  }
+
+  public updateSosStatus(id: number, status: SosStatus): Observable<SosIncidentDTO> {
+    return this.http.patch<SosIncidentDTO>(
+      `${this.baseUrl}/sos/${id}/status?status=${encodeURIComponent(status)}`,
+      {}
     );
   }
 

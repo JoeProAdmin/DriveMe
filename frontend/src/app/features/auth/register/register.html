@@ -7,6 +7,7 @@
       <p>{{ texts[currentLang].subtitle }}</p>
       <button type="button" class="profile-option" (click)="selectFlow('PASSAGER')"><strong>{{ texts[currentLang].passenger }}</strong><span>{{ texts[currentLang].passengerDesc }}</span></button>
       <button type="button" class="profile-option" (click)="selectFlow('CHAUFFEUR')"><strong>{{ texts[currentLang].driver }}</strong><span>{{ texts[currentLang].driverDesc }}</span></button>
+      <a routerLink="/login" class="login-link">{{ texts[currentLang].login }}</a>
     </section>
 
     <section *ngIf="currentFlow" class="form-card">
@@ -56,6 +57,7 @@
         <button *ngIf="currentFlow === 'CHAUFFEUR' && currentStep < 4" type="button" class="primary" (click)="nextStep()">{{ texts[currentLang].next }}</button>
         <button *ngIf="currentFlow === 'PASSAGER' || (currentFlow === 'CHAUFFEUR' && currentStep === 4)" type="button" class="primary" [disabled]="isSubmitting" (click)="submit()">{{ isSubmitting ? texts[currentLang].submitting : texts[currentLang].submit }}</button>
       </div>
+      <a routerLink="/login" class="login-link compact">{{ texts[currentLang].login }}</a>
     </section>
   </main>
 </div>

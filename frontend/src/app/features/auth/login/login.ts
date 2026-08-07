@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../../core/api.service';
 import { HeaderComponent } from '../../../shared/layout/header/header';
 
@@ -15,6 +15,7 @@ import { HeaderComponent } from '../../../shared/layout/header/header';
 export class LoginComponent {
   public readonly api = inject(ApiService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   public loginData = { identifiant: '', motDePasse: '' };
   public dropdownOpen = false;
@@ -44,8 +45,9 @@ export class LoginComponent {
     this.api.login({ identifiant: this.loginData.identifiant.trim(), motDePasse: this.loginData.motDePasse }).subscribe({
       next: (res: any) => {
         this.isSubmitting = false;
-        this.storeSession(res.token);
-        this.router.navigate(['/dashboard']);
+        const role = this.storeSession(res.token);
+        const redirect = this.route.snapshot.queryParamMap.get('redirect');
+        this.router.navigate([redirect === 'create-course' && role === 'PASSAGER' ? '/create-course' : '/dashboard']);
       },
       error: (err: any) => {
         this.isSubmitting = false;
@@ -54,11 +56,12 @@ export class LoginComponent {
     });
   }
 
-  private storeSession(token: string): void {
+  private storeSession(token: string): string {
     const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
     localStorage.setItem('token', token);
     localStorage.setItem('userRole', payload.role);
     localStorage.setItem('userEmail', payload.sub);
+    return payload.role;
   }
 
   public changeLangViaDropdown(lang: 'FR' | 'AR' | 'EN' | 'ES'): void {

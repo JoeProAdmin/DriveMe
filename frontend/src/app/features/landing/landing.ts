@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../core/api.service';
 
 type Language = 'FR' | 'EN' | 'AR' | 'ES';
@@ -95,9 +96,12 @@ interface LandingCopy {
 })
 export class Landing {
   private readonly api = inject(ApiService);
+  private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
   public mobileMenuOpen = false;
   public isLocating = false;
   public locationMessage = '';
+  private departureCoordinates: { latitude: number; longitude: number } | null = null;
   public readonly minDate = new Date().toISOString().split('T')[0];
 
   public searchForm = {
@@ -164,6 +168,10 @@ export class Landing {
     return this.api.currentLanguage().toUpperCase() as Language;
   }
 
+  public get comingSoon(): string {
+    return { FR: 'Bientôt disponible', EN: 'Coming soon', AR: 'قريباً', ES: 'Próximamente' }[this.currentLang];
+  }
+
   public changeLanguage(language: Language): void {
     this.api.setLanguage(language.toLowerCase() as 'fr' | 'en' | 'ar' | 'es');
     this.mobileMenuOpen = false;
@@ -191,10 +199,20 @@ export class Landing {
 
     this.isLocating = true;
     navigator.geolocation.getCurrentPosition(
-      () => {
-        this.searchForm.departure = this.t.locationCurrent;
-        this.locationMessage = this.t.locationCurrent;
-        this.isLocating = false;
+      position => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        this.departureCoordinates = { latitude, longitude };
+        const params = new HttpParams()
+          .set('format', 'jsonv2')
+          .set('lat', String(latitude))
+          .set('lon', String(longitude))
+          .set('accept-language', this.currentLang.toLowerCase());
+
+        this.http.get<{ display_name?: string }>('https://nominatim.openstreetmap.org/reverse', { params }).subscribe({
+          next: result => this.finishLocation(result.display_name || this.t.locationCurrent),
+          error: () => this.finishLocation(this.t.locationCurrent)
+        });
       },
       () => {
         this.locationMessage = this.t.locationDenied;
@@ -202,5 +220,25 @@ export class Landing {
       },
       { enableHighAccuracy: true, timeout: 8000, maximumAge: 120000 }
     );
+  }
+
+  public continueSearch(): void {
+    const departure = this.searchForm.departure.trim();
+    const destination = this.searchForm.destination.trim();
+    if (!departure || !destination) return;
+
+    sessionStorage.setItem('drivemePendingRide', JSON.stringify({
+      ...this.searchForm,
+      departure,
+      destination,
+      departureCoordinates: this.departureCoordinates
+    }));
+    this.router.navigate(['/login'], { queryParams: { redirect: 'create-course' } });
+  }
+
+  private finishLocation(label: string): void {
+    this.searchForm.departure = label;
+    this.locationMessage = label;
+    this.isLocating = false;
   }
 }

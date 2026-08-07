@@ -81,7 +81,29 @@ export class CreateCourse implements OnInit, OnDestroy {
   private routeLayer: any = null;
 
   ngOnInit(): void {
+    this.restorePendingRide();
     setTimeout(() => this.initMap(), 100);
+  }
+
+  private restorePendingRide(): void {
+    const rawDraft = sessionStorage.getItem('drivemePendingRide');
+    if (!rawDraft) return;
+
+    try {
+      const draft = JSON.parse(rawDraft);
+      this.formModel.adresseDepart = String(draft.departure || '');
+      this.formModel.adresseArrivee = String(draft.destination || '');
+      if (draft.departureCoordinates?.latitude != null && draft.departureCoordinates?.longitude != null) {
+        this.departurePoint = {
+          latitude: Number(draft.departureCoordinates.latitude),
+          longitude: Number(draft.departureCoordinates.longitude),
+          label: this.formModel.adresseDepart
+        };
+      }
+      sessionStorage.removeItem('drivemePendingRide');
+    } catch {
+      sessionStorage.removeItem('drivemePendingRide');
+    }
   }
 
   private initMap(): void {
@@ -105,6 +127,11 @@ export class CreateCourse implements OnInit, OnDestroy {
     this.map.on('click', (event: any) => {
       this.zone.run(() => this.selectPointFromMap(event.latlng.lat, event.latlng.lng));
     });
+
+    if (this.departurePoint) {
+      this.updateMarker('departure', this.departurePoint);
+      this.map.setView([this.departurePoint.latitude, this.departurePoint.longitude], 14);
+    }
 
     setTimeout(() => this.map?.invalidateSize(), 0);
   }

@@ -1,6 +1,8 @@
 package com.driveme.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -25,6 +27,11 @@ public class Chauffeur {
 
     @Column(name = "solde_credit", precision = 10, scale = 2)
     private BigDecimal soldeCredit;
+
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    @Column(name = "type_chauffeur", length = 30)
+    private DriverType typeChauffeur;
 
     @Column(name = "marque_vehicule", length = 80)
     private String marqueVehicule;
@@ -76,16 +83,45 @@ public class Chauffeur {
         return soldeCredit;
     }
 
-    public String getMarqueVehicule() { return marqueVehicule; }
-    public String getModeleVehicule() { return modeleVehicule; }
-    public Integer getAnneeVehicule() { return anneeVehicule; }
-    public String getImmatriculation() { return immatriculation; }
+    public DriverType getTypeChauffeur() {
+        return typeChauffeur;
+    }
 
-    public boolean isDisponible() { return disponible; }
-    public Double getLatitudeActuelle() { return latitudeActuelle; }
-    public Double getLongitudeActuelle() { return longitudeActuelle; }
-    public LocalDateTime getDernierePositionAt() { return dernierePositionAt; }
-    public Long getVersion() { return version; }
+    public String getMarqueVehicule() {
+        return marqueVehicule;
+    }
+
+    public String getModeleVehicule() {
+        return modeleVehicule;
+    }
+
+    public Integer getAnneeVehicule() {
+        return anneeVehicule;
+    }
+
+    public String getImmatriculation() {
+        return immatriculation;
+    }
+
+    public boolean isDisponible() {
+        return disponible;
+    }
+
+    public Double getLatitudeActuelle() {
+        return latitudeActuelle;
+    }
+
+    public Double getLongitudeActuelle() {
+        return longitudeActuelle;
+    }
+
+    public LocalDateTime getDernierePositionAt() {
+        return dernierePositionAt;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
 
     public void setId(Long id) {
         this.id = id;
@@ -107,14 +143,43 @@ public class Chauffeur {
         this.soldeCredit = soldeCredit;
     }
 
-    public void setMarqueVehicule(String marqueVehicule) { this.marqueVehicule = marqueVehicule; }
-    public void setModeleVehicule(String modeleVehicule) { this.modeleVehicule = modeleVehicule; }
-    public void setAnneeVehicule(Integer anneeVehicule) { this.anneeVehicule = anneeVehicule; }
-    public void setImmatriculation(String immatriculation) { this.immatriculation = immatriculation; }
+    public void setTypeChauffeur(DriverType typeChauffeur) {
+        this.typeChauffeur = typeChauffeur;
+    }
 
-    public void setDisponible(boolean disponible) { this.disponible = disponible; }
-    public void setLatitudeActuelle(Double latitudeActuelle) { this.latitudeActuelle = latitudeActuelle; }
-    public void setLongitudeActuelle(Double longitudeActuelle) { this.longitudeActuelle = longitudeActuelle; }
-    public void setDernierePositionAt(LocalDateTime dernierePositionAt) { this.dernierePositionAt = dernierePositionAt; }
-    public void setVersion(Long version) { this.version = version; }
+    public void setMarqueVehicule(String marqueVehicule) {
+        this.marqueVehicule = marqueVehicule;
+    }
+
+    public void setModeleVehicule(String modeleVehicule) {
+        this.modeleVehicule = modeleVehicule;
+    }
+
+    public void setAnneeVehicule(Integer anneeVehicule) {
+        this.anneeVehicule = anneeVehicule;
+    }
+
+    public void setImmatriculation(String immatriculation) {
+        this.immatriculation = immatriculation;
+    }
+
+    public void setDisponible(boolean disponible) {
+        this.disponible = disponible;
+    }
+
+    public void setLatitudeActuelle(Double latitudeActuelle) {
+        this.latitudeActuelle = latitudeActuelle;
+    }
+
+    public void setLongitudeActuelle(Double longitudeActuelle) {
+        this.longitudeActuelle = longitudeActuelle;
+    }
+
+    public void setDernierePositionAt(LocalDateTime dernierePositionAt) {
+        this.dernierePositionAt = dernierePositionAt;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
 }

@@ -1,5 +1,7 @@
 package com.driveme.dto;
 
+import com.driveme.entity.DriverType;
+
 public class RegisterRequest {
 
     private String nom;
@@ -8,6 +10,7 @@ public class RegisterRequest {
     private String telephone;
     private String motDePasse;
     private String role;
+    private DriverType typeChauffeur;
     private String marque;
     private String modele;
     private Integer annee;
@@ -64,6 +67,9 @@ public class RegisterRequest {
     public void setRole(String role) {
         this.role = role;
     }
+
+    public DriverType getTypeChauffeur() { return typeChauffeur; }
+    public void setTypeChauffeur(DriverType typeChauffeur) { this.typeChauffeur = typeChauffeur; }
 
     public String getMarque() { return marque; }
     public void setMarque(String marque) { this.marque = marque; }

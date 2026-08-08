@@ -114,6 +114,10 @@ public class ChauffeurServiceImpl implements ChauffeurService {
     @Override
     public ChauffeurResponseDTO createChauffeur(ChauffeurCreateDTO dto) {
 
+        if (dto.getTypeChauffeur() == null) {
+            throw new IllegalArgumentException("Le type de chauffeur est obligatoire");
+        }
+
         Utilisateur user = utilisateurRepository
                 .findById(dto.getUtilisateurId())
                 .orElseThrow(() ->
@@ -122,6 +126,8 @@ public class ChauffeurServiceImpl implements ChauffeurService {
         Chauffeur chauffeur = new Chauffeur();
 
         chauffeur.setUtilisateur(user);
+
+        chauffeur.setTypeChauffeur(dto.getTypeChauffeur());
 
         chauffeur.setStatutValidation(
                 dto.getStatutValidation().byteValue()
@@ -146,6 +152,10 @@ public class ChauffeurServiceImpl implements ChauffeurService {
         chauffeur.setStatutValidation(
                 dto.getStatutValidation().byteValue()
         );
+
+        if (dto.getTypeChauffeur() != null) {
+            chauffeur.setTypeChauffeur(dto.getTypeChauffeur());
+        }
 
         return mapToDTO(
                 chauffeurRepository.save(chauffeur)
@@ -212,6 +222,7 @@ public class ChauffeurServiceImpl implements ChauffeurService {
         dto.setModeleVehicule(chauffeur.getModeleVehicule());
         dto.setAnneeVehicule(chauffeur.getAnneeVehicule());
         dto.setImmatriculation(chauffeur.getImmatriculation());
+        dto.setTypeChauffeur(chauffeur.getTypeChauffeur());
         dto.setDocuments(chauffeurDocumentService.listForChauffeur(chauffeur.getId()));
         return dto;
     }

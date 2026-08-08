@@ -1,11 +1,14 @@
 package com.driveme.dto;
 
+import com.driveme.entity.DriverType;
+
 public class ChauffeurCreateDTO {
 
     private Long utilisateurId;
     private Integer statutValidation;
     private Double noteMoyenne;
     private Double soldeCredit;
+    private DriverType typeChauffeur;
 
     public ChauffeurCreateDTO() {
     }
@@ -41,4 +44,7 @@ public class ChauffeurCreateDTO {
     public void setSoldeCredit(Double soldeCredit) {
         this.soldeCredit = soldeCredit;
     }
+
+    public DriverType getTypeChauffeur() { return typeChauffeur; }
+    public void setTypeChauffeur(DriverType typeChauffeur) { this.typeChauffeur = typeChauffeur; }
 }

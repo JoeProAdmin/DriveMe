@@ -166,6 +166,7 @@ public class AuthController {
 
         Chauffeur chauffeur = new Chauffeur();
         chauffeur.setUtilisateur(user);
+        chauffeur.setTypeChauffeur(request.getTypeChauffeur());
         chauffeur.setStatutValidation((byte) 0);
         chauffeur.setNoteMoyenne(BigDecimal.ZERO);
         chauffeur.setSoldeCredit(BigDecimal.ZERO);
@@ -233,6 +234,9 @@ public class AuthController {
     }
 
     private void validateDriverRequest(RegisterRequest request) {
+        if (request.getTypeChauffeur() == null) {
+            throw new RuntimeException("Le type de chauffeur est obligatoire");
+        }
         if (isBlank(request.getMarque()) || isBlank(request.getModele()) || isBlank(request.getImmatriculation())) {
             throw new RuntimeException("La marque, le modèle et l'immatriculation du véhicule sont obligatoires");
         }

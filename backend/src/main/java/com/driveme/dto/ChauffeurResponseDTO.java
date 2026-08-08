@@ -1,5 +1,7 @@
 package com.driveme.dto;
 
+import com.driveme.entity.DriverType;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,7 @@ public class ChauffeurResponseDTO {
     private Integer statutValidation;
     private Double noteMoyenne;
     private Double soldeCredit;
+    private DriverType typeChauffeur;
     private Boolean disponible;
     private Double latitudeActuelle;
     private Double longitudeActuelle;
@@ -86,6 +89,7 @@ public class ChauffeurResponseDTO {
     public Double getSoldeCredit() {
         return soldeCredit;
     }
+    public DriverType getTypeChauffeur() { return typeChauffeur; }
     public Boolean getDisponible() { return disponible; }
     public Double getLatitudeActuelle() { return latitudeActuelle; }
     public Double getLongitudeActuelle() { return longitudeActuelle; }
@@ -127,6 +131,7 @@ public class ChauffeurResponseDTO {
     public void setSoldeCredit(Double soldeCredit) {
         this.soldeCredit = soldeCredit;
     }
+    public void setTypeChauffeur(DriverType typeChauffeur) { this.typeChauffeur = typeChauffeur; }
     public void setDisponible(Boolean disponible) { this.disponible = disponible; }
     public void setLatitudeActuelle(Double latitudeActuelle) { this.latitudeActuelle = latitudeActuelle; }
     public void setLongitudeActuelle(Double longitudeActuelle) { this.longitudeActuelle = longitudeActuelle; }

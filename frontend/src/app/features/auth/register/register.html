@@ -21,6 +21,24 @@
       <div *ngIf="successMessage" class="message success">{{ successMessage }}</div>
 
       <div *ngIf="currentStep === 1" class="fields">
+        <div *ngIf="currentFlow === 'CHAUFFEUR'" class="driver-type-section">
+          <h2>{{ texts[currentLang].driverTypeTitle }}</h2>
+          <p>{{ texts[currentLang].driverTypeHelp }}</p>
+          <div class="driver-type-options">
+            <button type="button" class="driver-type-option" [class.selected]="driverForm.typeChauffeur === 'CHAUFFEUR_PRIVE'" (click)="driverForm.typeChauffeur = 'CHAUFFEUR_PRIVE'">
+              <strong>{{ texts[currentLang].privateDriver }}</strong>
+              <span>{{ texts[currentLang].privateDriverDesc }}</span>
+            </button>
+            <button type="button" class="driver-type-option" [class.selected]="driverForm.typeChauffeur === 'TAXI_OFFICIEL'" (click)="driverForm.typeChauffeur = 'TAXI_OFFICIEL'">
+              <strong>{{ texts[currentLang].officialTaxi }}</strong>
+              <span>{{ texts[currentLang].officialTaxiDesc }}</span>
+            </button>
+            <button type="button" class="driver-type-option" [class.selected]="driverForm.typeChauffeur === 'TRANSPORTEUR_TOURISTIQUE'" (click)="driverForm.typeChauffeur = 'TRANSPORTEUR_TOURISTIQUE'">
+              <strong>{{ texts[currentLang].touristTransporter }}</strong>
+              <span>{{ texts[currentLang].touristTransporterDesc }}</span>
+            </button>
+          </div>
+        </div>
         <div class="two-columns"><label>{{ api.t('common.name') }}<input [(ngModel)]="accountForm.nom" autocomplete="family-name"></label><label>{{ api.t('common.firstName') }}<input [(ngModel)]="accountForm.prenom" autocomplete="given-name"></label></div>
         <label>{{ api.t('register.internationalPhone') }}<input [(ngModel)]="accountForm.telephone" placeholder="+212612345678, +33612345678…" autocomplete="tel"></label>
         <label>{{ api.t('common.email') }}<input [(ngModel)]="accountForm.email" type="email" placeholder="nom@exemple.ma" autocomplete="email"></label>
@@ -37,6 +55,7 @@
         <label>{{ api.t('register.registration') }}<input type="file" accept="image/*,.pdf" (change)="onFileSelected($event, 'carteGrise')"></label>
         <label>{{ api.t('register.insurance') }}<input type="file" accept="image/*,.pdf" (change)="onFileSelected($event, 'assurance')"></label>
         <p class="notice">{{ api.t('register.documentsNotice') }}</p>
+        <p class="notice profile-document-notice">{{ texts[currentLang].docsProfileNotice }}</p>
       </div>
 
       <div *ngIf="currentFlow === 'CHAUFFEUR' && currentStep === 3" class="fields">

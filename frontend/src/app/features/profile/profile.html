@@ -27,12 +27,17 @@
 
       <div class="info-row">
         <span>{{ texts[currentLang].role }}</span>
-        <strong>{{ userRole }}</strong>
+        <strong>{{ userRole === 'CHAUFFEUR' ? texts[currentLang].driverRole : userRole }}</strong>
       </div>
 
-      <div class="info-row">
+      <div class="info-row" *ngIf="userRole === 'CHAUFFEUR'">
         <span>{{ texts[currentLang].status }}</span>
-        <strong class="success">{{ texts[currentLang].statusVal }}</strong>
+        <strong
+          [class]="chauffeur?.statutValidation === 1 ? 'success' : (chauffeur?.statutValidation === 2 ? 'danger' : 'pending')">
+          {{ chauffeur?.statutValidation === 1
+            ? texts[currentLang].validated
+            : (chauffeur?.statutValidation === 2 ? texts[currentLang].rejected : texts[currentLang].pending) }}
+        </strong>
       </div>
 
       <div class="info-row">
@@ -44,6 +49,19 @@
     <div class="profile-card" *ngIf="userRole === 'CHAUFFEUR'">
       <h2>{{ texts[currentLang].driverSpace }}</h2>
 
+      <div class="info-row driver-category">
+        <span>{{ texts[currentLang].category }}</span>
+        <strong>
+          {{ chauffeur?.typeChauffeur === 'TAXI_OFFICIEL'
+            ? texts[currentLang].officialTaxi
+            : (chauffeur?.typeChauffeur === 'TRANSPORTEUR_TOURISTIQUE'
+              ? texts[currentLang].touristCarrier
+              : (chauffeur?.typeChauffeur === 'CHAUFFEUR_PRIVE'
+                ? texts[currentLang].privateDriver
+                : texts[currentLang].notDefined)) }}
+        </strong>
+      </div>
+
       <div class="metric-box">
         <span>{{ texts[currentLang].rating }}</span>
         <strong class="success">{{ noteMoyenne }}/5</strong>
@@ -52,6 +70,7 @@
       <div class="metric-box">
         <span>{{ texts[currentLang].credits }}</span>
         <strong class="success">{{ soldeCredit }} MAD</strong>
+        <small>{{ texts[currentLang].welcomeBonus }}</small>
       </div>
     </div>
 

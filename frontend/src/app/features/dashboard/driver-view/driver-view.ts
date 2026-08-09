@@ -88,6 +88,7 @@ export class DriverViewComponent implements OnInit, OnDestroy {
       proposalSent: 'Votre proposition a été envoyée.',
       priceRequired: 'Veuillez saisir un prix valide.',
       driverUnavailable: 'Profil chauffeur indisponible.',
+      privateDriver: 'Chauffeur privé', officialTaxi: 'Taxi officiel', touristCarrier: 'Transporteur touristique', categoryUndefined: 'Catégorie à définir',
       proposalError: 'Impossible d’envoyer la proposition.',
       searching: 'Recherche de courses en cours',
       searchingSubtitle: 'Restez connecté, les nouvelles demandes s’afficheront ici automatiquement.'
@@ -127,6 +128,7 @@ export class DriverViewComponent implements OnInit, OnDestroy {
       proposalSent: 'Your offer has been sent.',
       priceRequired: 'Please enter a valid price.',
       driverUnavailable: 'Driver profile unavailable.',
+      privateDriver: 'Private driver', officialTaxi: 'Official taxi', touristCarrier: 'Tourist transport operator', categoryUndefined: 'Category not defined',
       proposalError: 'Unable to send the offer.',
       searching: 'Searching for trips',
       searchingSubtitle: 'Stay connected. New requests will appear here automatically.'
@@ -166,6 +168,7 @@ export class DriverViewComponent implements OnInit, OnDestroy {
       proposalSent: 'تم إرسال عرضك.',
       priceRequired: 'يرجى إدخال سعر صحيح.',
       driverUnavailable: 'ملف السائق غير متاح.',
+      privateDriver: 'سائق خاص', officialTaxi: 'سيارة أجرة رسمية', touristCarrier: 'ناقل سياحي', categoryUndefined: 'الفئة غير محددة',
       proposalError: 'تعذر إرسال العرض.',
       searching: 'جارٍ البحث عن رحلات',
       searchingSubtitle: 'ابق متصلاً، ستظهر الطلبات الجديدة هنا تلقائياً.'
@@ -205,6 +208,7 @@ export class DriverViewComponent implements OnInit, OnDestroy {
       proposalSent: 'Tu oferta ha sido enviada.',
       priceRequired: 'Introduce un precio válido.',
       driverUnavailable: 'Perfil del conductor no disponible.',
+      privateDriver: 'Conductor privado', officialTaxi: 'Taxi oficial', touristCarrier: 'Transportista turístico', categoryUndefined: 'Categoría no definida',
       proposalError: 'No se pudo enviar la oferta.',
       searching: 'Buscando viajes',
       searchingSubtitle: 'Mantente conectado. Las nuevas solicitudes aparecerán aquí automáticamente.'
@@ -218,6 +222,15 @@ export class DriverViewComponent implements OnInit, OnDestroy {
 
   get currentLang(): 'fr' | 'en' | 'ar' | 'es' {
     return this.apiService.currentLanguage();
+  }
+
+  public get driverCategoryLabel(): string {
+    switch (this.chauffeur?.typeChauffeur) {
+      case 'TAXI_OFFICIEL': return this.labels[this.currentLang].officialTaxi;
+      case 'TRANSPORTEUR_TOURISTIQUE': return this.labels[this.currentLang].touristCarrier;
+      case 'CHAUFFEUR_PRIVE': return this.labels[this.currentLang].privateDriver;
+      default: return this.labels[this.currentLang].categoryUndefined;
+    }
   }
 
   public ngOnInit(): void {

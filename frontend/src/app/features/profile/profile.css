@@ -84,6 +84,21 @@
   color: #00c853 !important;
 }
 
+.pending { color: #d97706 !important; }
+.danger { color: #dc2626 !important; }
+
+.driver-category {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #f0fdf4;
+}
+
+.metric-box small {
+  color: #64748b;
+  font-size: 12px;
+}
+
 .metric-box {
   background: #f8fafc;
   border-radius: 14px;

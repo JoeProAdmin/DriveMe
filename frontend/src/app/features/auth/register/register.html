@@ -54,7 +54,6 @@
         <label>{{ api.t('register.license') }}<input type="file" accept="image/*,.pdf" (change)="onFileSelected($event, 'permis')"></label>
         <label>{{ api.t('register.registration') }}<input type="file" accept="image/*,.pdf" (change)="onFileSelected($event, 'carteGrise')"></label>
         <label>{{ api.t('register.insurance') }}<input type="file" accept="image/*,.pdf" (change)="onFileSelected($event, 'assurance')"></label>
-        <p class="notice">{{ api.t('register.documentsNotice') }}</p>
         <p class="notice profile-document-notice">{{ texts[currentLang].docsProfileNotice }}</p>
       </div>
 
@@ -69,7 +68,6 @@
       <div *ngIf="currentFlow === 'CHAUFFEUR' && currentStep === 4" class="fields">
         <h2>{{ texts[currentLang].biometric }}</h2>
         <label>{{ api.t('register.selfie') }}<input type="file" accept="image/*" capture="user" (change)="onFileSelected($event, 'selfie')"></label>
-        <p class="notice">{{ texts[currentLang].pending }}</p>
       </div>
 
       <div class="form-actions">

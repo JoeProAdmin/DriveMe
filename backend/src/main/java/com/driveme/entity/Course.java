@@ -1,6 +1,9 @@
 package com.driveme.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import java.time.LocalDateTime;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -58,6 +61,28 @@ public class Course {
     @Column(name = "prix_final", precision = 10, scale = 2)
     private BigDecimal prixFinal;
 
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    @Column(name = "categorie_service", nullable = false, length = 40)
+    private CategorieService categorieService;
+
+    @Column(name = "nombre_passagers", nullable = false)
+    private Integer nombrePassagers;
+
+    @Column(name = "date_heure_depart", nullable = false)
+    private LocalDateTime dateHeureDepart;
+
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    @Column(name = "periode_course", nullable = false, length = 10)
+    private PeriodeCourse periodeCourse;
+
+    @Column(name = "bagages_importants", nullable = false)
+    private boolean bagagesImportants;
+
+    @Column(name = "vehicule_adapte", nullable = false)
+    private boolean vehiculeAdapte;
+
     @Version
     private Long version;
 
@@ -95,6 +120,22 @@ public class Course {
 
         if (this.prixFinal == null && this.prix != null) {
             this.prixFinal = this.prix;
+        }
+
+        if (this.categorieService == null) {
+            this.categorieService = CategorieService.TOUS_SERVICES;
+        }
+
+        if (this.nombrePassagers == null) {
+            this.nombrePassagers = 1;
+        }
+
+        if (this.dateHeureDepart == null) {
+            this.dateHeureDepart = this.dateCreation;
+        }
+
+        if (this.periodeCourse == null) {
+            this.periodeCourse = PeriodeCourse.JOUR;
         }
     }
 
@@ -137,6 +178,13 @@ public class Course {
     public BigDecimal getPrixFinal() {
         return prixFinal;
     }
+
+    public CategorieService getCategorieService() { return categorieService; }
+    public Integer getNombrePassagers() { return nombrePassagers; }
+    public LocalDateTime getDateHeureDepart() { return dateHeureDepart; }
+    public PeriodeCourse getPeriodeCourse() { return periodeCourse; }
+    public boolean isBagagesImportants() { return bagagesImportants; }
+    public boolean isVehiculeAdapte() { return vehiculeAdapte; }
 
     public CourseStatus getStatut() {
         return statut;
@@ -193,6 +241,13 @@ public class Course {
     public void setPrixFinal(BigDecimal prixFinal) {
         this.prixFinal = prixFinal;
     }
+
+    public void setCategorieService(CategorieService categorieService) { this.categorieService = categorieService; }
+    public void setNombrePassagers(Integer nombrePassagers) { this.nombrePassagers = nombrePassagers; }
+    public void setDateHeureDepart(LocalDateTime dateHeureDepart) { this.dateHeureDepart = dateHeureDepart; }
+    public void setPeriodeCourse(PeriodeCourse periodeCourse) { this.periodeCourse = periodeCourse; }
+    public void setBagagesImportants(boolean bagagesImportants) { this.bagagesImportants = bagagesImportants; }
+    public void setVehiculeAdapte(boolean vehiculeAdapte) { this.vehiculeAdapte = vehiculeAdapte; }
 
     public void setStatut(CourseStatus statut) {
         this.statut = statut;

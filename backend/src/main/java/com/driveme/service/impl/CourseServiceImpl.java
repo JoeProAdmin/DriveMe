@@ -3,9 +3,11 @@ package com.driveme.service.impl;
 import com.driveme.dto.CourseCreateDTO;
 import com.driveme.dto.CourseResponseDTO;
 import com.driveme.entity.Chauffeur;
+import com.driveme.entity.CategorieService;
 import com.driveme.entity.Course;
 import com.driveme.entity.CourseStatus;
 import com.driveme.entity.Passager;
+import com.driveme.entity.PeriodeCourse;
 import com.driveme.exception.ResourceNotFoundException;
 import com.driveme.repository.AvisRepository;
 import com.driveme.repository.ChauffeurRepository;
@@ -20,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.stream.Collectors;
 
 @Service
@@ -83,6 +87,19 @@ public class CourseServiceImpl implements CourseService {
         course.setDistanceKm(dto.getDistanceKm());
         course.setDureeEstimeeMinutes(dto.getDureeEstimeeMinutes());
         course.setPrixEstime(dto.getPrixEstime());
+        course.setCategorieService(dto.getCategorieService() == null
+                ? CategorieService.TOUS_SERVICES
+                : dto.getCategorieService());
+        course.setNombrePassagers(dto.getNombrePassagers() == null
+                ? 1
+                : dto.getNombrePassagers());
+        LocalDateTime dateHeureDepart = dto.getDateHeureDepart() == null
+                ? LocalDateTime.now()
+                : dto.getDateHeureDepart();
+        course.setDateHeureDepart(dateHeureDepart);
+        course.setPeriodeCourse(determinerPeriode(dateHeureDepart.toLocalTime()));
+        course.setBagagesImportants(dto.isBagagesImportants());
+        course.setVehiculeAdapte(dto.isVehiculeAdapte());
         course.setStatut(CourseStatus.EN_ATTENTE);
 
         Course saved = courseRepository.save(course);
@@ -364,8 +381,23 @@ public class CourseServiceImpl implements CourseService {
                 course.getDistanceKm(),
                 course.getDureeEstimeeMinutes(),
                 course.getPrixEstime(),
+                course.getCategorieService().name(),
+                course.getNombrePassagers(),
+                course.getDateHeureDepart(),
+                course.getPeriodeCourse().name(),
+                course.isBagagesImportants(),
+                course.isVehiculeAdapte(),
                 paiementStatut,
                 avisDepose
         );
+    }
+
+    private PeriodeCourse determinerPeriode(LocalTime heureDepart) {
+        LocalTime debutNuit = LocalTime.of(20, 0);
+        LocalTime finNuit = LocalTime.of(6, 0);
+
+        return !heureDepart.isBefore(debutNuit) || heureDepart.isBefore(finNuit)
+                ? PeriodeCourse.NUIT
+                : PeriodeCourse.JOUR;
     }
 }

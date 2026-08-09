@@ -20,6 +20,12 @@ public class CourseResponseDTO {
     private Double distanceKm;
     private Integer dureeEstimeeMinutes;
     private BigDecimal prixEstime;
+    private String categorieService;
+    private Integer nombrePassagers;
+    private LocalDateTime dateHeureDepart;
+    private String periodeCourse;
+    private boolean bagagesImportants;
+    private boolean vehiculeAdapte;
 
     // RC3.4 Angular : informations nécessaires pour afficher l’avis
     private String paiementStatut;
@@ -44,6 +50,12 @@ public class CourseResponseDTO {
             Double distanceKm,
             Integer dureeEstimeeMinutes,
             BigDecimal prixEstime,
+            String categorieService,
+            Integer nombrePassagers,
+            LocalDateTime dateHeureDepart,
+            String periodeCourse,
+            boolean bagagesImportants,
+            boolean vehiculeAdapte,
             String paiementStatut,
             boolean avisDepose
     ) {
@@ -62,6 +74,12 @@ public class CourseResponseDTO {
         this.distanceKm = distanceKm;
         this.dureeEstimeeMinutes = dureeEstimeeMinutes;
         this.prixEstime = prixEstime;
+        this.categorieService = categorieService;
+        this.nombrePassagers = nombrePassagers;
+        this.dateHeureDepart = dateHeureDepart;
+        this.periodeCourse = periodeCourse;
+        this.bagagesImportants = bagagesImportants;
+        this.vehiculeAdapte = vehiculeAdapte;
         this.paiementStatut = paiementStatut;
         this.avisDepose = avisDepose;
     }
@@ -185,6 +203,19 @@ public class CourseResponseDTO {
     public void setPrixEstime(BigDecimal prixEstime) {
         this.prixEstime = prixEstime;
     }
+
+    public String getCategorieService() { return categorieService; }
+    public void setCategorieService(String categorieService) { this.categorieService = categorieService; }
+    public Integer getNombrePassagers() { return nombrePassagers; }
+    public void setNombrePassagers(Integer nombrePassagers) { this.nombrePassagers = nombrePassagers; }
+    public LocalDateTime getDateHeureDepart() { return dateHeureDepart; }
+    public void setDateHeureDepart(LocalDateTime dateHeureDepart) { this.dateHeureDepart = dateHeureDepart; }
+    public String getPeriodeCourse() { return periodeCourse; }
+    public void setPeriodeCourse(String periodeCourse) { this.periodeCourse = periodeCourse; }
+    public boolean isBagagesImportants() { return bagagesImportants; }
+    public void setBagagesImportants(boolean bagagesImportants) { this.bagagesImportants = bagagesImportants; }
+    public boolean isVehiculeAdapte() { return vehiculeAdapte; }
+    public void setVehiculeAdapte(boolean vehiculeAdapte) { this.vehiculeAdapte = vehiculeAdapte; }
 
     public String getPaiementStatut() {
         return paiementStatut;

@@ -6,6 +6,7 @@ import com.driveme.entity.Chauffeur;
 import com.driveme.entity.CategorieService;
 import com.driveme.entity.Course;
 import com.driveme.entity.CourseStatus;
+import com.driveme.entity.DriverType;
 import com.driveme.entity.Passager;
 import com.driveme.entity.PeriodeCourse;
 import com.driveme.exception.ResourceNotFoundException;
@@ -183,13 +184,16 @@ public class CourseServiceImpl implements CourseService {
 
         var user = utilisateurRepository.findByEmailIgnoreCase(authenticatedIdentifier)
                 .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable"));
+        Chauffeur chauffeur = null;
         if (user.getRole() == Role.CHAUFFEUR) {
-            Chauffeur chauffeur = chauffeurRepository.findByUtilisateurEmail(authenticatedIdentifier)
+            chauffeur = chauffeurRepository.findByUtilisateurEmail(authenticatedIdentifier)
                     .orElseThrow(() -> new ResourceNotFoundException("Chauffeur introuvable"));
             if (!chauffeur.isDisponible() || chauffeur.getSoldeCredit() == null || chauffeur.getSoldeCredit().signum() <= 0) {
                 return List.of();
             }
         }
+
+        final Chauffeur chauffeurConnecte = chauffeur;
 
         return courseRepository.findAll()
                 .stream()
@@ -197,8 +201,17 @@ public class CourseServiceImpl implements CourseService {
                         course.getStatut() == CourseStatus.EN_ATTENTE
                                 || course.getStatut() == CourseStatus.PROPOSITION_RECUE
                 )
+                .filter(course -> chauffeurConnecte == null
+                        || categorieCompatible(course.getCategorieService(), chauffeurConnecte.getTypeChauffeur()))
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
+    }
+
+    private boolean categorieCompatible(CategorieService categorieService, DriverType typeChauffeur) {
+        if (categorieService == null || categorieService == CategorieService.TOUS_SERVICES) {
+            return true;
+        }
+        return typeChauffeur != null && categorieService.name().equals(typeChauffeur.name());
     }
 
     @Override

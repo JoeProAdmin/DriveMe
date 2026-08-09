@@ -48,6 +48,7 @@ export interface ChauffeurResponseDTO {
   statutValidation: number;
   noteMoyenne?: number;
   soldeCredit?: number;
+  typeChauffeur?: Exclude<CategorieService, 'TOUS_SERVICES'> | null;
   disponible?: boolean;
   latitudeActuelle?: number | null;
   longitudeActuelle?: number | null;

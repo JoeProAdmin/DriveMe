@@ -3,6 +3,7 @@ package com.driveme.service.impl;
 import com.driveme.dto.PropositionCreateDTO;
 import com.driveme.dto.PropositionResponseDTO;
 import com.driveme.entity.Chauffeur;
+import com.driveme.entity.CategorieService;
 import com.driveme.entity.Course;
 import com.driveme.entity.CourseStatus;
 import com.driveme.entity.PropositionChauffeur;
@@ -58,6 +59,9 @@ public class PropositionChauffeurServiceImpl implements PropositionChauffeurServ
         if (chauffeur.getSoldeCredit() == null || chauffeur.getSoldeCredit().signum() <= 0) {
             throw new IllegalStateException("Votre crédit DriveMe est épuisé. Rechargez votre portefeuille.");
         }
+        if (!categorieCompatible(course, chauffeur)) {
+            throw new IllegalStateException("Cette course est réservée à une autre catégorie de chauffeur.");
+        }
         if (propositionRepository.existsByCourseIdAndChauffeurId(courseId, chauffeur.getId())) {
             throw new IllegalStateException("Une proposition existe déjà pour cette course.");
         }
@@ -80,6 +84,14 @@ public class PropositionChauffeurServiceImpl implements PropositionChauffeurServ
         } catch (DataIntegrityViolationException ex) {
             throw new IllegalStateException("Une proposition existe déjà pour cette course.");
         }
+    }
+
+    private boolean categorieCompatible(Course course, Chauffeur chauffeur) {
+        CategorieService categorie = course.getCategorieService();
+        return categorie == null
+                || categorie == CategorieService.TOUS_SERVICES
+                || chauffeur.getTypeChauffeur() != null
+                && categorie.name().equals(chauffeur.getTypeChauffeur().name());
     }
 
     @Override

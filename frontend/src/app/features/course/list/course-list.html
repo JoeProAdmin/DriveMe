@@ -506,6 +506,15 @@
       </p>
     </div>
 
+    <div class="service-information">
+      <span class="service-badge">{{ getServiceLabel(course.categorieService) }}</span>
+      <span>{{ texts[currentLang].passengerCount }}: {{ course.nombrePassagers || 1 }}</span>
+      <span>{{ texts[currentLang].scheduledAt }}: {{ formatScheduledDeparture(course.dateHeureDepart) }}</span>
+      <span>{{ getPeriodLabel(course.periodeCourse) }}</span>
+      <span *ngIf="course.bagagesImportants">{{ texts[currentLang].largeLuggage }}</span>
+      <span *ngIf="course.vehiculeAdapte">{{ texts[currentLang].adaptedVehicle }}</span>
+    </div>
+
     <div class="price-box">
       <span>{{ texts[currentLang].price }}</span>
       <strong>{{ course.prix }} {{ texts[currentLang].mad }}</strong>

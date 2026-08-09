@@ -62,6 +62,40 @@
         <div class="route-help">{{ calculatingRoute ? api.t('course.calculating') : api.t('course.selectPoints') }}</div>
       </ng-template>
 
+      <div class="service-grid">
+        <div class="field service-field">
+          <label for="service-category">{{ api.t('course.serviceType') }}</label>
+          <select id="service-category" name="categorieService" [(ngModel)]="formModel.categorieService" required>
+            <option value="TOUS_SERVICES">{{ api.t('course.serviceAll') }}</option>
+            <option value="TAXI_OFFICIEL">{{ api.t('course.serviceTaxi') }}</option>
+            <option value="TRANSPORTEUR_TOURISTIQUE">{{ api.t('course.serviceTourist') }}</option>
+            <option value="CHAUFFEUR_PRIVE">{{ api.t('course.servicePrivate') }}</option>
+          </select>
+        </div>
+
+        <div class="field passenger-field">
+          <label for="passenger-count">{{ api.t('course.passengerCount') }}</label>
+          <input id="passenger-count" type="number" name="nombrePassagers" [(ngModel)]="formModel.nombrePassagers" min="1" max="50" step="1" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="departure-date-time">{{ api.t('course.departureDateTime') }}</label>
+        <input id="departure-date-time" type="datetime-local" name="dateHeureDepart" [(ngModel)]="formModel.dateHeureDepart" [min]="minimumDepartureDateTime" required>
+      </div>
+
+      <fieldset class="options-fieldset">
+        <legend>{{ api.t('course.options') }}</legend>
+        <label class="check-option">
+          <input type="checkbox" name="bagagesImportants" [(ngModel)]="formModel.bagagesImportants">
+          <span>{{ api.t('course.largeLuggage') }}</span>
+        </label>
+        <label class="check-option">
+          <input type="checkbox" name="vehiculeAdapte" [(ngModel)]="formModel.vehiculeAdapte">
+          <span>{{ api.t('course.accessibleVehicle') }}</span>
+        </label>
+      </fieldset>
+
       <div class="field">
         <label for="proposed-price">{{ api.t('course.yourPrice') }}</label>
         <div class="price-row">
@@ -73,13 +107,18 @@
       <div class="summary-box">
         <p><strong>{{ api.t('course.departure') }}</strong><span>{{ formModel.adresseDepart || api.t('course.notSetM') }}</span></p>
         <p><strong>{{ api.t('course.destination') }}</strong><span>{{ formModel.adresseArrivee || api.t('course.notSetF') }}</span></p>
+        <p><strong>{{ api.t('course.serviceType') }}</strong><span>{{ serviceLabel(formModel.categorieService) }}</span></p>
+        <p><strong>{{ api.t('course.passengerCount') }}</strong><span>{{ formModel.nombrePassagers }}</span></p>
+        <p><strong>{{ api.t('course.departureDateTime') }}</strong><span>{{ formModel.dateHeureDepart || api.t('course.notSetF') }}</span></p>
+        <p><strong>{{ api.t('course.largeLuggage') }}</strong><span>{{ api.t(formModel.bagagesImportants ? 'course.yes' : 'course.no') }}</span></p>
+        <p><strong>{{ api.t('course.accessibleVehicle') }}</strong><span>{{ api.t(formModel.vehiculeAdapte ? 'course.yes' : 'course.no') }}</span></p>
         <p><strong>{{ api.t('course.proposedPrice') }}</strong><span>{{ formModel.prix || 0 }} MAD</span></p>
       </div>
 
       <div *ngIf="errorMessage" class="message error-message">{{ errorMessage }}</div>
       <div *ngIf="successMessage" class="message success-message">{{ successMessage }}</div>
 
-      <button type="submit" class="submit-btn" [disabled]="loading || calculatingRoute || !departurePoint || !arrivalPoint || !formModel.prix">
+      <button type="submit" class="submit-btn" [disabled]="loading || calculatingRoute || !departurePoint || !arrivalPoint || !formModel.prix || !formModel.dateHeureDepart">
         {{ loading ? api.t('course.creating') : api.t('course.submit') }}
       </button>
     </form>

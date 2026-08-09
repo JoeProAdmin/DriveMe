@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { catchError, forkJoin, map, of } from 'rxjs';
 import {
   ApiService,
+  CategorieService,
   CourseCreateDTO
 } from '../../../core/api.service';
 
@@ -53,8 +54,15 @@ export class CreateCourse implements OnInit, OnDestroy {
   public formModel = {
     adresseDepart: '',
     adresseArrivee: '',
-    prix: null as number | null
+    prix: null as number | null,
+    categorieService: 'TOUS_SERVICES' as CategorieService,
+    nombrePassagers: 1,
+    dateHeureDepart: '',
+    bagagesImportants: false,
+    vehiculeAdapte: false
   };
+
+  public minimumDepartureDateTime = '';
 
   public departureResults: GeoPoint[] = [];
   public arrivalResults: GeoPoint[] = [];
@@ -81,6 +89,7 @@ export class CreateCourse implements OnInit, OnDestroy {
   private routeLayer: any = null;
 
   ngOnInit(): void {
+    this.minimumDepartureDateTime = this.toLocalDateTimeInputValue(new Date());
     this.restorePendingRide();
     setTimeout(() => this.initMap(), 100);
   }
@@ -243,6 +252,24 @@ export class CreateCourse implements OnInit, OnDestroy {
       return;
     }
 
+    if (!Number.isInteger(Number(this.formModel.nombrePassagers))
+      || this.formModel.nombrePassagers < 1
+      || this.formModel.nombrePassagers > 50) {
+      this.errorMessage = this.api.t('course.invalidPassengerCount');
+      return;
+    }
+
+    if (!this.formModel.dateHeureDepart) {
+      this.errorMessage = this.api.t('course.missingDepartureDate');
+      return;
+    }
+
+    const departureDate = new Date(this.formModel.dateHeureDepart);
+    if (Number.isNaN(departureDate.getTime()) || departureDate.getTime() < Date.now()) {
+      this.errorMessage = this.api.t('course.pastDepartureDate');
+      return;
+    }
+
     this.loading = true;
 
     const payload: CourseCreateDTO = {
@@ -255,7 +282,12 @@ export class CreateCourse implements OnInit, OnDestroy {
           longitudeArrivee: this.arrivalPoint!.longitude,
           distanceKm: this.distanceKm,
           dureeEstimeeMinutes: this.durationMinutes,
-          prixEstime: this.estimatedPrice
+          prixEstime: this.estimatedPrice,
+          categorieService: this.formModel.categorieService,
+          nombrePassagers: Number(this.formModel.nombrePassagers),
+          dateHeureDepart: this.formModel.dateHeureDepart,
+          bagagesImportants: this.formModel.bagagesImportants,
+          vehiculeAdapte: this.formModel.vehiculeAdapte
     };
 
     this.api.requestCourse(payload).subscribe({
@@ -417,6 +449,21 @@ export class CreateCourse implements OnInit, OnDestroy {
   private round(value: number, decimals: number): number {
     const factor = 10 ** decimals;
     return Math.round(value * factor) / factor;
+  }
+
+  public serviceLabel(category: CategorieService): string {
+    const keys: Record<CategorieService, string> = {
+      TOUS_SERVICES: 'course.serviceAll',
+      TAXI_OFFICIEL: 'course.serviceTaxi',
+      TRANSPORTEUR_TOURISTIQUE: 'course.serviceTourist',
+      CHAUFFEUR_PRIVE: 'course.servicePrivate'
+    };
+    return this.api.t(keys[category]);
+  }
+
+  private toLocalDateTimeInputValue(date: Date): string {
+    const offsetMilliseconds = date.getTimezoneOffset() * 60_000;
+    return new Date(date.getTime() - offsetMilliseconds).toISOString().slice(0, 16);
   }
 
   private escapeHtml(value: string): string {

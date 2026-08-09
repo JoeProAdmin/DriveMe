@@ -82,6 +82,14 @@ export interface PassagerResponseDTO {
   dateCreation?: string;
 }
 
+export type CategorieService =
+  | 'TOUS_SERVICES'
+  | 'TAXI_OFFICIEL'
+  | 'TRANSPORTEUR_TOURISTIQUE'
+  | 'CHAUFFEUR_PRIVE';
+
+export type PeriodeCourse = 'JOUR' | 'NUIT';
+
 export interface CourseCreateDTO {
   adresseDepart: string;
   adresseArrivee: string;
@@ -93,6 +101,11 @@ export interface CourseCreateDTO {
   distanceKm?: number | null;
   dureeEstimeeMinutes?: number | null;
   prixEstime?: number | null;
+  categorieService: CategorieService;
+  nombrePassagers: number;
+  dateHeureDepart: string;
+  bagagesImportants: boolean;
+  vehiculeAdapte: boolean;
 }
 
 export interface CourseResponseDTO extends CourseCreateDTO {
@@ -103,6 +116,7 @@ export interface CourseResponseDTO extends CourseCreateDTO {
   dateCreation: string;
   paiementStatut: string | null;
   avisDepose: boolean;
+  periodeCourse: PeriodeCourse;
 }
 
 export interface PropositionCreateDTO {

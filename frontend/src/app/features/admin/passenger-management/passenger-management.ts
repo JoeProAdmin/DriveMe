@@ -111,11 +111,15 @@ export class PassengerManagementComponent implements OnInit {
       return;
     }
 
+    this.errorMessage = '';
+
     this.apiService.deletePassager(passager.id).subscribe({
       next: () => this.loadPassagers(),
       error: (error) => {
         console.error('Erreur suppression passager', error);
-        this.errorMessage = 'Suppression impossible. Ce passager possède peut-être des courses liées.';
+        this.errorMessage = error?.error?.message
+          || (typeof error?.error === 'string' ? error.error : '')
+          || 'La suppression du passager a échoué.';
         this.cdr.markForCheck();
       }
     });

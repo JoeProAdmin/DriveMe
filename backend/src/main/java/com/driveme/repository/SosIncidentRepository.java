@@ -8,4 +8,5 @@ import java.util.List;
 public interface SosIncidentRepository extends JpaRepository<SosIncident, Long> {
     List<SosIncident> findAllByOrderByDateCreationDesc();
     List<SosIncident> findByUtilisateurIdOrderByDateCreationDesc(Long utilisateurId);
+    boolean existsByUtilisateurId(Long utilisateurId);
 }

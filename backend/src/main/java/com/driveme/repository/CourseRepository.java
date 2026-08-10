@@ -17,6 +17,8 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     List<Course> findByPassagerId(Long passagerId);
 
+    boolean existsByPassagerId(Long passagerId);
+
     List<Course> findByStatut(CourseStatus statut);
 
     List<Course> findByPassagerUtilisateurEmailIgnoreCase(String email);

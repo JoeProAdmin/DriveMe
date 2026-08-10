@@ -6,11 +6,15 @@ import com.driveme.entity.Language;
 import com.driveme.entity.Passager;
 import com.driveme.entity.Role;
 import com.driveme.entity.Utilisateur;
+import com.driveme.exception.BusinessRuleException;
 import com.driveme.exception.ResourceNotFoundException;
+import com.driveme.repository.CourseRepository;
 import com.driveme.repository.PassagerRepository;
+import com.driveme.repository.SosIncidentRepository;
 import com.driveme.repository.UtilisateurRepository;
 import com.driveme.service.PassagerService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,11 +24,17 @@ public class PassagerServiceImpl implements PassagerService {
 
     private final PassagerRepository passagerRepository;
     private final UtilisateurRepository utilisateurRepository;
+    private final CourseRepository courseRepository;
+    private final SosIncidentRepository sosIncidentRepository;
 
     public PassagerServiceImpl(PassagerRepository passagerRepository,
-                               UtilisateurRepository utilisateurRepository) {
+                               UtilisateurRepository utilisateurRepository,
+                               CourseRepository courseRepository,
+                               SosIncidentRepository sosIncidentRepository) {
         this.passagerRepository = passagerRepository;
         this.utilisateurRepository = utilisateurRepository;
+        this.courseRepository = courseRepository;
+        this.sosIncidentRepository = sosIncidentRepository;
     }
 
     @Override
@@ -90,12 +100,31 @@ public class PassagerServiceImpl implements PassagerService {
     }
 
     @Override
+    @Transactional
     public void deletePassager(Long id) {
-        if (!passagerRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Passager introuvable");
+        Passager passager = passagerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Passager introuvable"));
+
+        Utilisateur utilisateur = passager.getUtilisateur();
+        Long utilisateurId = utilisateur.getId();
+
+        if (courseRepository.existsByPassagerId(id)) {
+            throw new BusinessRuleException(
+                    "Suppression impossible : ce passager possède un historique de courses. " +
+                    "Son compte doit être conservé pour garantir la traçabilité."
+            );
         }
 
-        passagerRepository.deleteById(id);
+        if (sosIncidentRepository.existsByUtilisateurId(utilisateurId)) {
+            throw new BusinessRuleException(
+                    "Suppression impossible : ce passager possède un historique d'incidents SOS. " +
+                    "Son compte doit être conservé pour garantir la traçabilité."
+            );
+        }
+
+        passagerRepository.delete(passager);
+        passagerRepository.flush();
+        utilisateurRepository.delete(utilisateur);
     }
 
     @Override

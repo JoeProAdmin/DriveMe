@@ -1,11 +1,57 @@
-Copyright (c) 2025-2026 Youssef Qarnouf
+DRIVEME — LICENCE PROPRIÉTAIRE DE CONSULTATION ACADÉMIQUE
 
-Tous droits réservés.
+Copyright © 2025-2026 Youssef Qarnouf. Tous droits réservés.
 
-Ce projet a été développé dans le cadre du Travail de Fin d'Études (TFE) ICC Bruxelles.
+1. Propriété
 
-Aucune permission n'est accordée pour copier, modifier, redistribuer, publier, vendre, héberger, réutiliser ou exploiter tout ou partie du code source, de l'architecture, des documents, des maquettes ou des ressources associées sans autorisation écrite préalable de l'auteur.
+Le code source, l’architecture, les interfaces, les textes, les maquettes, la documentation, les schémas et les autres ressources originales composant le projet DriveMe demeurent la propriété exclusive de leur auteur, sous réserve des droits appartenant éventuellement à des tiers sur leurs propres composants.
 
-Ce dépôt est publié uniquement à des fins académiques, de démonstration et d'évaluation.
+2. Autorisation limitée
 
-Aucune licence Open Source n'est accordée.
+L’accès public à ce dépôt autorise uniquement la consultation du projet aux fins suivantes :
+
+- évaluation académique par l’ICC Bruxelles et son jury ;
+- démonstration du travail réalisé ;
+- consultation professionnelle du portfolio de l’auteur.
+
+Cette autorisation limitée ne constitue ni une licence open source, ni une cession de droits, ni une autorisation implicite d’utilisation.
+
+3. Usages interdits
+
+Sans autorisation écrite préalable de Youssef Qarnouf, il est notamment interdit de :
+
+- copier ou reproduire tout ou partie du projet au-delà des copies techniquement nécessaires à sa consultation ;
+- modifier, adapter, traduire ou créer une œuvre dérivée ;
+- redistribuer, republier, transmettre, mettre à disposition ou héberger une copie ;
+- intégrer le projet ou une partie substantielle de celui-ci dans un autre produit, service, travail académique ou dépôt ;
+- vendre, louer, concéder sous licence ou exploiter commercialement le projet ;
+- supprimer ou altérer les mentions de copyright, d’auteur ou de licence ;
+- présenter le projet, son code ou ses éléments originaux comme sa propre création.
+
+4. Composants tiers
+
+Les bibliothèques, frameworks et autres composants tiers restent soumis à leurs licences respectives. La présente licence ne limite pas les droits accordés directement par ces tiers sur leurs propres composants et ne confère aucun droit supplémentaire sur ceux-ci.
+
+5. Absence de garantie
+
+Le projet est fourni à des fins académiques et de démonstration, « en l’état », sans garantie expresse ou implicite. L’auteur ne garantit pas son adéquation à un usage de production ni l’absence d’erreurs. Toute utilisation non autorisée ou tout déploiement effectué par un tiers se fait à ses propres risques.
+
+6. Données, marques et environnement de production
+
+La publication du code n’accorde aucun droit sur le nom DriveMe, le domaine driveme.cloud, les identités visuelles, les comptes, les données, les secrets ou les environnements de production. Les identifiants de démonstration ne peuvent être utilisés qu’aux fins expressément prévues par l’auteur.
+
+7. Demandes d’autorisation
+
+Toute demande d’autorisation doit être adressée à l’auteur par un canal privé. Aucune autorisation n’est valable sans accord écrit explicite.
+
+---
+
+DRIVEME — PROPRIETARY ACADEMIC VIEWING LICENSE
+
+Copyright © 2025-2026 Youssef Qarnouf. All rights reserved.
+
+Public access to this repository permits viewing solely for academic assessment, project demonstration and the author’s professional portfolio. No open-source licence is granted.
+
+Without the author’s prior written permission, copying, modification, adaptation, redistribution, republication, hosting, incorporation into another project, creation of derivative works, commercial use, removal of notices, or presentation as another person’s work is prohibited.
+
+Third-party components remain governed by their respective licences. The project is provided for academic and demonstration purposes “as is”, without warranty. Public availability grants no rights in the DriveMe name, driveme.cloud domain, branding, accounts, data, secrets or production environment.

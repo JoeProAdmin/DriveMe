@@ -1,18 +1,66 @@
+# IDE et système
 .idea/
 *.iml
 *.iws
 *.ipr
+.vscode/
 *.log
 .DS_Store
 Thumbs.db
+
+# Secrets et configurations locales
+.env
+.env.*
+!.env.example
+*.local
+application-local.properties
+application-secrets.properties
+secrets/
+credentials/
+
+# Clés, certificats et jetons
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+id_rsa
+id_rsa.*
+
+# Sauvegardes et exports de bases de données
+backups/
+backup/
+dumps/
+dump/
+*.bak
+*.backup
+*.dump
+*_backup_*.sql
+*_sauvegarde_*.sql
+*_avant_*.sql
+docker/mysql/data/
+
+# Documents et téléversements utilisateurs
+uploads/
+storage/
+documents/
+driver-documents/
+
+# Java / Maven
+backend/target/
+*.class
+
+# Angular / Node
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+node_modules/
+dist/
+.angular/
+coverage/
+
+# Fichiers historiques explicitement locaux
 driveme_avant_rc3.1b.sql
 course_backup_avant_rc32.sql
-
-# Secrets Docker locaux
-.env
-
-# Sauvegarde locale de la base Docker avant Flyway
 sql/driveme_docker_avant_flyway_20260805.sql
-
-# Sauvegardes locales de bases de donnees
-backups/

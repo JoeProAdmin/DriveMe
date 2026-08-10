@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
+import com.driveme.entity.DriverType;
 
 @Service
 public class ChauffeurServiceImpl implements ChauffeurService {
@@ -94,6 +95,9 @@ public class ChauffeurServiceImpl implements ChauffeurService {
         if (Boolean.TRUE.equals(dto.getDisponible())) {
             if (chauffeur.getStatutValidation() == null || chauffeur.getStatutValidation() != 1) {
                 throw new IllegalStateException("Le chauffeur doit être validé avant de devenir disponible.");
+            }
+            if (!dossierValidable(chauffeur)) {
+                throw new IllegalStateException("Le dossier professionnel n'est plus complet ou approuvé.");
             }
             if (chauffeur.getLatitudeActuelle() == null || chauffeur.getLongitudeActuelle() == null) {
                 throw new IllegalStateException("La position doit être enregistrée avant d'activer la disponibilité.");
@@ -182,8 +186,28 @@ public class ChauffeurServiceImpl implements ChauffeurService {
         }
 
         chauffeur.setStatutValidation(statut.byteValue());
+        if (statut != 1) chauffeur.setDisponible(false);
 
         return mapToDTO(chauffeurRepository.save(chauffeur));
+    }
+
+    @Override
+    public ChauffeurResponseDTO updateTypeChauffeur(Long id, DriverType typeChauffeur) {
+        if (typeChauffeur == null) throw new IllegalArgumentException("La catégorie professionnelle est obligatoire");
+        Chauffeur chauffeur = chauffeurRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Chauffeur introuvable : " + id));
+        if (chauffeur.getTypeChauffeur() != typeChauffeur) {
+            chauffeur.setTypeChauffeur(typeChauffeur);
+            chauffeur.setStatutValidation((byte) 0);
+            chauffeur.setDisponible(false);
+        }
+        return mapToDTO(chauffeurRepository.save(chauffeur));
+    }
+
+    @Override
+    public Chauffeur getEntityById(Long id) {
+        return chauffeurRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Chauffeur introuvable : " + id));
     }
 
     @Override
@@ -224,6 +248,9 @@ public class ChauffeurServiceImpl implements ChauffeurService {
         dto.setImmatriculation(chauffeur.getImmatriculation());
         dto.setTypeChauffeur(chauffeur.getTypeChauffeur());
         dto.setDocuments(chauffeurDocumentService.listForChauffeur(chauffeur.getId()));
+        dto.setDocumentsObligatoires(chauffeurDocumentService.requiredTypes(chauffeur.getTypeChauffeur())
+                .stream().map(Enum::name).toList());
+        dto.setDossierComplet(dossierValidable(chauffeur));
         return dto;
     }
 
@@ -232,6 +259,7 @@ public class ChauffeurServiceImpl implements ChauffeurService {
                 && chauffeur.getModeleVehicule() != null && !chauffeur.getModeleVehicule().isBlank()
                 && chauffeur.getAnneeVehicule() != null
                 && chauffeur.getImmatriculation() != null && !chauffeur.getImmatriculation().isBlank()
-                && chauffeurDocumentService.requiredDocumentsApproved(chauffeur.getId());
+                && chauffeur.getTypeChauffeur() != null
+                && chauffeurDocumentService.requiredDocumentsApproved(chauffeur.getId(), chauffeur.getTypeChauffeur());
     }
 }

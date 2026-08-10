@@ -14,6 +14,7 @@ import com.driveme.repository.CourseRepository;
 import com.driveme.repository.PropositionChauffeurRepository;
 import com.driveme.service.PropositionChauffeurService;
 import com.driveme.service.PortefeuilleService;
+import com.driveme.service.ChauffeurDocumentService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,15 +30,18 @@ public class PropositionChauffeurServiceImpl implements PropositionChauffeurServ
     private final CourseRepository courseRepository;
     private final ChauffeurRepository chauffeurRepository;
     private final PortefeuilleService portefeuilleService;
+    private final ChauffeurDocumentService chauffeurDocumentService;
 
     public PropositionChauffeurServiceImpl(PropositionChauffeurRepository propositionRepository,
                                             CourseRepository courseRepository,
                                             ChauffeurRepository chauffeurRepository,
-                                            PortefeuilleService portefeuilleService) {
+                                            PortefeuilleService portefeuilleService,
+                                            ChauffeurDocumentService chauffeurDocumentService) {
         this.propositionRepository = propositionRepository;
         this.courseRepository = courseRepository;
         this.chauffeurRepository = chauffeurRepository;
         this.portefeuilleService = portefeuilleService;
+        this.chauffeurDocumentService = chauffeurDocumentService;
     }
 
     @Override
@@ -52,6 +56,13 @@ public class PropositionChauffeurServiceImpl implements PropositionChauffeurServ
                 .orElseThrow(() -> new ResourceNotFoundException("Aucun profil chauffeur n'est associé au compte authentifié"));
         if (chauffeur.getStatutValidation() == null || chauffeur.getStatutValidation() != CHAUFFEUR_VALIDE) {
             throw new IllegalStateException("Le chauffeur doit être validé pour envoyer une proposition.");
+        }
+        if (chauffeur.getTypeChauffeur() == null
+                || !chauffeurDocumentService.requiredDocumentsApproved(chauffeur.getId(), chauffeur.getTypeChauffeur())) {
+            chauffeur.setDisponible(false);
+            chauffeur.setStatutValidation((byte) 0);
+            chauffeurRepository.save(chauffeur);
+            throw new IllegalStateException("Le dossier professionnel doit être complet et approuvé pour envoyer une proposition.");
         }
         if (!chauffeur.isDisponible()) {
             throw new IllegalStateException("Le chauffeur doit être disponible pour envoyer une proposition.");

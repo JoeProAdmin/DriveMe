@@ -335,6 +335,15 @@
 
         <section class="dossier-section">
           <h3>{{ d.vehicle }}</h3>
+          <label class="category-admin-field">
+            Catégorie professionnelle
+            <select [ngModel]="chauffeurSelectionne.typeChauffeur" (ngModelChange)="modifierCategorie($event)">
+              <option [ngValue]="null">Catégorie à définir</option>
+              <option value="TAXI_OFFICIEL">Taxi officiel</option>
+              <option value="TRANSPORTEUR_TOURISTIQUE">Transporteur touristique</option>
+              <option value="CHAUFFEUR_PRIVE">Chauffeur privé</option>
+            </select>
+          </label>
           <dl class="vehicle-grid">
             <div class="detail-field">
               <dt>{{ d.brand }}</dt>
@@ -396,6 +405,10 @@
 
               <ng-template #documentAbsent>
                 <p class="document-missing">{{ d.absent }}</p>
+                <label *ngIf="documentObligatoire(type)" class="btn-doc-view">
+                  Ajouter
+                  <input type="file" accept="image/*,.pdf" hidden (change)="ajouterDocument(type, $event)">
+                </label>
               </ng-template>
             </article>
           </div>

@@ -6,6 +6,7 @@ import com.driveme.dto.ChauffeurPositionRequestDTO;
 import com.driveme.dto.ChauffeurDisponibiliteRequestDTO;
 
 import java.math.BigDecimal;
+import com.driveme.entity.DriverType;
 import java.util.List;
 
 public interface ChauffeurService {
@@ -27,6 +28,8 @@ public interface ChauffeurService {
     ChauffeurResponseDTO updateChauffeur(Long id, ChauffeurCreateDTO dto);
 
     ChauffeurResponseDTO updateStatutValidation(Long id, Integer statut);
+    ChauffeurResponseDTO updateTypeChauffeur(Long id, DriverType typeChauffeur);
+    com.driveme.entity.Chauffeur getEntityById(Long id);
 
     void deleteChauffeur(Long id);
 

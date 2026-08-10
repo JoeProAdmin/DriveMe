@@ -6,6 +6,7 @@ import com.driveme.dto.ChauffeurPositionRequestDTO;
 import com.driveme.dto.ChauffeurDisponibiliteRequestDTO;
 import com.driveme.dto.ChauffeurDocumentDTO;
 import com.driveme.entity.DocumentValidationStatus;
+import com.driveme.entity.DriverType;
 import com.driveme.service.ChauffeurDocumentService;
 import com.driveme.service.ChauffeurService;
 import jakarta.validation.Valid;
@@ -16,6 +17,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import com.driveme.entity.ChauffeurDocumentType;
 
 import java.util.List;
 import java.security.Principal;
@@ -127,6 +130,13 @@ public class ChauffeurController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{id}/type")
+    public ResponseEntity<ChauffeurResponseDTO> updateTypeChauffeur(
+            @PathVariable Long id, @RequestParam DriverType type) {
+        return ResponseEntity.ok(chauffeurService.updateTypeChauffeur(id, type));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}/documents/{documentId}/validation")
     public ResponseEntity<ChauffeurDocumentDTO> updateDocumentValidation(
             @PathVariable Long id,
@@ -159,6 +169,16 @@ public class ChauffeurController {
                 .contentType(mediaType)
                 .header(HttpHeaders.CONTENT_DISPOSITION, disposition.toString())
                 .body(content.resource());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping(value = "/{id}/documents/{type}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ChauffeurDocumentDTO> addDocument(
+            @PathVariable Long id,
+            @PathVariable ChauffeurDocumentType type,
+            @RequestPart("file") MultipartFile file) {
+        com.driveme.entity.Chauffeur chauffeur = chauffeurService.getEntityById(id);
+        return new ResponseEntity<>(chauffeurDocumentService.addDocument(chauffeur, type, file), HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

@@ -26,7 +26,7 @@ public class ChauffeurDocument {
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "type_document", nullable = false, length = 30)
+    @Column(name = "type_document", nullable = false, length = 50)
     private ChauffeurDocumentType typeDocument;
 
     @Column(name = "nom_original", nullable = false)

@@ -32,7 +32,9 @@ export class ChauffeurList implements OnInit {
   };
 
   public readonly documentTypes = [
-    'CIN', 'PERMIS', 'CARTE_GRISE', 'ASSURANCE', 'SELFIE', 'VEHICULE_AVANT', 'VEHICULE_ARRIERE'
+    'CIN', 'PERMIS', 'CARTE_GRISE', 'ASSURANCE', 'SELFIE',
+    'LICENCE_TAXI', 'AGREMENT_TRANSPORT_TOURISTIQUE', 'JUSTIFICATIF_ACTIVITE_PROFESSIONNELLE',
+    'VEHICULE_AVANT', 'VEHICULE_ARRIERE'
   ];
 
   public get d(): any { return this.dossierTexts[this.apiService.currentLanguage()]; }
@@ -52,6 +54,7 @@ export class ChauffeurList implements OnInit {
   public chargement = false;
   public actionEnCoursId: number | null = null;
   public documentActionEnCoursId: number | null = null;
+  public categorieActionEnCours = false;
   public selfieUrl: string | null = null;
 
   public messageSucces = '';
@@ -286,18 +289,36 @@ export class ChauffeurList implements OnInit {
     return this.chauffeurSelectionne?.documents?.find(document => document.type === type);
   }
 
+  public modifierCategorie(type: 'TAXI_OFFICIEL' | 'TRANSPORTEUR_TOURISTIQUE' | 'CHAUFFEUR_PRIVE' | null): void {
+    if (!this.chauffeurSelectionne || !type || this.categorieActionEnCours) return;
+    this.categorieActionEnCours = true;
+    this.apiService.modifierTypeChauffeur(this.chauffeurSelectionne.id, type).subscribe({
+      next: updated => {
+        this.chauffeurSelectionne = updated;
+        this.chauffeurs = this.chauffeurs.map(item => item.id === updated.id ? updated : item);
+        this.categorieActionEnCours = false;
+        this.messageSucces = 'Catégorie enregistrée. Le dossier doit être contrôlé avant approbation.';
+        this.cdr.markForCheck();
+      },
+      error: (erreur: any) => {
+        this.categorieActionEnCours = false;
+        this.messageErreur = erreur?.error?.message || 'Impossible de modifier la catégorie.';
+      }
+    });
+  }
+
   public libelleTypeDocument(type: string): string {
     const labels: Record<string, Record<string, string>> = {
-      fr: { CIN:'CIN', PERMIS:'Permis de conduire', CARTE_GRISE:'Carte grise', ASSURANCE:'Assurance', SELFIE:'Selfie avec CIN', VEHICULE_AVANT:'Photo véhicule avant', VEHICULE_ARRIERE:'Photo véhicule arrière' },
-      en: { CIN:'ID card', PERMIS:'Driving licence', CARTE_GRISE:'Vehicle registration', ASSURANCE:'Insurance', SELFIE:'Selfie with ID', VEHICULE_AVANT:'Front vehicle photo', VEHICULE_ARRIERE:'Rear vehicle photo' },
-      ar: { CIN:'البطاقة الوطنية', PERMIS:'رخصة السياقة', CARTE_GRISE:'البطاقة الرمادية', ASSURANCE:'التأمين', SELFIE:'صورة مع البطاقة', VEHICULE_AVANT:'صورة أمامية للمركبة', VEHICULE_ARRIERE:'صورة خلفية للمركبة' },
-      es: { CIN:'Documento de identidad', PERMIS:'Permiso de conducir', CARTE_GRISE:'Permiso de circulación', ASSURANCE:'Seguro', SELFIE:'Selfie con documento', VEHICULE_AVANT:'Foto frontal del vehículo', VEHICULE_ARRIERE:'Foto trasera del vehículo' }
+      fr: { CIN:'CIN', PERMIS:'Permis de conduire', CARTE_GRISE:'Carte grise', ASSURANCE:'Assurance', SELFIE:'Selfie avec CIN', LICENCE_TAXI:'Licence / autorisation de taxi', AGREMENT_TRANSPORT_TOURISTIQUE:'Agrément transport touristique', JUSTIFICATIF_ACTIVITE_PROFESSIONNELLE:"Justificatif d'activité ou Autorisation (Patente / Auto-entrepreneur / Agrément)", VEHICULE_AVANT:'Photo véhicule avant', VEHICULE_ARRIERE:'Photo véhicule arrière' },
+      en: { CIN:'ID card', PERMIS:'Driving licence', CARTE_GRISE:'Vehicle registration', ASSURANCE:'Insurance', SELFIE:'Selfie with ID', LICENCE_TAXI:'Taxi licence / authorisation', AGREMENT_TRANSPORT_TOURISTIQUE:'Tourist transport approval', JUSTIFICATIF_ACTIVITE_PROFESSIONNELLE:'Activity evidence or authorisation (business tax / self-employed status / approval)', VEHICULE_AVANT:'Front vehicle photo', VEHICULE_ARRIERE:'Rear vehicle photo' },
+      ar: { CIN:'البطاقة الوطنية', PERMIS:'رخصة السياقة', CARTE_GRISE:'البطاقة الرمادية', ASSURANCE:'التأمين', SELFIE:'صورة مع البطاقة', LICENCE_TAXI:'رخصة سيارة الأجرة', AGREMENT_TRANSPORT_TOURISTIQUE:'اعتماد النقل السياحي', JUSTIFICATIF_ACTIVITE_PROFESSIONNELLE:'إثبات النشاط أو الترخيص (الضريبة المهنية / وضع المقاول الذاتي / الاعتماد)', VEHICULE_AVANT:'صورة أمامية للمركبة', VEHICULE_ARRIERE:'صورة خلفية للمركبة' },
+      es: { CIN:'Documento de identidad', PERMIS:'Permiso de conducir', CARTE_GRISE:'Permiso de circulación', ASSURANCE:'Seguro', SELFIE:'Selfie con documento', LICENCE_TAXI:'Licencia de taxi', AGREMENT_TRANSPORT_TOURISTIQUE:'Autorización de transporte turístico', JUSTIFICATIF_ACTIVITE_PROFESSIONNELLE:'Justificante de actividad o autorización (patente / autónomo / habilitación)', VEHICULE_AVANT:'Foto frontal del vehículo', VEHICULE_ARRIERE:'Foto trasera del vehículo' }
     };
     return labels[this.apiService.currentLanguage()]?.[type] || type;
   }
 
   public documentObligatoire(type: string): boolean {
-    return ['CIN', 'PERMIS', 'CARTE_GRISE', 'ASSURANCE', 'SELFIE'].includes(type);
+    return this.chauffeurSelectionne?.documentsObligatoires?.includes(type) ?? false;
   }
 
   public libelleStatutDocument(statut?: string): string {
@@ -348,6 +369,22 @@ export class ChauffeurList implements OnInit {
         this.documentActionEnCoursId = null;
         this.messageErreur = erreur?.error?.message || 'La validation du document a échoué.';
       }
+    });
+  }
+
+  public ajouterDocument(type: string, event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!this.chauffeurSelectionne || !file) return;
+    const chauffeurId = this.chauffeurSelectionne.id;
+    this.apiService.ajouterDocumentChauffeur(chauffeurId, type, file).subscribe({
+      next: document => {
+        const documents = [...(this.chauffeurSelectionne?.documents || []), document];
+        this.chauffeurSelectionne = { ...this.chauffeurSelectionne!, documents, statutValidation: 0, disponible: false };
+        this.chauffeurs = this.chauffeurs.map(item => item.id === chauffeurId ? this.chauffeurSelectionne! : item);
+        this.messageSucces = 'Document ajouté. Il est maintenant en attente de validation.';
+        this.cdr.markForCheck();
+      },
+      error: (erreur: any) => this.messageErreur = erreur?.error?.message || 'Impossible d’ajouter le document.'
     });
   }
 

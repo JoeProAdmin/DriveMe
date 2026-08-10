@@ -136,7 +136,10 @@ public class AuthController {
             @RequestPart("assurance") MultipartFile assurance,
             @RequestPart("selfie") MultipartFile selfie,
             @RequestPart(value = "photoAvant", required = false) MultipartFile photoAvant,
-            @RequestPart(value = "photoArriere", required = false) MultipartFile photoArriere
+            @RequestPart(value = "photoArriere", required = false) MultipartFile photoArriere,
+            @RequestPart(value = "licenceTaxi", required = false) MultipartFile licenceTaxi,
+            @RequestPart(value = "agrementTouristique", required = false) MultipartFile agrementTouristique,
+            @RequestPart(value = "justificatifProfessionnel", required = false) MultipartFile justificatifProfessionnel
     ) {
         validateRegisterRequest(request);
         if (!"CHAUFFEUR".equalsIgnoreCase(request.getRole())) {
@@ -180,7 +183,8 @@ public class AuthController {
         portefeuilleService.attribuerBonusBienvenue(chauffeur.getId());
 
         chauffeurDocumentService.saveInitialDocuments(
-                chauffeur, cin, permis, carteGrise, assurance, selfie, photoAvant, photoArriere
+                chauffeur, cin, permis, carteGrise, assurance, selfie, photoAvant, photoArriere,
+                licenceTaxi, agrementTouristique, justificatifProfessionnel
         );
 
         return new AuthResponse(jwtService.generateToken(user.getEmail(), user.getRole().name()));

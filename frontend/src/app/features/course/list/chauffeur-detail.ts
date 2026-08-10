@@ -17,11 +17,7 @@ export class ChauffeurDetail implements OnInit {
   public isLoading: boolean = true;
   public errorMessage: string = '';
 
-  public documents = [
-    { type: 'Permis de Conduire', statut: 'Valide', dateDepot: '2026-05-10' },
-    { type: 'Assurance Véhicule', statut: 'En attente de vérification', dateDepot: '2026-06-01' },
-    { type: 'Carte Grise', statut: 'Valide', dateDepot: '2026-05-12' }
-  ];
+  public documents: Array<{ type: string; statut: string; dateDepot: string }> = [];
 
   constructor(
     private route: ActivatedRoute,

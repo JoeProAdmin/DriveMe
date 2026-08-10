@@ -54,6 +54,7 @@
         <label>{{ api.t('register.license') }}<input type="file" accept="image/*,.pdf" (change)="onFileSelected($event, 'permis')"></label>
         <label>{{ api.t('register.registration') }}<input type="file" accept="image/*,.pdf" (change)="onFileSelected($event, 'carteGrise')"></label>
         <label>{{ api.t('register.insurance') }}<input type="file" accept="image/*,.pdf" (change)="onFileSelected($event, 'assurance')"></label>
+        <label>{{ categoryDocumentLabel() }} <small>({{ categoryDocumentRequirementLabel() }})</small><input type="file" accept="image/*,.pdf" (change)="onFileSelected($event, categoryDocumentKey())"></label>
         <p class="notice profile-document-notice">{{ texts[currentLang].docsProfileNotice }}</p>
       </div>
 

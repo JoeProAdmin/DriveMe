@@ -26,6 +26,8 @@ public class ChauffeurResponseDTO {
     private Integer anneeVehicule;
     private String immatriculation;
     private List<ChauffeurDocumentDTO> documents = new ArrayList<>();
+    private List<String> documentsObligatoires = new ArrayList<>();
+    private Boolean dossierComplet;
 
     public ChauffeurResponseDTO() {
     }
@@ -99,6 +101,8 @@ public class ChauffeurResponseDTO {
     public Integer getAnneeVehicule() { return anneeVehicule; }
     public String getImmatriculation() { return immatriculation; }
     public List<ChauffeurDocumentDTO> getDocuments() { return documents; }
+    public List<String> getDocumentsObligatoires() { return documentsObligatoires; }
+    public Boolean getDossierComplet() { return dossierComplet; }
 
     public void setId(Long id) {
         this.id = id;
@@ -141,4 +145,6 @@ public class ChauffeurResponseDTO {
     public void setAnneeVehicule(Integer anneeVehicule) { this.anneeVehicule = anneeVehicule; }
     public void setImmatriculation(String immatriculation) { this.immatriculation = immatriculation; }
     public void setDocuments(List<ChauffeurDocumentDTO> documents) { this.documents = documents != null ? documents : new ArrayList<>(); }
+    public void setDocumentsObligatoires(List<String> documentsObligatoires) { this.documentsObligatoires = documentsObligatoires; }
+    public void setDossierComplet(Boolean dossierComplet) { this.dossierComplet = dossierComplet; }
 }

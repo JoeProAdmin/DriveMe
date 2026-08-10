@@ -58,6 +58,8 @@ export interface ChauffeurResponseDTO {
   anneeVehicule?: number;
   immatriculation?: string;
   documents?: ChauffeurDocumentDTO[];
+  documentsObligatoires?: string[];
+  dossierComplet?: boolean;
 }
 
 export type DocumentValidationStatus = 'EN_ATTENTE' | 'APPROUVE' | 'REJETE';
@@ -411,6 +413,11 @@ export class ApiService {
     return this.validerChauffeur(id, 2);
   }
 
+  public modifierTypeChauffeur(id: number, type: Exclude<CategorieService, 'TOUS_SERVICES'>): Observable<ChauffeurResponseDTO> {
+    return this.http.patch<ChauffeurResponseDTO>(`${this.baseUrl}/chauffeurs/${id}/type?type=${type}`, {})
+      .pipe(tap(() => { this.chauffeurs$ = undefined; }));
+  }
+
   public validerDocumentChauffeur(
     chauffeurId: number,
     documentId: number,
@@ -432,6 +439,13 @@ export class ApiService {
       `${this.baseUrl}/chauffeurs/${chauffeurId}/documents/${documentId}/content`,
       { responseType: 'blob' }
     );
+  }
+
+  public ajouterDocumentChauffeur(chauffeurId: number, type: string, file: File): Observable<ChauffeurDocumentDTO> {
+    const data = new FormData();
+    data.append('file', file, file.name);
+    return this.http.post<ChauffeurDocumentDTO>(`${this.baseUrl}/chauffeurs/${chauffeurId}/documents/${type}`, data)
+      .pipe(tap(() => { this.chauffeurs$ = undefined; }));
   }
 
   public uploadSelfieVerification(

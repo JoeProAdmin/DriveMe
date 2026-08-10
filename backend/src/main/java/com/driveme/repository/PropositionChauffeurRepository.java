@@ -11,6 +11,8 @@ public interface PropositionChauffeurRepository
 
     List<PropositionChauffeur> findByCourseId(Long courseId);
 
+    long countByCourseId(Long courseId);
+
     List<PropositionChauffeur> findByCourseIdOrderByPrixProposeAsc(Long courseId);
 
     List<PropositionChauffeur> findByChauffeurId(Long chauffeurId);
@@ -23,5 +25,4 @@ public interface PropositionChauffeurRepository
             Long courseId,
             PropositionStatus statut
     );
-
 }

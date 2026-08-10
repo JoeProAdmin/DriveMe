@@ -110,6 +110,50 @@ button:disabled {
   margin-bottom: 28px;
 }
 
+.admin-stats { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.admin-stats .stat-card { min-height: 96px; padding: 18px; }
+.stat-card.attention strong, .stat-card.payment-alert strong { color: #d97706; }
+.stat-card.muted strong { color: #64748b; }
+
+.admin-filters {
+  display: grid;
+  grid-template-columns: minmax(260px, 2fr) repeat(4, minmax(145px, 1fr)) auto;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 16px;
+  border: 1px solid #dfe6f0;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.admin-filters input, .admin-filters select {
+  min-width: 0;
+  min-height: 42px;
+  border: 1px solid #cfd9e7;
+  border-radius: 9px;
+  padding: 0 11px;
+  background: #fff;
+  color: #172944;
+}
+
+.admin-results-count { margin: 12px 2px; color: #64748b; font-weight: 700; }
+.admin-table-wrap { overflow-x: auto; border: 1px solid #dfe6f0; border-radius: 14px; background: #fff; }
+.admin-course-table { width: 100%; min-width: 1120px; border-collapse: collapse; }
+.admin-course-table th { padding: 13px; background: #10213d; color: #fff; text-align: start; font-size: 12px; text-transform: uppercase; }
+.admin-course-table td { padding: 14px 13px; border-bottom: 1px solid #e7ecf3; vertical-align: top; }
+.admin-course-table td > span, .admin-course-table td > small { display: block; margin-top: 5px; }
+.admin-course-table small { color: #6d7890; }
+.admin-course-table tbody > tr:not(.admin-detail-row):hover { background: #f8fbff; }
+.details-btn { border: 1px solid #b9c8dc; border-radius: 8px; padding: 8px 11px; background: #fff; color: #17345e; font-weight: 700; cursor: pointer; }
+.payment-ok { color: #08783a; font-weight: 800; }
+.admin-detail-row td { padding: 20px; background: #f8fbff; }
+.admin-detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.admin-detail-row h3 { margin: 0 0 8px; font-size: 14px; color: #33435d; }
+.admin-detail-row p { margin: 0; color: #5f6b80; }
+.course-timeline { display: grid; grid-template-columns: repeat(8, minmax(90px, 1fr)); gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+.course-timeline li { position: relative; border-radius: 999px; padding: 8px 9px; background: #e5eaf1; color: #718096; text-align: center; font-size: 11px; font-weight: 800; }
+.course-timeline li.reached { background: #dff7e8; color: #08783a; }
+
 .stat-card {
   min-height: 112px;
   padding: 22px;
@@ -227,6 +271,8 @@ button:disabled {
   background: #dceeff;
   color: #1269a9;
 }
+
+.status-proposal { background: #eee7ff; color: #6d28d9; }
 
 .status-progress {
   background: #e6f0ff;
@@ -439,6 +485,8 @@ button:disabled {
   .form-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+  .admin-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .admin-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 720px) {
@@ -471,6 +519,7 @@ button:disabled {
   .section-count {
     align-self: flex-end;
   }
+  .admin-stats, .admin-filters, .admin-detail-grid { grid-template-columns: 1fr; }
 }
 
 

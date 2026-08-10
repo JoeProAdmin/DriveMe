@@ -6,11 +6,15 @@ import java.time.LocalDateTime;
 public class CourseResponseDTO {
 
     private Long id;
+    private Long passagerId;
+    private Long chauffeurId;
     private String passagerNom;
     private String chauffeurNom;
     private String adresseDepart;
     private String adresseArrivee;
     private BigDecimal prix;
+    private BigDecimal prixInitial;
+    private BigDecimal prixFinal;
     private String statut;
     private LocalDateTime dateCreation;
     private Double latitudeDepart;
@@ -29,6 +33,10 @@ public class CourseResponseDTO {
 
     // RC3.4 Angular : informations nécessaires pour afficher l’avis
     private String paiementStatut;
+    private BigDecimal paiementMontant;
+    private String paiementMethode;
+    private LocalDateTime paiementDate;
+    private int nombrePropositions;
     private boolean avisDepose;
 
     public CourseResponseDTO() {
@@ -36,11 +44,15 @@ public class CourseResponseDTO {
 
     public CourseResponseDTO(
             Long id,
+            Long passagerId,
+            Long chauffeurId,
             String passagerNom,
             String chauffeurNom,
             String adresseDepart,
             String adresseArrivee,
             BigDecimal prix,
+            BigDecimal prixInitial,
+            BigDecimal prixFinal,
             String statut,
             LocalDateTime dateCreation,
             Double latitudeDepart,
@@ -57,14 +69,22 @@ public class CourseResponseDTO {
             boolean bagagesImportants,
             boolean vehiculeAdapte,
             String paiementStatut,
+            BigDecimal paiementMontant,
+            String paiementMethode,
+            LocalDateTime paiementDate,
+            int nombrePropositions,
             boolean avisDepose
     ) {
         this.id = id;
+        this.passagerId = passagerId;
+        this.chauffeurId = chauffeurId;
         this.passagerNom = passagerNom;
         this.chauffeurNom = chauffeurNom;
         this.adresseDepart = adresseDepart;
         this.adresseArrivee = adresseArrivee;
         this.prix = prix;
+        this.prixInitial = prixInitial;
+        this.prixFinal = prixFinal;
         this.statut = statut;
         this.dateCreation = dateCreation;
         this.latitudeDepart = latitudeDepart;
@@ -81,12 +101,21 @@ public class CourseResponseDTO {
         this.bagagesImportants = bagagesImportants;
         this.vehiculeAdapte = vehiculeAdapte;
         this.paiementStatut = paiementStatut;
+        this.paiementMontant = paiementMontant;
+        this.paiementMethode = paiementMethode;
+        this.paiementDate = paiementDate;
+        this.nombrePropositions = nombrePropositions;
         this.avisDepose = avisDepose;
     }
 
     public Long getId() {
         return id;
     }
+
+    public Long getPassagerId() { return passagerId; }
+    public void setPassagerId(Long passagerId) { this.passagerId = passagerId; }
+    public Long getChauffeurId() { return chauffeurId; }
+    public void setChauffeurId(Long chauffeurId) { this.chauffeurId = chauffeurId; }
 
     public void setId(Long id) {
         this.id = id;
@@ -131,6 +160,11 @@ public class CourseResponseDTO {
     public void setPrix(BigDecimal prix) {
         this.prix = prix;
     }
+
+    public BigDecimal getPrixInitial() { return prixInitial; }
+    public void setPrixInitial(BigDecimal prixInitial) { this.prixInitial = prixInitial; }
+    public BigDecimal getPrixFinal() { return prixFinal; }
+    public void setPrixFinal(BigDecimal prixFinal) { this.prixFinal = prixFinal; }
 
     public String getStatut() {
         return statut;
@@ -224,6 +258,15 @@ public class CourseResponseDTO {
     public void setPaiementStatut(String paiementStatut) {
         this.paiementStatut = paiementStatut;
     }
+
+    public BigDecimal getPaiementMontant() { return paiementMontant; }
+    public void setPaiementMontant(BigDecimal paiementMontant) { this.paiementMontant = paiementMontant; }
+    public String getPaiementMethode() { return paiementMethode; }
+    public void setPaiementMethode(String paiementMethode) { this.paiementMethode = paiementMethode; }
+    public LocalDateTime getPaiementDate() { return paiementDate; }
+    public void setPaiementDate(LocalDateTime paiementDate) { this.paiementDate = paiementDate; }
+    public int getNombrePropositions() { return nombrePropositions; }
+    public void setNombrePropositions(int nombrePropositions) { this.nombrePropositions = nombrePropositions; }
 
     public boolean isAvisDepose() {
         return avisDepose;

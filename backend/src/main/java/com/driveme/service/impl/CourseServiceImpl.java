@@ -14,6 +14,7 @@ import com.driveme.repository.AvisRepository;
 import com.driveme.repository.ChauffeurRepository;
 import com.driveme.repository.CourseRepository;
 import com.driveme.repository.PassagerRepository;
+import com.driveme.repository.PropositionChauffeurRepository;
 import com.driveme.service.CourseService;
 import com.driveme.service.PortefeuilleService;
 import com.driveme.repository.UtilisateurRepository;
@@ -36,6 +37,7 @@ public class CourseServiceImpl implements CourseService {
     private final AvisRepository avisRepository;
     private final PortefeuilleService portefeuilleService;
     private final UtilisateurRepository utilisateurRepository;
+    private final PropositionChauffeurRepository propositionChauffeurRepository;
 
     public CourseServiceImpl(
             CourseRepository courseRepository,
@@ -43,7 +45,8 @@ public class CourseServiceImpl implements CourseService {
             ChauffeurRepository chauffeurRepository,
             AvisRepository avisRepository,
             PortefeuilleService portefeuilleService,
-            UtilisateurRepository utilisateurRepository
+            UtilisateurRepository utilisateurRepository,
+            PropositionChauffeurRepository propositionChauffeurRepository
     ) {
         this.courseRepository = courseRepository;
         this.passagerRepository = passagerRepository;
@@ -51,6 +54,7 @@ public class CourseServiceImpl implements CourseService {
         this.avisRepository = avisRepository;
         this.portefeuilleService = portefeuilleService;
         this.utilisateurRepository = utilisateurRepository;
+        this.propositionChauffeurRepository = propositionChauffeurRepository;
     }
 
     @Override
@@ -366,12 +370,20 @@ public class CourseServiceImpl implements CourseService {
         }
 
         String paiementStatut = null;
+        java.math.BigDecimal paiementMontant = null;
+        String paiementMethode = null;
+        LocalDateTime paiementDate = null;
 
         if (course.getPaiement() != null
                 && course.getPaiement().getStatut() != null) {
             paiementStatut = course.getPaiement()
                     .getStatut()
                     .name();
+            paiementMontant = course.getPaiement().getMontant();
+            paiementMethode = course.getPaiement().getMethode() == null
+                    ? null
+                    : course.getPaiement().getMethode().name();
+            paiementDate = course.getPaiement().getDatePaiement();
         }
 
         boolean avisDepose = avisRepository.existsByCourseId(
@@ -380,11 +392,15 @@ public class CourseServiceImpl implements CourseService {
 
         return new CourseResponseDTO(
                 course.getId(),
+                course.getPassager().getId(),
+                course.getChauffeur() == null ? null : course.getChauffeur().getId(),
                 course.getPassager().getUtilisateur().getNom(),
                 chauffeurNom,
                 course.getAdresseDepart(),
                 course.getAdresseArrivee(),
                 course.getPrix(),
+                course.getPrixInitial(),
+                course.getPrixFinal(),
                 course.getStatut().name(),
                 course.getDateCreation(),
                 course.getLatitudeDepart(),
@@ -401,6 +417,10 @@ public class CourseServiceImpl implements CourseService {
                 course.isBagagesImportants(),
                 course.isVehiculeAdapte(),
                 paiementStatut,
+                paiementMontant,
+                paiementMethode,
+                paiementDate,
+                Math.toIntExact(propositionChauffeurRepository.countByCourseId(course.getId())),
                 avisDepose
         );
     }

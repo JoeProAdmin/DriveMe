@@ -14,6 +14,7 @@ import { CourseReview } from './course-review';
 
 import {
   ApiService,
+  CourseResponseDTO,
   ChauffeurResponseDTO,
   PassagerResponseDTO,
   PropositionCreateDTO,
@@ -48,9 +49,15 @@ interface ProposalForm {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CourseList implements OnInit, OnDestroy {
-  public courses: any[] = [];
-  public coursesDisponibles: any[] = [];
-  public mesCourses: any[] = [];
+  public courses: CourseResponseDTO[] = [];
+  public coursesDisponibles: CourseResponseDTO[] = [];
+  public mesCourses: CourseResponseDTO[] = [];
+  public adminSearch = '';
+  public adminStatusFilter = 'TOUS';
+  public adminCategoryFilter = 'TOUTES';
+  public adminPeriodFilter = 'TOUTES';
+  public adminSort: 'RECENT' | 'ANCIEN' = 'RECENT';
+  public expandedAdminCourseId: number | null = null;
 
   public chauffeur?: ChauffeurResponseDTO;
   public passager?: PassagerResponseDTO;
@@ -94,6 +101,12 @@ export class CourseList implements OnInit, OnDestroy {
       serviceAll: 'Todos los servicios', serviceTaxi: 'Taxi oficial', serviceTourist: 'Transporte turístico autorizado', servicePrivate: 'Conductor privado', passengerCount: 'Pasajeros', scheduledAt: 'Salida prevista', dayPeriod: 'Día', nightPeriod: 'Noche', largeLuggage: 'Equipaje voluminoso', adaptedVehicle: 'Vehículo adaptado',
       title: 'Gestión de viajes', subtitleAdmin: 'Supervisión de todos los viajes DriveMe', subtitlePassenger: 'Seguimiento de solicitudes y elección del conductor', subtitleDriver: 'Consulta solicitudes disponibles y propón tu precio', dash: 'Dashboard', refresh: 'Actualizar', total: 'Total', waiting: 'Pendientes', accepted: 'Aceptados', finished: 'Finalizados', myTrips: 'Mis viajes', availableTrips: 'Viajes disponibles', loading: 'Cargando viajes...', errorLoad: 'Error al cargar los viajes.', dep: 'Salida', dest: 'Destino', pass: 'Pasajero', drv: 'Conductor', price: 'Precio solicitado', status: 'Estado', propose: 'Hacer una oferta', proposalSent: 'Oferta enviada', editProposal: 'Editar datos', cancel: 'Cancelar', send: 'Enviar oferta', sending: 'Enviando...', proposedPrice: 'Tu precio propuesto', distance: 'Distancia a la recogida (km)', eta: 'Tiempo estimado (minutos)', message: 'Mensaje al pasajero', messagePlaceholder: 'Ej. Puedo llegar rápidamente.', invalidProposal: 'Introduce un precio superior a 0.', proposalSuccess: 'Tu oferta ha sido enviada.', proposalError: 'No se pudo enviar la oferta.', viewOffers: 'Ver ofertas', hideOffers: 'Ocultar ofertas', offers: 'Ofertas recibidas', noOffers: 'Todavía no hay ofertas.', loadingOffers: 'Cargando ofertas...', choose: 'Elegir este conductor', choosing: 'Seleccionando...', chosen: 'Conductor elegido', chooseSuccess: 'El conductor ha sido seleccionado.', chooseError: 'No se pudo seleccionar esta oferta.', driverNote: 'Valoración', distanceShort: 'Distancia', etaShort: 'Llegada estimada', startRoute: 'Ir hacia el pasajero', arrived: 'He llegado', startRide: 'Iniciar viaje', end: 'Finalizar viaje', statusUpdating: 'Actualizando...', statusUpdateSuccess: 'El estado del viaje se ha actualizado.', statusUpdateError: 'No se pudo actualizar el estado del viaje.', empty: 'No hay viajes disponibles.', emptyAvailable: 'No hay nuevas solicitudes.', emptyDriverTrips: 'No tienes ningún viaje asignado actualmente.', waitingDriver: 'Esperando conductor', mad: 'MAD', pay: 'Pagar el viaje', paymentTitle: 'Pago del viaje', paymentMethod: 'Método de pago', card: 'Tarjeta bancaria', cash: 'Efectivo', online: 'Pago en línea', cardName: 'Titular de la tarjeta', cardNumber: 'Número de tarjeta', expiry: 'MM/AA', cvc: 'CVC', paymentCancel: 'Cancelar', paymentConfirm: 'Confirmar pago', paymentProcessing: 'Procesando...', paymentSuccess: 'Pago validado correctamente.', paymentError: 'No se pudo validar el pago.', invalidCard: 'Complete correctamente los datos de la tarjeta.', paid: 'Pago validado', paymentPending: 'Pago requerido', paymentInfo: 'El importe lo determina el viaje y no se puede modificar.'
     }
+  };
+  public readonly adminTexts = {
+    FR: { active: 'Actives', cancelled: 'Annulées', paymentRequired: 'Paiement requis', search: 'Rechercher par n°, passager, chauffeur ou trajet', allStatuses: 'Tous les statuts', allCategories: 'Toutes les catégories', allPeriods: 'Jour et nuit', recent: 'Plus récentes', oldest: 'Plus anciennes', reset: 'Réinitialiser', results: 'résultat(s)', ride: 'Course', created: 'Créée le', route: 'Trajet', people: 'Personnes', requested: 'Demandé', final: 'Final', payment: 'Paiement', offers: 'proposition(s)', details: 'Voir le détail', hide: 'Masquer le détail', identifiers: 'Identifiants', initialPrice: 'Prix initial', finalPrice: 'Prix final', paymentAmount: 'Montant payé', method: 'Méthode', timeline: 'Chronologie', noFiltered: 'Aucune course ne correspond aux filtres.', passenger: 'Passager', driver: 'Chauffeur', waiting: 'Non attribué' },
+    EN: { active: 'Active', cancelled: 'Cancelled', paymentRequired: 'Payment required', search: 'Search by no., passenger, driver or route', allStatuses: 'All statuses', allCategories: 'All categories', allPeriods: 'Day and night', recent: 'Newest first', oldest: 'Oldest first', reset: 'Reset', results: 'result(s)', ride: 'Ride', created: 'Created', route: 'Route', people: 'People', requested: 'Requested', final: 'Final', payment: 'Payment', offers: 'offer(s)', details: 'View details', hide: 'Hide details', identifiers: 'Identifiers', initialPrice: 'Initial price', finalPrice: 'Final price', paymentAmount: 'Paid amount', method: 'Method', timeline: 'Timeline', noFiltered: 'No ride matches these filters.', passenger: 'Passenger', driver: 'Driver', waiting: 'Unassigned' },
+    AR: { active: 'نشطة', cancelled: 'ملغاة', paymentRequired: 'الدفع مطلوب', search: 'البحث بالرقم أو الراكب أو السائق أو المسار', allStatuses: 'جميع الحالات', allCategories: 'جميع الفئات', allPeriods: 'النهار والليل', recent: 'الأحدث أولاً', oldest: 'الأقدم أولاً', reset: 'إعادة ضبط', results: 'نتيجة', ride: 'رحلة', created: 'تاريخ الإنشاء', route: 'المسار', people: 'الأشخاص', requested: 'المطلوب', final: 'النهائي', payment: 'الدفع', offers: 'عرض', details: 'عرض التفاصيل', hide: 'إخفاء التفاصيل', identifiers: 'المعرفات', initialPrice: 'السعر الأولي', finalPrice: 'السعر النهائي', paymentAmount: 'المبلغ المدفوع', method: 'الطريقة', timeline: 'التسلسل الزمني', noFiltered: 'لا توجد رحلة تطابق عوامل التصفية.', passenger: 'الراكب', driver: 'السائق', waiting: 'غير معيّن' },
+    ES: { active: 'Activos', cancelled: 'Cancelados', paymentRequired: 'Pago requerido', search: 'Buscar por n.º, pasajero, conductor o trayecto', allStatuses: 'Todos los estados', allCategories: 'Todas las categorías', allPeriods: 'Día y noche', recent: 'Más recientes', oldest: 'Más antiguos', reset: 'Restablecer', results: 'resultado(s)', ride: 'Viaje', created: 'Creado', route: 'Trayecto', people: 'Personas', requested: 'Solicitado', final: 'Final', payment: 'Pago', offers: 'oferta(s)', details: 'Ver detalles', hide: 'Ocultar detalles', identifiers: 'Identificadores', initialPrice: 'Precio inicial', finalPrice: 'Precio final', paymentAmount: 'Importe pagado', method: 'Método', timeline: 'Cronología', noFiltered: 'Ningún viaje coincide con los filtros.', passenger: 'Pasajero', driver: 'Conductor', waiting: 'Sin asignar' }
   };
   constructor(
     public readonly apiService: ApiService,
@@ -156,6 +169,74 @@ export class CourseList implements OnInit, OnDestroy {
 
   public get finishedCoursesCount(): number {
     return this.countCoursesByStatus('TERMINEE');
+  }
+
+  public get activeCoursesCount(): number {
+    return this.displayedCourses.filter(course =>
+      ['ACCEPTEE', 'CHAUFFEUR_EN_ROUTE', 'CHAUFFEUR_ARRIVE', 'EN_COURS']
+        .includes(this.normalizeStatus(course.statut))
+    ).length;
+  }
+
+  public get cancelledCoursesCount(): number {
+    return this.countCoursesByStatus('ANNULEE');
+  }
+
+  public get paymentRequiredCount(): number {
+    return this.displayedCourses.filter(course =>
+      this.normalizeStatus(course.statut) === 'TERMINEE'
+      && this.normalizeStatus(course.paiementStatut) !== 'PAYE'
+    ).length;
+  }
+
+  public get filteredAdminCourses(): CourseResponseDTO[] {
+    const query = this.adminSearch.trim().toLowerCase();
+    return this.courses
+      .filter(course => !query || [course.id, course.passagerNom, course.chauffeurNom,
+        course.adresseDepart, course.adresseArrivee]
+        .some(value => String(value ?? '').toLowerCase().includes(query)))
+      .filter(course => this.adminStatusFilter === 'TOUS'
+        || this.normalizeStatus(course.statut) === this.adminStatusFilter)
+      .filter(course => this.adminCategoryFilter === 'TOUTES'
+        || String(course.categorieService) === this.adminCategoryFilter)
+      .filter(course => this.adminPeriodFilter === 'TOUTES'
+        || String(course.periodeCourse) === this.adminPeriodFilter)
+      .sort((a, b) => {
+        const difference = new Date(b.dateCreation).getTime() - new Date(a.dateCreation).getTime();
+        return this.adminSort === 'RECENT' ? difference : -difference;
+      });
+  }
+
+  public toggleAdminDetails(courseId: number): void {
+    this.expandedAdminCourseId = this.expandedAdminCourseId === courseId ? null : courseId;
+  }
+
+  public isAdminDetailsExpanded(courseId: number): boolean {
+    return this.expandedAdminCourseId === courseId;
+  }
+
+  public resetAdminFilters(): void {
+    this.adminSearch = '';
+    this.adminStatusFilter = 'TOUS';
+    this.adminCategoryFilter = 'TOUTES';
+    this.adminPeriodFilter = 'TOUTES';
+    this.adminSort = 'RECENT';
+  }
+
+  public formatDateTime(value: string | null | undefined): string {
+    return value ? this.formatScheduledDeparture(value) : '—';
+  }
+
+  public adminPrice(course: CourseResponseDTO): number {
+    return Number(course.prixFinal ?? course.prix ?? course.prixInitial ?? 0);
+  }
+
+  public timelineReached(course: CourseResponseDTO, step: string): boolean {
+    const order = ['EN_ATTENTE', 'PROPOSITION_RECUE', 'ACCEPTEE', 'CHAUFFEUR_EN_ROUTE',
+      'CHAUFFEUR_ARRIVE', 'EN_COURS', 'TERMINEE'];
+    const current = this.normalizeStatus(course.statut);
+    if (current === 'ANNULEE') return step === 'EN_ATTENTE';
+    return order.indexOf(current) >= order.indexOf(step);
   }
 
   public loadCourses(showLoading = true): void {
@@ -573,6 +654,8 @@ export class CourseList implements OnInit, OnDestroy {
     switch (this.normalizeStatus(status)) {
       case 'EN_ATTENTE':
         return 'status-waiting';
+      case 'PROPOSITION_RECUE':
+        return 'status-proposal';
       case 'ACCEPTEE':
         return 'status-accepted';
       case 'CHAUFFEUR_EN_ROUTE':
@@ -586,7 +669,7 @@ export class CourseList implements OnInit, OnDestroy {
     }
   }
 
-  public trackByCourseId(_index: number, course: any): number {
+  public trackByCourseId(_index: number, course: CourseResponseDTO): number {
     return Number(course?.id);
   }
 
@@ -736,8 +819,8 @@ export class CourseList implements OnInit, OnDestroy {
     };
   }
 
-  private toSafeArray(data: unknown): any[] {
-    return Array.isArray(data) ? data : [];
+  private toSafeArray(data: unknown): CourseResponseDTO[] {
+    return Array.isArray(data) ? data as CourseResponseDTO[] : [];
   }
 
   private toPositiveNumber(value: unknown): number | null {

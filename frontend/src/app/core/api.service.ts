@@ -111,11 +111,19 @@ export interface CourseCreateDTO {
 
 export interface CourseResponseDTO extends CourseCreateDTO {
   id: number;
+  passagerId: number;
+  chauffeurId?: number | null;
   passagerNom: string;
   chauffeurNom?: string | null;
   statut: string;
   dateCreation: string;
   paiementStatut: string | null;
+  paiementMontant?: number | null;
+  paiementMethode?: string | null;
+  paiementDate?: string | null;
+  prixInitial?: number | null;
+  prixFinal?: number | null;
+  nombrePropositions: number;
   avisDepose: boolean;
   periodeCourse: PeriodeCourse;
 }

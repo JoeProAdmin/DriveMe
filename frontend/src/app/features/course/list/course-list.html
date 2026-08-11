@@ -80,10 +80,10 @@
       <input type="search" [(ngModel)]="adminSearch" [placeholder]="adminTexts[currentLang].search" />
       <select [(ngModel)]="adminStatusFilter">
         <option value="TOUS">{{ adminTexts[currentLang].allStatuses }}</option>
-        <option value="EN_ATTENTE">EN_ATTENTE</option><option value="PROPOSITION_RECUE">PROPOSITION_RECUE</option>
-        <option value="ACCEPTEE">ACCEPTEE</option><option value="CHAUFFEUR_EN_ROUTE">CHAUFFEUR_EN_ROUTE</option>
-        <option value="CHAUFFEUR_ARRIVE">CHAUFFEUR_ARRIVE</option><option value="EN_COURS">EN_COURS</option>
-        <option value="TERMINEE">TERMINEE</option><option value="ANNULEE">ANNULEE</option>
+        <option value="EN_ATTENTE">{{ statusLabel('EN_ATTENTE') }}</option><option value="PROPOSITION_RECUE">{{ statusLabel('PROPOSITION_RECUE') }}</option>
+        <option value="ACCEPTEE">{{ statusLabel('ACCEPTEE') }}</option><option value="CHAUFFEUR_EN_ROUTE">{{ statusLabel('CHAUFFEUR_EN_ROUTE') }}</option>
+        <option value="CHAUFFEUR_ARRIVE">{{ statusLabel('CHAUFFEUR_ARRIVE') }}</option><option value="EN_COURS">{{ statusLabel('EN_COURS') }}</option>
+        <option value="TERMINEE">{{ statusLabel('TERMINEE') }}</option><option value="ANNULEE">{{ statusLabel('ANNULEE') }}</option>
       </select>
       <select [(ngModel)]="adminCategoryFilter">
         <option value="TOUTES">{{ adminTexts[currentLang].allCategories }}</option>
@@ -114,7 +114,7 @@
               <td><span>{{ adminTexts[currentLang].passenger }}: {{ course.passagerNom }}</span><span>{{ adminTexts[currentLang].driver }}: {{ course.chauffeurNom || adminTexts[currentLang].waiting }}</span></td>
               <td><span>{{ adminTexts[currentLang].requested }}: {{ course.prixInitial || course.prix }} MAD</span><strong>{{ adminTexts[currentLang].final }}: {{ adminPrice(course) }} MAD</strong><small>{{ course.nombrePropositions || 0 }} {{ adminTexts[currentLang].offers }}</small></td>
               <td><span [class.payment-ok]="normalizeStatus(course.paiementStatut) === 'PAYE'">{{ course.paiementStatut || adminTexts[currentLang].paymentRequired }}</span><small *ngIf="course.paiementMethode">{{ course.paiementMethode }} · {{ course.paiementMontant }} MAD</small></td>
-              <td><span class="status" [ngClass]="statusClass(course.statut)">{{ course.statut }}</span></td>
+              <td><span class="status" [ngClass]="statusClass(course.statut)">{{ statusLabel(course.statut) }}</span></td>
               <td><button type="button" class="details-btn" (click)="toggleAdminDetails(course.id)">{{ isAdminDetailsExpanded(course.id) ? adminTexts[currentLang].hide : adminTexts[currentLang].details }}</button></td>
             </tr>
             <tr class="admin-detail-row" *ngIf="isAdminDetailsExpanded(course.id)"><td colspan="7">
@@ -124,10 +124,10 @@
               </div>
               <h3>{{ adminTexts[currentLang].timeline }}</h3>
               <ol class="course-timeline">
-                <li [class.reached]="timelineReached(course, 'EN_ATTENTE')">EN_ATTENTE</li><li [class.reached]="timelineReached(course, 'PROPOSITION_RECUE')">PROPOSITION_RECUE</li>
-                <li [class.reached]="timelineReached(course, 'ACCEPTEE')">ACCEPTEE</li><li [class.reached]="timelineReached(course, 'CHAUFFEUR_EN_ROUTE')">EN_ROUTE</li>
-                <li [class.reached]="timelineReached(course, 'CHAUFFEUR_ARRIVE')">ARRIVE</li><li [class.reached]="timelineReached(course, 'EN_COURS')">EN_COURS</li>
-                <li [class.reached]="timelineReached(course, 'TERMINEE')">TERMINEE</li><li [class.reached]="normalizeStatus(course.paiementStatut) === 'PAYE'">PAYE</li>
+                <li [class.reached]="timelineReached(course, 'EN_ATTENTE')">{{ statusLabel('EN_ATTENTE') }}</li><li [class.reached]="timelineReached(course, 'PROPOSITION_RECUE')">{{ statusLabel('PROPOSITION_RECUE') }}</li>
+                <li [class.reached]="timelineReached(course, 'ACCEPTEE')">{{ statusLabel('ACCEPTEE') }}</li><li [class.reached]="timelineReached(course, 'CHAUFFEUR_EN_ROUTE')">{{ statusLabel('CHAUFFEUR_EN_ROUTE') }}</li>
+                <li [class.reached]="timelineReached(course, 'CHAUFFEUR_ARRIVE')">{{ statusLabel('CHAUFFEUR_ARRIVE') }}</li><li [class.reached]="timelineReached(course, 'EN_COURS')">{{ statusLabel('EN_COURS') }}</li>
+                <li [class.reached]="timelineReached(course, 'TERMINEE')">{{ statusLabel('TERMINEE') }}</li><li [class.reached]="normalizeStatus(course.paiementStatut) === 'PAYE'">{{ statusLabel('PAYE') }}</li>
               </ol>
             </td></tr>
           </ng-container>
@@ -528,7 +528,7 @@
   <div class="card-header">
     <span class="course-id">#{{ course.id }}</span>
     <span class="status" [ngClass]="statusClass(course.statut)">
-      {{ course.statut }}
+      {{ statusLabel(course.statut) }}
     </span>
   </div>
 

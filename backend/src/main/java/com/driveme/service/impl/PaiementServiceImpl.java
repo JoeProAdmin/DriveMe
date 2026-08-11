@@ -162,7 +162,7 @@ public class PaiementServiceImpl implements PaiementService {
     @Override
     @Transactional(readOnly = true)
     public List<PaiementResponseDTO> getAllPaiements() {
-        return paiementRepository.findAll()
+        return paiementRepository.findAllByOrderByDatePaiementDescIdDesc()
                 .stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());

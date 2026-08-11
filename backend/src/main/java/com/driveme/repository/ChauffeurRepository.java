@@ -11,6 +11,8 @@ import java.util.Optional;
 
 public interface ChauffeurRepository extends JpaRepository<Chauffeur, Long> {
 
+    java.util.List<Chauffeur> findAllByOrderByIdDesc();
+
     boolean existsByUtilisateurId(Long utilisateurId);
 
     Optional<Chauffeur> findByUtilisateurEmail(String email);

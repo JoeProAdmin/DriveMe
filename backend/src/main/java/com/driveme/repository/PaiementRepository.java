@@ -12,6 +12,8 @@ import java.util.Optional;
 
 public interface PaiementRepository extends JpaRepository<Paiement, Long> {
 
+    List<Paiement> findAllByOrderByDatePaiementDescIdDesc();
+
     boolean existsByCourseId(Long courseId);
 
     Optional<Paiement> findByCourseId(Long courseId);

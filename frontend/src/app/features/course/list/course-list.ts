@@ -227,6 +227,17 @@ export class CourseList implements OnInit, OnDestroy {
     return value ? this.formatScheduledDeparture(value) : '—';
   }
 
+  public statusLabel(status: unknown): string {
+    const labels: Record<Language, Record<string, string>> = {
+      FR: { EN_ATTENTE: 'En attente', PROPOSITION_RECUE: 'Proposition reçue', ACCEPTEE: 'Acceptée', CHAUFFEUR_EN_ROUTE: 'Chauffeur en route', CHAUFFEUR_ARRIVE: 'Chauffeur arrivé', EN_COURS: 'En cours', TERMINEE: 'Terminée', ANNULEE: 'Annulée', PAYE: 'Payée' },
+      EN: { EN_ATTENTE: 'Pending', PROPOSITION_RECUE: 'Offer received', ACCEPTEE: 'Accepted', CHAUFFEUR_EN_ROUTE: 'Driver on the way', CHAUFFEUR_ARRIVE: 'Driver arrived', EN_COURS: 'In progress', TERMINEE: 'Finished', ANNULEE: 'Cancelled', PAYE: 'Paid' },
+      AR: { EN_ATTENTE: 'قيد الانتظار', PROPOSITION_RECUE: 'تم استلام عرض', ACCEPTEE: 'مقبولة', CHAUFFEUR_EN_ROUTE: 'السائق في الطريق', CHAUFFEUR_ARRIVE: 'وصل السائق', EN_COURS: 'جارية', TERMINEE: 'مكتملة', ANNULEE: 'ملغاة', PAYE: 'مدفوعة' },
+      ES: { EN_ATTENTE: 'Pendiente', PROPOSITION_RECUE: 'Oferta recibida', ACCEPTEE: 'Aceptada', CHAUFFEUR_EN_ROUTE: 'Conductor en camino', CHAUFFEUR_ARRIVE: 'Conductor llegado', EN_COURS: 'En curso', TERMINEE: 'Finalizada', ANNULEE: 'Cancelada', PAYE: 'Pagada' }
+    };
+    const normalized = this.normalizeStatus(status);
+    return labels[this.currentLang][normalized] || normalized.replaceAll('_', ' ');
+  }
+
   public adminPrice(course: CourseResponseDTO): number {
     return Number(course.prixFinal ?? course.prix ?? course.prixInitial ?? 0);
   }

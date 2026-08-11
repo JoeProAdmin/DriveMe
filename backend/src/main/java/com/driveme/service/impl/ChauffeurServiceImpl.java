@@ -48,7 +48,7 @@ public class ChauffeurServiceImpl implements ChauffeurService {
 
     @Override
     public List<ChauffeurResponseDTO> getAllChauffeurs() {
-        return chauffeurRepository.findAll()
+        return chauffeurRepository.findAllByOrderByIdDesc()
                 .stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());

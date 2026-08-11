@@ -7,15 +7,19 @@ Plateforme web de mobilité conçue pour le marché marocain, mettant en relatio
 
 ## Statut du projet
 
-DriveMe est en phase de finalisation V9 avant déploiement sur l’infrastructure OVH et ouverture d’une version de démonstration.
+DriveMe est déployé sur un VPS OVH et sa recette fonctionnelle de production a été validée le 11 août 2026.
 
 - V8 stable : parcours passager, chauffeur et administration validés ;
 - V9 juridique et stratégique : pages À propos, Conditions d’utilisation et Confidentialité finalisées en FR, EN, AR et ES ;
 - V9 professionnelle : catégories de chauffeurs et choix du service passager intégrés ;
 - environnement local de production : Docker Compose, MySQL, Spring Boot, Angular et Nginx opérationnels ;
-- déploiement OVH, HTTPS, paiement réel et publication bêta : à finaliser.
+- production : Docker Compose, MySQL 8.4, API Spring Boot, frontend Angular servi par Nginx et HTTPS opérationnels sur OVH ;
+- paiement bancaire : simulateur académique, à remplacer par une passerelle certifiée avant exploitation commerciale réelle.
 
-Le domaine réservé pour le projet est `driveme.cloud`.
+Sites de production :
+
+- application : `https://driveme.cloud` ;
+- API : `https://api.driveme.cloud`.
 
 ## Fonctionnalités principales
 
@@ -25,7 +29,9 @@ Le domaine réservé pour le projet est `driveme.cloud`.
 - typologie professionnelle des chauffeurs ;
 - vérification administrative et documentaire des chauffeurs ;
 - création, proposition, acceptation et suivi des courses ;
-- portefeuille prépayé chauffeur, recharges et commissions ;
+- bonus de bienvenue chauffeur de 100 MAD après approbation du dossier ;
+- portefeuille prépayé, recharge minimale de 200 MAD et packs 200/250/500 MAD ;
+- commission DriveMe de 10 % débitée uniquement à la fin d’une course ;
 - paiements simulés dans l’environnement académique ;
 - avis, commentaires et calcul de la note moyenne ;
 - assistance SOS et supervision administrative ;
@@ -131,11 +137,9 @@ Avant toute publication, l’historique Git complet doit être contrôlé. Le fa
 
 ### Après sécurisation du dépôt
 
-- finaliser la recette fonctionnelle V9 ;
-- préparer l’infrastructure OVH et les variables de production ;
-- configurer DNS, HTTPS, sauvegardes et supervision ;
-- créer l’administrateur maître directement en production ;
-- exécuter les tests de déploiement et de restauration ;
+- maintenir la recette fonctionnelle V9 et les tests de non-régression ;
+- automatiser et tester régulièrement les sauvegardes et restaurations OVH ;
+- renforcer la supervision et la procédure de mise à jour ;
 - préparer la version bêta et, le moment venu, la publication mobile.
 
 ## Limites de la version académique

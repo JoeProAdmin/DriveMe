@@ -218,6 +218,15 @@
             propositionForms[course.id]
           "
         >
+          <div class="proposal-heading">
+            <div>
+              <strong>{{ labels[currentLang].propose }}</strong>
+              <span>{{ course.adresseDepart }} → {{ course.adresseArrivee }}</span>
+            </div>
+            <span class="proposal-required">* {{ labels[currentLang].proposedPrice }}</span>
+          </div>
+
+          <div class="proposal-fields-grid">
           <div class="proposal-field">
             <label [for]="'prixPropose-' + course.id">
               {{ labels[currentLang].proposedPrice }}
@@ -261,6 +270,8 @@
             </div>
           </div>
 
+          </div>
+
           <div class="proposal-field">
             <label [for]="'message-' + course.id">
               {{ labels[currentLang].message }}
@@ -288,6 +299,15 @@
           <div class="trip-actions proposal-actions">
             <button
               type="button"
+              class="btn-cancel"
+              [disabled]="propositionEnCours[course.id]"
+              (click)="annulerProposition(course.id)"
+            >
+              {{ labels[currentLang].cancel }}
+            </button>
+
+            <button
+              type="button"
               class="btn-accept"
               [disabled]="propositionEnCours[course.id] || !chauffeur?.disponible"
               (click)="envoyerProposition(course)"
@@ -297,15 +317,6 @@
                   ? labels[currentLang].sending
                   : labels[currentLang].sendProposal
               }}
-            </button>
-
-            <button
-              type="button"
-              class="btn-cancel"
-              [disabled]="propositionEnCours[course.id]"
-              (click)="annulerProposition(course.id)"
-            >
-              {{ labels[currentLang].cancel }}
             </button>
           </div>
         </div>

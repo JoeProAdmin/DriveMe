@@ -134,7 +134,10 @@ export class SosComponent implements OnInit {
       this.cdr.markForCheck();
     })).subscribe({
       next: incidents => {
-        this.incidentHistory = incidents;
+        this.incidentHistory = [...(incidents || [])].sort((a, b) =>
+          new Date(b.dateCreation || 0).getTime() - new Date(a.dateCreation || 0).getTime()
+          || Number(b.id) - Number(a.id)
+        );
         this.cdr.markForCheck();
       },
       error: () => {

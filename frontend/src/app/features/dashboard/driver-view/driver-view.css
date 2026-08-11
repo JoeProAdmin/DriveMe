@@ -444,6 +444,66 @@
   transform: scale(0.99);
 }
 
+/* Formulaire de proposition */
+.proposal-form {
+  margin-top: 18px;
+  padding: 20px;
+  border: 1px solid #cfe0d6;
+  border-radius: var(--driveme-radius-lg);
+  background: linear-gradient(180deg, #f7fff9 0%, #ffffff 100%);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.07);
+}
+
+.proposal-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.proposal-heading > div { display: grid; gap: 4px; min-width: 0; }
+.proposal-heading strong { color: var(--driveme-text-primary); font-size: 17px; }
+.proposal-heading span { color: var(--driveme-text-muted); font-size: 12px; line-height: 1.45; overflow-wrap: anywhere; }
+.proposal-required { flex-shrink: 0; color: #a64012 !important; font-weight: 700; }
+
+.proposal-fields-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.proposal-field { display: grid; gap: 7px; min-width: 0; }
+.proposal-field:last-child { grid-column: 1 / -1; }
+.proposal-field label { color: var(--driveme-text-secondary); font-size: 13px; font-weight: 700; }
+.proposal-field label small { color: var(--driveme-text-muted); font-weight: 500; }
+
+.proposal-input-wrapper { position: relative; display: flex; align-items: center; }
+.proposal-input-wrapper input,
+.proposal-field textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: #fff;
+  color: var(--driveme-text-primary);
+  font: inherit;
+  outline: none;
+}
+.proposal-input-wrapper input { padding-inline-end: 76px; }
+.proposal-input-wrapper span { position: absolute; inset-inline-end: 13px; color: var(--driveme-text-muted); font-size: 12px; font-weight: 700; pointer-events: none; }
+.proposal-field textarea { resize: vertical; min-height: 96px; line-height: 1.5; }
+.proposal-input-wrapper input:focus,
+.proposal-field textarea:focus { border-color: var(--driveme-green-primary); box-shadow: 0 0 0 3px rgba(16, 185, 129, .14); }
+.proposal-error { margin: 14px 0 0; padding: 11px 12px; border-radius: 9px; background: #fee2e2; color: #991b1b; font-weight: 650; }
+
+.proposal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+.proposal-actions .btn-accept,
+.proposal-actions .btn-cancel { width: auto; min-width: 170px; min-height: 44px; padding: 11px 18px; border-radius: 10px; font-weight: 750; }
+.proposal-actions .btn-cancel { border: 1px solid #cbd5e1; background: #fff; color: var(--driveme-text-secondary); cursor: pointer; }
+.proposal-actions button:disabled { opacity: .6; cursor: not-allowed; }
+
 /* État vide (Aucune course) */
 .empty-state {
   background-color: var(--driveme-card-bg);
@@ -540,4 +600,11 @@
   .trip-card {
     padding: 16px;
   }
+
+  .proposal-form { padding: 16px; }
+  .proposal-heading { flex-direction: column; }
+  .proposal-fields-grid { grid-template-columns: 1fr; }
+  .proposal-actions { flex-direction: column-reverse; }
+  .proposal-actions .btn-accept,
+  .proposal-actions .btn-cancel { width: 100%; min-width: 0; }
 }

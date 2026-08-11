@@ -144,7 +144,7 @@ public class PortefeuilleServiceImpl implements PortefeuilleService {
                 PortefeuilleTransactionType.COMMISSION_COURSE,
                 montantCommission,
                 RechargeMethode.ONLINE,
-                "Commission DriveMe de 10 % réservée pour la course #" + courseId
+                "Commission DriveMe de 10 % débitée pour la course #" + courseId
         );
 
         transaction.setCourse(course);
@@ -369,8 +369,8 @@ public class PortefeuilleServiceImpl implements PortefeuilleService {
                         .setScale(2, RoundingMode.HALF_UP);
 
         boolean packValide =
-                montantPaye.equals(new BigDecimal("100.00"))
-                        && credits.equals(new BigDecimal("100.00"))
+                montantPaye.equals(new BigDecimal("200.00"))
+                        && credits.equals(new BigDecimal("200.00"))
                         || montantPaye.equals(new BigDecimal("250.00"))
                         && credits.equals(new BigDecimal("275.00"))
                         || montantPaye.equals(new BigDecimal("500.00"))

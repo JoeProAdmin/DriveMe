@@ -86,7 +86,8 @@ export class ChauffeurList implements OnInit {
       )
       .subscribe({
         next: (data: ChauffeurResponseDTO[]) => {
-          this.chauffeurs = Array.isArray(data) ? [...data] : [];
+          this.chauffeurs = (Array.isArray(data) ? [...data] : [])
+            .sort((a, b) => Number(b.id) - Number(a.id));
           this.cdr.markForCheck();
         },
         error: (erreur: unknown) => {

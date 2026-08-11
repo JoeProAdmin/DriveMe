@@ -29,7 +29,7 @@ export class PaymentComponent implements OnInit {
       subtitle: 'Gestion des recharges chauffeurs, paiements clients et moyens de paiement locaux.',
       recharge: 'Recharge chauffeur',
       rechargeDesc: 'Les chauffeurs achètent des crédits DriveMe pour recevoir et gérer des courses.',
-      initial: 'Pack Initial',
+      initial: 'Pack Essentiel',
       eco: 'Pack Éco',
       pro: 'Pack Pro',
       credits: 'crédits',
@@ -58,7 +58,7 @@ export class PaymentComponent implements OnInit {
       subtitle: 'Manage driver top-ups, customer payments and local payment methods.',
       recharge: 'Driver top-up',
       rechargeDesc: 'Drivers buy DriveMe credits to receive and manage trips.',
-      initial: 'Starter Pack',
+      initial: 'Essential Pack',
       eco: 'Eco Pack',
       pro: 'Pro Pack',
       credits: 'credits',
@@ -87,7 +87,7 @@ export class PaymentComponent implements OnInit {
       subtitle: 'إدارة شحن السائقين ومدفوعات العملاء ووسائل الدفع المحلية.',
       recharge: 'شحن رصيد السائق',
       rechargeDesc: 'يشتري السائقون رصيد DriveMe لاستقبال الرحلات وإدارتها.',
-      initial: 'الباقة الأولية',
+      initial: 'الباقة الأساسية',
       eco: 'الباقة الاقتصادية',
       pro: 'الباقة الاحترافية',
       credits: 'رصيد',
@@ -116,7 +116,7 @@ export class PaymentComponent implements OnInit {
       subtitle: 'Gestión de recargas de conductores, pagos de clientes y métodos de pago locales.',
       recharge: 'Recarga del conductor',
       rechargeDesc: 'Los conductores compran créditos DriveMe para recibir y gestionar viajes.',
-      initial: 'Pack Inicial',
+      initial: 'Pack Esencial',
       eco: 'Pack Eco',
       pro: 'Pack Pro',
       credits: 'créditos',
@@ -166,7 +166,7 @@ export class PaymentComponent implements OnInit {
   }
 
   public get selectedPackLabel(): string {
-    return this.selectedPack.price === 100
+    return this.selectedPack.price === 200
       ? this.t.initial
       : this.selectedPack.price === 500
         ? this.t.pro

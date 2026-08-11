@@ -59,7 +59,7 @@ public class PassagerServiceImpl implements PassagerService {
 
     @Override
     public List<PassagerResponseDTO> getAllPassagers() {
-        return passagerRepository.findAll()
+        return passagerRepository.findAllByOrderByDateCreationDescIdDesc()
                 .stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());

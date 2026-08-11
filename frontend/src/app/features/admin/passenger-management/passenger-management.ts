@@ -42,7 +42,12 @@ export class PassengerManagementComponent implements OnInit {
       )
       .subscribe({
         next: (data) => {
-          this.passagers = Array.isArray(data) ? [...data] : [];
+          this.passagers = (Array.isArray(data) ? [...data] : [])
+            .sort((a, b) => {
+              const byDate = new Date(b.dateCreation || 0).getTime()
+                - new Date(a.dateCreation || 0).getTime();
+              return byDate || Number(b.id) - Number(a.id);
+            });
           this.cdr.markForCheck();
         },
         error: (error) => {

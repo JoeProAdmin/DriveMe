@@ -7,6 +7,8 @@ import java.util.Optional;
 
 public interface PassagerRepository extends JpaRepository<Passager, Long> {
 
+    java.util.List<Passager> findAllByOrderByDateCreationDescIdDesc();
+
     boolean existsByUtilisateur_Telephone(String telephone);
 
     Optional<Passager> findByUtilisateur_Email(String email);

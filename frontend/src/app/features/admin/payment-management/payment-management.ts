@@ -31,7 +31,13 @@ export class PaymentManagementComponent implements OnInit {
   }
 
   public loadRecharges(): void {
-    this.apiService.getRechargesEnAttente().subscribe({next: rows => {this.recharges=rows;this.cdr.markForCheck();}, error: () => this.errorMessage='Impossible de charger les recharges.'});
+    this.apiService.getRechargesEnAttente().subscribe({next: rows => {
+      this.recharges = [...(rows || [])].sort((a, b) =>
+        new Date(b.dateCreation || 0).getTime() - new Date(a.dateCreation || 0).getTime()
+        || Number(b.id) - Number(a.id)
+      );
+      this.cdr.markForCheck();
+    }, error: () => this.errorMessage='Impossible de charger les recharges.'});
   }
 
   public traiterRecharge(id:number, approuver:boolean): void {

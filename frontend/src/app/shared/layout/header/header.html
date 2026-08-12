@@ -1,21 +1,54 @@
 <header class="dm-header">
   <div class="dm-header__inner">
     <app-logo />
-    <nav *ngIf="mode === 'public'" class="dm-header__nav" [attr.aria-label]="apiService.t('sidebar.overview')">
-      <a routerLink="/" fragment="services">{{ apiService.t('header.services') }}</a><a routerLink="/" fragment="safety">{{ apiService.t('header.safety') }}</a><a routerLink="/register">{{ apiService.t('header.drivers') }}</a><a routerLink="/terms">{{ apiService.t('header.help') }}</a>
+    <nav
+      *ngIf="mode === 'public'"
+      class="dm-header__nav"
+      [attr.aria-label]="apiService.t('sidebar.overview')"
+    >
+      <a routerLink="/" fragment="services">{{ apiService.t('header.services') }}</a
+      ><a routerLink="/" fragment="safety">{{ apiService.t('header.safety') }}</a
+      ><a routerLink="/register">{{ apiService.t('header.drivers') }}</a
+      ><a routerLink="/terms">{{ apiService.t('header.help') }}</a>
     </nav>
     <div class="dm-header__actions">
-      <select class="dm-header__language" [value]="currentLang" (change)="languageChange.emit($any($event.target).value)" aria-label="Language">
-        <option value="FR">FR</option><option value="EN">EN</option><option value="AR">AR</option><option value="ES">ES</option>
+      <button
+        *ngIf="mode === 'app'"
+        type="button"
+        class="dm-header__menu"
+        [class.is-open]="menuOpen"
+        [attr.aria-label]="menuLabel"
+        [attr.aria-expanded]="menuOpen"
+        aria-controls="connected-navigation"
+        (click)="menuToggle.emit()"
+      >
+        <span></span><span></span><span></span>
+      </button>
+      <select
+        class="dm-header__language"
+        [value]="currentLang"
+        (change)="languageChange.emit($any($event.target).value)"
+        aria-label="Language"
+      >
+        <option value="FR">FR</option>
+        <option value="EN">EN</option>
+        <option value="AR">AR</option>
+        <option value="ES">ES</option>
       </select>
       <ng-container *ngIf="mode === 'public'">
-        <a class="dm-header__link" routerLink="/login">{{ apiService.t('header.login') }}</a><a class="dm-header__primary" routerLink="/register">{{ apiService.t('header.register') }}</a>
+        <a class="dm-header__link" routerLink="/login">{{ apiService.t('header.login') }}</a
+        ><a class="dm-header__primary" routerLink="/register">{{
+          apiService.t('header.register')
+        }}</a>
       </ng-container>
       <ng-container *ngIf="mode === 'auth'">
         <a class="dm-header__link" routerLink="/">{{ apiService.t('header.home') }}</a>
       </ng-container>
       <ng-container *ngIf="mode === 'app'">
-        <span class="dm-header__user" *ngIf="userLabel">{{ userLabel }}</span><button type="button" class="dm-header__logout" (click)="logout.emit()">{{ apiService.t('header.logout') }}</button>
+        <span class="dm-header__user" *ngIf="userLabel">{{ userLabel }}</span
+        ><button type="button" class="dm-header__logout" (click)="logout.emit()">
+          {{ apiService.t('header.logout') }}
+        </button>
       </ng-container>
     </div>
   </div>

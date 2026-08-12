@@ -1,16 +1,30 @@
 <div class="dm-app-shell">
   <app-unified-sidebar
+    id="connected-navigation"
     [role]="userRole"
     [email]="userEmail"
+    [mobileOpen]="mobileMenuOpen"
+    (closeMenu)="closeMobileMenu()"
     (logout)="logout()"
   />
+
+  @if (mobileMenuOpen) {
+    <button
+      type="button"
+      class="dm-app-backdrop"
+      aria-label="Fermer le menu de navigation"
+      (click)="closeMobileMenu()"
+    ></button>
+  }
 
   <div class="dm-app-main">
     <app-header
       mode="app"
       [currentLang]="currentLang"
       [userLabel]="userEmail"
+      [menuOpen]="mobileMenuOpen"
       (languageChange)="changeLanguage($event)"
+      (menuToggle)="toggleMobileMenu()"
       (logout)="logout()"
     />
 

@@ -1,16 +1,78 @@
-<aside class="dm-sidebar">
-  <div class="dm-sidebar__brand"><app-logo [inverse]="true" /></div>
-  <div class="dm-sidebar__context"><span>{{ apiService.t('sidebar.connected') }}</span><strong>{{ role }}</strong></div>
+<aside class="dm-sidebar" [class.is-mobile-open]="mobileOpen">
+  <div class="dm-sidebar__brand">
+    <app-logo [inverse]="true" />
+    <button
+      type="button"
+      class="dm-sidebar__close"
+      [attr.aria-label]="closeLabel"
+      (click)="closeMenu.emit()"
+    >
+      ×
+    </button>
+  </div>
+  <div class="dm-sidebar__context">
+    <span>{{ apiService.t('sidebar.connected') }}</span
+    ><strong>{{ role }}</strong>
+  </div>
   <nav class="dm-sidebar__nav" aria-label="Navigation de l'espace connecté">
-    <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">{{ apiService.t('sidebar.overview') }}</a>
-    <a *ngIf="role === 'ADMIN'" routerLink="/chauffeurs" routerLinkActive="active">{{ apiService.t('header.drivers') }}</a>
-    <a *ngIf="role === 'ADMIN'" routerLink="/passagers" routerLinkActive="active">{{ apiService.t('sidebar.passengers') }}</a>
-    <a routerLink="/courses" routerLinkActive="active">{{ apiService.t('sidebar.trips') }}</a>
-    <a *ngIf="role === 'PASSAGER'" routerLink="/create-course" routerLinkActive="active">{{ apiService.t('sidebar.newTrip') }}</a>
-    <a *ngIf="role === 'ADMIN'" routerLink="/paiements" routerLinkActive="active">{{ apiService.t('sidebar.payments') }}</a>
-    <a *ngIf="role === 'CHAUFFEUR'" routerLink="/recharge" routerLinkActive="active">{{ apiService.t('sidebar.driverCredit') }}</a>
-    <a routerLink="/profile" routerLinkActive="active">{{ apiService.t('sidebar.profile') }}</a>
-    <a routerLink="/sos" routerLinkActive="active">{{ apiService.t('sidebar.sos') }}</a>
+    <a
+      routerLink="/dashboard"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      (click)="closeMenu.emit()"
+      >{{ apiService.t('sidebar.overview') }}</a
+    >
+    <a
+      *ngIf="role === 'ADMIN'"
+      routerLink="/chauffeurs"
+      routerLinkActive="active"
+      (click)="closeMenu.emit()"
+      >{{ apiService.t('header.drivers') }}</a
+    >
+    <a
+      *ngIf="role === 'ADMIN'"
+      routerLink="/passagers"
+      routerLinkActive="active"
+      (click)="closeMenu.emit()"
+      >{{ apiService.t('sidebar.passengers') }}</a
+    >
+    <a routerLink="/courses" routerLinkActive="active" (click)="closeMenu.emit()">{{
+      apiService.t('sidebar.trips')
+    }}</a>
+    <a
+      *ngIf="role === 'PASSAGER'"
+      routerLink="/create-course"
+      routerLinkActive="active"
+      (click)="closeMenu.emit()"
+      >{{ apiService.t('sidebar.newTrip') }}</a
+    >
+    <a
+      *ngIf="role === 'ADMIN'"
+      routerLink="/paiements"
+      routerLinkActive="active"
+      (click)="closeMenu.emit()"
+      >{{ apiService.t('sidebar.payments') }}</a
+    >
+    <a
+      *ngIf="role === 'CHAUFFEUR'"
+      routerLink="/recharge"
+      routerLinkActive="active"
+      (click)="closeMenu.emit()"
+      >{{ apiService.t('sidebar.driverCredit') }}</a
+    >
+    <a routerLink="/profile" routerLinkActive="active" (click)="closeMenu.emit()">{{
+      apiService.t('sidebar.profile')
+    }}</a>
+    <a routerLink="/sos" routerLinkActive="active" (click)="closeMenu.emit()">{{
+      apiService.t('sidebar.sos')
+    }}</a>
   </nav>
-  <div class="dm-sidebar__footer"><div class="dm-sidebar__avatar">{{ role.charAt(0) }}</div><div><strong>{{ role }}</strong><span>{{ email }}</span></div><button type="button" (click)="logout.emit()">{{ apiService.t('header.logout') }}</button></div>
+  <div class="dm-sidebar__footer">
+    <div class="dm-sidebar__avatar">{{ role.charAt(0) }}</div>
+    <div>
+      <strong>{{ role }}</strong
+      ><span>{{ email }}</span>
+    </div>
+    <button type="button" (click)="logout.emit()">{{ apiService.t('header.logout') }}</button>
+  </div>
 </aside>

@@ -185,6 +185,25 @@ export class Landing {
     this.mobileMenuOpen = !this.mobileMenuOpen;
   }
 
+  public navigateToSection(event: Event, sectionId: string): void {
+    event.preventDefault();
+    this.mobileMenuOpen = false;
+
+    requestAnimationFrame(() => {
+      const section = document.getElementById(sectionId);
+      if (!section) return;
+
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.history.replaceState(null, '', `#${sectionId}`);
+    });
+  }
+
+  public navigateFromMobileMenu(event: Event, route: string): void {
+    event.preventDefault();
+    this.mobileMenuOpen = false;
+    void this.router.navigateByUrl(route);
+  }
+
   public selectPopularRoute(departure: string, destination: string): void {
     this.searchForm.departure = departure;
     this.searchForm.destination = destination;

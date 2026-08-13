@@ -51,11 +51,11 @@
     </div>
 
     <nav class="mobile-nav" [class.open]="mobileMenuOpen" aria-label="Navigation mobile">
-      <a href="#services" (click)="mobileMenuOpen = false">{{ t.navServices }}</a>
-      <a href="#safety" (click)="mobileMenuOpen = false">{{ t.navSafety }}</a>
-      <a href="#drivers" (click)="mobileMenuOpen = false">{{ t.navDriver }}</a>
-      <a routerLink="/login">{{ t.login }}</a>
-      <a routerLink="/register">{{ t.register }}</a>
+      <a href="#services" (click)="navigateToSection($event, 'services')">{{ t.navServices }}</a>
+      <a href="#safety" (click)="navigateToSection($event, 'safety')">{{ t.navSafety }}</a>
+      <a href="#drivers" (click)="navigateToSection($event, 'drivers')">{{ t.navDriver }}</a>
+      <a href="/login" (click)="navigateFromMobileMenu($event, '/login')">{{ t.login }}</a>
+      <a href="/register" (click)="navigateFromMobileMenu($event, '/register')">{{ t.register }}</a>
     </nav>
   </header>
 

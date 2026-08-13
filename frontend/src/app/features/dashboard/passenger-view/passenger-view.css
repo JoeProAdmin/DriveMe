@@ -1,7 +1,16 @@
+.passenger-dashboard,
+.passenger-dashboard * {
+  box-sizing: border-box;
+}
+
 .passenger-dashboard {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   padding: 2rem;
   font-family: 'Poppins', sans-serif;
   color: #0f172a;
+  overflow-x: hidden;
 }
 
 .dashboard-header {
@@ -10,6 +19,10 @@
   align-items: center;
   gap: 1.5rem;
   margin-bottom: 2rem;
+}
+
+.dashboard-header > div {
+  min-width: 0;
 }
 
 .dashboard-header h1 {
@@ -25,6 +38,10 @@
 }
 
 .primary-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
   background-color: #00C853;
   color: #ffffff;
   text-decoration: none;
@@ -41,6 +58,7 @@
 }
 
 .stat-card {
+  min-width: 0;
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 1rem;
@@ -98,4 +116,77 @@
 .action-card span {
   color: #00C853;
   font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .passenger-dashboard {
+    padding: 0.25rem 0 1rem;
+  }
+
+  .dashboard-header {
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  /* Le titre général du dashboard est déjà affiché juste au-dessus. */
+  .dashboard-header > div {
+    display: none;
+  }
+
+  .primary-action {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    text-align: center;
+    line-height: 1.25;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.625rem;
+    margin-bottom: 1rem;
+  }
+
+  .stat-card {
+    min-height: 5.75rem;
+    padding: 0.875rem;
+    border-radius: 0.75rem;
+  }
+
+  .stat-card span {
+    font-size: 0.68rem;
+    line-height: 1.25;
+  }
+
+  .stat-card strong {
+    margin-top: 0.4rem;
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+
+  .action-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .action-card {
+    min-width: 0;
+    padding: 1rem;
+    border-radius: 0.75rem;
+  }
+
+  .action-card h2 {
+    font-size: 1rem;
+  }
+
+  .action-card p {
+    margin: 0.45rem 0;
+    font-size: 0.82rem;
+    line-height: 1.4;
+  }
+
+  .action-card span {
+    font-size: 0.85rem;
+  }
 }

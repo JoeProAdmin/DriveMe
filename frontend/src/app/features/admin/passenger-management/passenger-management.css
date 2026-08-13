@@ -39,4 +39,16 @@ td { border-top: 1px solid #f1f5f9; padding: 1rem; color: #334155; font-size: .8
 .edit-form label { font-size: .78rem; font-weight: 700; color: #475569; }
 .edit-form input { margin-top: .4rem; font-weight: 400; }
 .modal-actions { grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: .6rem; margin-top: .5rem; }
-@media (max-width: 700px) { .admin-page { padding: 1rem; } .page-header { align-items: flex-start; flex-direction: column; } .details-grid, .edit-form { grid-template-columns: 1fr; } }
+@media (max-width: 700px) {
+  .admin-page { padding: 14px; }
+  .page-header { align-items: stretch; flex-direction: column; gap: 12px; margin-bottom: 18px; }
+  .page-header h1 { font-size: clamp(1.7rem, 7.5vw, 2.1rem); line-height: 1.08; }
+  .page-header p { font-size: .98rem; line-height: 1.4; }
+  .page-header .btn { width: 100%; }
+  .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
+  .metric-card { min-height: 104px; padding: 14px; }
+  .metric-card span { min-height: 2.5em; line-height: 1.25; }
+  .metric-card strong { margin-top: 8px; font-size: 1.7rem; }
+  .toolbar { padding: 14px; margin-bottom: 12px; }
+  .details-grid, .edit-form { grid-template-columns: 1fr; }
+}

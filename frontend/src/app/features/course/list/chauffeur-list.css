@@ -877,15 +877,29 @@ button:disabled {
   }
 
   .metrics-cards-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
   }
 
   .mini-metric-card {
-    min-height: auto;
+    min-height: 112px;
+    padding: 14px;
   }
 
   .metric-label {
-    min-height: auto;
+    min-height: 2.5em;
+    font-size: 12px;
+    line-height: 1.25;
+  }
+
+  .mini-metric-card h3 {
+    margin-top: 8px;
+    font-size: 26px;
+  }
+
+  .metric-caption {
+    margin-top: 4px;
+    font-size: 11px;
   }
 
   .modal-backdrop {

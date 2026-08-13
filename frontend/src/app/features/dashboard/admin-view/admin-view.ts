@@ -174,6 +174,66 @@ import { ApiService, AdminStats } from '../../../core/api.service';
       border:1px solid #e5e7eb;
     }
 
+    @media (max-width:700px){
+      .admin-dashboard{
+        padding:14px;
+      }
+
+      .dashboard-header{
+        margin-bottom:18px;
+      }
+
+      .dashboard-header h1{
+        font-size:clamp(1.8rem,8vw,2.2rem);
+        line-height:1.08;
+      }
+
+      .dashboard-header p{
+        margin-top:6px;
+        font-size:.98rem;
+        line-height:1.4;
+      }
+
+      .stats-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:10px;
+        margin-bottom:18px;
+      }
+
+      .card{
+        min-height:112px;
+        padding:14px;
+      }
+
+      .label{
+        min-height:2.5em;
+        line-height:1.25;
+      }
+
+      .card p,
+      .money-card p{
+        margin:8px 0 0;
+        font-size:clamp(1.45rem,6.5vw,1.85rem);
+        line-height:1.15;
+        overflow-wrap:anywhere;
+      }
+
+      .money-card small{
+        margin-top:5px;
+        font-size:10px;
+        line-height:1.25;
+      }
+
+      .quick-actions{
+        grid-template-columns:1fr;
+        gap:10px;
+      }
+
+      .action-card{
+        padding:16px;
+      }
+    }
+
     .action-card:hover{
       transform:translateY(-2px);
       border-color:#cbd5e1;

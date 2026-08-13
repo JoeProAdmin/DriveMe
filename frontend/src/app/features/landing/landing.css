@@ -11,3 +11,93 @@ footer{padding:72px 0 24px;background:#0a101c;color:#fff}.footer-grid{display:gr
 
 .search-button{border:0;cursor:pointer;font-family:inherit}.search-button:disabled{cursor:not-allowed;opacity:.55;transform:none}.coming-soon{margin:0 0 12px;color:var(--emerald-dark);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.7px}.store-button{min-width:165px;height:57px;display:flex;align-items:center;gap:11px;padding:0 16px;border-radius:11px;background:#0f172a;color:#fff;opacity:.72;cursor:not-allowed}.store-button svg{width:25px;fill:#fff}.store-button small,.store-button b{display:block}.store-button small{font-size:8px;text-transform:uppercase;color:#cbd5e1}.store-button b{font-size:15px}@media(max-width:480px){.store-button{min-width:0;flex:1}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+/* Accueil mobile compact : contenu complet, visuels décoratifs allégés. */
+@media(max-width:760px){
+  .hero-grid{
+    display:block;
+    padding-top:30px;
+    padding-bottom:38px;
+  }
+  .eyebrow,.section-heading>span{font-size:10px;letter-spacing:1.1px}
+  .hero-copy h1{margin:13px 0 12px;font-size:38px;line-height:1.03;letter-spacing:-2px}
+  .hero-description{margin-bottom:20px;font-size:14px;line-height:1.55}
+  .booking-card{padding:13px;border-radius:16px}
+  .booking-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .field-wide{grid-column:span 2}
+  .booking-field>span{margin-bottom:5px;font-size:11px}
+  .input-shell{height:44px;padding:0 10px}
+  .input-shell input,.input-shell select{min-width:0;font-size:13px}
+  .booking-footer{gap:10px;margin-top:12px}
+  .search-button{height:46px}
+  .popular-routes{gap:6px;margin-top:12px}
+  .popular-routes button{padding:6px 9px!important}
+  .hero-visual{display:none}
+
+  .benefits-section{padding:52px 0}
+  .section-heading.centered{margin-bottom:25px}
+  .section-heading h2{margin:8px 0 9px;font-size:29px;letter-spacing:-1.2px}
+  .section-heading p{font-size:13px;line-height:1.5}
+  .benefit-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .benefit-card{min-height:0;padding:17px 15px;border-radius:14px}
+  .icon-box{width:39px;height:39px;margin-bottom:13px;border-radius:11px}
+  .icon-box svg{width:21px}
+  .benefit-card h3{margin-bottom:7px;font-size:15px}
+  .benefit-card p{font-size:12px;line-height:1.45}
+  .card-index{right:10px;bottom:2px;font-size:34px}
+
+  .steps-section{padding:52px 0}
+  .steps-layout{display:block}
+  .steps-list{gap:9px;margin-top:24px}
+  .steps-list article{grid-template-columns:42px 1fr;gap:13px;padding:15px;border-radius:13px}
+  .step-number{width:40px;height:40px;border-radius:11px;font-size:13px}
+  .steps-list h3{margin:0 0 4px;font-size:15px}
+  .steps-list p{font-size:12px;line-height:1.45}
+
+  .app-section{padding:52px 0}
+  .app-layout{display:block}
+  .phone-stage{display:none}
+  .app-copy ul{gap:9px;margin:20px 0 22px}
+  .app-copy li{font-size:13px}
+  .store-buttons{gap:8px}
+  .store-button{height:51px;padding:0 11px}
+
+  .driver-cta{padding:45px 0}
+  .driver-cta-card{gap:20px;padding:27px 22px;border-radius:18px}
+  .driver-cta-card h2{margin:7px 0;font-size:27px}
+  .driver-cta-card p{font-size:13px;line-height:1.5}
+  .driver-cta-card>a{height:48px}
+
+  footer{padding:48px 0 20px}
+  .footer-grid{gap:28px 22px}
+  .footer-brand p{margin-top:13px;font-size:12px;line-height:1.5}
+  .footer-grid h3{margin:3px 0 13px}
+  .footer-grid a:not(.brand){margin-bottom:9px;font-size:12px}
+  .footer-bottom{gap:8px;margin-top:32px;padding-top:18px}
+}
+
+@media(max-width:380px){
+  .hero-copy h1{font-size:34px}
+  .benefit-grid{grid-template-columns:1fr}
+}
+
+/* Signature mobilité DriveMe à la place du trait décoratif générique. */
+.eyebrow .eyebrow-icon{
+  width:27px;
+  height:27px;
+  display:inline-grid;
+  flex:0 0 27px;
+  place-items:center;
+  border-radius:8px;
+  background:#e4f7ef;
+  color:var(--emerald-dark);
+}
+.eyebrow .eyebrow-icon svg{
+  width:19px;
+  height:19px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.65;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}

@@ -63,7 +63,17 @@
     <section class="hero-section">
       <div class="hero-grid shell">
         <div class="hero-copy">
-          <div class="eyebrow"><span></span>{{ t.eyebrow }}</div>
+          <div class="eyebrow">
+            <span class="eyebrow-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M5 15.5h14l-1.5-5.2A2.5 2.5 0 0 0 15.1 8H8.9a2.5 2.5 0 0 0-2.4 2.3L5 15.5Z" />
+                <path d="M7 15.5v2M17 15.5v2M6.5 13h11" />
+                <circle cx="8" cy="15.5" r="1.2" />
+                <circle cx="16" cy="15.5" r="1.2" />
+              </svg>
+            </span>
+            {{ t.eyebrow }}
+          </div>
           <h1>
             {{ t.titleLead }}<br /><span>{{ t.titleAccent }}</span>
           </h1>

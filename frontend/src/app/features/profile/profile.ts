@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService, ChauffeurResponseDTO } from '../../core/api.service';
@@ -32,7 +32,7 @@ export class ProfileComponent implements OnInit {
     ES: { title: 'Mi Perfil', subtitle: 'Información personal de DriveMe', account: 'Cuenta de usuario', email: 'Email', role: 'Rol', driverRole: 'Conductor', status: 'Validación administrativa', pending: 'Pendiente', validated: 'Validado', rejected: 'Rechazado', category: 'Categoría profesional', privateDriver: 'Conductor privado', officialTaxi: 'Taxi oficial', touristCarrier: 'Transportista turístico', notDefined: 'No definida', platform: 'Plataforma', driverSpace: 'Espacio de Conductor', rating: 'Nota media', credits: 'Créditos DriveMe', welcomeBonus: 'Bono de bienvenida incluido', security: 'Seguridad', auth: 'Autenticación', conn: 'Conexión', connVal: 'Segura', lastAct: 'Última actividad' }
   };
 
-  constructor(public readonly apiService: ApiService) {}
+  constructor(public readonly apiService: ApiService, private readonly cdr: ChangeDetectorRef) {}
 
   public get currentLang(): 'FR' | 'EN' | 'AR' | 'ES' {
     return this.apiService.currentLanguage().toUpperCase() as 'FR' | 'EN' | 'AR' | 'ES';
@@ -62,6 +62,7 @@ export class ProfileComponent implements OnInit {
         this.updateDriverLabels(this.currentLang);
         localStorage.setItem('chauffeurNoteMoyenne', String(this.noteMoyenne));
         localStorage.setItem('chauffeurSoldeCredit', String(this.soldeCredit));
+        this.cdr.detectChanges();
       },
       error: (err: any) => console.error('Erreur chargement profil chauffeur', err)
     });

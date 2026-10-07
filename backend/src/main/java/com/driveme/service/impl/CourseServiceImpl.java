@@ -308,6 +308,39 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional
+    public CourseResponseDTO cancelCurrentPassengerCourse(Long courseId, String email) {
+        Course course = courseRepository.findByIdForUpdate(courseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Course introuvable"));
+
+        String ownerEmail = course.getPassager().getUtilisateur().getEmail();
+        if (email == null || ownerEmail == null || !ownerEmail.equalsIgnoreCase(email)) {
+            throw new AccessDeniedException(
+                    "Vous ne pouvez annuler que vos propres demandes.");
+        }
+
+        if (course.getStatut() == CourseStatus.ANNULEE) {
+            return mapToDTO(course);
+        }
+
+        if (course.getChauffeur() != null
+                || (course.getStatut() != CourseStatus.EN_ATTENTE
+                && course.getStatut() != CourseStatus.PROPOSITION_RECUE)) {
+            throw new com.driveme.exception.BusinessRuleException(
+                    "Seule une demande sans chauffeur attribue peut etre annulee ici. "
+                            + "Pour une course deja acceptee, contactez le support.");
+        }
+
+        if (course.getPaiement() != null) {
+            throw new com.driveme.exception.BusinessRuleException(
+                    "Cette demande comporte un paiement. Contactez le support.");
+        }
+
+        course.setStatut(CourseStatus.ANNULEE);
+        return mapToDTO(courseRepository.save(course));
+    }
+
+    @Override
     public CourseResponseDTO updateStatus(Long id, String status) {
 
         Course course = courseRepository.findById(id)

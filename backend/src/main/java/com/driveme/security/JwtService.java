@@ -37,8 +37,17 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public String generateToken(String username, String role) {
+    public boolean isTokenForUser(String token, Long userId) {
+        String tokenUserId = extractClaim(token, claims -> claims.get("userId", String.class));
+        return userId != null && userId.toString().equals(tokenUserId);
+    }
+
+    public String generateToken(String username, String role, Long userId) {
+        if (userId == null) {
+            throw new IllegalArgumentException("Identifiant utilisateur obligatoire");
+        }
         Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userId.toString());
         claims.put("role", role);
 
         Date issuedAt = new Date();

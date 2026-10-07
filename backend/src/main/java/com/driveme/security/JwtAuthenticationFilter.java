@@ -1,4 +1,5 @@
 package com.driveme.security;
+import com.driveme.repository.UtilisateurRepository;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,11 +21,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final CustomUserDetailsService userDetailsService;
+    private final UtilisateurRepository utilisateurRepository;
 
     public JwtAuthenticationFilter(JwtService jwtService,
-                                   CustomUserDetailsService userDetailsService) {
+                                   CustomUserDetailsService userDetailsService,
+                                   UtilisateurRepository utilisateurRepository) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
+        this.utilisateurRepository = utilisateurRepository;
     }
 
     @Override
@@ -55,6 +59,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+
+                Long currentUserId = utilisateurRepository.findByEmail(email)
+                        .orElseThrow(() -> new IllegalStateException("Utilisateur introuvable"))
+                        .getId();
+
+                if (!jwtService.isTokenForUser(token, currentUserId)) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    return;
+                }
 
                 if (jwtService.isTokenValid(token, userDetails.getUsername())) {
 

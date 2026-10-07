@@ -599,6 +599,56 @@ export class CourseList implements OnInit, OnDestroy {
     }
   }
 
+  public cancellingCourseId: number | null = null;
+
+  public readonly cancellationTexts = {
+    FR: { button: 'Annuler ma demande', confirm: 'Annuler cette demande de course ?', success: 'Votre demande a été annulée.', failure: 'Impossible d’annuler cette demande.' },
+    EN: { button: 'Cancel my request', confirm: 'Cancel this ride request?', success: 'Your request has been cancelled.', failure: 'Unable to cancel this request.' },
+    AR: { button: 'إلغاء طلبي', confirm: 'هل تريد إلغاء طلب الرحلة؟', success: 'تم إلغاء طلبك.', failure: 'تعذر إلغاء الطلب.' },
+    ES: { button: 'Cancelar mi solicitud', confirm: '¿Cancelar esta solicitud de viaje?', success: 'Tu solicitud ha sido cancelada.', failure: 'No se pudo cancelar la solicitud.' }
+  };
+
+  public canCancelPassengerCourse(course: any): boolean {
+    const status = this.normalizeStatus(course?.statut);
+    return this.userRole === 'PASSAGER'
+      && course?.chauffeurId == null
+      && (status === 'EN_ATTENTE' || status === 'PROPOSITION_RECUE');
+  }
+
+  public cancelPassengerCourse(course: any): void {
+    const courseId = Number(course?.id);
+    if (!courseId || !this.canCancelPassengerCourse(course)
+        || this.cancellingCourseId !== null || this.selectingProposalId !== null) return;
+
+    const labels = this.cancellationTexts[this.currentLang];
+    if (!window.confirm(labels.confirm)) return;
+
+    this.cancellingCourseId = courseId;
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.changeDetectorRef.markForCheck();
+
+    this.apiService.cancelCurrentPassengerCourse(courseId).pipe(
+      finalize(() => {
+        this.cancellingCourseId = null;
+        this.changeDetectorRef.markForCheck();
+      })
+    ).subscribe({
+      next: updatedCourse => {
+        this.courses = this.courses.map(item =>
+          Number(item?.id) === courseId ? updatedCourse : item);
+        this.proposalsByCourse.delete(courseId);
+        this.successMessage = labels.success;
+        this.changeDetectorRef.markForCheck();
+        this.loadCourses(false);
+      },
+      error: err => {
+        this.errorMessage = err?.error?.message || labels.failure;
+        this.changeDetectorRef.markForCheck();
+      }
+    });
+  }
+
   public updateDriverCourseStatus(course: any): void {
     const courseId = Number(course?.id);
     const nextStatus = this.getNextDriverStatus(course?.statut);

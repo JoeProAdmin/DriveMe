@@ -91,4 +91,13 @@ public class CourseController {
     ) {
         return courseService.updateStatus(id, status);
     }
+
+    @PreAuthorize("hasRole('PASSAGER')")
+    @PutMapping("/passager/me/{id}/annulation")
+    public CourseResponseDTO cancelCurrentPassengerCourse(
+            @PathVariable Long id,
+            Principal principal
+    ) {
+        return courseService.cancelCurrentPassengerCourse(id, principal.getName());
+    }
 }

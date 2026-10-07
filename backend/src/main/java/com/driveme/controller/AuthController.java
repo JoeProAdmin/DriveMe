@@ -77,7 +77,7 @@ public class AuthController {
             throw new RuntimeException("Identifiants incorrects");
         }
 
-        return new AuthResponse(jwtService.generateToken(user.getEmail(), user.getRole().name()));
+        return new AuthResponse(jwtService.generateToken(user.getEmail(), user.getRole().name(), user.getId()));
     }
 
     @PostMapping("/register")
@@ -123,7 +123,7 @@ public class AuthController {
         passager.setUtilisateur(user);
         passagerRepository.save(passager);
 
-        return new AuthResponse(jwtService.generateToken(user.getEmail(), user.getRole().name()));
+        return new AuthResponse(jwtService.generateToken(user.getEmail(), user.getRole().name(), user.getId()));
     }
 
     @PostMapping(value = "/register/chauffeur", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -187,7 +187,7 @@ public class AuthController {
                 licenceTaxi, agrementTouristique, justificatifProfessionnel
         );
 
-        return new AuthResponse(jwtService.generateToken(user.getEmail(), user.getRole().name()));
+        return new AuthResponse(jwtService.generateToken(user.getEmail(), user.getRole().name(), user.getId()));
     }
 
     @GetMapping("/me")

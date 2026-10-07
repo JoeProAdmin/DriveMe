@@ -35,6 +35,8 @@ public interface CourseService {
             String authenticatedIdentifier
     );
 
+    CourseResponseDTO cancelCurrentPassengerCourse(Long courseId, String email);
+
     CourseResponseDTO updateStatus(Long id, String status);
 
     long count();

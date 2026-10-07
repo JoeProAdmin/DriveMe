@@ -1,5 +1,6 @@
 package com.driveme.exception;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,6 +14,14 @@ import org.springframework.security.access.AccessDeniedException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<Map<String, Object>> handleDatabaseException(DataAccessException ex) {
+        return error(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Internal Server Error",
+                "Une erreur technique empêche cette opération. Veuillez réessayer ou contacter le support.");
+    }
 
     @ExceptionHandler({AccessDeniedException.class, SecurityException.class})
     public ResponseEntity<Map<String, Object>> handleForbidden(Exception ex) {
@@ -64,7 +73,7 @@ public class GlobalExceptionHandler {
         error.put("timestamp", LocalDateTime.now());
         error.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
         error.put("error", "Internal Server Error");
-        error.put("message", ex.getMessage());
+        error.put("message", "Une erreur technique est survenue. Veuillez réessayer ou contacter le support.");
 
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }

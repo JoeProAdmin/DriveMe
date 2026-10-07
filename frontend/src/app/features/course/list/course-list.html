@@ -182,7 +182,7 @@
 
         <section
           class="offers-panel"
-          *ngIf="areProposalsVisible(course.id)"
+          *ngIf="areProposalsVisible(course.id) && normalizeStatus(course.statut) !== 'ANNULEE'"
         >
           <h3>{{ texts[currentLang].offers }}</h3>
 
@@ -269,6 +269,17 @@
           <span>{{ course.prix }} {{ texts[currentLang].mad }}</span>
         </div>
 
+        <div class="course-actions" *ngIf="canCancelPassengerCourse(course)">
+          <button
+            type="button"
+            class="cancel-btn"
+            [disabled]="cancellingCourseId !== null || selectingProposalId !== null"
+            (click)="cancelPassengerCourse(course)">
+            {{ cancellingCourseId === course.id
+              ? texts[currentLang].statusUpdating
+              : cancellationTexts[currentLang].button }}
+          </button>
+        </div>
         <app-course-review
           *ngIf="canReviewCourse(course)"
           [courseId]="course.id"

@@ -485,6 +485,22 @@ export class ApiService {
   }
 
   /**
+   * Ferme le compte du passager authentifie.
+   */
+  public deleteCurrentPassager(): Observable<string> {
+    return this.http.delete(
+      `${this.baseUrl}/passagers/me`,
+      { responseType: 'text' }
+    );
+  }
+
+  public getCurrentPassager(): Observable<PassagerResponseDTO> {
+    return this.http.get<PassagerResponseDTO>(
+      `${this.baseUrl}/passagers/me`
+    );
+  }
+
+  /**
    * Route réservée à l'administration.
    */
   public getPassagerByEmail(
@@ -577,6 +593,13 @@ export class ApiService {
   public getCurrentDriverCourses(): Observable<CourseResponseDTO[]> {
     return this.http.get<CourseResponseDTO[]>(
       `${this.baseUrl}/courses/chauffeur/me`
+    );
+  }
+
+  public cancelCurrentPassengerCourse(courseId: number): Observable<CourseResponseDTO> {
+    return this.http.put<CourseResponseDTO>(
+      `${this.baseUrl}/courses/passager/me/${courseId}/annulation`,
+      {}
     );
   }
 

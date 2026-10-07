@@ -123,7 +123,7 @@ export class PassengerViewComponent implements OnInit {
       return;
     }
 
-    this.apiService.getPassagerByEmail(email).subscribe({
+    this.apiService.getCurrentPassager().subscribe({
       next: (passager: PassagerResponseDTO) => {
         this.passenger = passager;
         this.passengerName = `${passager.prenom ?? ''} ${passager.nom ?? ''}`.trim() || 'Passager DriveMe';

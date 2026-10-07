@@ -1,4 +1,7 @@
 package com.driveme.service.impl;
+import com.driveme.entity.Course;
+import com.driveme.entity.CourseStatus;
+import com.driveme.entity.PaiementStatut;
 
 import com.driveme.dto.PassagerCreateDTO;
 import com.driveme.dto.PassagerResponseDTO;
@@ -14,9 +17,11 @@ import com.driveme.repository.SosIncidentRepository;
 import com.driveme.repository.UtilisateurRepository;
 import com.driveme.service.PassagerService;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,15 +31,18 @@ public class PassagerServiceImpl implements PassagerService {
     private final UtilisateurRepository utilisateurRepository;
     private final CourseRepository courseRepository;
     private final SosIncidentRepository sosIncidentRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public PassagerServiceImpl(PassagerRepository passagerRepository,
                                UtilisateurRepository utilisateurRepository,
                                CourseRepository courseRepository,
-                               SosIncidentRepository sosIncidentRepository) {
+                               SosIncidentRepository sosIncidentRepository,
+                               PasswordEncoder passwordEncoder) {
         this.passagerRepository = passagerRepository;
         this.utilisateurRepository = utilisateurRepository;
         this.courseRepository = courseRepository;
         this.sosIncidentRepository = sosIncidentRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -127,6 +135,66 @@ public class PassagerServiceImpl implements PassagerService {
         utilisateurRepository.delete(utilisateur);
     }
 
+    @Override
+    @Transactional
+    public void deleteCurrentPassager(String email) {
+        Passager passager = passagerRepository.findByUtilisateur_Email(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Passager introuvable"));
+
+        Utilisateur utilisateur = passager.getUtilisateur();
+        Long utilisateurId = utilisateur.getId();
+
+        List<Course> courses = courseRepository.findByPassagerId(passager.getId());
+
+        boolean courseActive = courses.stream().anyMatch(course ->
+                course.getStatut() != CourseStatus.TERMINEE
+                        && course.getStatut() != CourseStatus.ANNULEE);
+        if (courseActive) {
+            throw new BusinessRuleException(
+                    "Une course est encore active. Terminez-la ou annulez-la avant de fermer votre compte. "
+                            + "Pour une demande d'effacement, contactez le support.");
+        }
+
+        boolean paiementNonResolue = courses.stream().anyMatch(course ->
+                course.getStatut() == CourseStatus.TERMINEE
+                        && (course.getPaiement() == null
+                        || course.getPaiement().getStatut() != PaiementStatut.PAYE));
+        if (paiementNonResolue) {
+            throw new BusinessRuleException(
+                    "Un paiement reste a resoudre. Contactez le support pour fermer votre compte "
+                            + "ou demander l'effacement de vos donnees.");
+        }
+
+        boolean historiqueCourse = courseRepository.existsByPassagerId(passager.getId());
+        boolean historiqueSos = sosIncidentRepository.existsByUtilisateurId(utilisateurId);
+
+        if (historiqueSos) {
+            throw new BusinessRuleException(
+                    "Votre compte est associe a un incident SOS. "
+                            + "Contactez le support pour demander sa fermeture et l'effacement "
+                            + "de vos donnees, avec examen des informations necessaires au suivi.");
+        }
+
+        if (!historiqueCourse && !historiqueSos) {
+            passagerRepository.delete(passager);
+            passagerRepository.flush();
+            utilisateurRepository.delete(utilisateur);
+            return;
+        }
+
+        passager.setPhotoUrl(null);
+
+        utilisateur.setNom("Utilisateur");
+        utilisateur.setPrenom("Supprimé");
+        utilisateur.setEmail("deleted-" + UUID.randomUUID() + "@deleted.invalid");
+        utilisateur.setTelephone(String.format("+999%015d", utilisateurId));
+        utilisateur.setMotDePasse(passwordEncoder.encode(UUID.randomUUID().toString()));
+        utilisateur.setConditionsAccepteesAt(null);
+        utilisateur.setVersionConditions(null);
+
+        utilisateurRepository.save(utilisateur);
+        passagerRepository.save(passager);
+    }
     @Override
     public long count() {
         return passagerRepository.count();

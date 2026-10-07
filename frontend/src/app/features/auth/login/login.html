@@ -15,7 +15,7 @@
 
         <div class="label-row">
           <label for="motDePasse">{{ dictionary[currentLang].password }}</label>
-          <button type="button" class="link-button" (click)="showForgotPasswordInformation()">{{ dictionary[currentLang].forgot }}</button>
+          <a routerLink="/forgot-password" class="link-button">{{ dictionary[currentLang].forgot }}</a>
         </div>
         <div class="password-field">
           <input id="motDePasse" name="motDePasse" [(ngModel)]="loginData.motDePasse" [type]="showPassword ? 'text' : 'password'" autocomplete="current-password">

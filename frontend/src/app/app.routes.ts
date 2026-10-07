@@ -1,3 +1,4 @@
+import { PasswordResetComponent } from './features/auth/password-reset/password-reset';
 import { Routes } from '@angular/router';
 
 import { Landing } from './features/landing/landing';
@@ -21,6 +22,8 @@ import { AppLayoutComponent } from './shared/layout/app-layout/app-layout';
 export const routes: Routes = [
   { path: '', component: Landing },
   { path: 'login', component: LoginComponent },
+  { path: 'forgot-password', component: PasswordResetComponent },
+  { path: 'reset-password', component: PasswordResetComponent },
   { path: 'register', component: RegisterComponent },
   ...LEGAL_ROUTES,
   {

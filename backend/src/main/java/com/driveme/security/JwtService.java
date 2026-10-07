@@ -42,12 +42,21 @@ public class JwtService {
         return userId != null && userId.toString().equals(tokenUserId);
     }
 
-    public String generateToken(String username, String role, Long userId) {
+        public boolean isTokenAtAuthVersion(String token, long currentVersion) {
+        Number version = extractClaim(
+                token, claims -> claims.get("authVersion", Number.class)
+        );
+        long tokenVersion = version == null ? 0L : version.longValue();
+        return currentVersion >= 0L && tokenVersion == currentVersion;
+    }
+
+    public String generateToken(String username, String role, Long userId, long authVersion) {
         if (userId == null) {
             throw new IllegalArgumentException("Identifiant utilisateur obligatoire");
         }
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId.toString());
+        claims.put("authVersion", authVersion);
         claims.put("role", role);
 
         Date issuedAt = new Date();

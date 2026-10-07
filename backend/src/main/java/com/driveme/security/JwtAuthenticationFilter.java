@@ -43,7 +43,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = null;
 
         String uri = request.getRequestURI();
-        if (uri.equals("/api/auth/login") || uri.equals("/api/auth/register")
+        if (uri.equals("/api/auth/forgot-password") || uri.equals("/api/auth/reset-password")
+                || uri.equals("/api/auth/login") || uri.equals("/api/auth/register")
                 || uri.startsWith("/v3/api-docs") || uri.startsWith("/swagger-ui")) {
             filterChain.doFilter(request, response);
             return;
@@ -60,11 +61,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
-                Long currentUserId = utilisateurRepository.findByEmail(email)
-                        .orElseThrow(() -> new IllegalStateException("Utilisateur introuvable"))
-                        .getId();
+                com.driveme.entity.Utilisateur currentUser = utilisateurRepository.findByEmail(email)
+                        .orElseThrow(() -> new IllegalStateException("Utilisateur introuvable"));
 
-                if (!jwtService.isTokenForUser(token, currentUserId)) {
+                if (!jwtService.isTokenForUser(token, currentUser.getId())
+                        || !jwtService.isTokenAtAuthVersion(token, currentUser.getAuthVersion())) {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     return;
                 }

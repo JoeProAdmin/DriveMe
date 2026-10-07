@@ -43,6 +43,14 @@ public class Utilisateur {
     @Column(name = "conditions_acceptees_at") private LocalDateTime conditionsAccepteesAt;
     @Column(name = "version_conditions", length = 30) private String versionConditions;
 
+    @JsonIgnore
+    @Column(name = "auth_version", nullable = false)
+    private long authVersion = 0L;
+
+    public long getAuthVersion() { return authVersion; }
+
+    public void setAuthVersion(long value) { this.authVersion = value; }
+
     // ===== CONSTRUCTEUR =====
     public Utilisateur() {
         this.dateCreation = LocalDateTime.now();

@@ -11,6 +11,6 @@ public class ContactController {
   if(!Boolean.TRUE.equals(d.getConsentement())) throw new RuntimeException("Le consentement à la politique de confidentialité est obligatoire");
   ContactMessage i=new ContactMessage(); i.setNom(d.getNom().trim()); i.setEmail(d.getEmail().trim().toLowerCase(Locale.ROOT));
   i.setTelephone(blank(d.getTelephone())?null:d.getTelephone().trim()); i.setSujet(d.getSujet().trim()); i.setMessage(d.getMessage().trim()); i.setConsentementAt(LocalDateTime.now());
-  i=repository.save(i); return Map.of("id",i.getId(),"message","Votre message a bien été transmis à l'Équipe DriveMe.");
+  i=repository.save(i); return Map.of("id",i.getId(),"message","Votre demande a été enregistrée.");
  } private boolean blank(String v){return v==null||v.isBlank();}
 }

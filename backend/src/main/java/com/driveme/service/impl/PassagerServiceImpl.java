@@ -152,7 +152,7 @@ public class PassagerServiceImpl implements PassagerService {
         if (courseActive) {
             throw new BusinessRuleException(
                     "Une course est encore active. Terminez-la ou annulez-la avant de fermer votre compte. "
-                            + "Pour une demande d'effacement, contactez le support.");
+                            + "Pour une demande d'effacement, écrivez à privacy@driveme.cloud.");
         }
 
         boolean paiementNonResolue = courses.stream().anyMatch(course ->
@@ -161,8 +161,8 @@ public class PassagerServiceImpl implements PassagerService {
                         || course.getPaiement().getStatut() != PaiementStatut.PAYE));
         if (paiementNonResolue) {
             throw new BusinessRuleException(
-                    "Un paiement reste a resoudre. Contactez le support pour fermer votre compte "
-                            + "ou demander l'effacement de vos donnees.");
+                    "Un paiement reste à résoudre. Écrivez à support@driveme.cloud pour le paiement "
+                            + "ou à privacy@driveme.cloud pour demander la fermeture ou l'effacement de vos données.");
         }
 
         boolean historiqueCourse = courseRepository.existsByPassagerId(passager.getId());
@@ -171,7 +171,7 @@ public class PassagerServiceImpl implements PassagerService {
         if (historiqueSos) {
             throw new BusinessRuleException(
                     "Votre compte est associe a un incident SOS. "
-                            + "Contactez le support pour demander sa fermeture et l'effacement "
+                            + "Écrivez à privacy@driveme.cloud pour demander sa fermeture et l'effacement "
                             + "de vos donnees, avec examen des informations necessaires au suivi.");
         }
 

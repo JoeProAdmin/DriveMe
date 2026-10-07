@@ -328,12 +328,12 @@ public class CourseServiceImpl implements CourseService {
                 && course.getStatut() != CourseStatus.PROPOSITION_RECUE)) {
             throw new com.driveme.exception.BusinessRuleException(
                     "Seule une demande sans chauffeur attribue peut etre annulee ici. "
-                            + "Pour une course deja acceptee, contactez le support.");
+                            + "Pour une course déjà acceptée, écrivez à support@driveme.cloud.");
         }
 
         if (course.getPaiement() != null) {
             throw new com.driveme.exception.BusinessRuleException(
-                    "Cette demande comporte un paiement. Contactez le support.");
+                    "Cette demande comporte un paiement. Écrivez à support@driveme.cloud.");
         }
 
         course.setStatut(CourseStatus.ANNULEE);

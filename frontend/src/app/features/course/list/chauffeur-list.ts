@@ -197,11 +197,14 @@ export class ChauffeurList implements OnInit {
         this.actionEnCoursId = null;
         this.messageSucces =
           `Le chauffeur ${this.nomComplet(chauffeur)} a été approuvé.`;
+        if (this.chauffeurSelectionne?.id === id) this.fermerDetail();
+        this.cdr.markForCheck();
       },
       error: (erreur: unknown) => {
         console.error(`Erreur lors de l'approbation du chauffeur ${id} :`, erreur);
         this.actionEnCoursId = null;
         this.messageErreur = (erreur as any)?.error?.message || 'La validation du chauffeur a échoué.';
+        this.cdr.markForCheck();
       }
     });
   }

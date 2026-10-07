@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../../core/api.service';
@@ -17,6 +17,7 @@ type DriverType = 'CHAUFFEUR_PRIVE' | 'TAXI_OFFICIEL' | 'TRANSPORTEUR_TOURISTIQU
 })
 export class RegisterComponent {
   private readonly router = inject(Router);
+  private readonly cdr = inject(ChangeDetectorRef);
   public readonly api = inject(ApiService);
 
   public currentFlow: Flow | null = null;
@@ -123,11 +124,13 @@ export class RegisterComponent {
         this.isSubmitting = false;
         this.storeSession(response.token);
         this.successMessage = 'Compte créé avec succès.';
+        this.cdr.markForCheck();
         setTimeout(() => this.router.navigate(['/dashboard']), 500);
       },
       error: (err: any) => {
         this.isSubmitting = false;
         this.errorMessage = err?.error?.message || 'Impossible de créer le compte.';
+        this.cdr.markForCheck();
       }
     });
   }

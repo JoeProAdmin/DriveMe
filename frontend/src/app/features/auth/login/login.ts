@@ -27,10 +27,10 @@ export class LoginComponent {
   public showPassword = false;
 
   public readonly dictionary: Record<string, any> = {
-    FR: { title: 'Connexion à DriveMe', identifier: 'Téléphone ou email', password: 'Mot de passe', submit: 'Se connecter', loading: 'Connexion...', register: 'Créer un compte', forgot: 'Mot de passe oublié ?', forgotInfo: 'La réinitialisation du mot de passe sera bientôt disponible. Pour le moment, contactez l’assistance DriveMe.', or: 'ou', google: 'Continuer avec Google', apple: 'Continuer avec Apple', qr: 'Connexion par QR', legal: 'Google, Apple et QR sont présentés comme parcours futurs. La connexion par téléphone/email et mot de passe est pleinement fonctionnelle.' },
-    EN: { title: 'Sign in to DriveMe', identifier: 'Phone or email', password: 'Password', submit: 'Sign in', loading: 'Signing in...', register: 'Create account', forgot: 'Forgot password?', forgotInfo: 'Password reset will be available soon. For now, please contact DriveMe support.', or: 'or', google: 'Continue with Google', apple: 'Continue with Apple', qr: 'Sign in with QR', legal: 'Google, Apple and QR are presented as future flows. Phone/email and password sign-in is fully functional.' },
-    AR: { title: 'تسجيل الدخول إلى DriveMe', identifier: 'الهاتف أو البريد الإلكتروني', password: 'كلمة المرور', submit: 'تسجيل الدخول', loading: 'جاري الدخول...', register: 'إنشاء حساب', forgot: 'نسيت كلمة المرور؟', forgotInfo: 'ستتوفر إعادة تعيين كلمة المرور قريباً. يرجى حالياً التواصل مع دعم DriveMe.', or: 'أو', google: 'المتابعة مع Google', apple: 'المتابعة مع Apple', qr: 'الدخول عبر QR', legal: 'يتم عرض Google وApple وQR كمسارات مستقبلية. تسجيل الدخول بالهاتف/البريد وكلمة المرور يعمل بالكامل.' },
-    ES: { title: 'Iniciar sesión en DriveMe', identifier: 'Teléfono o email', password: 'Contraseña', submit: 'Iniciar sesión', loading: 'Conectando...', register: 'Crear una cuenta', forgot: '¿Olvidó su contraseña?', forgotInfo: 'El restablecimiento de contraseña estará disponible próximamente. Por ahora, contacte con el soporte de DriveMe.', or: 'o', google: 'Continuar con Google', apple: 'Continuar con Apple', qr: 'Conexión por QR', legal: 'Google, Apple y QR se presentan como flujos futuros. El acceso por teléfono/email y contraseña funciona completamente.' }
+    FR: { title: 'Connexion à DriveMe', identifier: 'Téléphone ou email', password: 'Mot de passe', submit: 'Se connecter', loading: 'Connexion...', register: 'Créer un compte', forgot: 'Mot de passe oublié ?', or: 'ou', google: 'Continuer avec Google', apple: 'Continuer avec Apple', qr: 'Connexion par QR', legal: 'Google, Apple et QR sont présentés comme parcours futurs. La connexion par téléphone/email et mot de passe est pleinement fonctionnelle.' },
+    EN: { title: 'Sign in to DriveMe', identifier: 'Phone or email', password: 'Password', submit: 'Sign in', loading: 'Signing in...', register: 'Create account', forgot: 'Forgot password?', or: 'or', google: 'Continue with Google', apple: 'Continue with Apple', qr: 'Sign in with QR', legal: 'Google, Apple and QR are presented as future flows. Phone/email and password sign-in is fully functional.' },
+    AR: { title: 'تسجيل الدخول إلى DriveMe', identifier: 'الهاتف أو البريد الإلكتروني', password: 'كلمة المرور', submit: 'تسجيل الدخول', loading: 'جاري الدخول...', register: 'إنشاء حساب', forgot: 'نسيت كلمة المرور؟', or: 'أو', google: 'المتابعة مع Google', apple: 'المتابعة مع Apple', qr: 'الدخول عبر QR', legal: 'يتم عرض Google وApple وQR كمسارات مستقبلية. تسجيل الدخول بالهاتف/البريد وكلمة المرور يعمل بالكامل.' },
+    ES: { title: 'Iniciar sesión en DriveMe', identifier: 'Teléfono o email', password: 'Contraseña', submit: 'Iniciar sesión', loading: 'Conectando...', register: 'Crear una cuenta', forgot: '¿Olvidó su contraseña?', or: 'o', google: 'Continuar con Google', apple: 'Continuar con Apple', qr: 'Conexión por QR', legal: 'Google, Apple y QR se presentan como flujos futuros. El acceso por teléfono/email y contraseña funciona completamente.' }
   };
 
   public get currentLang(): 'FR' | 'AR' | 'EN' | 'ES' {
@@ -60,10 +60,6 @@ export class LoginComponent {
     });
   }
 
-  public showForgotPasswordInformation(): void {
-    this.errorMessage = '';
-    this.informationMessage = this.dictionary[this.currentLang].forgotInfo;
-  }
 
   private storeSession(token: string): string {
     const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));

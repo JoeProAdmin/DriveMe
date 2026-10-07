@@ -17,6 +17,52 @@
 
   <div class="profile-grid">
 
+    <section class="profile-card" *ngIf="userRole === 'CHAUFFEUR'">
+      <h2>{{ currentLang === 'FR' ? 'Fermeture du compte chauffeur'
+        : currentLang === 'EN' ? 'Driver account closure'
+        : currentLang === 'AR' ? 'إغلاق حساب السائق'
+        : 'Cierre de la cuenta del conductor' }}</h2>
+
+      <p *ngIf="currentLang === 'FR'">
+        Pour demander la fermeture de votre compte ou l’effacement de vos données,
+        écrivez à privacy@driveme.cloud depuis votre adresse de compte.
+        Les courses, le crédit restant, les commissions, les documents et les incidents
+        nécessitent un examen individuel. La suspension administrative est distincte
+        de la fermeture du compte.
+      </p>
+      <p *ngIf="currentLang === 'EN'">
+        To request account closure or erasure of your data, email privacy@driveme.cloud
+        from your account email address. Rides, remaining credit, commissions,
+        documents and incidents require individual review.
+        Administrative suspension is separate from account closure.
+      </p>
+      <p *ngIf="currentLang === 'AR'">
+        لطلب إغلاق حسابك أو محو بياناتك، راسل privacy@driveme.cloud من بريد حسابك.
+        تتطلب الرحلات والرصيد المتبقي والعمولات والوثائق والحوادث مراجعة فردية.
+        التعليق الإداري يختلف عن إغلاق الحساب.
+      </p>
+      <p *ngIf="currentLang === 'ES'">
+        Para solicitar el cierre de su cuenta o la supresión de sus datos,
+        escriba a privacy@driveme.cloud desde el correo de su cuenta.
+        Los viajes, el crédito restante, las comisiones, los documentos y los incidentes
+        requieren revisión individual. La suspensión administrativa es distinta del cierre.
+      </p>
+
+      <a href="mailto:privacy@driveme.cloud?subject=DriveMe%20-%20Fermeture%20du%20compte%20chauffeur">
+        {{ currentLang === 'FR' ? 'Préparer ma demande par email'
+          : currentLang === 'EN' ? 'Prepare my email request'
+          : currentLang === 'AR' ? 'إعداد طلبي عبر البريد الإلكتروني'
+          : 'Preparar mi solicitud por correo' }}
+      </a>
+      <p>
+        <small>{{ currentLang === 'FR' ? 'Ce lien ouvre votre messagerie. Envoyez le message pour transmettre votre demande.'
+          : currentLang === 'EN' ? 'This link opens your email app. Send the message to submit your request.'
+          : currentLang === 'AR' ? 'يفتح الرابط تطبيق البريد. أرسل الرسالة لتقديم طلبك.'
+          : 'Este enlace abre su correo. Envíe el mensaje para presentar su solicitud.' }}</small>
+      </p>
+    </section>
+
+
     <section class="profile-card" *ngIf="userRole === 'PASSAGER'"
       style="border: 1px solid #fecaca;">
       <h2>{{ closureTexts[currentLang].title }}</h2>

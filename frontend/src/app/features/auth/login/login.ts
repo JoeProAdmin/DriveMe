@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../../core/api.service';
@@ -16,6 +16,7 @@ export class LoginComponent {
   public readonly api = inject(ApiService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   public loginData = { identifiant: '', motDePasse: '' };
   public dropdownOpen = false;
@@ -54,6 +55,7 @@ export class LoginComponent {
       error: (err: any) => {
         this.isSubmitting = false;
         this.errorMessage = err?.error?.message || 'Connexion impossible. Vérifiez vos identifiants.';
+        this.cdr.markForCheck();
       }
     });
   }

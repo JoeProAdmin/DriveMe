@@ -464,25 +464,23 @@ export class DriverViewComponent implements OnInit, OnDestroy {
     }).subscribe({
       next: ({ courses, propositions }) => {
         const courseIdsDejaProposes = new Set(
-          (propositions ?? []).map(proposition => Number(proposition.courseId))
+          (propositions ?? []).map(proposition =>
+            Number(proposition.courseId)
+          )
         );
 
         this.coursesDisponibles = (Array.isArray(courses) ? courses : [])
-          .filter(course => !courseIdsDejaProposes.has(Number(course.id)));
+          .filter(course =>
+            !courseIdsDejaProposes.has(Number(course.id))
+          )
+          .sort((a, b) => Number(b.id) - Number(a.id));
 
-        console.log(
-          'COURSES DISPONIBLES =',
-          this.coursesDisponibles
-        );
+        this.cdr.markForCheck();
       },
 
-      error: (err: any) => {
-        console.error(
-          'Erreur chargement courses disponibles',
-          err
-        );
-
-        this.coursesDisponibles = [];
+      error: (err: unknown) => {
+        console.error('Erreur chargement courses disponibles', err);
+        this.cdr.markForCheck();
       }
     });
   }

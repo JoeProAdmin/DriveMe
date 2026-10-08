@@ -680,3 +680,68 @@ button:disabled {
 
 /* RC2.3 — enveloppe visuelle unifiée */
 :host{display:block;font-family:Inter,Arial,sans-serif;background:#f8fafc}.page-header,.courses-header{border:0!important}.primary-btn,.refresh-btn,.action-btn,button.primary{background:#10b981!important;color:#052e24!important;border-color:#10b981!important;box-shadow:none!important}.secondary-btn,.dashboard-btn,button.secondary{background:#fff!important;color:#0f172a!important;border:1px solid #dbe3ee!important}.primary-btn:hover,.refresh-btn:hover,.action-btn:hover{background:#34d399!important}.stat-card,.course-card,.offers-panel{border-color:#e2e8f0!important;border-radius:1rem!important;box-shadow:0 10px 30px rgba(15,23,42,.06)!important}
+
+
+/* DriveMe : contraste des courses */
+.page-container {
+  background: #edf2f7;
+}
+
+.page-container .course-card,
+.page-container .stat-card {
+  border-color: #b8c5d6 !important;
+}
+
+.course-card .card-header {
+  background: #f1f5f9;
+  border-bottom-color: #cbd5e1;
+}
+
+.course-id,
+.price-box > span {
+  color: #10213d;
+  font-weight: 800;
+}
+
+.page-header p,
+.section-heading p,
+.course-information strong,
+.proposal-form label > span,
+.stat-card span,
+.offer-top span,
+.offer-meta,
+.empty-state {
+  color: #475569;
+}
+
+.price-box strong,
+.offer-price,
+.stat-card strong {
+  color: #08783a;
+}
+
+.proposal-btn,
+.send-btn,
+.choose-btn,
+.finish-btn,
+.payment-btn,
+.pay-confirm-btn,
+.available-count {
+  background: #08783a;
+  color: #ffffff;
+}
+
+.proposal-form input,
+.proposal-form textarea,
+.card-fields input,
+.language-select {
+  color: #10213d;
+}
+
+.course-actions button,
+.form-actions button,
+.payment-actions button {
+  min-height: 46px;
+  white-space: normal;
+  padding: 10px 16px;
+}

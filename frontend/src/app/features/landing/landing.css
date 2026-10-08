@@ -101,3 +101,10 @@ footer{padding:72px 0 24px;background:#0a101c;color:#fff}.footer-grid{display:gr
   stroke-linecap:round;
   stroke-linejoin:round;
 }
+
+
+/* DriveMe : numeros accueil lisibles */
+.landing-page .benefit-card .card-index {
+  color: #047857;
+  opacity: 1;
+}

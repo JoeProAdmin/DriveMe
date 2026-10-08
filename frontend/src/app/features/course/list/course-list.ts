@@ -881,7 +881,21 @@ export class CourseList implements OnInit, OnDestroy {
   }
 
   private toSafeArray(data: unknown): CourseResponseDTO[] {
-    return Array.isArray(data) ? data as CourseResponseDTO[] : [];
+    if (!Array.isArray(data)) {
+      return [];
+    }
+
+    return [...data as CourseResponseDTO[]].sort((a, b) => {
+      const dateA = Date.parse(a.dateCreation);
+      const dateB = Date.parse(b.dateCreation);
+
+      if (Number.isFinite(dateA) && Number.isFinite(dateB)
+          && dateA !== dateB) {
+        return dateB - dateA;
+      }
+
+      return Number(b.id) - Number(a.id);
+    });
   }
 
   private toPositiveNumber(value: unknown): number | null {

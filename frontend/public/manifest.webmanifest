@@ -13,8 +13,8 @@
   "theme_color": "#0d172d",
   "categories": ["travel", "navigation", "lifestyle"],
   "icons": [
-    { "src": "icons/icon-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-maskable-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "icons/icon-192x192.png?v=dm-c-2", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512x512.png?v=dm-c-2", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512x512.png?v=dm-c-2", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }

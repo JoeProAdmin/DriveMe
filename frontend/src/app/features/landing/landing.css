@@ -108,3 +108,14 @@ footer{padding:72px 0 24px;background:#0a101c;color:#fff}.footer-grid{display:gr
   color: #047857;
   opacity: 1;
 }
+/* Icône de marque DriveMe C */
+.brand-mark {
+  overflow: hidden;
+  background: #0d172d;
+}
+.brand-mark > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

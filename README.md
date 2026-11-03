@@ -11,9 +11,18 @@ Documentation mise à jour le 3 novembre 2026.
 
 ### Références du code
 
+* Projet : **DriveMe — préparation de la seconde session, décembre 2026**.
 * Dernière référence de production contrôlée : **5c458bc**.
-* Correctif des compteurs disponible sur GitHub : **88bbe9b**, branche **fix/course-status-counters**.
-* Ce correctif est compilé et exécuté dans Docker localement. Les deux vues passager ont été vérifiées sur ordinateur. Son déploiement en production reste à effectuer.
+* Référence du code corrigé et validé localement : **d8d22bf**.
+* Le déploiement de ce lot en production reste à vérifier.
+
+Validation réalisée : compilation Angular, 12 tests backend réussis avec une base MySQL temporaire, vérification des compteurs des trois rôles et affichage mobile passager.
+
+Recette locale : course no 18, budget initial de 31 MAD, prix accepté de 35 MAD, course terminée et paiement enregistré. Une commission de 3,50 MAD a ramené le crédit chauffeur de 100 à 96,50 MAD.
+
+Les demandes annulées sans attribution restent dans les statistiques passager et administrateur ; elles ne sont pas ajoutées aux courses du chauffeur. Leur paiement est affiché comme non applicable.
+
+Les numéros des documents de soutenance ne constituent pas des versions logicielles. La référence technique est le commit ou le tag Git associé à chaque livraison.
 
 Les anciens tags V8, V9 et V10 restent des jalons historiques. Chaque livraison doit être identifiée par son commit ou son tag Git.
 

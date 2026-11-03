@@ -160,7 +160,7 @@ export class CourseList implements OnInit, OnDestroy {
   }
 
   public get waitingCoursesCount(): number {
-    return this.countCoursesByStatus('EN_ATTENTE');
+    return this.countCoursesByStatus('EN_ATTENTE') + this.countCoursesByStatus('PROPOSITION_RECUE');
   }
 
   public get acceptedCoursesCount(): number {

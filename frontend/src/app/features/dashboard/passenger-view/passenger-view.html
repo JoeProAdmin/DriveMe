@@ -32,8 +32,18 @@
     </div>
 
     <div class="stat-card">
+      <span>{{ texts[currentLang].active }}</span>
+      <strong>{{ stats.coursesActives }}</strong>
+    </div>
+
+    <div class="stat-card">
       <span>{{ texts[currentLang].completed }}</span>
       <strong>{{ stats.coursesTerminees }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>{{ texts[currentLang].cancelled }}</span>
+      <strong>{{ stats.coursesAnnulees }}</strong>
     </div>
 
     <div class="stat-card">

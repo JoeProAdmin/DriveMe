@@ -18,6 +18,8 @@ export class PassengerViewComponent implements OnInit {
   public stats = {
     totalCourses: 0,
     coursesEnAttente: 0,
+    coursesActives: 0,
+    coursesAnnulees: 0,
     coursesTerminees: 0,
     avisDonnes: 0
   };
@@ -30,6 +32,8 @@ export class PassengerViewComponent implements OnInit {
       orderRide: 'Commander une course',
       totalCourses: 'Total courses',
       pending: 'En attente',
+      active: 'Actives',
+      cancelled: 'Annulées',
       completed: 'Terminées',
       reviews: 'Avis donnés',
       newRide: 'Nouvelle course',
@@ -49,6 +53,8 @@ export class PassengerViewComponent implements OnInit {
       orderRide: 'Book a Ride',
       totalCourses: 'Total Trips',
       pending: 'Pending',
+      active: 'Active',
+      cancelled: 'Cancelled',
       completed: 'Completed',
       reviews: 'Reviews',
       newRide: 'New Ride',
@@ -68,6 +74,8 @@ export class PassengerViewComponent implements OnInit {
       orderRide: 'طلب رحلة',
       totalCourses: 'إجمالي الرحلات',
       pending: 'قيد الانتظار',
+      active: 'نشطة',
+      cancelled: 'ملغاة',
       completed: 'مكتملة',
       reviews: 'التقييمات',
       newRide: 'رحلة جديدة',
@@ -87,6 +95,8 @@ export class PassengerViewComponent implements OnInit {
       orderRide: 'Solicitar Viaje',
       totalCourses: 'Total Viajes',
       pending: 'Pendientes',
+      active: 'Activos',
+      cancelled: 'Cancelados',
       completed: 'Finalizados',
       reviews: 'Opiniones',
       newRide: 'Nuevo Viaje',
@@ -155,7 +165,16 @@ export class PassengerViewComponent implements OnInit {
     this.stats.totalCourses = safeCourses.length;
 
     this.stats.coursesEnAttente = safeCourses.filter(course =>
-      this.normalizeStatus(course?.statut) === 'EN_ATTENTE'
+      ['EN_ATTENTE', 'PROPOSITION_RECUE'].includes(this.normalizeStatus(course?.statut))
+    ).length;
+
+    this.stats.coursesActives = safeCourses.filter(course =>
+      ['ACCEPTEE', 'CHAUFFEUR_EN_ROUTE', 'CHAUFFEUR_ARRIVE', 'EN_COURS']
+        .includes(this.normalizeStatus(course?.statut))
+    ).length;
+
+    this.stats.coursesAnnulees = safeCourses.filter(course =>
+      this.normalizeStatus(course?.statut) === 'ANNULEE'
     ).length;
 
     this.stats.coursesTerminees = safeCourses.filter(course =>
@@ -170,6 +189,8 @@ export class PassengerViewComponent implements OnInit {
   private resetStats(): void {
     this.stats.totalCourses = 0;
     this.stats.coursesEnAttente = 0;
+    this.stats.coursesActives = 0;
+    this.stats.coursesAnnulees = 0;
     this.stats.coursesTerminees = 0;
     this.stats.avisDonnes = 0;
   }

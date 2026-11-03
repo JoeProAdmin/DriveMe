@@ -34,7 +34,7 @@
     </div>
   </header>
 
-  <section class="stats-grid" *ngIf="userRole !== 'ADMIN'">
+  <section class="stats-grid user-stats" *ngIf="userRole !== 'ADMIN'">
     <article class="stat-card">
       <span>{{ texts[currentLang].total }}</span>
       <strong>{{ totalCourses }}</strong>
@@ -44,12 +44,16 @@
       <strong>{{ waitingCoursesCount }}</strong>
     </article>
     <article class="stat-card">
-      <span>{{ texts[currentLang].accepted }}</span>
-      <strong>{{ acceptedCoursesCount }}</strong>
+      <span>{{ adminTexts[currentLang].active }}</span>
+      <strong>{{ activeCoursesCount }}</strong>
     </article>
     <article class="stat-card">
       <span>{{ texts[currentLang].finished }}</span>
       <strong>{{ finishedCoursesCount }}</strong>
+    </article>
+    <article class="stat-card muted">
+      <span>{{ adminTexts[currentLang].cancelled }}</span>
+      <strong>{{ cancelledCoursesCount }}</strong>
     </article>
   </section>
 
@@ -560,7 +564,7 @@
       <p *ngIf="showDriver">
         <strong>{{ texts[currentLang].drv }}</strong>
         <span>
-          {{ course.chauffeurNom || texts[currentLang].waitingDriver }}
+          {{ course.chauffeurNom || adminTexts[currentLang].waiting }}
         </span>
       </p>
     </div>

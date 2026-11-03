@@ -116,8 +116,8 @@
               <td><strong>#{{ course.id }}</strong><small>{{ adminTexts[currentLang].created }} {{ formatDateTime(course.dateCreation) }}</small><small>{{ getServiceLabel(course.categorieService) }}</small></td>
               <td><strong>{{ course.adresseDepart }}</strong><span>→ {{ course.adresseArrivee }}</span><small>{{ formatDateTime(course.dateHeureDepart) }}</small></td>
               <td><span>{{ adminTexts[currentLang].passenger }}: {{ course.passagerNom }}</span><span>{{ adminTexts[currentLang].driver }}: {{ course.chauffeurNom || adminTexts[currentLang].waiting }}</span></td>
-              <td><span>{{ adminTexts[currentLang].requested }}: {{ course.prixInitial || course.prix }} MAD</span><strong>{{ adminTexts[currentLang].final }}: {{ adminPrice(course) }} MAD</strong><small>{{ course.nombrePropositions || 0 }} {{ adminTexts[currentLang].offers }}</small></td>
-              <td><span [class.payment-ok]="normalizeStatus(course.paiementStatut) === 'PAYE'">{{ course.paiementStatut || adminTexts[currentLang].paymentRequired }}</span><small *ngIf="course.paiementMethode">{{ course.paiementMethode }} · {{ course.paiementMontant }} MAD</small></td>
+              <td><span>{{ adminTexts[currentLang].requested }}: {{ course.prixInitial ?? course.prix }} MAD</span><strong *ngIf="hasAcceptedPrice(course)">{{ rideDisplayTexts[currentLang].accepted }}: {{ adminPrice(course) }} MAD</strong><small>{{ course.nombrePropositions || 0 }} {{ adminTexts[currentLang].offers }}</small></td>
+              <td><span [class.payment-ok]="normalizeStatus(course.paiementStatut) === 'PAYE'">{{ ridePaymentLabel(course) }}</span><small *ngIf="course.paiementMethode">{{ course.paiementMethode }} · {{ course.paiementMontant }} MAD</small></td>
               <td><span class="status" [ngClass]="statusClass(course.statut)">{{ statusLabel(course.statut) }}</span></td>
               <td><button type="button" class="details-btn" (click)="toggleAdminDetails(course.id)">{{ isAdminDetailsExpanded(course.id) ? adminTexts[currentLang].hide : adminTexts[currentLang].details }}</button></td>
             </tr>
@@ -579,7 +579,7 @@
     </div>
 
     <div class="price-box">
-      <span>{{ texts[currentLang].price }}</span>
+      <span>{{ hasAcceptedPrice(course) ? rideDisplayTexts[currentLang].accepted : texts[currentLang].price }}</span>
       <strong>{{ course.prix }} {{ texts[currentLang].mad }}</strong>
     </div>
   </div>

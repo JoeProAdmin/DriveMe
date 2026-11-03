@@ -238,6 +238,32 @@ export class CourseList implements OnInit, OnDestroy {
     return labels[this.currentLang][normalized] || normalized.replaceAll('_', ' ');
   }
 
+  public readonly rideDisplayTexts: Record<string, any> = {
+    FR: { accepted: 'Prix accepté', notApplicable: 'Non applicable', notDue: 'Non exigible à ce stade' },
+    EN: { accepted: 'Agreed price', notApplicable: 'Not applicable', notDue: 'Not due yet' },
+    AR: { accepted: 'السعر المتفق عليه', notApplicable: 'غير منطبق', notDue: 'غير مستحق حالياً' },
+    ES: { accepted: 'Precio acordado', notApplicable: 'No aplicable', notDue: 'Todavía no exigible' }
+  };
+
+  public hasAcceptedPrice(course: CourseResponseDTO): boolean {
+    const status = this.normalizeStatus(course.statut);
+    return course.chauffeurId != null
+      && !['EN_ATTENTE', 'PROPOSITION_RECUE'].includes(status);
+  }
+
+  public ridePaymentLabel(course: CourseResponseDTO): string {
+    const payment = this.normalizeStatus(course.paiementStatut);
+    if (payment === 'PAYE') return this.texts[this.currentLang].paid;
+    if (payment) return String(course.paiementStatut);
+    const status = this.normalizeStatus(course.statut);
+    if (status === 'ANNULEE') {
+      return this.rideDisplayTexts[this.currentLang].notApplicable;
+    }
+    return status === 'TERMINEE'
+      ? this.adminTexts[this.currentLang].paymentRequired
+      : this.rideDisplayTexts[this.currentLang].notDue;
+  }
+
   public adminPrice(course: CourseResponseDTO): number {
     return Number(course.prixFinal ?? course.prix ?? course.prixInitial ?? 0);
   }

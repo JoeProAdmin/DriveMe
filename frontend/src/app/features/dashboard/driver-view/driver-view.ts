@@ -47,6 +47,7 @@ export class DriverViewComponent implements OnInit, OnDestroy {
     coursesTotal: 0,
     coursesEnCours: 0,
     coursesTerminees: 0,
+    coursesAnnulees: 0,
     revenus: 0,
     note: 0,
     soldeCredit: 0
@@ -66,6 +67,7 @@ export class DriverViewComponent implements OnInit, OnDestroy {
       totalCourses: 'Total Courses',
       activeCourses: 'Courses En Cours',
       finishedCourses: 'Courses Terminées',
+      cancelledCourses: 'Courses annulées',
       estimatedIncome: 'Revenus Estimés',
       credits: 'Crédits DriveMe',
       rating: 'Note Moyenne',
@@ -106,6 +108,7 @@ export class DriverViewComponent implements OnInit, OnDestroy {
       totalCourses: 'Total Trips',
       activeCourses: 'Active Trips',
       finishedCourses: 'Completed Trips',
+      cancelledCourses: 'Cancelled Trips',
       estimatedIncome: 'Estimated Earnings',
       credits: 'DriveMe Credits',
       rating: 'Average Rating',
@@ -146,6 +149,7 @@ export class DriverViewComponent implements OnInit, OnDestroy {
       totalCourses: 'إجمالي الرحلات',
       activeCourses: 'الرحلات النشطة',
       finishedCourses: 'الرحلات المكتملة',
+      cancelledCourses: 'الرحلات الملغاة',
       estimatedIncome: 'الأرباح',
       credits: 'رصيد DriveMe',
       rating: 'التقييم',
@@ -186,6 +190,7 @@ export class DriverViewComponent implements OnInit, OnDestroy {
       totalCourses: 'Total Viajes',
       activeCourses: 'Viajes Activos',
       finishedCourses: 'Viajes Finalizados',
+      cancelledCourses: 'Viajes cancelados',
       estimatedIncome: 'Ingresos',
       credits: 'Créditos DriveMe',
       rating: 'Valoración',
@@ -512,6 +517,9 @@ export class DriverViewComponent implements OnInit, OnDestroy {
       coursesTotal: safeCourses.length,
       coursesEnCours: coursesEnCours.length,
       coursesTerminees: coursesTerminees.length,
+      coursesAnnulees: safeCourses.filter(course =>
+        this.normalizeStatus(course.statut) === 'ANNULEE'
+      ).length,
       revenus
     };
 

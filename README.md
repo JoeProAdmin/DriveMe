@@ -7,27 +7,43 @@ Plateforme web et PWA de mobilité conçue pour le marché marocain. DriveMe met
 
 ## Version de référence
 
-Version stable actuelle :
+Documentation mise à jour le 3 novembre 2026.
 
-```text
-DriveMe V10.2.1
-Commit : d45b8f3
-Tag : v10.2.1-mobile-admin-ux-production-stable
-Date de référence : 15 août 2026
-```
+### Références du code
 
-Cette version comprend notamment :
+* Dernière référence de production contrôlée : **5c458bc**.
+* Correctif des compteurs disponible sur GitHub : **88bbe9b**, branche **fix/course-status-counters**.
+* Ce correctif est compilé et exécuté dans Docker localement. Les deux vues passager ont été vérifiées sur ordinateur. Son déploiement en production reste à effectuer.
 
-* les parcours Passager, Chauffeur et Administrateur ;
-* la typologie professionnelle des chauffeurs ;
-* la validation administrative et documentaire ;
-* le choix du service par le passager ;
-* le portefeuille chauffeur et les commissions ;
-* l’interface responsive ;
-* l’optimisation mobile des tableaux de bord ;
-* la navigation mobile de la page d’accueil ;
-* le socle PWA installable et hors ligne ;
-* les pages publiques et juridiques en quatre langues.
+Les anciens tags V8, V9 et V10 restent des jalons historiques. Chaque livraison doit être identifiée par son commit ou son tag Git.
+
+### Évolutions depuis le jalon V10.2.1
+
+* Annulation protégée des demandes de course.
+* Clôture du compte passager et demande de clôture chauffeur.
+* Récupération du mot de passe par lien à usage unique et révocation des sessions.
+* Actualisation des données de profil et du dossier chauffeur.
+* Rafraîchissement des demandes chauffeur, tri des courses récentes et contraste amélioré.
+* Monogramme DM commun au site et à la PWA.
+* Permissions des ressources statiques corrigées pour Nginx et URL des icônes PWA versionnées.
+* Compteurs distinguant les courses en attente, actives, terminées et annulées.
+
+### Lecture des statistiques
+
+* En attente : statuts EN_ATTENTE et PROPOSITION_RECUE.
+* Actives : ACCEPTEE, CHAUFFEUR_EN_ROUTE, CHAUFFEUR_ARRIVE et EN_COURS.
+* Terminées : TERMINEE.
+* Annulées : ANNULEE.
+
+Pour ces statuts, le total correspond à la somme des quatre catégories. Les avis sont un indicateur distinct et ne sont pas ajoutés au total des courses.
+
+### Propriété et confidentialité
+
+Copyright © 2025-2026 Youssef Qarnouf. Tous droits réservés.
+
+Les conditions de consultation et les restrictions sont précisées dans [LICENSE.txt](LICENSE.txt). Les composants tiers conservent leurs licences respectives.
+
+Le dépôt public ne doit contenir aucun secret, mot de passe, document personnel ou jeu de données de production. Les accès de démonstration sont communiqués séparément.
 
 ## Accès
 
@@ -175,7 +191,7 @@ Une PWA ne remplace pas automatiquement une application mobile native. Les fonct
 | ----------------- | ------------------------------------------------------------ |
 | Backend           | Java 17, Spring Boot 3.2.5, Spring Security, Spring Data JPA |
 | Sécurité          | JWT, BCrypt, contrôle des rôles                              |
-| Frontend          | Angular 21, TypeScript, RxJS                                 |
+| Frontend          | Angular 21 ; dépendances Angular et Service Worker déclarées en ^21.2.20 ; TypeScript, RxJS |
 | Base de données   | MySQL 8.4                                                    |
 | Migrations        | Flyway                                                       |
 | Conteneurisation  | Docker Compose                                               |
@@ -224,6 +240,7 @@ backend/src/main/resources/db/migration
 | V9        | Typologie des chauffeurs                   |
 | V10       | Choix du service passager                  |
 | V11       | Documents professionnels chauffeur         |
+| V12 | Réinitialisation du mot de passe |
 
 Une migration déjà appliquée ne doit jamais être modifiée rétroactivement. Toute évolution supplémentaire doit utiliser une nouvelle version.
 
@@ -244,7 +261,7 @@ Java, Maven, Node.js, Angular CLI, MySQL et Nginx sont fournis par les images Do
 Créer le fichier local d’environnement :
 
 ```powershell
-Copy-Item .env.example .env
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 ```
 
 Renseigner les valeurs nécessaires uniquement dans `.env`.
@@ -286,7 +303,7 @@ Le développement ne doit pas démarrer si des modifications inexpliquées sont 
 ### 4. Vérifier Docker Compose
 
 ```powershell
-docker compose config --quiet
+docker compose -p driveme-privacy-test config --quiet
 ```
 
 L’absence de message confirme que la configuration est valide.
@@ -294,7 +311,7 @@ L’absence de message confirme que la configuration est valide.
 ### 5. Démarrer les services
 
 ```powershell
-docker compose up -d
+docker compose -p driveme-privacy-test up -d
 ```
 
 Cette commande démarre ou recrée si nécessaire :
@@ -306,7 +323,7 @@ Cette commande démarre ou recrée si nécessaire :
 ### 6. Vérifier les services
 
 ```powershell
-docker compose ps
+docker compose -p driveme-privacy-test ps
 ```
 
 État attendu :
@@ -318,8 +335,8 @@ docker compose ps
 ### 7. Vérifier les journaux
 
 ```powershell
-docker compose logs backend --tail=120
-docker compose logs frontend --tail=60
+docker compose -p driveme-privacy-test logs backend --tail=120
+docker compose -p driveme-privacy-test logs frontend --tail=60
 ```
 
 ### 8. Ouvrir l’application
@@ -343,19 +360,19 @@ Après une modification du code, reconstruire uniquement le service concerné lo
 Backend :
 
 ```powershell
-docker compose up -d --build backend
+docker compose -p driveme-privacy-test up -d --build backend
 ```
 
 Frontend :
 
 ```powershell
-docker compose up -d --build frontend
+docker compose -p driveme-privacy-test up -d --build frontend
 ```
 
 Reconstruction complète :
 
 ```powershell
-docker compose up -d --build
+docker compose -p driveme-privacy-test up -d --build
 ```
 
 Une reconstruction complète n’est pas nécessaire pour un redémarrage quotidien normal.
@@ -365,7 +382,7 @@ Une reconstruction complète n’est pas nécessaire pour un redémarrage quotid
 Depuis `C:\Projets\DriveMe` :
 
 ```powershell
-docker compose down
+docker compose -p driveme-privacy-test down
 ```
 
 Cette commande arrête les conteneurs sans supprimer volontairement les données persistantes.
@@ -373,7 +390,7 @@ Cette commande arrête les conteneurs sans supprimer volontairement les données
 Ne pas utiliser :
 
 ```powershell
-docker compose down -v
+docker compose -p driveme-privacy-test down -v
 ```
 
 sauf si la suppression définitive des volumes et des données locales est explicitement souhaitée et sauvegardée.

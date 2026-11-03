@@ -68,6 +68,29 @@ import { ApiService, AdminStats } from '../../../core/api.service';
 
   </div>
 
+  <div class="stats-grid" *ngIf="courseStatsLoaded"
+       [attr.dir]="currentLang === 'ar' ? 'rtl' : 'ltr'">
+    <div class="card">
+      <span class="label">{{ texts[currentLang].waitingTrips }}</span>
+      <p>{{ stats.coursesEnAttente }}</p>
+    </div>
+    <div class="card">
+      <span class="label">{{ texts[currentLang].activeTrips }}</span>
+      <p>{{ stats.coursesActives }}</p>
+    </div>
+    <div class="card">
+      <span class="label">{{ texts[currentLang].finishedTrips }}</span>
+      <p>{{ stats.coursesTerminees }}</p>
+    </div>
+    <div class="card">
+      <span class="label">{{ texts[currentLang].cancelledTrips }}</span>
+      <p>{{ stats.coursesAnnulees }}</p>
+    </div>
+  </div>
+  <p *ngIf="courseStatsError" role="alert">
+    {{ texts[currentLang].statsUnavailable }}
+  </p>
+
   <div class="quick-actions">
 
     <a class="action-card" routerLink="/chauffeurs">
@@ -247,6 +270,9 @@ export class AdminViewComponent implements OnInit {
   private readonly api = inject(ApiService);
   private readonly cdr = inject(ChangeDetectorRef);
 
+  public courseStatsLoaded = false;
+  public courseStatsError = false;
+
   public stats: AdminStats = {
     totalChauffeurs: 0,
     totalPassagers: 0,
@@ -272,6 +298,11 @@ export class AdminViewComponent implements OnInit {
       drivers: 'CHAUFFEURS',
       passengers: 'PASSAGERS',
       trips: 'COURSES',
+      waitingTrips: 'EN ATTENTE',
+      activeTrips: 'ACTIVES',
+      finishedTrips: 'TERMINÉES',
+      cancelledTrips: 'ANNULÉES',
+      statsUnavailable: 'Répartition des courses indisponible. Actualisez la page.',
       payments: 'PAIEMENTS',
       paidVolume: 'VOLUME DES COURSES PAYÉES',
       paidPayments: 'paiement(s) payé(s)',
@@ -294,6 +325,11 @@ export class AdminViewComponent implements OnInit {
       drivers: 'DRIVERS',
       passengers: 'PASSENGERS',
       trips: 'TRIPS',
+      waitingTrips: 'PENDING',
+      activeTrips: 'ACTIVE',
+      finishedTrips: 'COMPLETED',
+      cancelledTrips: 'CANCELLED',
+      statsUnavailable: 'Trip breakdown unavailable. Refresh the page.',
       payments: 'PAYMENTS',
       paidVolume: 'PAID TRIP VOLUME',
       paidPayments: 'paid payment(s)',
@@ -316,6 +352,11 @@ export class AdminViewComponent implements OnInit {
       drivers: 'السائقون',
       passengers: 'الركاب',
       trips: 'الرحلات',
+      waitingTrips: 'قيد الانتظار',
+      activeTrips: 'نشطة',
+      finishedTrips: 'مكتملة',
+      cancelledTrips: 'ملغاة',
+      statsUnavailable: 'توزيع الرحلات غير متاح. يرجى تحديث الصفحة.',
       payments: 'المدفوعات',
       paidVolume: 'حجم الرحلات المدفوعة',
       paidPayments: 'دفعة مدفوعة',
@@ -338,6 +379,11 @@ export class AdminViewComponent implements OnInit {
       drivers: 'CONDUCTORES',
       passengers: 'PASAJEROS',
       trips: 'VIAJES',
+      waitingTrips: 'PENDIENTES',
+      activeTrips: 'ACTIVOS',
+      finishedTrips: 'FINALIZADOS',
+      cancelledTrips: 'CANCELADOS',
+      statsUnavailable: 'Desglose de viajes no disponible. Actualice la página.',
       payments: 'PAGOS',
       paidVolume: 'VOLUMEN DE VIAJES PAGADOS',
       paidPayments: 'pago(s) pagado(s)',
@@ -365,6 +411,25 @@ export class AdminViewComponent implements OnInit {
         this.stats.totalChauffeurs = Number(data?.totalChauffeurs ?? 0);
         this.stats.totalPassagers = Number(data?.totalPassagers ?? 0);
         this.stats.totalCourses = Number(data?.totalCourses ?? 0);
+
+        const counts = [data.coursesEnAttente, data.coursesActives,
+          data.coursesTerminees, data.coursesAnnulees];
+        const valid = counts.every(value =>
+          typeof value === 'number' && Number.isSafeInteger(value) && value >= 0)
+          && typeof data.totalCourses === 'number'
+          && Number.isSafeInteger(data.totalCourses)
+          && data.totalCourses >= 0
+          && counts.reduce<number>((sum, value) => sum + (value ?? 0), 0)
+            === data.totalCourses;
+
+        this.courseStatsLoaded = valid;
+        this.courseStatsError = !valid;
+        if (valid) {
+          this.stats.coursesEnAttente = data.coursesEnAttente;
+          this.stats.coursesActives = data.coursesActives;
+          this.stats.coursesTerminees = data.coursesTerminees;
+          this.stats.coursesAnnulees = data.coursesAnnulees;
+        }
         this.stats.totalPaiements = Number(data?.totalPaiements ?? 0);
         this.stats.paiementsPayes = Number(data?.paiementsPayes ?? 0);
         this.stats.montantPaiementsPayes = Number(data?.montantPaiementsPayes ?? 0);
@@ -378,6 +443,8 @@ export class AdminViewComponent implements OnInit {
       error: (err: any) => {
         console.error('Erreur chargement statistiques administrateur', err);
 
+        this.courseStatsLoaded = false;
+        this.courseStatsError = true;
         this.stats.totalChauffeurs = 0;
         this.stats.totalPassagers = 0;
         this.stats.totalCourses = 0;

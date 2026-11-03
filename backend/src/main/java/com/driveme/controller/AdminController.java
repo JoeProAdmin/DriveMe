@@ -1,9 +1,12 @@
 package com.driveme.controller;
 
 import com.driveme.dto.AdminStats;
+import com.driveme.entity.CourseStatus;
+import com.driveme.repository.CourseRepository;
+import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 import com.driveme.entity.PaiementStatut;
 import com.driveme.service.ChauffeurService;
-import com.driveme.service.CourseService;
 import com.driveme.service.PaiementService;
 import com.driveme.service.PassagerService;
 import com.driveme.repository.TransactionPortefeuilleRepository;
@@ -23,16 +26,26 @@ public class AdminController {
 
     private final ChauffeurService chauffeurService;
     private final PassagerService passagerService;
-    private final CourseService courseService;
+    private final CourseRepository courseRepository;
     private final PaiementService paiementService;
     private final TransactionPortefeuilleRepository transactionPortefeuilleRepository;
 
     @GetMapping("/stats")
+    @Transactional(readOnly = true)
     public AdminStats getStats() {
         AdminStats stats = new AdminStats();
         stats.setTotalChauffeurs(chauffeurService.count());
         stats.setTotalPassagers(passagerService.count());
-        stats.setTotalCourses(courseService.count());
+        stats.setTotalCourses(courseRepository.count());
+        stats.setCoursesEnAttente(courseRepository.countByStatutIn(
+            List.of(CourseStatus.EN_ATTENTE, CourseStatus.PROPOSITION_RECUE)));
+        stats.setCoursesActives(courseRepository.countByStatutIn(
+            List.of(CourseStatus.ACCEPTEE, CourseStatus.CHAUFFEUR_EN_ROUTE,
+                CourseStatus.CHAUFFEUR_ARRIVE, CourseStatus.EN_COURS)));
+        stats.setCoursesTerminees(courseRepository.countByStatutIn(
+            List.of(CourseStatus.TERMINEE)));
+        stats.setCoursesAnnulees(courseRepository.countByStatutIn(
+            List.of(CourseStatus.ANNULEE)));
         stats.setTotalPaiements(paiementService.count());
         stats.setPaiementsPayes(paiementService.countByStatut(PaiementStatut.PAYE));
         stats.setMontantPaiementsPayes(paiementService.sumMontantByStatut(PaiementStatut.PAYE));

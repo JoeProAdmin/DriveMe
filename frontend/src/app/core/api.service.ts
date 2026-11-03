@@ -13,6 +13,10 @@ import { APP_TRANSLATIONS } from './app-translations';
 export type AppLanguage = 'fr' | 'en' | 'ar' | 'es';
 
 export interface AdminStats {
+  coursesEnAttente?: number;
+  coursesActives?: number;
+  coursesTerminees?: number;
+  coursesAnnulees?: number;
   totalChauffeurs: number;
   totalPassagers: number;
   totalCourses: number;

@@ -21,6 +21,8 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     List<Course> findByStatut(CourseStatus statut);
 
+    long countByStatutIn(List<CourseStatus> statuts);
+
     List<Course> findByPassagerUtilisateurEmailIgnoreCase(String email);
 
     List<Course> findByChauffeurUtilisateurEmailIgnoreCase(String email);

@@ -2,29 +2,16 @@
 
 Plateforme web et PWA de mobilité conçue pour le marché marocain. DriveMe met en relation des passagers avec des chauffeurs et professionnels du transport, permet de publier une demande de trajet, de comparer les propositions reçues et de sélectionner librement une offre avant le départ.
 
-> Travail de Fin d’Études - ICC Bruxelles - année académique 2025-2026
+> Projet de fin d’études réalisé à l’Institut des Carrières Commerciales (Bruxelles), 2025-2026.
 > Copyright © 2025-2026 Youssef Qarnouf. Tous droits réservés.
 
-## Version de référence
+## Référence de déploiement
 
-Documentation mise à jour le 3 novembre 2026.
+La version déployée le 3 novembre 2026 correspond au commit [`ee109a9`](https://github.com/JoeProAdmin/DriveMe/commit/ee109a9).
 
-### Références du code
+La validation a combiné une compilation Angular, 12 tests backend sur une base MySQL temporaire et une recette des tableaux de bord pour les trois rôles.
 
-* Projet : **DriveMe — préparation de la seconde session, décembre 2026**.
-* Dernière référence de production contrôlée : **5c458bc**.
-* Référence du code corrigé et validé localement : **d8d22bf**.
-* Le déploiement de ce lot en production reste à vérifier.
-
-Validation réalisée : compilation Angular, 12 tests backend réussis avec une base MySQL temporaire, vérification des compteurs des trois rôles et affichage mobile passager.
-
-Recette locale : course no 18, budget initial de 31 MAD, prix accepté de 35 MAD, course terminée et paiement enregistré. Une commission de 3,50 MAD a ramené le crédit chauffeur de 100 à 96,50 MAD.
-
-Les demandes annulées sans attribution restent dans les statistiques passager et administrateur ; elles ne sont pas ajoutées aux courses du chauffeur. Leur paiement est affiché comme non applicable.
-
-Les numéros des documents de soutenance ne constituent pas des versions logicielles. La référence technique est le commit ou le tag Git associé à chaque livraison.
-
-Les anciens tags V8, V9 et V10 restent des jalons historiques. Chaque livraison doit être identifiée par son commit ou son tag Git.
+Les demandes annulées sans chauffeur attribué restent visibles dans les statistiques du passager et de l’administrateur. Elles ne figurent pas dans l’historique des courses attribuées au chauffeur. En l’absence de paiement, la mention « Non applicable » est affichée.
 
 ### Évolutions depuis le jalon V10.2.1
 
@@ -61,7 +48,7 @@ Le dépôt public ne doit contenir aucun secret, mot de passe, document personne
 * Environnement local : `http://localhost:8081`
 * Swagger local : `http://localhost:8080/swagger-ui/index.html`
 
-La disponibilité publique dépend de l’état du VPS et des services de production. Les identifiants de démonstration sont communiqués au jury séparément et ne sont jamais publiés dans ce dépôt.
+La disponibilité publique dépend de l’état du VPS et des services de production. Les identifiants de démonstration ne sont pas publiés dans ce dépôt.
 
 ## Positionnement
 
@@ -175,7 +162,7 @@ Le système comprend :
 * débit de la commission après une course terminée ;
 * suivi administratif des recharges et commissions.
 
-Les paiements externes restent simulés dans la version académique. Une passerelle de paiement certifiée devra être intégrée et validée avant une exploitation commerciale réelle.
+Les paiements externes restent simulés dans cette version. Une passerelle de paiement certifiée devra être intégrée et validée avant une exploitation commerciale réelle.
 
 ## Interface et PWA
 
@@ -279,7 +266,6 @@ Le fichier `.env` :
 
 * est ignoré par Git ;
 * ne doit jamais être commité ;
-* ne doit jamais être envoyé au jury ;
 * ne doit jamais être incorporé dans un ZIP public ;
 * ne doit contenir aucun secret réutilisé ailleurs.
 
@@ -427,7 +413,7 @@ git commit -m "Description claire du bloc validé"
 git push
 ```
 
-Les commits doivent rester réguliers, cohérents et compréhensibles pour le jury.
+Les commits doivent rester réguliers, cohérents et compréhensibles.
 
 Les commandes destructives, les réécritures d’historique et les `push --force` sont interdits sans contrôle préalable.
 
@@ -449,13 +435,13 @@ Un secret supprimé du dernier commit peut rester accessible dans l’historique
 
 Consultez [SECURITY.md](SECURITY.md) pour la politique de signalement.
 
-## Publication GitHub et jury
+## Publication du dépôt
 
 GitHub constitue :
 
 * la sauvegarde régulière du code ;
 * la preuve chronologique du développement ;
-* la présentation technique au jury ;
+* la documentation technique du projet ;
 * un point de restauration ;
 * une démonstration de la maîtrise de Git.
 
@@ -518,6 +504,4 @@ Consultez [LICENSE.txt](LICENSE.txt) pour les conditions complètes.
 ## Auteur
 
 **Youssef Qarnouf**
-Travail de Fin d’Études - ICC Bruxelles
-Année académique 2025-2026
 Projet : [DriveMe.cloud](https://driveme.cloud)

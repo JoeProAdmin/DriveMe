@@ -1,129 +1,149 @@
-# DriveMe - Frontend Angular (TFE 2025–2026)
+# DriveMe Frontend
 
-## Contexte académique
-Projet de fin d’études (TFE) – Bachelier en Informatique, orientation développement d’applications (ICC).
+Interface web et PWA de DriveMe, plateforme de mobilité conçue pour le marché marocain.
 
-DriveMe est une application VTC moderne inspirée du modèle inDrive, adaptée au marché marocain avec une ambition d’extension internationale.
+Le frontend propose des espaces adaptés aux passagers, aux chauffeurs et aux administrateurs. Il communique avec l’API Spring Boot.
 
----
+La présentation générale et les instructions de déploiement sont disponibles dans le [README principal](../README.md).
 
-## Présentation du frontend
+## Technologies
 
-Ce projet correspond au frontend Angular de l’application DriveMe.
+| Technologie | Utilisation |
+| --- | --- |
+| Angular | Composants autonomes, routage et formulaires |
+| TypeScript | Développement de l’interface |
+| HttpClient et RxJS | Communication avec le backend |
+| HTML, CSS et SCSS | Mise en page responsive |
+| Angular Service Worker | Installation PWA et cache des ressources configurées |
 
-Il permet :
-- l’interface utilisateur (authentification, dashboard futur, gestion des courses)
-- la communication avec le backend Spring Boot
-- la gestion de l’authentification (JWT à venir)
+Les dépendances Angular et Angular Service Worker sont déclarées en `^21.2.20`. Le fichier `package-lock.json` fixe les versions installées avec `npm ci`.
 
----
+## Fonctionnalités
 
-## Stack technique
+### Espace passager
 
-- Angular (Standalone Components)
-- TypeScript
-- HTML / CSS
-- Angular HttpClient
-- Architecture modulaire (core / shared / features)
+- Création d’une demande de course.
+- Consultation des propositions des chauffeurs et sélection d’une offre.
+- Suivi de la course et consultation de l’historique.
+- Annulation des demandes éligibles.
+- Consultation des paiements déclarés et dépôt d’avis.
+- Tableau de bord avec les courses en attente, actives, terminées et annulées.
 
----
+### Espace chauffeur
 
-## Structure du projet
+- Gestion du profil et de la disponibilité.
+- Consultation des demandes disponibles et proposition d’un prix.
+- Suivi des étapes des courses attribuées.
+- Consultation des courses terminées et annulées.
+- Consultation du portefeuille, des commissions et de son historique.
 
-src/app/
-├── core/        → services globaux (API, auth)
-├── shared/      → composants réutilisables
-├── features/    → modules métier
-│     └── auth/
-│           └── login/
-├── app.ts
-├── app.html
-├── app.routes.ts
+### Espace administrateur
 
----
+- Supervision des chauffeurs et des passagers.
+- Validation des dossiers chauffeurs.
+- Consultation et filtrage des courses.
+- Suivi des paiements, des crédits et des commissions.
+- Consultation des incidents SOS.
+- Tableau de bord présentant la répartition des courses par statut.
 
-## Fonctionnalités implémentées
+### Fonctions communes
 
-### Initialisation
-- création du projet Angular
-- configuration et lancement en local
+- Connexion, inscription et récupération du mot de passe.
+- Navigation adaptée au rôle de l’utilisateur.
+- Interface responsive en français, anglais, arabe et espagnol.
+- Affichage de droite à gauche pour l’arabe.
+- Installation en tant que PWA.
 
-### Architecture
-- structure professionnelle (core / shared / features)
-- utilisation des composants standalone Angular
+## Organisation du code
 
-### Authentification (en cours)
-- écran de connexion (login)
-- formulaire Angular (email + mot de passe)
-- binding avec ngModel
-- gestion des événements (ngSubmit)
+| Emplacement | Responsabilité |
+| --- | --- |
+| `src/app/core/` | Services API, authentification, intercepteur HTTP et gardes |
+| `src/app/shared/` | Composants réutilisables et structure des espaces connectés |
+| `src/app/features/` | Pages et fonctionnalités métier |
+| `src/app/app.routes.ts` | Déclaration des routes |
+| `src/environments/` | Configuration des adresses de l’application et de l’API |
+| `public/` | Ressources publiques et manifeste PWA |
+| `ngsw-config.json` | Configuration du Service Worker |
+| `nginx/default.conf` | Configuration Nginx du frontend conteneurisé |
 
-### Communication backend
-- service API Angular
-- requête HTTP POST vers /api/auth/login
-- utilisation de HttpClient
-- correction du problème CORS côté backend
+## Authentification et autorisations
 
----
+Après connexion, l’intercepteur HTTP transmet le JWT dans l’en-tête `Authorization: Bearer` des requêtes vers l’API DriveMe.
 
-## État actuel du login
+Les gardes Angular contrôlent la navigation vers les espaces connectés et les pages réservées à certains rôles. Le backend vérifie les autorisations, l’appartenance des ressources et les règles métier à chaque action concernée.
 
-Le frontend est fonctionnel et correctement connecté au backend.
+Le jeton est actuellement conservé dans `localStorage`. La prévention des failles XSS reste donc importante.
 
-- le formulaire envoie correctement :
-  - email
-  - rawPassword
-- la requête HTTP est bien transmise
-- le backend répond
+## Annulation et cohérence des informations
 
-Limitation actuelle :
+Les courses annulées restent visibles dans l’historique et dans les compteurs concernés.
 
-Le backend retourne une erreur :
+L’annulation autonome du passager est limitée aux demandes lui appartenant, sans chauffeur attribué ni paiement, aux statuts autorisés par le backend.
 
-400 Bad Request
+L’interface distingue le budget initial du passager, le prix accepté et l’état du paiement. Une course annulée affiche un paiement non applicable.
 
-Cela indique un problème côté backend (authentification, PasswordEncoder ou données en base).
+Le tableau de bord chauffeur porte sur ses courses attribuées. La page de gestion des courses peut également inclure les demandes disponibles.
 
-Le frontend est donc validé à ce stade.
+## Développement local
 
----
+Depuis le répertoire `frontend`, installer les dépendances :
 
-## Lancement du projet
+```powershell
+npm ci
+```
 
-Installation :
+Démarrer le serveur de développement :
 
-npm install
+```powershell
+npm start
+```
 
-Démarrage :
+L’interface est accessible à l’adresse :
 
-ng serve
-
----
-
-## Accès
-
+```text
 http://localhost:4200
+```
 
----
+La configuration de développement utilise l’API suivante :
 
-## Backend associé
-
+```text
 http://localhost:8080/api
+```
 
----
+Le backend doit être démarré séparément. Pour lancer l’ensemble de l’application avec Docker Compose, consulter le [README principal](../README.md).
 
-## Prochaines étapes
+## Compilation de production
 
-- correction du login backend (authentification JWT)
-- récupération et stockage du token côté frontend
-- mise en place d’un interceptor HTTP
-- sécurisation des routes Angular
-- redirection vers dashboard
-- développement des modules métier (courses, chauffeurs, passagers)
+```powershell
+npm run build
+```
 
----
+La configuration de production utilise `environment.prod.ts`, génère des ressources versionnées et active le Service Worker.
+
+Le Dockerfile compile l’application avec Node.js 22, puis copie les fichiers de `dist/driveme-frontend/browser` dans une image Nginx.
+
+## PWA et connexion réseau
+
+Le Service Worker met en cache le socle de l’interface et les ressources définies dans `ngsw-config.json`.
+
+Les opérations métier, notamment la création des courses, les propositions, les paiements et l’administration, nécessitent une connexion au serveur. Les réponses métier de l’API ne sont pas configurées pour une utilisation hors ligne.
+
+## Limites actuelles
+
+- Les écrans de paiement ne constituent pas une intégration bancaire réelle.
+- Le suivi GPS continu du chauffeur reste à développer.
+- Les notifications lorsque l’application est fermée restent à développer.
+- Le SOS permet un signalement et un suivi administratif, sans garantie d’intervention des secours.
+
+## Sécurité et licence
+
+Ne publier aucun secret, mot de passe, document personnel ou donnée de production.
+
+Consulter la [politique de sécurité](../SECURITY.md) et la [licence du projet](../LICENSE.txt).
 
 ## Auteur
 
-Youssef Qarnouf  
-Projet DriveMe – TFE ICC 2025–2026
+Youssef Qarnouf
+
+Site : [driveme.cloud](https://driveme.cloud)
